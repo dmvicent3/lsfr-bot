@@ -24,7 +24,7 @@ jobs:
           # VPS username
           username: ${{ secrets.SSH_USERNAME }}
           # SSH key (copy it from your local machine)
-          #key: ${{ secrets.VPS_SSH_SECRET }}
+          key: #${{ secrets.VPS_SSH_SECRET }}
           # SSH port
           port: ${{ secrets.VPS_SSH_PORT }}
           # passphrase
