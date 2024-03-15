@@ -31,7 +31,8 @@ jobs:
           # passphrase
           password: ${{ secrets.SSH_PASSPHRASE }}
           script: |  
-            cd ${{ secrets.PROJECT_PATH }} 
+            cd ${{ secrets.PROJECT_PATH }}
+            git config --global --add safe.directory ${{ secrets.PROJECT_PATH }}
             git pull origin main 
             make down
             make build
