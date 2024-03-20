@@ -1,10 +1,10 @@
-import psutil
-import os
+# import psutil
+#import os
 import json
 from datetime import datetime, timedelta
 
 
-def get_system_info():
+""" def get_system_info():
     # Get CPU usage
     cpu_usage = psutil.cpu_percent()
 
@@ -33,6 +33,7 @@ def get_system_info():
     uptime = int(psutil.boot_time())
 
     return f"CPU Usage: {cpu_usage}%\nAvailable Memory: {available_memory:.2f} GB\nAvailable Disk Space: {available_disk:.2f} GB\nUpload Speed: {upload_speed} bytes/sec\nDownload Speed: {download_speed} bytes/sec\nCPU Temperature: {cpu_temp}\nUptime: {uptime} seconds"
+ """
 
 
 def get_next_f1_session():

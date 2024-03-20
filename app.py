@@ -9,11 +9,9 @@ from interactions import (
     Client,
     Intents,
     listen,
-    slash_command,
-    SlashContext,
 )
 import logging
-from utils import get_system_info, get_next_f1_session
+from utils import get_next_f1_session
 from interactions.models.discord.enums import Status
 
 logging.basicConfig()
@@ -44,9 +42,9 @@ async def on_ready():
         await asyncio.sleep(60)
 
 
-@slash_command(name="status", description="Pi Status", scopes=[GUILD])
+""" @slash_command(name="status", description="Pi Status", scopes=[GUILD])
 async def get_status(ctx: SlashContext):
-    await ctx.send(get_system_info())
+    await ctx.send(get_system_info()) """
 
 
 """ @listen()
