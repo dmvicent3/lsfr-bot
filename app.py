@@ -1,28 +1,60 @@
+import asyncio
 from dotenv import load_dotenv
+
 load_dotenv()
 import os
-import discord
+from interactions import (
+    Activity,
+    ActivityType,
+    Client,
+    Intents,
+    listen,
+    slash_command,
+    SlashContext,
+)
+import logging
+from utils import get_system_info, get_next_f1_session
+from interactions.models.discord.enums import Status
 
-class MyClient(discord.Client):
-    def __init__(self, token):
-        intents = discord.Intents.default()
-        intents.message_content = True
-        super().__init__(intents=intents)
-        self.token = token
+logging.basicConfig()
+cls_log = logging.getLogger("MyLogger")
+cls_log.setLevel(logging.DEBUG)
 
-    async def on_ready(self):
-        print('Logged in as', self.user)
-        
-
-    #async def on_message(self, message):
-    
-    def run_bot(self):
-        self.run(self.token)
-        
-    def run_bot_test(self):
-        return self.start(self.token)
+GUILD = os.getenv("DISCORD_GUILD")
 
 
-if __name__ == '__main__':
-    bot = MyClient(os.environ.get("DISCORD_TOKEN"))
-    bot.run_bot()
+bot = Client(
+    sync_interactions=True,
+    asyncio_debug=True,
+    logger=cls_log,
+    token=os.environ.get("DISCORD_TOKEN"),
+    intents=Intents.ALL,
+    default_prefix="!",
+)
+
+
+@listen()
+async def on_ready():
+    print("Ready")
+    while True:
+        await bot.change_presence(
+            Status.ONLINE,
+            Activity(type=ActivityType.WATCHING, name=get_next_f1_session()),
+        )
+        await asyncio.sleep(60)
+
+
+@slash_command(name="status", description="Pi Status", scopes=[GUILD])
+async def get_status(ctx: SlashContext):
+    await ctx.send(get_system_info())
+
+
+""" @listen()
+async def on_message_create(event):
+    message = event.message.content
+    if message.startswith("#"):
+        #await event.ctx.reply("¯\_(ツ)_/¯") """
+
+
+if __name__ == "__main__":
+    bot.start()

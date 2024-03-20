@@ -1,4 +1,5 @@
-discord.py
+discord-py-interactions
+psutil
 black
 lint
 python-dotenv
