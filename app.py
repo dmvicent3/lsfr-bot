@@ -42,17 +42,5 @@ async def on_ready():
         await asyncio.sleep(60)
 
 
-""" @slash_command(name="status", description="Pi Status", scopes=[GUILD])
-async def get_status(ctx: SlashContext):
-    await ctx.send(get_system_info()) """
-
-
-""" @listen()
-async def on_message_create(event):
-    message = event.message.content
-    if message.startswith("#"):
-        #await event.ctx.reply("¯\_(ツ)_/¯") """
-
-
 if __name__ == "__main__":
     bot.start()

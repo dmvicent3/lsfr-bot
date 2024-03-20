@@ -1,40 +1,5 @@
-# import psutil
-#import os
 import json
 from datetime import datetime, timedelta
-
-
-""" def get_system_info():
-    # Get CPU usage
-    cpu_usage = psutil.cpu_percent()
-
-    # Get available memory
-    memory = psutil.virtual_memory()
-    available_memory = memory.available / (1024**3)  # Convert to GB
-
-    # Get disk usage
-    disk_usage = psutil.disk_usage("/")
-    available_disk = disk_usage.free / (1024**3)  # Convert to GB
-
-    # Get network information
-    network_info = psutil.net_io_counters()
-    upload_speed = network_info.bytes_sent
-    download_speed = network_info.bytes_recv
-
-    # Get system temperature
-    cpu_temp = (
-        os.popen("vcgencmd measure_temp")
-        .readline()
-        .replace("temp=", "")
-        .replace("'C\n", "")
-    )
-
-    # Get system uptime
-    uptime = int(psutil.boot_time())
-
-    return f"CPU Usage: {cpu_usage}%\nAvailable Memory: {available_memory:.2f} GB\nAvailable Disk Space: {available_disk:.2f} GB\nUpload Speed: {upload_speed} bytes/sec\nDownload Speed: {download_speed} bytes/sec\nCPU Temperature: {cpu_temp}\nUptime: {uptime} seconds"
- """
-
 
 def get_next_f1_session():
     f = open("./public/f1sessions.json")
