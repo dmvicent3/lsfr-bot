@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 
 def get_next_f1_session():
-    f = open("./public/f1sessions.json")
+    f = open("./public/f1sessions.json", encoding="utf-8")
     sessions = json.load(f)
     current_time = datetime.now()
 
