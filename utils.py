@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 def get_next_f1_session():
     f = open("./public/f1sessions.json")
     sessions = json.load(f)
-    current_time = datetime.now(datetime.UTC)
+    current_time = datetime.now()
 
     for race in sessions["races"]:
         for session_name, session_time_str in race["sessions"].items():
