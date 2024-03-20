@@ -15,5 +15,5 @@ RUN python3 -m black *.py
 
 #LINTING
 RUN python3 -m pylint app.py --disable=R,C
-RUN	python3 -m pylint commands.py --disable=R,C
+RUN	python3 -m pylint utils.py --disable=R,C
 EXPOSE 8443
