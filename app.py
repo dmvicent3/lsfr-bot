@@ -73,6 +73,8 @@ async def on_message_create(event: MessageCreate):
     if BOT_ID not in mentioned_ids:
         return
 
+    print("Message:", message)
+
     user_content = strip_all_mentions(message.content)
     if hasattr(message, "referenced_message") and message.referenced_message:
         ref_content = message.referenced_message.content or ""
