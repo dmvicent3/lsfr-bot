@@ -72,6 +72,8 @@ async def on_message_create(event):
             model = genai.GenerativeModel('gemini-2.0-flash')
             response = model.generate_content(prompt)
             answer = response.text.strip() if hasattr(response, 'text') else str(response)
+        except ValueError as e:
+            answer = f"Sorry, Gemini could not generate a response. ({e})"
         except Exception as e:
-            answer = f"Sorry, I couldn't get an answer from Gemini. ({e})"
+            answer = f"Sorry, an unexpected error occurred. ({e})"
         await message.reply(answer)
