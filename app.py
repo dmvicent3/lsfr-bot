@@ -55,7 +55,7 @@ if __name__ == "__main__":
 
 
 @listen()
-async def on_message_create(event):
+async def on_message(event):
     if not hasattr(event, 'message'):
         return
     message = event.message
