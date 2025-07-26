@@ -73,10 +73,12 @@ async def on_message_create(event: MessageCreate):
     if BOT_ID not in mentioned_ids:
         return
 
-    prompt = strip_all_mentions(message.content)
+    user_content = strip_all_mentions(message.content)
     if hasattr(message, "referenced_message") and message.referenced_message:
         ref_content = message.referenced_message.content or ""
-        prompt = f"[Reply to: {ref_content.strip()}]\n{prompt}"
+        prompt = f"[Original message]: {ref_content.strip()}\n[User reply]: {user_content}"
+    else:
+        prompt = user_content
 
     print("Prompt for Gemini:", prompt)
 
