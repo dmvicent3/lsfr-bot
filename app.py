@@ -74,6 +74,10 @@ async def on_message_create(event: MessageCreate):
         return
 
     prompt = strip_all_mentions(message.content)
+    if hasattr(message, "referenced_message") and message.referenced_message:
+        ref_content = message.referenced_message.content or ""
+        prompt = f"[Reply to: {ref_content.strip()}]\n{prompt}"
+
     print("Prompt for Gemini:", prompt)
 
     try:
