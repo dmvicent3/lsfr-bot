@@ -95,7 +95,19 @@ async def on_message_create(event: MessageCreate):
     except Exception as e:  # pylint: disable=broad-exception-caught
         answer = f"❗ Unexpected error: {e}"
 
-    await message.reply(answer)
+    MAX_LEN = 2000
+    if len(answer) <= MAX_LEN:
+        await message.reply(answer)
+    else:
+        start = 0
+        while start < len(answer):
+            chunk = answer[start:start+MAX_LEN]
+            if len(chunk) == MAX_LEN:
+                last_nl = chunk.rfind('\n')
+                if last_nl > 0:
+                    chunk = chunk[:last_nl]
+            await message.reply(chunk)
+            start += len(chunk)
 
 
 if __name__ == "__main__":
