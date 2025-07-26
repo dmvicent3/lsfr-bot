@@ -14,11 +14,19 @@ import logging
 from utils import get_next_f1_session
 from interactions.models.discord.enums import Status
 
+import google.generativeai as genai
+
 logging.basicConfig()
 cls_log = logging.getLogger("MyLogger")
 cls_log.setLevel(logging.DEBUG)
 
 GUILD = os.getenv("DISCORD_GUILD")
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+if GEMINI_API_KEY:
+    genai.configure(api_key=GEMINI_API_KEY)
+else:
+    print("Warning: GEMINI_API_KEY not set in environment.")
 
 
 bot = Client(
@@ -44,3 +52,26 @@ async def on_ready():
 
 if __name__ == "__main__":
     bot.start()
+
+
+@listen()
+async def on_message_create(event):
+    if not hasattr(event, 'message'):
+        return
+    message = event.message
+
+    if message.author.bot:
+        return
+
+    if bot.user and any(str(bot.user.id) in str(mention.id) for mention in message.mentions):
+        prompt = message.content
+
+        if bot.user.username in prompt:
+            prompt = prompt.replace(f"@{bot.user.username}", "").strip()
+        try:
+            model = genai.GenerativeModel('gemini-2.0-flash')
+            response = model.generate_content(prompt)
+            answer = response.text.strip() if hasattr(response, 'text') else str(response)
+        except Exception as e:
+            answer = f"Sorry, I couldn't get an answer from Gemini. ({e})"
+        await message.reply(answer)
