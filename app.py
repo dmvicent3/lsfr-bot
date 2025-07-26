@@ -82,7 +82,7 @@ async def on_message_create(event: MessageCreate):
         answer = getattr(response, "text", str(response)).strip()
     except ValueError as e:
         answer = f"⚠️ Gemini error: {e}"
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         answer = f"❗ Unexpected error: {e}"
 
     await message.reply(answer)
