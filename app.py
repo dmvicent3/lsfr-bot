@@ -56,6 +56,7 @@ if __name__ == "__main__":
 
 @listen()
 async def on_message(event):
+    print("Message event received:", event)
     if not hasattr(event, 'message'):
         return
     message = event.message
@@ -65,6 +66,7 @@ async def on_message(event):
 
     if bot.user and any(str(bot.user.id) in str(mention.id) for mention in message.mentions):
         prompt = message.content
+        print("Prompt:", prompt)
 
         if bot.user.username in prompt:
             prompt = prompt.replace(f"@{bot.user.username}", "").strip()
@@ -76,4 +78,5 @@ async def on_message(event):
             answer = f"Sorry, Gemini could not generate a response. ({e})"
         except Exception as e: # pylint: disable=broad-exception-caught
             answer = f"Sorry, an unexpected error occurred. ({e})"
+        print("Answer:", answer)
         await message.reply(answer)
