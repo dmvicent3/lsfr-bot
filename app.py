@@ -74,6 +74,6 @@ async def on_message_create(event):
             answer = response.text.strip() if hasattr(response, 'text') else str(response)
         except ValueError as e:
             answer = f"Sorry, Gemini could not generate a response. ({e})"
-        except Exception as e:
+        except Exception as e: # pylint: disable=broad-exception-caught
             answer = f"Sorry, an unexpected error occurred. ({e})"
         await message.reply(answer)
