@@ -69,18 +69,20 @@ async def on_message_create(event: MessageCreate):
         return
 
     mentioned_ids = extract_mention_ids(message.content)
-
     if BOT_ID not in mentioned_ids:
         return
 
-    print("Message:", message)
-
     user_content = strip_all_mentions(message.content)
-    if hasattr(message, "referenced_message") and message.referenced_message:
-        ref_content = message.referenced_message.content or ""
-        prompt = f"[Original message]: {ref_content.strip()}\n[User reply]: {user_content}"
-    else:
-        prompt = user_content
+
+    prompt = user_content
+
+    if message.message_reference and message.message_reference.message_id:
+        try:
+            ref_message = await message.channel.fetch_message(message.message_reference.message_id)
+            ref_content = ref_message.content or ""
+            prompt = f"[Original message]: {ref_content.strip()}\n[User reply]: {user_content}"
+        except Exception as e: # pylint: disable=broad-exception-caught
+            print(f"⚠️ Could not fetch replied-to message: {e}")
 
     print("Prompt for Gemini:", prompt)
 
