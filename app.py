@@ -14,7 +14,9 @@ import logging
 from utils import get_next_f1_session
 from interactions.models.discord.enums import Status
 
+
 import google.generativeai as genai
+from interactions.api.events import MessageCreate
 
 logging.basicConfig()
 cls_log = logging.getLogger("MyLogger")
@@ -55,10 +57,8 @@ if __name__ == "__main__":
 
 
 @listen()
-async def on_message(event):
-    print("Message event received:", event)
-    if not hasattr(event, 'message'):
-        return
+async def on_message(event: MessageCreate):
+    print("MessageCreate event received:", event)
     message = event.message
 
     if message.author.bot:
