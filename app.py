@@ -61,9 +61,9 @@ async def f1_ping_task():
                     message = f"<@&{DISCORD_ROLE_ID}> - {race_name} {session_name} starts in 1 hour! ({session_time})"
                     await channel.send(message)
                     announced_sessions.add(session_key)
-                    cls_log.info(f"Announced {session_key}")
-        except Exception as e:
-            cls_log.error(f"Error in F1 ping task: {e}")
+                    cls_log.info("Announced %s", session_key)
+        except (OSError, ValueError) as e:
+            cls_log.error("Error in F1 ping task: %s", e)
         
         await asyncio.sleep(60)
 
