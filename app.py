@@ -12,7 +12,7 @@ from interactions import (
     listen,
 )
 import logging
-from utils import get_next_f1_session
+from utils import get_next_f1_session, get_sessions_in_one_hour
 from interactions.models.discord.enums import Status
 from interactions.api.events import MessageCreate
 
@@ -25,6 +25,9 @@ cls_log.setLevel(logging.DEBUG)
 GUILD = os.getenv("DISCORD_GUILD")
 
 BOT_ID = int(os.environ["DISCORD_BOT_ID"])
+
+DISCORD_CHANNEL_ID = int(os.getenv("DISCORD_CHANNEL_ID"))
+DISCORD_ROLE_ID = int(os.getenv("DISCORD_ROLE_ID"))
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if GEMINI_API_KEY:
@@ -43,9 +46,31 @@ bot = Client(
 )
 
 
+announced_sessions = set()
+
+async def f1_ping_task():
+    await bot.wait_until_ready()
+    while True:
+        try:
+            channel = await bot.fetch_channel(DISCORD_CHANNEL_ID)
+            sessions_to_announce = get_sessions_in_one_hour()
+            
+            for race_name, session_name, session_time in sessions_to_announce:
+                session_key = f"{race_name}_{session_name}"
+                if session_key not in announced_sessions:
+                    message = f"<@&{DISCORD_ROLE_ID}> - {race_name} {session_name} starts in 1 hour! ({session_time})"
+                    await channel.send(message)
+                    announced_sessions.add(session_key)
+                    cls_log.info(f"Announced {session_key}")
+        except Exception as e:
+            cls_log.error(f"Error in F1 ping task: {e}")
+        
+        await asyncio.sleep(60)
+
 @listen()
 async def on_ready():
     print("Ready")
+    asyncio.create_task(f1_ping_task())
     while True:
         await bot.change_presence(
             Status.ONLINE,
