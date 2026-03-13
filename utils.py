@@ -39,7 +39,7 @@ def get_sessions_in_one_hour():
     for race in sessions["races"]:
         race_name = race["name"]
         for session_name, session_time_str in race["sessions"].items():
-            if session_name.lower() not in ["qualifying", "gp"]:
+            if session_name.lower() not in ["qualifying", "gp", "sprint, "sprintQualifying"]:
                 continue
             
             session_time = datetime.fromisoformat(session_time_str[:-1])
