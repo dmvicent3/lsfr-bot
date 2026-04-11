@@ -111,8 +111,14 @@ async def on_message_create(event: MessageCreate):
 
     print("Prompt for Gemini:", prompt)
 
+    SYSTEM_INSTRUCTION = """
+    Reply with only the final answer.
+    Do not include reasoning, analysis, hidden thought, or step-by-step work.
+    Be succinct with your answers and don't waste a token.
+    """
+    
     try:
-        model = genai.GenerativeModel("gemma-4-31b-it")
+        model = genai.GenerativeModel("gemma-4-31b-it", system_instruction=SYSTEM_INSTRUCTION)
         response = model.generate_content(prompt)
         answer = getattr(response, "text", str(response)).strip()
     except ValueError as e:
