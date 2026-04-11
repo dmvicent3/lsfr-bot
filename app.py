@@ -112,7 +112,7 @@ async def on_message_create(event: MessageCreate):
     print("Prompt for Gemini:", prompt)
 
     try:
-        model = genai.GenerativeModel("gemini-3-flash-preview")
+        model = genai.GenerativeModel("gemma-4-31b-it")
         response = model.generate_content(prompt)
         answer = getattr(response, "text", str(response)).strip()
     except ValueError as e:
