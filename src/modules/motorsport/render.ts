@@ -14,8 +14,30 @@ export interface SchedulePayload {
 
 const MAX_SELECT_OPTIONS = 25;
 
+const MAX_CONTENT = 2000;
+
 function unix(date: Date): number {
   return Math.floor(date.getTime() / 1000);
+}
+
+function sessionLine(s: Session): string {
+  const t = unix(s.start);
+  return `${s.pingable ? "🔔" : "▫️"} **${s.title}** — <t:${t}:F> (<t:${t}:R>)`;
+}
+
+/**
+ * The full schedule when it fits in one message. Otherwise (e.g. a WRC rally with 30+
+ * stages) only the pinged sessions are listed and the rest are counted.
+ */
+function scheduleText(info: SeriesInfo, event: EventSchedule): string {
+  const header = `## 🏁 ${info.name} — ${event.eventName}`;
+  const footer = "-# 🔔 = pinged";
+  const full = [header, ...event.sessions.map(sessionLine), footer].join("\n");
+  if (full.length <= MAX_CONTENT) return full;
+  const pinged = event.sessions.filter((s) => s.pingable);
+  const hidden = event.sessions.length - pinged.length;
+  const short = [header, ...pinged.map(sessionLine), `▫️ …and ${hidden} other sessions`, footer];
+  return short.join("\n").slice(0, MAX_CONTENT);
 }
 
 export function renderSchedule(info: SeriesInfo, event: EventSchedule | null): SchedulePayload {
@@ -37,13 +59,7 @@ export function renderSchedule(info: SeriesInfo, event: EventSchedule | null): S
     };
   }
 
-  const lines = event.sessions.map((s) => {
-    const t = unix(s.start);
-    return `${s.pingable ? "🔔" : "▫️"} **${s.title}** — <t:${t}:F> (<t:${t}:R>)`;
-  });
-  const content = [`## 🏁 ${info.name} — ${event.eventName}`, ...lines, "-# 🔔 = pinged"].join(
-    "\n",
-  );
+  const content = scheduleText(info, event);
 
   const pingable = event.sessions.filter((s) => s.pingable).slice(0, MAX_SELECT_OPTIONS);
   if (pingable.length === 0) return { content, components: [pingsRow] };

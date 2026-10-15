@@ -102,3 +102,26 @@ describe("renderPing", () => {
     expect(ping).toBeNull();
   });
 });
+
+test("every fixture event's schedule fits in one Discord message", async () => {
+  const { parseTunous } = await import("./sources/tunous.ts");
+  const { parseSportstimes } = await import("./sources/sportstimes.ts");
+  const { fixture } = await import("./sources/testing.ts");
+  const { applyRules } = await import("./rules.ts");
+  const { groupEvents } = await import("./decisions.ts");
+  const parsed = [
+    ...parseTunous("f1", 2026, await fixture("tunous-formula1")),
+    ...parseTunous("wec", 2026, await fixture("tunous-wec")),
+    ...parseTunous("wrc", 2026, await fixture("tunous-wrc")),
+    ...parseSportstimes("motogp", 2026, await fixture("st-motogp")),
+    ...parseSportstimes("indycar", 2026, await fixture("st-indycar")),
+  ];
+  for (const ev of groupEvents(applyRules(parsed))) {
+    const info = seriesInfo(ev.sessions[0]?.series ?? "f1");
+    const { content } = renderSchedule(info, ev);
+    expect(content.length).toBeLessThanOrEqual(2000);
+    for (const s of ev.sessions.filter((x) => x.pingable)) {
+      expect(content).toContain(`**${s.title}**`);
+    }
+  }
+});
