@@ -203,7 +203,7 @@ The current model ID is chosen during planning, and the value goes in the enviro
 - If a followed series' channel or role was deleted manually, the next tick treats the series as unfollowed and removes its rows. It doesn't recreate them.
 - `config.ts` fails fast at startup naming any missing or invalid environment variable.
 
-Required bot permissions: Manage Channels, Manage Roles, Manage Messages, Send Messages, View Channel, Read Message History. Required intents: Guilds, GuildMessages, MessageContent.
+Required bot permissions: Manage Channels, Manage Roles, Manage Messages, Send Messages, View Channel, Read Message History. Required intents: Guilds, GuildMessages, MessageContent, GuildMembers (to know who holds a series role; enable it in the Developer Portal).
 
 ## Configuration
 
