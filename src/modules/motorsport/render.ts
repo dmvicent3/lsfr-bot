@@ -38,8 +38,7 @@ function sessionLine(s: Session, weather: WeatherMap): string {
  */
 function scheduleText(info: SeriesInfo, event: EventSchedule, weather: WeatherMap): string {
   const header = `## 🏁 ${info.name} — ${event.eventName}`;
-  const footer = "-# 🔔 = pinged";
-  const full = [header, ...event.sessions.map((s) => sessionLine(s, weather)), footer].join("\n");
+  const full = [header, ...event.sessions.map((s) => sessionLine(s, weather))].join("\n");
   if (full.length <= MAX_CONTENT) return full;
   const pinged = event.sessions.filter((s) => s.pingable);
   const hidden = event.sessions.length - pinged.length;
@@ -47,7 +46,6 @@ function scheduleText(info: SeriesInfo, event: EventSchedule, weather: WeatherMa
     header,
     ...pinged.map((s) => sessionLine(s, weather)),
     `▫️ …and ${hidden} other sessions`,
-    footer,
   ];
   return short.join("\n").slice(0, MAX_CONTENT);
 }

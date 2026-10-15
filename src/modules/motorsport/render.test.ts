@@ -36,7 +36,7 @@ describe("renderSchedule", () => {
     expect(lines.some((l) => l.startsWith("▫️ **Practice 1** · <t:"))).toBe(true);
     expect(lines.some((l) => l.startsWith("🔔 **Race** · <t:"))).toBe(true);
     expect(lines.some((l) => /^🔔 \*\*Race\*\* · <t:\d+:d> <t:\d+:t>$/.test(l))).toBe(true);
-    expect(lines.at(-1)).toBe("-# 🔔 = pinged");
+    expect(lines.at(-1)?.startsWith("🔔 **Race**")).toBe(true);
   });
 
   test("has season-pings and remind-me buttons", () => {
