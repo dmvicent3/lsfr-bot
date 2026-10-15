@@ -18,6 +18,7 @@ import {
 import { collectResults } from "./collect-results.ts";
 import { currentEvent, PING_DELETE_AFTER_MS, sessionsToPing, shouldRename } from "./decisions.ts";
 import { getLeadMinutes } from "./lead.ts";
+import { memberLoader } from "./members.ts";
 import { refreshAll, refreshWeather } from "./refresh.ts";
 import { renderPing } from "./render.ts";
 import { type Followed, MotorsportRepo } from "./repo.ts";
@@ -51,6 +52,8 @@ const refresh: Job = {
   },
 };
 
+const ensureMembers = memberLoader();
+
 async function sendPings(
   guild: Guild,
   repo: MotorsportRepo,
@@ -62,7 +65,7 @@ async function sendPings(
 ): Promise<void> {
   const due = sessionsToPing(repo.listSessions(f.series), repo.sentKeys(f.series), leadMs, now);
   if (due.length === 0) return;
-  await guild.members.fetch();
+  await ensureMembers(guild);
   const roleMemberIds = new Set(role.members.keys());
   for (const session of due) {
     const payload = renderPing({
