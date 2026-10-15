@@ -3,6 +3,7 @@ import type { EventHandler } from "../../core/module.ts";
 import { isDiscordError } from "./channels.ts";
 import { shouldDeleteMessage } from "./decisions.ts";
 import { MotorsportRepo } from "./repo.ts";
+import { pickRoast } from "./roasts.ts";
 
 /** Keeps series channels read-only for admins too (they bypass channel permissions). */
 const keepSeriesChannelsClean: EventHandler = {
@@ -21,12 +22,27 @@ const keepSeriesChannelsClean: EventHandler = {
       system: message.system,
     };
     if (!shouldDeleteMessage(candidate, seriesChannelIds)) return;
-    try {
-      await message.delete();
-    } catch (err) {
-      if (!isDiscordError(err, RESTJSONErrorCodes.UnknownMessage)) throw err;
-    }
+    await deleteQuietly(message);
+    // Pin notices just vanish; people get roasted.
+    if (message.system || !message.channel.isSendable()) return;
+    const roast = await message.channel.send({
+      content: pickRoast(`<@${message.author.id}>`),
+      allowedMentions: { users: [message.author.id] },
+    });
+    await Bun.sleep(ROAST_LIFETIME_MS);
+    await deleteQuietly(roast);
   },
 };
+
+// Gone almost before anyone can read it — part of the joke.
+const ROAST_LIFETIME_MS = 1_000;
+
+async function deleteQuietly(message: Message): Promise<void> {
+  try {
+    await message.delete();
+  } catch (err) {
+    if (!isDiscordError(err, RESTJSONErrorCodes.UnknownMessage)) throw err;
+  }
+}
 
 export const motorsportEvents: EventHandler[] = [keepSeriesChannelsClean];
