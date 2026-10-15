@@ -45,3 +45,14 @@ export function currentEvent(sessions: Session[], now: number): EventSchedule | 
     groupEvents(sessions).find((event) => event.sessions.some((s) => s.end.getTime() > now)) ?? null
   );
 }
+
+/**
+ * Series channels are read-only, but the owner and admins bypass channel permissions, so the
+ * bot removes anything not its own, plus its own system notices ("pinned a message").
+ */
+export function shouldDeleteMessage(
+  m: { channelId: string; authorId: string; botId: string; system: boolean },
+  seriesChannelIds: ReadonlySet<string>,
+): boolean {
+  return seriesChannelIds.has(m.channelId) && (m.authorId !== m.botId || m.system);
+}

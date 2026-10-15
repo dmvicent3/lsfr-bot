@@ -14,6 +14,7 @@ import type { BotModule, Ctx } from "./module.ts";
 import { rejectRenameRateLimit } from "./rate-limit.ts";
 import { retry } from "./retry.ts";
 import { buildRouter, type Router } from "./router.ts";
+import { isRecord, isString } from "./guards.ts";
 import { safely, startJobs } from "./scheduler.ts";
 
 export async function startBot(
@@ -31,7 +32,7 @@ export async function startBot(
     ],
     rest: { rejectOnRateLimit: rejectRenameRateLimit },
   });
-  const ctx: Ctx = { client, db, config };
+  const ctx: Ctx = { client, db, config, commandIds: new Map() };
 
   client.once(Events.ClientReady, (ready) => {
     log.info("core", `logged in as ${ready.user.tag}`);
@@ -39,21 +40,7 @@ export async function startBot(
       modules.flatMap((module) => (module.jobs ?? []).map((job) => ({ module: module.name, job }))),
       ctx,
     );
-    // Jobs run regardless; without commands the bot is unusable, so exit and let Docker restart.
-    const rest = new REST().setToken(config.discordToken);
-    retry(
-      () =>
-        rest.put(Routes.applicationGuildCommands(ready.application.id, config.guildId), {
-          body: router.commands.map((command) => command.data),
-        }),
-      { attempts: 5, delayMs: 5_000 },
-    ).then(
-      () => log.info("core", `registered ${router.commands.length} commands`),
-      (err: unknown) => {
-        log.error("core", "command registration failed, exiting", err);
-        process.exit(1);
-      },
-    );
+    void registerCommands(ready.application.id, router, ctx);
   });
 
   client.on(Events.InteractionCreate, (interaction) => {
@@ -93,5 +80,33 @@ async function routeInteraction(interaction: Interaction, router: Router, ctx: C
     await (interaction.replied || interaction.deferred
       ? interaction.followUp(reply)
       : interaction.reply(reply));
+  }
+}
+
+function commandIdPairs(registered: unknown): [string, string][] {
+  if (!Array.isArray(registered)) return [];
+  return registered.flatMap((command: unknown): [string, string][] =>
+    isRecord(command) && isString(command["name"]) && isString(command["id"])
+      ? [[command["name"], command["id"]]]
+      : [],
+  );
+}
+
+/** Jobs run regardless; without commands the bot is unusable, so exit and let Docker restart. */
+async function registerCommands(appId: string, router: Router, ctx: Ctx): Promise<void> {
+  const rest = new REST().setToken(ctx.config.discordToken);
+  try {
+    const registered = await retry(
+      () =>
+        rest.put(Routes.applicationGuildCommands(appId, ctx.config.guildId), {
+          body: router.commands.map((command) => command.data),
+        }),
+      { attempts: 5, delayMs: 5_000 },
+    );
+    for (const [name, id] of commandIdPairs(registered)) ctx.commandIds.set(name, id);
+    log.info("core", `registered ${router.commands.length} commands`);
+  } catch (err) {
+    log.error("core", "command registration failed, exiting", err);
+    process.exit(1);
   }
 }

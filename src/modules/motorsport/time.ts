@@ -17,9 +17,12 @@ export function slugify(s: string): string {
     .replaceAll(/^-+|-+$/g, "");
 }
 
+/** Counts down to (or shows live) only sessions that get pings; practice never appears. */
 export function channelName(series: SeriesKey, sessions: Session[], now: Date): string {
   const t = now.getTime();
-  const byStart = sessions.toSorted((a, b) => a.start.getTime() - b.start.getTime());
+  const byStart = sessions
+    .filter((s) => s.pingable)
+    .toSorted((a, b) => a.start.getTime() - b.start.getTime());
   const live = byStart.find((s) => s.start.getTime() <= t && t < s.end.getTime());
   if (live) return `${series}・🔴-${slugify(live.title)}-live`;
   const next = byStart.find((s) => s.start.getTime() > t);

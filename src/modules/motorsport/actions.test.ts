@@ -2,7 +2,7 @@ import { Database } from "bun:sqlite";
 import { beforeEach, describe, expect, test } from "bun:test";
 import { runMigrations } from "../../core/db.ts";
 import { coreMigrations } from "../../core/settings.ts";
-import { toggleReminder } from "./actions.ts";
+import { setReminders, toggleReminder } from "./actions.ts";
 import { motorsportMigrations, MotorsportRepo } from "./repo.ts";
 import type { Session } from "./types.ts";
 
@@ -73,5 +73,30 @@ describe("toggleReminder", () => {
     expect(toggleReminder(repo, "u", "f1", "chinese-grand-prix", "practice-1", T)).toBe(rejected);
     expect(toggleReminder(repo, "u", "f1", "chinese-grand-prix", "sprint-race", T)).toBe(rejected);
     expect(toggleReminder(repo, "u", "f1", "other", "qualifying", T)).toBe(rejected);
+  });
+});
+
+describe("setReminders", () => {
+  test("keeps only upcoming pinged sessions and describes the result", () => {
+    follow();
+    const text = setReminders(
+      repo,
+      "u",
+      "f1",
+      "chinese-grand-prix",
+      ["qualifying", "practice-1", "sprint-race"],
+      T,
+    );
+    expect(text).toBe("Reminders for Chinese Grand Prix: Qualifying.");
+    expect(repo.userOneOffs("u", "f1", "chinese-grand-prix")).toEqual(["qualifying"]);
+  });
+
+  test("an empty selection clears them", () => {
+    follow();
+    setReminders(repo, "u", "f1", "chinese-grand-prix", ["qualifying"], T);
+    expect(setReminders(repo, "u", "f1", "chinese-grand-prix", [], T)).toBe(
+      "No reminders for Chinese Grand Prix.",
+    );
+    expect(repo.userOneOffs("u", "f1", "chinese-grand-prix")).toEqual([]);
   });
 });

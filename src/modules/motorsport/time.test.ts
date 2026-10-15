@@ -60,3 +60,17 @@ describe("channelName", () => {
     expect(channelName("wec", sessions, NOW)).toBe("wec・🔴-qualifying-live");
   });
 });
+
+describe("channelName ignores sessions without pings", () => {
+  test("counts down past practice to the next pinged session", () => {
+    const fp = { ...session("Practice 1", HOUR), pingable: false };
+    expect(channelName("f1", [fp, session("Qualifying", 2 * DAY + HOUR)], NOW)).toBe(
+      "f1・qualifying-2d",
+    );
+  });
+
+  test("a live practice session is not shown as live", () => {
+    const fp = { ...session("Practice 1", -10 * MIN), pingable: false };
+    expect(channelName("f1", [fp, session("Race", 3 * HOUR)], NOW)).toBe("f1・race-3h");
+  });
+});

@@ -14,6 +14,8 @@ export interface Ctx {
   client: Client;
   db: Database;
   config: Config;
+  /** Registered command name → command ID, filled once registration succeeds. */
+  commandIds: Map<string, string>;
 }
 
 export interface SlashCommand {
@@ -42,6 +44,10 @@ export interface Job {
 
 export interface BotModule {
   name: string;
+  /** Heading in /help, e.g. "🏁 Motorsport". */
+  title?: string;
+  /** Extra /help line for behaviour that isn't a command. */
+  helpNote?: string;
   commands?: SlashCommand[];
   components?: ComponentHandler[];
   events?: EventHandler[];

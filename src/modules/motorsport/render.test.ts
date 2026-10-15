@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { ComponentType } from "discord.js";
-import { renderPing, renderSchedule } from "./render.ts";
+import { renderPing, renderReminderPicker, renderSchedule } from "./render.ts";
 import { seriesInfo } from "./series.ts";
 import type { EventSchedule, Session } from "./types.ts";
 
@@ -38,27 +38,22 @@ describe("renderSchedule", () => {
     expect(lines.at(-1)).toBe("-# 🔔 = pinged");
   });
 
-  test("has a season-pings button and a remind select of pingable sessions", () => {
+  test("has season-pings and remind-me buttons", () => {
     const { components } = renderSchedule(f1, event);
-    expect(components).toHaveLength(2);
-    const button = components[0]?.components[0];
-    expect(button?.type).toBe(ComponentType.Button);
-    expect(button && "custom_id" in button ? button.custom_id : "").toBe("motorsport:pings:f1");
-    const select = components[1]?.components[0];
-    if (select?.type !== ComponentType.StringSelect) throw new Error("expected a string select");
-    expect(select.custom_id).toBe("motorsport:remind:f1:chinese-grand-prix");
-    expect(select.options.map((o) => o.value)).toEqual(["race"]);
+    expect(components).toHaveLength(1);
+    const ids = (components[0]?.components ?? []).map((c) => ("custom_id" in c ? c.custom_id : ""));
+    expect(ids).toEqual(["motorsport:pings:f1", "motorsport:remindmenu:f1:chinese-grand-prix"]);
   });
 
-  test("no select when nothing in the event is pinged", () => {
+  test("no remind button when nothing in the event is pinged", () => {
     const quiet = { ...event, sessions: [fp1] };
-    expect(renderSchedule(f1, quiet).components).toHaveLength(1);
+    expect(renderSchedule(f1, quiet).components[0]?.components).toHaveLength(1);
   });
 
   test("off-season", () => {
     const rendered = renderSchedule(f1, null);
     expect(rendered.content).toContain("No upcoming events this season.");
-    expect(rendered.components).toHaveLength(1);
+    expect(rendered.components[0]?.components).toHaveLength(1);
   });
 });
 
@@ -124,4 +119,29 @@ test("every fixture event's schedule fits in one Discord message", async () => {
       expect(content).toContain(`**${s.title}**`);
     }
   }
+});
+
+describe("renderReminderPicker", () => {
+  const qual = session("qualifying", "Qualifying", true, 24);
+  const picker = { ...event, sessions: [fp1, qual, race] };
+
+  test("multi-select of upcoming pinged sessions with the user's picks ticked", () => {
+    const { content, components } = renderReminderPicker(f1, picker, new Set(["race"]), T);
+    expect(content).toContain("Chinese Grand Prix");
+    const select = components[0]?.components[0];
+    if (select?.type !== ComponentType.StringSelect) throw new Error("expected a string select");
+    expect(select.custom_id).toBe("motorsport:reminders:f1:chinese-grand-prix");
+    expect(select.min_values).toBe(0);
+    expect(select.max_values).toBe(2);
+    expect(select.options.map((o) => [o.value, o.default ?? false])).toEqual([
+      ["qualifying", false],
+      ["race", true],
+    ]);
+  });
+
+  test("nothing left to remind about", () => {
+    const rendered = renderReminderPicker(f1, picker, new Set(), T + 100 * 3_600_000);
+    expect(rendered.content).toBe("No upcoming sessions to remind about.");
+    expect(rendered.components).toEqual([]);
+  });
 });

@@ -5,6 +5,7 @@ import {
   RENAME_MIN_INTERVAL_MS,
   sessionKey,
   sessionsToPing,
+  shouldDeleteMessage,
   shouldRename,
 } from "./decisions.ts";
 import type { Session } from "./types.ts";
@@ -79,5 +80,23 @@ describe("groupEvents / currentEvent", () => {
     expect(currentEvent(all, T - 1)?.eventId).toBe("a");
     expect(currentEvent(all, T)?.eventId).toBe("b");
     expect(currentEvent(all, b1.end.getTime())).toBeNull();
+  });
+});
+
+describe("shouldDeleteMessage", () => {
+  const channels = new Set(["c1"]);
+  const base = { channelId: "c1", authorId: "u1", botId: "bot", system: false };
+
+  test("anyone else's message in a series channel", () => {
+    expect(shouldDeleteMessage(base, channels)).toBe(true);
+  });
+  test("the bot's own messages stay", () => {
+    expect(shouldDeleteMessage({ ...base, authorId: "bot" }, channels)).toBe(false);
+  });
+  test("the bot's 'pinned a message' notice goes", () => {
+    expect(shouldDeleteMessage({ ...base, authorId: "bot", system: true }, channels)).toBe(true);
+  });
+  test("other channels are untouched", () => {
+    expect(shouldDeleteMessage({ ...base, channelId: "c2" }, channels)).toBe(false);
   });
 });

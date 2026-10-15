@@ -33,6 +33,9 @@ async function onMessage(ctx: Ctx, message: Message): Promise<void> {
 
 export const chatModule: BotModule = {
   name: "chat",
+  title: "💬 Chat",
+  helpNote:
+    "Mention @Gork with a question (or reply to a message while mentioning it) for an AI answer.",
   events: [
     {
       event: Events.MessageCreate,

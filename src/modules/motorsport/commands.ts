@@ -219,6 +219,7 @@ export const motorsportCommand: SlashCommand = {
       case "unfollow":
         return unfollow(i, ctx);
       case "pings": {
+        await i.deferReply({ flags: MessageFlags.Ephemeral });
         const guild = await ctx.client.guilds.fetch(ctx.config.guildId);
         const text = await togglePings(
           guild,
@@ -226,7 +227,8 @@ export const motorsportCommand: SlashCommand = {
           i.user.id,
           seriesOption(i),
         );
-        return reply(i, text);
+        await i.editReply(text);
+        return;
       }
       case "remind":
         return remind(i, ctx);

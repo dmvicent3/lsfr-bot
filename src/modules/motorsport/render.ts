@@ -1,5 +1,6 @@
 import {
   type APIActionRowComponent,
+  type APIButtonComponentWithCustomId,
   type APIComponentInMessageActionRow,
   ButtonStyle,
   ComponentType,
@@ -41,42 +42,68 @@ function scheduleText(info: SeriesInfo, event: EventSchedule): string {
 }
 
 export function renderSchedule(info: SeriesInfo, event: EventSchedule | null): SchedulePayload {
-  const pingsRow: APIActionRowComponent<APIComponentInMessageActionRow> = {
-    type: ComponentType.ActionRow,
-    components: [
-      {
-        type: ComponentType.Button,
-        custom_id: `motorsport:pings:${info.key}`,
-        label: "🔔 Season pings",
-        style: ButtonStyle.Secondary,
-      },
-    ],
-  };
-  if (!event) {
-    return {
-      content: `## 🏁 ${info.name}\nNo upcoming events this season.`,
-      components: [pingsRow],
-    };
+  const buttons: APIButtonComponentWithCustomId[] = [
+    {
+      type: ComponentType.Button,
+      custom_id: `motorsport:pings:${info.key}`,
+      label: "🔔 Season pings",
+      style: ButtonStyle.Secondary,
+    },
+  ];
+  if (event?.sessions.some((s) => s.pingable)) {
+    buttons.push({
+      type: ComponentType.Button,
+      custom_id: `motorsport:remindmenu:${info.key}:${event.eventId}`,
+      label: "⏰ Remind me…",
+      style: ButtonStyle.Secondary,
+    });
   }
+  const components = [{ type: ComponentType.ActionRow as const, components: buttons }];
+  const content = event
+    ? scheduleText(info, event)
+    : `## 🏁 ${info.name}\nNo upcoming events this season.`;
+  return { content, components };
+}
 
-  const content = scheduleText(info, event);
-
-  const pingable = event.sessions.filter((s) => s.pingable).slice(0, MAX_SELECT_OPTIONS);
-  if (pingable.length === 0) return { content, components: [pingsRow] };
-  const remindRow: APIActionRowComponent<APIComponentInMessageActionRow> = {
-    type: ComponentType.ActionRow,
+/**
+ * The private picker opened by "Remind me…": a multi-select of the event's upcoming pinged
+ * sessions with the viewer's current reminders ticked. Submitting sets exactly that selection.
+ */
+export function renderReminderPicker(
+  info: SeriesInfo,
+  event: EventSchedule,
+  selected: ReadonlySet<string>,
+  now: number,
+): SchedulePayload {
+  const upcoming = event.sessions
+    .filter((s) => s.pingable && s.start.getTime() > now)
+    .slice(0, MAX_SELECT_OPTIONS);
+  if (upcoming.length === 0) {
+    return { content: "No upcoming sessions to remind about.", components: [] };
+  }
+  return {
+    content: `Pick the ${info.name} ${event.eventName} sessions to ping you about (this weekend only):`,
     components: [
       {
-        type: ComponentType.StringSelect,
-        custom_id: `motorsport:remind:${info.key}:${event.eventId}`,
-        placeholder: "Remind me about…",
-        min_values: 1,
-        max_values: 1,
-        options: pingable.map((s) => ({ label: s.title, value: s.sessionId })),
+        type: ComponentType.ActionRow,
+        components: [
+          {
+            type: ComponentType.StringSelect,
+            custom_id: `motorsport:reminders:${info.key}:${event.eventId}`,
+            placeholder: "No reminders",
+            min_values: 0,
+            max_values: upcoming.length,
+            options: upcoming.map((s) => ({
+              label: s.title,
+              value: s.sessionId,
+              description: s.start.toUTCString().slice(0, 22) + " UTC",
+              default: selected.has(s.sessionId),
+            })),
+          },
+        ],
       },
     ],
   };
-  return { content, components: [pingsRow, remindRow] };
 }
 
 export interface PingInput {

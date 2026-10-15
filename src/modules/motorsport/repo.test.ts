@@ -125,3 +125,18 @@ test("deleteSeries removes only that series", () => {
   expect(repo.oneOffUsers("f1", "e", "race")).toEqual([]);
   expect(repo.sentKeys("f1").size).toBe(0);
 });
+
+describe("per-user reminder sets", () => {
+  test("setOneOffs replaces the user's set for that event only", () => {
+    repo.setOneOffs("u1", "f1", "e", ["q", "race"]);
+    repo.setOneOffs("u1", "f1", "other", ["race"]);
+    repo.setOneOffs("u2", "f1", "e", ["race"]);
+    expect(repo.userOneOffs("u1", "f1", "e")).toEqual(["q", "race"]);
+    repo.setOneOffs("u1", "f1", "e", ["race"]);
+    expect(repo.userOneOffs("u1", "f1", "e")).toEqual(["race"]);
+    repo.setOneOffs("u1", "f1", "e", []);
+    expect(repo.userOneOffs("u1", "f1", "e")).toEqual([]);
+    expect(repo.userOneOffs("u1", "f1", "other")).toEqual(["race"]);
+    expect(repo.oneOffUsers("f1", "e", "race")).toEqual(["u2"]);
+  });
+});
