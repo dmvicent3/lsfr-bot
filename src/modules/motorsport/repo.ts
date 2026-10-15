@@ -2,6 +2,7 @@ import type { Database } from "bun:sqlite";
 import type { Migration } from "../../core/db.ts";
 import { isSeriesKey } from "./series.ts";
 import type { SeriesKey, Session } from "./types.ts";
+import { isResultRows, type ResultKind, type ResultRow } from "./results.ts";
 import type { Forecast } from "./weather.ts";
 
 export const motorsportMigrations: Migration[] = [
@@ -62,7 +63,33 @@ export const motorsportMigrations: Migration[] = [
       );
     `,
   },
+  {
+    id: "motorsport-003-results",
+    sql: `
+      CREATE TABLE motorsport_results (
+        series TEXT NOT NULL,
+        event_id TEXT NOT NULL,
+        event_name TEXT NOT NULL,
+        session_id TEXT NOT NULL,
+        kind TEXT NOT NULL,
+        rows_json TEXT NOT NULL,
+        posted_at INTEGER NOT NULL,
+        PRIMARY KEY (series, event_id, session_id)
+      );
+    `,
+  },
 ];
+
+/** A session's classification, kept once posted (also the record F4 predictions score against). */
+export interface StoredResult {
+  series: SeriesKey;
+  eventId: string;
+  eventName: string;
+  sessionId: string;
+  kind: ResultKind;
+  rows: ResultRow[];
+  postedAt: number;
+}
 
 export interface Followed {
   series: SeriesKey;
@@ -370,5 +397,54 @@ export class MotorsportRepo {
         { tempC: r.temp_c, rainChance: r.rain_chance, code: r.code },
       ]),
     );
+  }
+
+  insertResult(r: StoredResult): void {
+    this.db.run(
+      `INSERT OR REPLACE INTO motorsport_results
+        (series, event_id, event_name, session_id, kind, rows_json, posted_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [r.series, r.eventId, r.eventName, r.sessionId, r.kind, JSON.stringify(r.rows), r.postedAt],
+    );
+  }
+
+  /** `eventId/sessionId` of every stored result. */
+  resultKeys(s: SeriesKey): Set<string> {
+    const rows = this.db
+      .query<{ key: string }, [string]>(
+        "SELECT event_id || '/' || session_id AS key FROM motorsport_results WHERE series = ?",
+      )
+      .all(s);
+    return new Set(rows.map((r) => r.key));
+  }
+
+  latestResult(s: SeriesKey): StoredResult | null {
+    const row = this.db
+      .query<
+        {
+          event_id: string;
+          event_name: string;
+          session_id: string;
+          kind: ResultKind;
+          rows_json: string;
+          posted_at: number;
+        },
+        [string]
+      >(
+        `SELECT event_id, event_name, session_id, kind, rows_json, posted_at
+         FROM motorsport_results WHERE series = ? ORDER BY posted_at DESC LIMIT 1`,
+      )
+      .get(s);
+    if (!row) return null;
+    const rows: unknown = JSON.parse(row.rows_json);
+    return {
+      series: s,
+      eventId: row.event_id,
+      eventName: row.event_name,
+      sessionId: row.session_id,
+      kind: row.kind,
+      rows: isResultRows(rows) ? rows : [],
+      postedAt: row.posted_at,
+    };
   }
 }

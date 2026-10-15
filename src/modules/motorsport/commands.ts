@@ -16,6 +16,7 @@ import { currentEvent } from "./decisions.ts";
 import { formatLead, getLeadMinutes, LEAD_SETTING_KEY, parseLeadTime } from "./lead.ts";
 import { renderNext } from "./next.ts";
 import { renderSchedule } from "./render.ts";
+import { renderResults, resultSeries } from "./results.ts";
 import { MotorsportRepo } from "./repo.ts";
 import { isSeriesKey, SERIES, seriesInfo } from "./series.ts";
 import type { SeriesKey } from "./types.ts";
@@ -77,6 +78,18 @@ const data = new SlashCommandBuilder()
       ),
   )
   .addSubcommand((sub) => sub.setName("next").setDescription("Next session of every series"))
+  .addSubcommand((sub) =>
+    sub
+      .setName("results")
+      .setDescription("Latest qualifying, sprint or race results (spoilered)")
+      .addStringOption((o) =>
+        o
+          .setName("series")
+          .setDescription("Series")
+          .setRequired(true)
+          .addChoices(...seriesChoices.filter((c) => resultSeries().includes(c.value))),
+      ),
+  )
   .addSubcommand((sub) =>
     sub
       .setName("reminder-time")
@@ -192,6 +205,18 @@ async function next(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
   });
 }
 
+async function results(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
+  const series = seriesOption(i);
+  const info = seriesInfo(series);
+  const latest = new MotorsportRepo(ctx.db).latestResult(series);
+  await reply(
+    i,
+    latest
+      ? renderResults(info, latest.eventName, latest.kind, { rows: latest.rows })
+      : `No ${info.name} results yet.`,
+  );
+}
+
 async function reminderTime(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
   const input = i.options.getString("time");
   if (input === null) {
@@ -250,6 +275,8 @@ export const motorsportCommand: SlashCommand = {
         return reminderTime(i, ctx);
       case "next":
         return next(i, ctx);
+      case "results":
+        return results(i, ctx);
       default:
         throw new Error(`Unknown subcommand ${i.options.getSubcommand()}`);
     }

@@ -2,7 +2,7 @@ import { Database } from "bun:sqlite";
 import { beforeEach, describe, expect, test } from "bun:test";
 import { runMigrations } from "../../core/db.ts";
 import { coreMigrations } from "../../core/settings.ts";
-import { type Followed, motorsportMigrations, MotorsportRepo } from "./repo.ts";
+import { type Followed, motorsportMigrations, MotorsportRepo, type StoredResult } from "./repo.ts";
 import type { Session } from "./types.ts";
 
 let repo: MotorsportRepo;
@@ -149,4 +149,31 @@ test("weather replace and lookup by session key", () => {
   expect([...weather.keys()]).toEqual(["e/q"]);
   expect(weather.get("e/q")).toEqual(f);
   expect(repo.weatherFor("wec").size).toBe(0);
+});
+
+const stored = (sessionId: string, postedAt: number): StoredResult => ({
+  series: "f1",
+  eventId: "e",
+  eventName: "E",
+  sessionId,
+  kind: sessionId === "race" ? "race" : "qualifying",
+  rows: [{ pos: "1", name: "Norris", team: "McLaren", time: "1:30.000" }],
+  postedAt,
+});
+
+describe("results", () => {
+  test("stores results, lists their keys, returns the latest", () => {
+    expect(repo.latestResult("f1")).toBeNull();
+    repo.insertResult(stored("qualifying", 1));
+    repo.insertResult(stored("race", 2));
+    expect(repo.resultKeys("f1")).toEqual(new Set(["e/qualifying", "e/race"]));
+    expect(repo.resultKeys("motogp")).toEqual(new Set());
+    expect(repo.latestResult("f1")).toEqual(stored("race", 2));
+  });
+
+  test("inserting the same session twice keeps one row", () => {
+    repo.insertResult(stored("race", 1));
+    repo.insertResult(stored("race", 2));
+    expect(repo.resultKeys("f1").size).toBe(1);
+  });
 });

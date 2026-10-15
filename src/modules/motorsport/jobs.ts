@@ -15,6 +15,7 @@ import {
   isDiscordError,
   updatePinned,
 } from "./channels.ts";
+import { collectResults } from "./collect-results.ts";
 import { currentEvent, PING_DELETE_AFTER_MS, sessionsToPing, shouldRename } from "./decisions.ts";
 import { getLeadMinutes } from "./lead.ts";
 import { refreshAll, refreshWeather } from "./refresh.ts";
@@ -163,4 +164,20 @@ const cleanup: Job = {
   },
 };
 
-export const motorsportJobs: Job[] = [refresh, tick, cleanup];
+/** Posts session results (spoilered) into followed series channels as they get published. */
+const results: Job = {
+  name: "results",
+  cron: "*/5 * * * *",
+  runOnStart: true,
+  async run(ctx) {
+    const repo = new MotorsportRepo(ctx.db);
+    await collectResults(repo, Date.now(), fetch, async (series, content) => {
+      const f = repo.getFollowed(series);
+      if (!f) return;
+      const channel = await fetchSeriesChannel(await guildOf(ctx), f);
+      if (channel) await channel.send({ content, allowedMentions: { parse: [] } });
+    });
+  },
+};
+
+export const motorsportJobs: Job[] = [refresh, tick, cleanup, results];

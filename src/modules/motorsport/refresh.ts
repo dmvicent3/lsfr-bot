@@ -3,7 +3,7 @@ import { log } from "../../core/log.ts";
 import type { MotorsportRepo } from "./repo.ts";
 import { applyRules } from "./rules.ts";
 import { SERIES } from "./series.ts";
-import { fetchSeries } from "./sources/fetch.ts";
+import { fetchSeries, getJson } from "./sources/fetch.ts";
 import type { SeriesKey } from "./types.ts";
 import { coordsByEvent, FORECAST_DAYS, type Forecast, forecastAt, forecastUrl } from "./weather.ts";
 
@@ -42,10 +42,10 @@ export async function refreshAll(
 
 const DAY_MS = 86_400_000;
 
-async function getJson(url: string, fetchFn: FetchFn): Promise<unknown> {
-  const res = await fetchFn(url, { signal: AbortSignal.timeout(30_000) });
-  if (!res.ok) throw new Error(`${url} returned ${res.status}`);
-  return res.json();
+async function requireJson(url: string, fetchFn: FetchFn): Promise<unknown> {
+  const json = await getJson(url, fetchFn);
+  if (json === null) throw new Error(`${url} returned 404`);
+  return json;
 }
 
 /**
@@ -64,7 +64,7 @@ export async function refreshWeather(
     const upcoming = sessions.filter(
       (s) => s.start.getTime() > t && s.start.getTime() <= t + FORECAST_DAYS * DAY_MS,
     );
-    const calendar = await getJson(
+    const calendar = await requireJson(
       `https://raw.githubusercontent.com/sportstimes/f1/main/_db/f1/${now.getUTCFullYear()}.json`,
       fetchFn,
     );
@@ -73,7 +73,7 @@ export async function refreshWeather(
     for (const eventId of new Set(upcoming.map((s) => s.eventId))) {
       const where = coords.get(eventId);
       if (!where) continue;
-      const json = await getJson(forecastUrl(where), fetchFn);
+      const json = await requireJson(forecastUrl(where), fetchFn);
       for (const s of upcoming.filter((x) => x.eventId === eventId)) {
         const forecast = forecastAt(json, s.start);
         if (forecast) rows.push({ eventId, sessionId: s.sessionId, forecast });
