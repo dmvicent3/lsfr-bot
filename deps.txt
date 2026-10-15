@@ -1,5 +1,0 @@
-google-generativeai
-discord-py-interactions
-black
-lint
-python-dotenv
