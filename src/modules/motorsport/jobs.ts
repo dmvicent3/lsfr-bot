@@ -17,7 +17,7 @@ import {
 } from "./channels.ts";
 import { currentEvent, PING_DELETE_AFTER_MS, sessionsToPing, shouldRename } from "./decisions.ts";
 import { getLeadMinutes } from "./lead.ts";
-import { refreshAll } from "./refresh.ts";
+import { refreshAll, refreshWeather } from "./refresh.ts";
 import { renderPing } from "./render.ts";
 import { type Followed, MotorsportRepo } from "./repo.ts";
 import { seriesInfo } from "./series.ts";
@@ -39,6 +39,7 @@ const refresh: Job = {
       "motorsport:refresh",
       results.map((r) => `${r.series}:${r.ok ? "ok" : "failed"}`).join(" "),
     );
+    await refreshWeather(repo, now);
     const guild = await guildOf(ctx);
     for (const f of repo.listFollowed()) {
       await safely(`motorsport:refresh:${f.series}`, async () => {

@@ -5,6 +5,7 @@ import { applyRules } from "./rules.ts";
 import { SERIES } from "./series.ts";
 import { fetchSeries } from "./sources/fetch.ts";
 import type { SeriesKey } from "./types.ts";
+import { coordsByEvent, FORECAST_DAYS, type Forecast, forecastAt, forecastUrl } from "./weather.ts";
 
 export interface RefreshResult {
   series: SeriesKey;
@@ -37,4 +38,49 @@ export async function refreshAll(
       }
     }),
   );
+}
+
+const DAY_MS = 86_400_000;
+
+async function getJson(url: string, fetchFn: FetchFn): Promise<unknown> {
+  const res = await fetchFn(url, { signal: AbortSignal.timeout(30_000) });
+  if (!res.ok) throw new Error(`${url} returned ${res.status}`);
+  return res.json();
+}
+
+/**
+ * Forecasts for F1 sessions in the next 16 days (the Open-Meteo range). Coordinates come from
+ * the sportstimes F1 calendar for the current year; F1 never races across New Year. Any
+ * failure keeps the previously stored weather.
+ */
+export async function refreshWeather(
+  repo: MotorsportRepo,
+  now: Date,
+  fetchFn: FetchFn = fetch,
+): Promise<void> {
+  try {
+    const t = now.getTime();
+    const sessions = repo.listSessions("f1");
+    const upcoming = sessions.filter(
+      (s) => s.start.getTime() > t && s.start.getTime() <= t + FORECAST_DAYS * DAY_MS,
+    );
+    const calendar = await getJson(
+      `https://raw.githubusercontent.com/sportstimes/f1/main/_db/f1/${now.getUTCFullYear()}.json`,
+      fetchFn,
+    );
+    const coords = coordsByEvent(sessions, calendar);
+    const rows: { eventId: string; sessionId: string; forecast: Forecast }[] = [];
+    for (const eventId of new Set(upcoming.map((s) => s.eventId))) {
+      const where = coords.get(eventId);
+      if (!where) continue;
+      const json = await getJson(forecastUrl(where), fetchFn);
+      for (const s of upcoming.filter((x) => x.eventId === eventId)) {
+        const forecast = forecastAt(json, s.start);
+        if (forecast) rows.push({ eventId, sessionId: s.sessionId, forecast });
+      }
+    }
+    repo.replaceWeather("f1", rows, t);
+  } catch (err) {
+    log.error("motorsport:weather", "forecast refresh failed, keeping previous weather", err);
+  }
 }

@@ -145,3 +145,12 @@ describe("renderReminderPicker", () => {
     expect(rendered.components).toEqual([]);
   });
 });
+
+test("session lines carry the forecast when there is one", () => {
+  const weather = new Map([["chinese-grand-prix/race", { tempC: 20, rainChance: 10, code: 1 }]]);
+  const { content } = renderSchedule(f1, event, weather);
+  const raceLine = content.split("\n").find((l) => l.startsWith("🔔 **Race**")) ?? "";
+  expect(raceLine.endsWith(" · 🌤️ 20°C · 💧10%")).toBe(true);
+  const fpLine = content.split("\n").find((l) => l.startsWith("▫️ **Practice 1**")) ?? "";
+  expect(fpLine).not.toContain("💧");
+});

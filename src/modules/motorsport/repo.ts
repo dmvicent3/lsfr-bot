@@ -2,6 +2,7 @@ import type { Database } from "bun:sqlite";
 import type { Migration } from "../../core/db.ts";
 import { isSeriesKey } from "./series.ts";
 import type { SeriesKey, Session } from "./types.ts";
+import type { Forecast } from "./weather.ts";
 
 export const motorsportMigrations: Migration[] = [
   {
@@ -42,6 +43,21 @@ export const motorsportMigrations: Migration[] = [
         channel_id TEXT NOT NULL,
         message_id TEXT,
         delete_at INTEGER NOT NULL,
+        PRIMARY KEY (series, event_id, session_id)
+      );
+    `,
+  },
+  {
+    id: "motorsport-002-weather",
+    sql: `
+      CREATE TABLE motorsport_weather (
+        series TEXT NOT NULL,
+        event_id TEXT NOT NULL,
+        session_id TEXT NOT NULL,
+        temp_c REAL NOT NULL,
+        rain_chance INTEGER NOT NULL,
+        code INTEGER NOT NULL,
+        fetched_at INTEGER NOT NULL,
         PRIMARY KEY (series, event_id, session_id)
       );
     `,
@@ -317,6 +333,42 @@ export class MotorsportRepo {
     this.db.run(
       "UPDATE motorsport_sent_pings SET message_id = NULL WHERE series = ? AND event_id = ? AND session_id = ?",
       [s, eventId, sessionId],
+    );
+  }
+
+  replaceWeather(
+    s: SeriesKey,
+    rows: { eventId: string; sessionId: string; forecast: Forecast }[],
+    fetchedAt: number,
+  ): void {
+    this.db.transaction(() => {
+      this.db.run("DELETE FROM motorsport_weather WHERE series = ?", [s]);
+      for (const { eventId, sessionId, forecast } of rows) {
+        this.db.run(
+          `INSERT OR REPLACE INTO motorsport_weather
+            (series, event_id, session_id, temp_c, rain_chance, code, fetched_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?)`,
+          [s, eventId, sessionId, forecast.tempC, forecast.rainChance, forecast.code, fetchedAt],
+        );
+      }
+    })();
+  }
+
+  /** Forecasts keyed by `eventId/sessionId`. */
+  weatherFor(s: SeriesKey): Map<string, Forecast> {
+    const rows = this.db
+      .query<
+        { event_id: string; session_id: string; temp_c: number; rain_chance: number; code: number },
+        [string]
+      >(
+        "SELECT event_id, session_id, temp_c, rain_chance, code FROM motorsport_weather WHERE series = ?",
+      )
+      .all(s);
+    return new Map(
+      rows.map((r) => [
+        `${r.event_id}/${r.session_id}`,
+        { tempC: r.temp_c, rainChance: r.rain_chance, code: r.code },
+      ]),
     );
   }
 }

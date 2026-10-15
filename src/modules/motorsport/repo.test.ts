@@ -140,3 +140,13 @@ describe("per-user reminder sets", () => {
     expect(repo.oneOffUsers("f1", "e", "race")).toEqual(["u2"]);
   });
 });
+
+test("weather replace and lookup by session key", () => {
+  const f = { tempC: 20.5, rainChance: 10, code: 1 };
+  repo.replaceWeather("f1", [{ eventId: "e", sessionId: "race", forecast: f }], 1);
+  repo.replaceWeather("f1", [{ eventId: "e", sessionId: "q", forecast: f }], 2);
+  const weather = repo.weatherFor("f1");
+  expect([...weather.keys()]).toEqual(["e/q"]);
+  expect(weather.get("e/q")).toEqual(f);
+  expect(repo.weatherFor("wec").size).toBe(0);
+});

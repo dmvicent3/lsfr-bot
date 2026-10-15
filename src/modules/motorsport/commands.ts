@@ -120,7 +120,9 @@ async function follow(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
     const created = await createSeriesChannel(guild, info);
     try {
       const event = currentEvent(repo.listSessions(series), Date.now());
-      const message = await created.channel.send(renderSchedule(info, event));
+      const message = await created.channel.send(
+        renderSchedule(info, event, repo.weatherFor(series)),
+      );
       await message.pin();
       repo.insertFollowed({
         series,

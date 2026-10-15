@@ -7,6 +7,10 @@ import {
 } from "discord.js";
 import type { SeriesInfo } from "./series.ts";
 import type { EventSchedule, Session } from "./types.ts";
+import { type Forecast, formatWeather } from "./weather.ts";
+
+/** Forecasts keyed by `eventId/sessionId`. */
+export type WeatherMap = ReadonlyMap<string, Forecast>;
 
 export interface SchedulePayload {
   content: string;
@@ -21,27 +25,38 @@ function unix(date: Date): number {
   return Math.floor(date.getTime() / 1000);
 }
 
-function sessionLine(s: Session): string {
+function sessionLine(s: Session, weather: WeatherMap): string {
   const t = unix(s.start);
-  return `${s.pingable ? "🔔" : "▫️"} **${s.title}** — <t:${t}:F> (<t:${t}:R>)`;
+  const forecast = weather.get(`${s.eventId}/${s.sessionId}`);
+  const suffix = forecast ? ` · ${formatWeather(forecast)}` : "";
+  return `${s.pingable ? "🔔" : "▫️"} **${s.title}** — <t:${t}:F> (<t:${t}:R>)${suffix}`;
 }
 
 /**
  * The full schedule when it fits in one message. Otherwise (e.g. a WRC rally with 30+
  * stages) only the pinged sessions are listed and the rest are counted.
  */
-function scheduleText(info: SeriesInfo, event: EventSchedule): string {
+function scheduleText(info: SeriesInfo, event: EventSchedule, weather: WeatherMap): string {
   const header = `## 🏁 ${info.name} — ${event.eventName}`;
   const footer = "-# 🔔 = pinged";
-  const full = [header, ...event.sessions.map(sessionLine), footer].join("\n");
+  const full = [header, ...event.sessions.map((s) => sessionLine(s, weather)), footer].join("\n");
   if (full.length <= MAX_CONTENT) return full;
   const pinged = event.sessions.filter((s) => s.pingable);
   const hidden = event.sessions.length - pinged.length;
-  const short = [header, ...pinged.map(sessionLine), `▫️ …and ${hidden} other sessions`, footer];
+  const short = [
+    header,
+    ...pinged.map((s) => sessionLine(s, weather)),
+    `▫️ …and ${hidden} other sessions`,
+    footer,
+  ];
   return short.join("\n").slice(0, MAX_CONTENT);
 }
 
-export function renderSchedule(info: SeriesInfo, event: EventSchedule | null): SchedulePayload {
+export function renderSchedule(
+  info: SeriesInfo,
+  event: EventSchedule | null,
+  weather: WeatherMap = new Map(),
+): SchedulePayload {
   const buttons: APIButtonComponentWithCustomId[] = [
     {
       type: ComponentType.Button,
@@ -60,7 +75,7 @@ export function renderSchedule(info: SeriesInfo, event: EventSchedule | null): S
   }
   const components = [{ type: ComponentType.ActionRow as const, components: buttons }];
   const content = event
-    ? scheduleText(info, event)
+    ? scheduleText(info, event, weather)
     : `## 🏁 ${info.name}\nNo upcoming events this season.`;
   return { content, components };
 }
