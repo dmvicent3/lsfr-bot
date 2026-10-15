@@ -11,6 +11,7 @@ import { setSetting } from "../../core/settings.ts";
 import { notFollowedText, togglePings, toggleReminder } from "./actions.ts";
 import { log } from "../../core/log.ts";
 import { createSeriesChannel } from "./channels.ts";
+import { latestResult } from "./collect-results.ts";
 import { followErrorText } from "./errors.ts";
 import { currentEvent } from "./decisions.ts";
 import { formatLead, getLeadMinutes, LEAD_SETTING_KEY, parseLeadTime } from "./lead.ts";
@@ -208,9 +209,9 @@ async function next(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
 async function results(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
   const series = seriesOption(i);
   const info = seriesInfo(series);
-  const latest = new MotorsportRepo(ctx.db).latestResult(series);
-  await reply(
-    i,
+  await i.deferReply({ flags: MessageFlags.Ephemeral });
+  const latest = await latestResult(new MotorsportRepo(ctx.db), series, Date.now(), fetch);
+  await i.editReply(
     latest
       ? renderResults(info, latest.eventName, latest.kind, { rows: latest.rows })
       : `No ${info.name} results yet.`,

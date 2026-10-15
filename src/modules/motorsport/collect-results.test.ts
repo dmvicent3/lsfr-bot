@@ -1,9 +1,9 @@
 import { Database } from "bun:sqlite";
-import { beforeEach, expect, test } from "bun:test";
+import { beforeEach, describe, expect, test } from "bun:test";
 import { runMigrations } from "../../core/db.ts";
 import type { FetchFn } from "../../core/guards.ts";
 import { coreMigrations } from "../../core/settings.ts";
-import { collectResults } from "./collect-results.ts";
+import { collectResults, latestResult } from "./collect-results.ts";
 import { motorsportMigrations, MotorsportRepo } from "./repo.ts";
 import { fixture } from "./sources/testing.ts";
 import type { SeriesKey, Session } from "./types.ts";
@@ -71,4 +71,36 @@ test("a failed post is retried on the next run", async () => {
   expect(repo.latestResult("f1")).toBeNull();
   await collectResults(repo, AFTER_RACE, fetchFn, post);
   expect(posts).toHaveLength(1);
+});
+
+const noFetch: FetchFn = async () => {
+  throw new Error("should not fetch");
+};
+
+describe("latestResult", () => {
+  const qualifying: Session = {
+    ...race,
+    sessionId: "qualifying",
+    title: "Qualifying",
+    start: new Date(RACE_START - 22 * 3_600_000),
+    end: new Date(RACE_START - 21 * 3_600_000),
+  };
+
+  test("fetches the most recent finished session live when nothing is stored", async () => {
+    repo.replaceSessions("f1", [qualifying, race], 0);
+    const latest = await latestResult(repo, "f1", AFTER_RACE + 86_400_000, await openf1(true));
+    expect(latest?.kind).toBe("race");
+    expect(latest?.eventName).toBe("Singapore Grand Prix");
+    expect(latest?.rows[0]?.name).toBe("Verstappen");
+    expect(repo.latestResult("f1")).toBeNull();
+  });
+
+  test("uses the stored result when it is the latest session", async () => {
+    await collectResults(repo, AFTER_RACE, await openf1(true), post);
+    expect((await latestResult(repo, "f1", AFTER_RACE + 86_400_000, noFetch))?.kind).toBe("race");
+  });
+
+  test("nothing finished yet is null", async () => {
+    expect(await latestResult(repo, "f1", RACE_START, await openf1(true))).toBeNull();
+  });
 });
