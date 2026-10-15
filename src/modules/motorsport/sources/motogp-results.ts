@@ -86,23 +86,27 @@ export function parseMotogp(kind: ResultKind, json: unknown, q1?: unknown): Sess
       entries.push({ r, pos: String(main.length + k + 1), time: `Q1 ${bestLap(r)}` });
     }
   }
-  const names = entries.map(({ r }) => {
+  const names = riderNames(entries.map(({ r }) => r));
+  return {
+    rows: entries.map(({ r, pos, time }, i) => ({
+      pos,
+      name: names[i] ?? "",
+      team: isRecord(r["constructor"]) ? asText(r["constructor"]["name"]) : "",
+      time,
+    })),
+  };
+}
+
+/** Surnames, with an initial where two riders share one ("M. Marquez", "A. Marquez"). */
+export function riderNames(riders: Record<string, unknown>[]): string[] {
+  const names = riders.map((r) => {
     const full = isRecord(r["rider"]) ? asText(r["rider"]["full_name"]) : "";
     const [first = "", ...rest] = full.split(" ");
     return { first, surname: rest.join(" ") || first };
   });
-  const surnameCount = new Map<string, number>();
-  for (const n of names) surnameCount.set(n.surname, (surnameCount.get(n.surname) ?? 0) + 1);
-  return {
-    rows: entries.map(({ r, pos, time }, i) => {
-      const n = names[i] ?? { first: "", surname: "" };
-      const shared = (surnameCount.get(n.surname) ?? 0) > 1;
-      return {
-        pos,
-        name: shared ? `${n.first.slice(0, 1)}. ${n.surname}` : n.surname,
-        team: isRecord(r["constructor"]) ? asText(r["constructor"]["name"]) : "",
-        time,
-      };
-    }),
-  };
+  const count = new Map<string, number>();
+  for (const n of names) count.set(n.surname, (count.get(n.surname) ?? 0) + 1);
+  return names.map((n) =>
+    (count.get(n.surname) ?? 0) > 1 ? `${n.first.slice(0, 1)}. ${n.surname}` : n.surname,
+  );
 }

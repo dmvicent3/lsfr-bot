@@ -18,6 +18,7 @@ import { formatLead, getLeadMinutes, LEAD_SETTING_KEY, parseLeadTime } from "./l
 import { renderNext } from "./next.ts";
 import { renderSchedule } from "./render.ts";
 import { renderResults, resultSeries } from "./results.ts";
+import { fetchStandings, renderStandings, STANDINGS_SERIES } from "./standings.ts";
 import { MotorsportRepo } from "./repo.ts";
 import { isSeriesKey, SERIES, seriesInfo } from "./series.ts";
 import type { SeriesKey } from "./types.ts";
@@ -89,6 +90,27 @@ const data = new SlashCommandBuilder()
           .setDescription("Series")
           .setRequired(true)
           .addChoices(...seriesChoices.filter((c) => resultSeries().includes(c.value))),
+      ),
+  )
+  .addSubcommand((sub) =>
+    sub
+      .setName("standings")
+      .setDescription("Current championship standings")
+      .addStringOption((o) =>
+        o
+          .setName("series")
+          .setDescription("Series")
+          .setRequired(true)
+          .addChoices(...seriesChoices.filter((c) => STANDINGS_SERIES.includes(c.value))),
+      )
+      .addStringOption((o) =>
+        o
+          .setName("championship")
+          .setDescription("Drivers (default) or constructors (F1 only)")
+          .addChoices(
+            { name: "Drivers", value: "drivers" },
+            { name: "Constructors", value: "constructors" },
+          ),
       ),
   )
   .addSubcommand((sub) =>
@@ -224,6 +246,24 @@ async function results(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> 
   );
 }
 
+async function standings(i: ChatInputCommandInteraction): Promise<void> {
+  const series = seriesOption(i);
+  const info = seriesInfo(series);
+  const champ = i.options.getString("championship") === "constructors" ? "constructors" : "drivers";
+  await i.deferReply({ flags: MessageFlags.Ephemeral });
+  try {
+    const table = await fetchStandings(series, champ, new Date());
+    const missing =
+      champ === "constructors" && series !== "f1"
+        ? "Constructors' standings are only available for F1."
+        : `No ${info.name} standings available right now.`;
+    await i.editReply(table ? renderStandings(info, champ, table) : missing);
+  } catch (err) {
+    log.error("motorsport:standings", `${series} ${champ} failed`, err);
+    await i.editReply("⚠️ Couldn't load the standings right now.");
+  }
+}
+
 async function reminderTime(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
   const input = i.options.getString("time");
   if (input === null) {
@@ -284,6 +324,8 @@ export const motorsportCommand: SlashCommand = {
         return next(i, ctx);
       case "results":
         return results(i, ctx);
+      case "standings":
+        return standings(i);
       default:
         throw new Error(`Unknown subcommand ${i.options.getSubcommand()}`);
     }

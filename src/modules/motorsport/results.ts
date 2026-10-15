@@ -1,5 +1,6 @@
 import { isRecord, isString } from "../../core/guards.ts";
 import { isSeriesKey, type SeriesInfo } from "./series.ts";
+import { fitName, fitTeam, formatTable, posLabel, tableMessage } from "./table.ts";
 import type { SeriesKey, Session } from "./types.ts";
 
 export type ResultKind = "qualifying" | "sprint-qualifying" | "sprint" | "race";
@@ -81,13 +82,9 @@ export function resultsDue(
   });
 }
 
-const MAX_NAME = 15;
-const MAX_TEAM = 12;
-const MAX_CONTENT = 2000;
-
 /**
- * Heading in the clear, then the whole classification as a monospace table (one inline code
- * span per row, so it aligns), behind a single spoiler unless `spoiler` is false.
+ * Heading in the clear, then the whole classification as a monospace table, behind a
+ * single spoiler unless `spoiler` is false.
  */
 export function renderResults(
   info: SeriesInfo,
@@ -98,22 +95,9 @@ export function renderResults(
 ): string {
   const heading = `## 🏁 ${info.name} — ${eventName} · ${KIND_LABEL[kind]} results`;
   if (result.rows.length === 0) return `${heading}\nNo classification published.`;
-  const rows = result.rows.map((r) => ({
-    pos: /^\d+$/.test(r.pos) ? `P${r.pos}` : r.pos,
-    name: r.name.slice(0, MAX_NAME).trim(),
-    team: r.team.slice(0, MAX_TEAM).trim(),
-    time: r.time,
-  }));
-  const width = (key: keyof (typeof rows)[number]): number =>
-    Math.max(...rows.map((r) => r[key].length));
-  const [pos, name, team, time] = [width("pos"), width("name"), width("team"), width("time")];
-  const lines = rows.map(
-    (r) =>
-      `\`${r.pos.padEnd(pos)} ${r.name.padEnd(name)} ${r.team.padEnd(team)} ${r.time.padStart(time)}\``,
+  const lines = formatTable(
+    result.rows.map((r) => [posLabel(r.pos), fitName(r.name), fitTeam(r.team), r.time]),
+    new Set([3]),
   );
-  const wrap = spoiler ? "||" : "";
-  const render = (shown: string[]): string => `${heading}\n${wrap}${shown.join("\n")}${wrap}`;
-  let shown = lines;
-  while (render(shown).length > MAX_CONTENT) shown = shown.slice(0, -1);
-  return render(shown);
+  return tableMessage(heading, lines, spoiler);
 }
