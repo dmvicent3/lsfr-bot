@@ -69,6 +69,17 @@ describe("refreshAll", () => {
     expect(repo.listSessions("wec")).toHaveLength(before);
   });
 
+  test("a 404 for this year keeps the previous sessions", async () => {
+    await refreshAll(repo, NOW, await sourceFetch());
+    const before = repo.listSessions("wec").length;
+    const all = await sourceFetch();
+    const wecGone: FetchFn = async (url, init) =>
+      url === sourceUrl(wecInfo, 2026) ? new Response("", { status: 404 }) : all(url, init);
+    const results = await refreshAll(repo, NOW, wecGone);
+    expect(results.find((r) => r.series === "wec")?.ok).toBe(false);
+    expect(repo.listSessions("wec")).toHaveLength(before);
+  });
+
   test("includes next year's events when published", async () => {
     const nextYear = [
       {

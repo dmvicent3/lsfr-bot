@@ -26,11 +26,13 @@ export async function refreshAll(
   return Promise.all(
     SERIES.map(async (info): Promise<RefreshResult> => {
       try {
-        const years = await Promise.all([
+        const [current, next] = await Promise.all([
           fetchSeries(info, year, fetchFn),
           fetchSeries(info, year + 1, fetchFn),
         ]);
-        repo.replaceSessions(info.key, applyRules(years.flat()), now.getTime());
+        // Next year 404s until it's published; this year missing means the source broke.
+        if (current.length === 0) throw new Error(`no ${year} schedule`);
+        repo.replaceSessions(info.key, applyRules([...current, ...next]), now.getTime());
         return { series: info.key, ok: true };
       } catch (err) {
         log.error("motorsport:refresh", `${info.key} failed, keeping previous schedule`, err);
