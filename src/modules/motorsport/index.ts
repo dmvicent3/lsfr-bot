@@ -8,6 +8,8 @@ import { motorsportMigrations } from "./repo.ts";
 export const motorsportModule: BotModule = {
   name: "motorsport",
   title: "🏁 Motorsport",
+  helpNote:
+    "Use 🔮 Predict on a pinned schedule to call the podium of a race or sprint before it starts: 5 pts per exact position, 2 for a podium driver in the wrong place, +5 for all three.",
   commands: [motorsportCommand],
   components: motorsportComponents,
   events: motorsportEvents,

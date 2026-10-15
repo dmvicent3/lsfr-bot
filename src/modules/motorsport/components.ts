@@ -1,7 +1,9 @@
 import { MessageFlags } from "discord.js";
-import type { ComponentHandler } from "../../core/module.ts";
+import { log } from "../../core/log.ts";
+import type { ComponentHandler, Ctx } from "../../core/module.ts";
 import { notFollowedText, setReminders, togglePings } from "./actions.ts";
-import { deleteSeriesChannel } from "./channels.ts";
+import { deleteSeriesChannel, fetchSeriesChannel, updatePinned } from "./channels.ts";
+import { predictPicker, savePick } from "./predict-actions.ts";
 import { groupEvents, withoutPinged } from "./decisions.ts";
 import { renderReminderPicker } from "./render.ts";
 import { MotorsportRepo } from "./repo.ts";
@@ -66,6 +68,76 @@ const reminders: ComponentHandler = {
   },
 };
 
+const asReply = (picker: Awaited<ReturnType<typeof predictPicker>>) =>
+  typeof picker === "string" ? { content: picker, components: [] } : picker;
+
+/** "Predict" on the pinned schedule, or a picker's button to switch to another session. */
+const predictMenu: ComponentHandler = {
+  id: "motorsport:predictmenu",
+  async handle(i, args, ctx) {
+    const series = seriesArg(args);
+    const sessionId = args[2];
+    // The live driver list may need fetching: acknowledge first.
+    await (sessionId === undefined
+      ? i.deferReply({ flags: MessageFlags.Ephemeral })
+      : i.deferUpdate());
+    const repo = new MotorsportRepo(ctx.db);
+    const picker = await predictPicker(
+      repo,
+      series,
+      args[1] ?? "",
+      sessionId,
+      i.user.id,
+      Date.now(),
+      fetch,
+    );
+    await i.editReply(asReply(picker));
+  },
+};
+
+/** Re-renders the pinned schedule so its prediction count is current. Best effort. */
+async function refreshPinned(ctx: Ctx, repo: MotorsportRepo, series: SeriesKey): Promise<void> {
+  try {
+    const f = repo.getFollowed(series);
+    if (!f) return;
+    const channel = await fetchSeriesChannel(await ctx.client.guilds.fetch(ctx.config.guildId), f);
+    if (channel) await updatePinned(channel, repo, f, Date.now());
+  } catch (err) {
+    log.error("motorsport:predict", `${series} pinned refresh failed`, err);
+  }
+}
+
+/** One of the picker's P1/P2/P3 selects: saves that position and re-renders the picker. */
+const predict: ComponentHandler = {
+  id: "motorsport:predict",
+  async handle(i, args, ctx) {
+    if (!i.isStringSelectMenu()) return;
+    const series = seriesArg(args);
+    const [, eventId = "", sessionId = "", index = ""] = args;
+    const repo = new MotorsportRepo(ctx.db);
+    const now = Date.now();
+    const outcome = savePick(
+      repo,
+      i.user.id,
+      series,
+      eventId,
+      sessionId,
+      Number(index),
+      i.values[0] ?? "",
+      now,
+    );
+    if (!outcome.ok) {
+      await i.update({ content: outcome.text, components: [] });
+      return;
+    }
+    await i.deferUpdate();
+    await i.editReply(
+      asReply(await predictPicker(repo, series, eventId, sessionId, i.user.id, now, fetch)),
+    );
+    if (outcome.completed) await refreshPinned(ctx, repo, series);
+  },
+};
+
 const unfollow: ComponentHandler = {
   id: "motorsport:unfollow",
   async handle(i, args, ctx) {
@@ -84,4 +156,11 @@ const unfollow: ComponentHandler = {
   },
 };
 
-export const motorsportComponents: ComponentHandler[] = [pings, remindMenu, reminders, unfollow];
+export const motorsportComponents: ComponentHandler[] = [
+  pings,
+  remindMenu,
+  reminders,
+  predictMenu,
+  predict,
+  unfollow,
+];

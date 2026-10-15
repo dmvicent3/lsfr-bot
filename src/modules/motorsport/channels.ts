@@ -155,7 +155,12 @@ async function renderPinned(
   now: number,
 ): Promise<void> {
   const event = currentEvent(repo.listSessions(f.series), now);
-  const payload = renderSchedule(seriesInfo(f.series), event, repo.weatherFor(f.series));
+  const payload = renderSchedule(
+    seriesInfo(f.series),
+    event,
+    repo.weatherFor(f.series),
+    event ? repo.predictionCounts(f.series, event.eventId) : new Map(),
+  );
   let message: Message;
   try {
     message = await channel.messages.fetch(f.pinnedMessageId);

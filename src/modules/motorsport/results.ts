@@ -8,6 +8,8 @@ export type ResultKind = "qualifying" | "sprint-qualifying" | "sprint" | "race";
 export interface ResultRow {
   /** "1".."20", or "–" for an unclassified finisher. */
   pos: string;
+  /** Stable across sessions (F1 car number, MotoGP rider id); names can change form. */
+  id: string;
   name: string;
   team: string;
   /** Winner's time, a gap ("+3.123", "+1 lap"), a lap time, or "DNF". */
@@ -25,6 +27,7 @@ export function isResultRows(value: unknown): value is ResultRow[] {
       (r) =>
         isRecord(r) &&
         isString(r["pos"]) &&
+        isString(r["id"]) &&
         isString(r["name"]) &&
         isString(r["team"]) &&
         isString(r["time"]),

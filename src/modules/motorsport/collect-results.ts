@@ -1,5 +1,6 @@
 import type { FetchFn } from "../../core/guards.ts";
 import { log } from "../../core/log.ts";
+import { renderPredictionResults } from "./predictions.ts";
 import type { MotorsportRepo, StoredResult } from "./repo.ts";
 import { renderResults, resultKind, resultSeries, resultsDue } from "./results.ts";
 import { seriesInfo } from "./series.ts";
@@ -35,6 +36,11 @@ export async function collectResults(
           rows: result.rows,
           postedAt: now,
         });
+        // After storing: a failure here must not re-post the results.
+        const predictions = repo.completePredictions(series, session.eventId, session.sessionId);
+        if (predictions.length > 0) {
+          await post(series, renderPredictionResults(predictions, result.rows));
+        }
       } catch (err) {
         log.error("motorsport:results", `${series} ${session.eventId}/${session.sessionId}`, err);
       }

@@ -5,12 +5,16 @@ import {
   ButtonStyle,
   ComponentType,
 } from "discord.js";
+import { isPredictable } from "./predictions.ts";
 import type { SeriesInfo } from "./series.ts";
 import type { EventSchedule, Session } from "./types.ts";
 import { type Forecast, formatWeather } from "./weather.ts";
 
 /** Forecasts keyed by `eventId/sessionId`. */
 export type WeatherMap = ReadonlyMap<string, Forecast>;
+
+/** Complete predictions per session id of the shown event. */
+export type PredictionCounts = ReadonlyMap<string, number>;
 
 export interface SchedulePayload {
   content: string;
@@ -25,10 +29,16 @@ function unix(date: Date): number {
   return Math.floor(date.getTime() / 1000);
 }
 
-function sessionLine(s: Session, weather: WeatherMap): string {
+function sessionLine(s: Session, weather: WeatherMap, predictions: PredictionCounts): string {
   const t = unix(s.start);
   const forecast = weather.get(`${s.eventId}/${s.sessionId}`);
-  const suffix = forecast ? ` · ${formatWeather(forecast)}` : "";
+  const count = predictions.get(s.sessionId) ?? 0;
+  const suffix = [
+    ...(forecast ? [formatWeather(forecast)] : []),
+    ...(count > 0 ? [`🔮 ${count} prediction${count === 1 ? "" : "s"}`] : []),
+  ]
+    .map((part) => ` · ${part}`)
+    .join("");
   return `${s.pingable ? "🔔" : "▫️"} **${s.title}** · <t:${t}:d> <t:${t}:t> (<t:${t}:R>)${suffix}`;
 }
 
@@ -36,17 +46,19 @@ function sessionLine(s: Session, weather: WeatherMap): string {
  * The full schedule when it fits in one message. Otherwise (e.g. a WRC rally with 30+
  * stages) only the pinged sessions are listed and the rest are counted.
  */
-function scheduleText(info: SeriesInfo, event: EventSchedule, weather: WeatherMap): string {
+function scheduleText(
+  info: SeriesInfo,
+  event: EventSchedule,
+  weather: WeatherMap,
+  predictions: PredictionCounts,
+): string {
+  const line = (s: Session): string => sessionLine(s, weather, predictions);
   const header = `## 🏁 ${info.name} — ${event.eventName}`;
-  const full = [header, ...event.sessions.map((s) => sessionLine(s, weather))].join("\n");
+  const full = [header, ...event.sessions.map(line)].join("\n");
   if (full.length <= MAX_CONTENT) return full;
   const pinged = event.sessions.filter((s) => s.pingable);
   const hidden = event.sessions.length - pinged.length;
-  const short = [
-    header,
-    ...pinged.map((s) => sessionLine(s, weather)),
-    `▫️ …and ${hidden} other sessions`,
-  ];
+  const short = [header, ...pinged.map(line), `▫️ …and ${hidden} other sessions`];
   return short.join("\n").slice(0, MAX_CONTENT);
 }
 
@@ -54,6 +66,7 @@ export function renderSchedule(
   info: SeriesInfo,
   event: EventSchedule | null,
   weather: WeatherMap = new Map(),
+  predictions: PredictionCounts = new Map(),
 ): SchedulePayload {
   const buttons: APIButtonComponentWithCustomId[] = [
     {
@@ -71,9 +84,17 @@ export function renderSchedule(
       style: ButtonStyle.Secondary,
     });
   }
+  if (event?.sessions.some((s) => isPredictable(info.key, s.sessionId))) {
+    buttons.push({
+      type: ComponentType.Button,
+      custom_id: `motorsport:predictmenu:${info.key}:${event.eventId}`,
+      label: "🔮 Predict",
+      style: ButtonStyle.Secondary,
+    });
+  }
   const components = [{ type: ComponentType.ActionRow as const, components: buttons }];
   const content = event
-    ? scheduleText(info, event, weather)
+    ? scheduleText(info, event, weather, predictions)
     : `## 🏁 ${info.name}\nNo upcoming events this season.`;
   return { content, components };
 }

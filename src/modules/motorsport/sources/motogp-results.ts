@@ -90,6 +90,7 @@ export function parseMotogp(kind: ResultKind, json: unknown, q1?: unknown): Sess
   return {
     rows: entries.map(({ r, pos, time }, i) => ({
       pos,
+      id: riderId(r),
       name: names[i] ?? "",
       team: isRecord(r["constructor"]) ? asText(r["constructor"]["name"]) : "",
       time,

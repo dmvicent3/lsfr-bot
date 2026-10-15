@@ -36,12 +36,14 @@ describe("OpenF1", () => {
     expect(result?.rows[21]).toMatchObject({ pos: "–", time: "DNF" });
     expect(result?.rows[0]).toEqual({
       pos: "1",
+      id: "3",
       name: "Verstappen",
       team: "Red Bull",
       time: "1:42:00.785",
     });
     expect(result?.rows[9]).toEqual({
       pos: "10",
+      id: "6",
       name: "Hadjar",
       team: "Red Bull",
       time: "+90.862",
@@ -53,6 +55,7 @@ describe("OpenF1", () => {
     const quali = parseOpenF1("qualifying", await fixture("openf1-result-quali"), drivers);
     expect(quali?.rows[0]).toEqual({
       pos: "1",
+      id: "3",
       name: "Verstappen",
       team: "Red Bull",
       time: "1:31.373",
@@ -150,12 +153,14 @@ describe("MotoGP", () => {
     expect(result?.rows.at(-1)).toMatchObject({ time: "DNF" });
     expect(result?.rows[0]).toEqual({
       pos: "1",
+      id: "ab06dbae-7d6e-47c3-b63f-b7ac6b7d3bcd",
       name: "Bezzecchi",
       team: "Aprilia",
       time: "40:46.582",
     });
     expect(result?.rows[1]).toEqual({
       pos: "2",
+      id: "58448742-f520-466a-a1a1-bf3286cce9c3",
       name: "Fernandez",
       team: "Aprilia",
       time: "+4.260",
@@ -177,6 +182,7 @@ describe("MotoGP", () => {
     expect(result?.rows[11]?.pos).toBe("12");
     expect(result?.rows[12]).toEqual({
       pos: "13",
+      id: "56475aa3-f3d1-485a-b6db-ca1149e1b6fa",
       name: "Rins",
       team: "Yamaha",
       time: "Q1 1:29.834",

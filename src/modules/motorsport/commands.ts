@@ -16,6 +16,7 @@ import { followErrorText } from "./errors.ts";
 import { currentEvent, sessionKey } from "./decisions.ts";
 import { formatLead, getLeadMinutes, LEAD_SETTING_KEY, parseLeadTime } from "./lead.ts";
 import { renderNext } from "./next.ts";
+import { seasonLeaderboard } from "./predict-actions.ts";
 import { renderSchedule } from "./render.ts";
 import { renderResults, resultSeries } from "./results.ts";
 import { fetchStandings, renderStandings, STANDINGS_SERIES } from "./standings.ts";
@@ -111,6 +112,18 @@ const data = new SlashCommandBuilder()
             { name: "Drivers", value: "drivers" },
             { name: "Constructors", value: "constructors" },
           ),
+      ),
+  )
+  .addSubcommand((sub) =>
+    sub
+      .setName("leaderboard")
+      .setDescription("Podium prediction standings this season")
+      .addStringOption((o) =>
+        o
+          .setName("series")
+          .setDescription("Series")
+          .setRequired(true)
+          .addChoices(...seriesChoices.filter((c) => resultSeries().includes(c.value))),
       ),
   )
   .addSubcommand((sub) =>
@@ -328,6 +341,13 @@ export const motorsportCommand: SlashCommand = {
         return results(i, ctx);
       case "standings":
         return standings(i);
+      case "leaderboard":
+        // Public, so the table can be argued over; mentions show names without pinging.
+        await i.reply({
+          content: seasonLeaderboard(new MotorsportRepo(ctx.db), seriesOption(i), Date.now()),
+          allowedMentions: { parse: [] },
+        });
+        return;
       default:
         throw new Error(`Unknown subcommand ${i.options.getSubcommand()}`);
     }

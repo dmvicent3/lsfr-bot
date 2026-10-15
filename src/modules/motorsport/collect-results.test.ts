@@ -57,6 +57,20 @@ test("posts a published result once and stores it", async () => {
   expect(repo.latestResult("f1")?.rows[0]?.name).toBe("Verstappen");
 });
 
+test("predictions are scored in a second post under the results", async () => {
+  repo.setPicks("u1", "f1", race.eventId, "race", ["3", "1", "4"], 0);
+  repo.setPicks("u2", "f1", race.eventId, "race", ["3", null, null], 0);
+  await collectResults(repo, AFTER_RACE, await openf1(true), post);
+  expect(posts).toHaveLength(2);
+  expect(posts[1]?.text).toStartWith("### 🔮 Predictions\n||<@u1> Verstappen · ");
+  expect(posts[1]?.text).not.toContain("u2");
+});
+
+test("no predictions, no second post", async () => {
+  await collectResults(repo, AFTER_RACE, await openf1(true), post);
+  expect(posts).toHaveLength(1);
+});
+
 test("nothing published yet: nothing posted or stored", async () => {
   await collectResults(repo, AFTER_RACE, await openf1(false), post);
   expect(posts).toEqual([]);

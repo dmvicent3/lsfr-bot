@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import {
+  isResultRows,
   RESULTS_WINDOW_MS,
   renderResults,
   resultKind,
@@ -61,9 +62,9 @@ describe("resultsDue", () => {
 describe("renderResults", () => {
   const result: SessionResult = {
     rows: [
-      { pos: "1", name: "Verstappen", team: "Red Bull", time: "1:42:00.785" },
-      { pos: "2", name: "Hamilton", team: "Ferrari", time: "+3.123" },
-      { pos: "10", name: "Antonelli", team: "Aston Martin", time: "+1 lap" },
+      { pos: "1", id: "1", name: "Verstappen", team: "Red Bull", time: "1:42:00.785" },
+      { pos: "2", id: "2", name: "Hamilton", team: "Ferrari", time: "+3.123" },
+      { pos: "10", id: "10", name: "Antonelli", team: "Aston Martin", time: "+1 lap" },
     ],
   };
 
@@ -81,7 +82,7 @@ describe("renderResults", () => {
 
   test("sprint qualifying label", () => {
     const text = renderResults(seriesInfo("f1"), "Singapore Grand Prix", "sprint-qualifying", {
-      rows: [{ pos: "1", name: "Verstappen", team: "Red Bull", time: "1:31.156" }],
+      rows: [{ pos: "1", id: "1", name: "Verstappen", team: "Red Bull", time: "1:31.156" }],
     });
     expect(text).toBe(
       "## 🏁 F1 — Singapore Grand Prix · Sprint Qualifying results\n||`P1 Verstappen Red Bull 1:31.156`||",
@@ -90,7 +91,9 @@ describe("renderResults", () => {
 
   test("long names are cut so the table stays narrow", () => {
     const text = renderResults(seriesInfo("motogp"), "X", "race", {
-      rows: [{ pos: "1", name: "Di Giannantonio Longname", team: "Ducati", time: "40:46.582" }],
+      rows: [
+        { pos: "1", id: "1", name: "Di Giannantonio Longname", team: "Ducati", time: "40:46.582" },
+      ],
     });
     expect(text).toContain("`P1 Di Giannantonio Ducati 40:46.582`");
   });
@@ -106,6 +109,7 @@ describe("renderResults", () => {
   test("a full grid fits in one message", () => {
     const rows = Array.from({ length: 30 }, (_, i) => ({
       pos: String(i + 1),
+      id: String(i),
       name: "Giovinazzi Long",
       team: "Aston Martin",
       time: "+1:23.456",
@@ -120,4 +124,10 @@ describe("renderResults", () => {
       "No classification",
     );
   });
+});
+
+test("stored rows need a driver id to be scored against", () => {
+  const row = { pos: "1", name: "Norris", team: "McLaren", time: "1:30.000" };
+  expect(isResultRows([{ ...row, id: "4" }])).toBe(true);
+  expect(isResultRows([row])).toBe(false);
 });

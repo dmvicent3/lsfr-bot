@@ -64,6 +64,7 @@ test("MotoGP qualifying walks season, event, category and session", async () => 
   const result = await fetchResult(q2, race, fetchFn);
   expect(result?.rows[0]).toEqual({
     pos: "1",
+    id: "58448742-f520-466a-a1a1-bf3286cce9c3",
     name: "Fernandez",
     team: "Aprilia",
     time: "1:28.852",

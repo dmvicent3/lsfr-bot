@@ -166,7 +166,7 @@ const stored = (sessionId: string, postedAt: number): StoredResult => ({
   eventName: "E",
   sessionId,
   kind: sessionId === "race" ? "race" : "qualifying",
-  rows: [{ pos: "1", name: "Norris", team: "McLaren", time: "1:30.000" }],
+  rows: [{ pos: "1", id: "1", name: "Norris", team: "McLaren", time: "1:30.000" }],
   postedAt,
 });
 
@@ -184,5 +184,45 @@ describe("results", () => {
     repo.insertResult(stored("race", 1));
     repo.insertResult(stored("race", 2));
     expect(repo.resultKeys("f1").size).toBe(1);
+  });
+});
+
+describe("predictions", () => {
+  test("picks round-trip per user and session; nothing picked is all null", () => {
+    expect(repo.getPicks("u1", "f1", "e", "race")).toEqual([null, null, null]);
+    repo.setPicks("u1", "f1", "e", "race", ["1", null, "3"], 1);
+    repo.setPicks("u1", "f1", "e", "race", ["1", "2", "3"], 2);
+    repo.setPicks("u2", "f1", "e", "sprint", ["4", null, null], 2);
+    expect(repo.getPicks("u1", "f1", "e", "race")).toEqual(["1", "2", "3"]);
+    expect(repo.getPicks("u2", "f1", "e", "race")).toEqual([null, null, null]);
+  });
+
+  test("only complete predictions count and get scored", () => {
+    repo.setPicks("u1", "f1", "e", "race", ["1", "2", "3"], 1);
+    repo.setPicks("u2", "f1", "e", "race", ["1", null, "3"], 1);
+    repo.setPicks("u3", "f1", "e", "sprint", ["1", "2", "3"], 1);
+    repo.setPicks("u4", "f1", "other", "race", ["1", "2", "3"], 1);
+    expect(repo.completePredictions("f1", "e", "race")).toEqual([
+      { userId: "u1", picks: ["1", "2", "3"] },
+    ]);
+    expect(repo.predictionCounts("f1", "e")).toEqual(
+      new Map([
+        ["race", 1],
+        ["sprint", 1],
+      ]),
+    );
+  });
+
+  test("season entries: complete race/sprint predictions with results posted since", () => {
+    repo.setPicks("u1", "f1", "e", "race", ["1", "2", "3"], 1);
+    repo.setPicks("u1", "f1", "e", "qualifying", ["1", "2", "3"], 1);
+    repo.setPicks("u2", "f1", "old", "race", ["1", "2", "3"], 1);
+    repo.setPicks("u3", "f1", "e", "race", ["1", null, null], 1);
+    repo.insertResult(stored("race", 100));
+    repo.insertResult(stored("qualifying", 100));
+    repo.insertResult({ ...stored("race", 5), eventId: "old" });
+    expect(repo.seasonPredictions("f1", 50)).toEqual([
+      { userId: "u1", picks: ["1", "2", "3"], rows: stored("race", 100).rows },
+    ]);
   });
 });

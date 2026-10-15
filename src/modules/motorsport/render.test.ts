@@ -41,11 +41,27 @@ describe("renderSchedule", () => {
     expect(lines.at(-1)?.startsWith("🔔 **Race**")).toBe(true);
   });
 
-  test("has season-pings and remind-me buttons", () => {
+  test("has season-pings, remind-me and predict buttons", () => {
     const { components } = renderSchedule(f1, event);
     expect(components).toHaveLength(1);
     const ids = (components[0]?.components ?? []).map((c) => ("custom_id" in c ? c.custom_id : ""));
-    expect(ids).toEqual(["motorsport:pings:f1", "motorsport:remindmenu:f1:chinese-grand-prix"]);
+    expect(ids).toEqual([
+      "motorsport:pings:f1",
+      "motorsport:remindmenu:f1:chinese-grand-prix",
+      "motorsport:predictmenu:f1:chinese-grand-prix",
+    ]);
+  });
+
+  test("no predict button for a series without a podium to predict", () => {
+    const wec = renderSchedule(seriesInfo("wec"), event);
+    expect(JSON.stringify(wec.components)).not.toContain("predictmenu");
+  });
+
+  test("prediction counts on their sessions", () => {
+    const { content } = renderSchedule(f1, event, new Map(), new Map([["race", 4]]));
+    expect(content.split("\n").at(-1)).toEndWith(") · 🔮 4 predictions");
+    const one = renderSchedule(f1, event, new Map(), new Map([["race", 1]]));
+    expect(one.content).toEndWith(" · 🔮 1 prediction");
   });
 
   test("no remind button when nothing in the event is pinged", () => {

@@ -113,6 +113,7 @@ export function parseOpenF1(
     const driver = byNumber.get(num(r["driver_number"]) ?? -1);
     return {
       pos: position === null ? "–" : String(position),
+      id: asText(r["driver_number"]),
       name: driver?.name ?? asText(r["driver_number"]),
       team: driver?.team ?? "",
       time: racing ? raceTime(r, first) : qualifyingTime(r, first, segment, prefix),
