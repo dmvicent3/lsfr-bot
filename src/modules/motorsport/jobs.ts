@@ -1,10 +1,4 @@
-import {
-  type Guild,
-  RateLimitError,
-  RESTJSONErrorCodes,
-  type Role,
-  type TextChannel,
-} from "discord.js";
+import { type Guild, RateLimitError, RESTJSONErrorCodes, type Role } from "discord.js";
 import { log } from "../../core/log.ts";
 import type { Ctx, Job } from "../../core/module.ts";
 import { safely } from "../../core/scheduler.ts";
@@ -13,6 +7,7 @@ import {
   fetchSeriesChannel,
   fetchSeriesRole,
   isDiscordError,
+  type SeriesChannel,
   updatePinned,
 } from "./channels.ts";
 import { collectResults } from "./collect-results.ts";
@@ -58,7 +53,7 @@ async function sendPings(
   guild: Guild,
   repo: MotorsportRepo,
   f: Followed,
-  channel: TextChannel,
+  channel: SeriesChannel,
   role: Role,
   leadMs: number,
   now: number,

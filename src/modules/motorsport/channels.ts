@@ -3,7 +3,9 @@ import {
   ChannelType,
   DiscordAPIError,
   type Guild,
+  type GuildBasedChannel,
   type Message,
+  type NewsChannel,
   PermissionFlagsBits,
   RESTJSONErrorCodes,
   type Role,
@@ -16,6 +18,17 @@ import type { Followed, MotorsportRepo } from "./repo.ts";
 import { seriesInfo, type SeriesInfo } from "./series.ts";
 
 const CATEGORY_NAME = "Motorsport";
+
+/** The series channel; admins may turn it into an announcement channel, which still works. */
+export type SeriesChannel = TextChannel | NewsChannel;
+
+export function isSeriesChannelType(type: ChannelType): boolean {
+  return type === ChannelType.GuildText || type === ChannelType.GuildAnnouncement;
+}
+
+function isSeriesChannel(channel: GuildBasedChannel | null): channel is SeriesChannel {
+  return channel !== null && isSeriesChannelType(channel.type);
+}
 
 export const BOT_CHANNEL_PERMISSIONS = [
   PermissionFlagsBits.ViewChannel,
@@ -96,10 +109,10 @@ export async function deleteSeriesChannel(guild: Guild, f: Followed): Promise<vo
 }
 
 /** The series' text channel, or null when it no longer exists. */
-export async function fetchSeriesChannel(guild: Guild, f: Followed): Promise<TextChannel | null> {
+export async function fetchSeriesChannel(guild: Guild, f: Followed): Promise<SeriesChannel | null> {
   try {
     const channel = await guild.channels.fetch(f.channelId);
-    return channel?.type === ChannelType.GuildText ? channel : null;
+    return isSeriesChannel(channel) ? channel : null;
   } catch (err) {
     if (isDiscordError(err, RESTJSONErrorCodes.UnknownChannel)) return null;
     throw err;
@@ -123,7 +136,7 @@ const pinnedLock = keyedLock();
  * it if someone deleted the original.
  */
 export async function updatePinned(
-  channel: TextChannel,
+  channel: SeriesChannel,
   repo: MotorsportRepo,
   f: Followed,
   now: number,
@@ -136,7 +149,7 @@ export async function updatePinned(
 }
 
 async function renderPinned(
-  channel: TextChannel,
+  channel: SeriesChannel,
   repo: MotorsportRepo,
   f: Followed,
   now: number,
