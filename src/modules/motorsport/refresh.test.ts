@@ -92,7 +92,15 @@ describe("refreshAll", () => {
       await sourceFetch({ [sourceUrl(f1Info, 2027)]: JSON.stringify(nextYear) }),
     );
     const sessions = repo.listSessions("f1");
-    expect(sessions.some((s) => s.eventId === "bahrain-2027" && s.pingable)).toBe(true);
-    expect(sessions.some((s) => s.eventId === "chinese-grand-prix")).toBe(true);
+    expect(sessions.some((s) => s.eventId === "2027-bahrain-2027" && s.pingable)).toBe(true);
+    expect(sessions.some((s) => s.eventId === "2026-chinese-grand-prix")).toBe(true);
   });
+});
+
+test("the same event in two seasons keeps both", async () => {
+  const f1Next = JSON.stringify(await fixture("tunous-formula1"));
+  await refreshAll(repo, NOW, await sourceFetch({ [sourceUrl(f1Info, 2027)]: f1Next }));
+  const both = repo.listSessions("f1").length;
+  await refreshAll(repo, NOW, await sourceFetch());
+  expect(both).toBe(repo.listSessions("f1").length * 2);
 });

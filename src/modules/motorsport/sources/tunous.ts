@@ -2,7 +2,8 @@ import { isRecord, isString } from "../../../core/guards.ts";
 import { type ParsedSession, type SeriesKey, SourceFormatError } from "../types.ts";
 import { byStart, parseDate } from "./dates.ts";
 
-export function parseTunous(series: SeriesKey, json: unknown): ParsedSession[] {
+/** Event IDs are prefixed with the season year: source ids repeat every season. */
+export function parseTunous(series: SeriesKey, year: number, json: unknown): ParsedSession[] {
   if (!Array.isArray(json)) throw new SourceFormatError(`${series}: expected an array of events`);
   const sessions: ParsedSession[] = [];
   for (const event of json as unknown[]) {
@@ -20,7 +21,7 @@ export function parseTunous(series: SeriesKey, json: unknown): ParsedSession[] {
       const where = `${series}/${event["id"]}/${stage["id"]}`;
       eventSessions.push({
         series,
-        eventId: event["id"],
+        eventId: `${year}-${event["id"]}`,
         eventName: event["title"],
         sessionId: stage["id"],
         title: stage["title"],

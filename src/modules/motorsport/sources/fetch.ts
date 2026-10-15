@@ -20,5 +20,7 @@ export async function fetchSeries(
   if (res.status === 404) return [];
   if (!res.ok) throw new Error(`${url} returned ${res.status}`);
   const json: unknown = await res.json();
-  return info.source === "tunous" ? parseTunous(info.key, json) : parseSportstimes(info.key, json);
+  return info.source === "tunous"
+    ? parseTunous(info.key, year, json)
+    : parseSportstimes(info.key, year, json);
 }

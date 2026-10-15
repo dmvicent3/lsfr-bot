@@ -5,8 +5,8 @@ import { parseTunous } from "./tunous.ts";
 
 describe("parseTunous", () => {
   test("F1 sprint weekend sessions and significance", async () => {
-    const sessions = parseTunous("f1", await fixture("tunous-formula1"));
-    const china = sessions.filter((s) => s.eventId === "chinese-grand-prix");
+    const sessions = parseTunous("f1", 2026, await fixture("tunous-formula1"));
+    const china = sessions.filter((s) => s.eventId === "2026-chinese-grand-prix");
     expect(china.map((s) => s.sessionId)).toEqual([
       "practice-1",
       "sprint-qualification",
@@ -20,16 +20,16 @@ describe("parseTunous", () => {
   });
 
   test("skips cancelled events", async () => {
-    const sessions = parseTunous("f1", await fixture("tunous-formula1"));
+    const sessions = parseTunous("f1", 2026, await fixture("tunous-formula1"));
     const ids = new Set(sessions.map((s) => s.eventId));
-    expect(ids.has("bahrain-grand-prix")).toBe(false);
-    expect(ids.has("saudi-arabian-grand-prix")).toBe(false);
+    expect(ids.has("2026-bahrain-grand-prix")).toBe(false);
+    expect(ids.has("2026-saudi-arabian-grand-prix")).toBe(false);
   });
 
   test("WEC times and event name", async () => {
     const fp1 = find(
-      parseTunous("wec", await fixture("tunous-wec")),
-      "6-hours-of-imola",
+      parseTunous("wec", 2026, await fixture("tunous-wec")),
+      "2026-6-hours-of-imola",
       "practice-1",
     );
     expect(fp1.start.toISOString()).toBe("2026-04-17T08:15:00.000Z");
@@ -39,15 +39,15 @@ describe("parseTunous", () => {
 
   test("WRC stage start", async () => {
     const ss1 = find(
-      parseTunous("wrc", await fixture("tunous-wrc")),
-      "wrc-rallye-monte-carlo-2026",
+      parseTunous("wrc", 2026, await fixture("tunous-wrc")),
+      "2026-wrc-rallye-monte-carlo-2026",
       "ss1",
     );
     expect(ss1.start.toISOString()).toBe("2026-01-22T15:05:00.000Z");
   });
 
   test("rejects a wrong shape", () => {
-    expect(() => parseTunous("f1", [{ id: 1 }])).toThrow(SourceFormatError);
-    expect(() => parseTunous("f1", { a: 1 })).toThrow(SourceFormatError);
+    expect(() => parseTunous("f1", 2026, [{ id: 1 }])).toThrow(SourceFormatError);
+    expect(() => parseTunous("f1", 2026, { a: 1 })).toThrow(SourceFormatError);
   });
 });
