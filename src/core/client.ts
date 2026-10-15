@@ -7,6 +7,7 @@ import {
   REST,
   Routes,
   type Interaction,
+  type RepliableInteraction,
 } from "discord.js";
 import type { Config } from "./config.ts";
 import { log } from "./log.ts";
@@ -65,15 +66,32 @@ export async function startBot(
   return client;
 }
 
+/**
+ * Buttons on old messages (e.g. from the previous bot) or a command Discord still lists
+ * after it was removed: answer, instead of leaving "This interaction failed".
+ */
+async function replyStale(
+  interaction: RepliableInteraction,
+  what: "button" | "command",
+): Promise<void> {
+  await interaction.reply({
+    content: `This ${what} doesn't work any more. Try /help for what Gork can do now.`,
+    flags: MessageFlags.Ephemeral,
+  });
+}
+
 async function routeInteraction(interaction: Interaction, router: Router, ctx: Ctx): Promise<void> {
   try {
     if (interaction.isChatInputCommand()) {
-      await router.command(interaction.commandName)?.execute(interaction, ctx);
+      const command = router.command(interaction.commandName);
+      if (command) await command.execute(interaction, ctx);
+      else await replyStale(interaction, "command");
     } else if (interaction.isAutocomplete()) {
       await router.command(interaction.commandName)?.autocomplete?.(interaction, ctx);
     } else if (interaction.isMessageComponent()) {
       const route = router.component(interaction.customId);
-      await route?.handler.handle(interaction, route.args, ctx);
+      if (route) await route.handler.handle(interaction, route.args, ctx);
+      else await replyStale(interaction, "button");
     }
   } catch (err) {
     log.error("core:interaction", "handler failed", err);
