@@ -220,7 +220,8 @@ export class MotorsportRepo {
     this.db.transaction(() => {
       this.db.run("DELETE FROM motorsport_followed WHERE series = ?", [s]);
       this.db.run("DELETE FROM motorsport_one_off WHERE series = ?", [s]);
-      this.db.run("DELETE FROM motorsport_sent_pings WHERE series = ?", [s]);
+      // Keep the sent markers (a re-follow must not re-ping); the messages went with the channel.
+      this.db.run("UPDATE motorsport_sent_pings SET message_id = NULL WHERE series = ?", [s]);
     })();
   }
 

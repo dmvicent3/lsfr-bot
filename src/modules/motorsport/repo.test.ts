@@ -111,6 +111,16 @@ test("deleteSeries removes only that series", () => {
   repo.insertFollowed(followed);
   repo.insertFollowed({ ...followed, series: "wec" });
   repo.toggleOneOff("u1", "f1", "e", "race");
+  repo.deleteSeries("f1");
+  expect(repo.getFollowed("f1")).toBeNull();
+  expect(repo.getFollowed("wec")).not.toBeNull();
+  expect(repo.oneOffUsers("f1", "e", "race")).toEqual([]);
+});
+
+test("deleteSeries remembers sent pings so a re-follow doesn't repeat them", () => {
+  repo.insertFollowed(followed);
+  repo.insertFollowed({ ...followed, series: "wec" });
+  repo.toggleOneOff("u1", "f1", "e", "race");
   repo.insertSentPing({
     series: "f1",
     eventId: "e",
@@ -120,10 +130,9 @@ test("deleteSeries removes only that series", () => {
     deleteAt: 1,
   });
   repo.deleteSeries("f1");
-  expect(repo.getFollowed("f1")).toBeNull();
-  expect(repo.getFollowed("wec")).not.toBeNull();
-  expect(repo.oneOffUsers("f1", "e", "race")).toEqual([]);
-  expect(repo.sentKeys("f1").size).toBe(0);
+  expect(repo.sentKeys("f1")).toEqual(new Set(["e/s"]));
+  // The message went with the channel: nothing left for cleanup to delete.
+  expect(repo.duePingDeletes(2)).toEqual([]);
 });
 
 describe("per-user reminder sets", () => {
