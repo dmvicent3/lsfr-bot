@@ -1,4 +1,4 @@
-import type { Turn } from "../../core/llm.ts";
+import type { InlineImage, Turn } from "../../core/llm.ts";
 
 const MENTION = /<@!?\d+>/g;
 
@@ -13,6 +13,7 @@ export interface ChainMessage {
   fromBot: boolean;
   author: string;
   text: string;
+  images?: InlineImage[];
 }
 
 /**
@@ -48,13 +49,18 @@ export async function collectChain<M>(
 export function buildConversation(chain: ChainMessage[]): Turn[] {
   const turns: Turn[] = [];
   for (const m of chain) {
-    const text = stripMentions(m.text);
+    const images = m.images ?? [];
+    const text = stripMentions(m.text) || (images.length > 0 ? "(sent an image)" : "");
     if (!text) continue;
     const role = m.fromBot ? "model" : "user";
     const line = m.fromBot ? text : `${m.author}: ${text}`;
     const last = turns.at(-1);
-    if (last?.role === role) last.text += `\n${line}`;
-    else turns.push({ role, text: line });
+    if (last?.role === role) {
+      last.text += `\n${line}`;
+      if (images.length > 0) last.images = [...(last.images ?? []), ...images];
+    } else {
+      turns.push({ role, text: line, ...(images.length > 0 ? { images } : {}) });
+    }
   }
   if (turns[0]?.role === "model") turns.unshift({ role: "user", text: "(earlier conversation)" });
   return turns;

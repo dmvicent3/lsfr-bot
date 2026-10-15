@@ -15,15 +15,29 @@ function responseText(body: unknown): string {
     .join("");
 }
 
+/** Image bytes sent inline, base64-encoded. */
+export interface InlineImage {
+  mimeType: string;
+  data: string;
+}
+
 export interface Turn {
   role: "user" | "model";
   text: string;
+  images?: InlineImage[];
+}
+
+function turnParts(t: Turn): unknown[] {
+  return [
+    ...(t.text ? [{ text: t.text }] : []),
+    ...(t.images ?? []).map((i) => ({ inline_data: { mime_type: i.mimeType, data: i.data } })),
+  ];
 }
 
 /** One prompt, or a whole conversation (oldest first, ending with the user's turn). */
 export async function generate(
   prompt: string | Turn[],
-  opts: { apiKey: string; model: string; fetchFn?: FetchFn },
+  opts: { apiKey: string; model: string; system?: string; fetchFn?: FetchFn },
 ): Promise<string> {
   const turns: Turn[] = typeof prompt === "string" ? [{ role: "user", text: prompt }] : prompt;
   const fetchFn = opts.fetchFn ?? fetch;
@@ -32,7 +46,8 @@ export async function generate(
     method: "POST",
     headers: { "content-type": "application/json", "x-goog-api-key": opts.apiKey },
     body: JSON.stringify({
-      contents: turns.map((t) => ({ role: t.role, parts: [{ text: t.text }] })),
+      ...(opts.system ? { system_instruction: { parts: [{ text: opts.system }] } } : {}),
+      contents: turns.map((t) => ({ role: t.role, parts: turnParts(t) })),
     }),
     signal: AbortSignal.timeout(60_000),
   });

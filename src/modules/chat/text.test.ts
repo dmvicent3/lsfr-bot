@@ -108,3 +108,30 @@ describe("splitMessage", () => {
 
   test("empty text gives no chunks", () => expect(splitMessage("")).toEqual([]));
 });
+
+describe("buildConversation with images", () => {
+  const png = { mimeType: "image/png", data: "QUJD" };
+
+  test("images ride on the turn of the message they came with", () => {
+    expect(buildConversation([{ ...user("<@9> what car?"), images: [png] }])).toEqual([
+      { role: "user", text: "12x: what car?", images: [png] },
+    ]);
+  });
+
+  test("an image with no text still makes a turn", () => {
+    expect(buildConversation([{ ...user("<@9>"), images: [png] }])).toEqual([
+      { role: "user", text: "12x: (sent an image)", images: [png] },
+    ]);
+  });
+
+  test("merged neighbours keep every image", () => {
+    const jpg = { mimeType: "image/jpeg", data: "REVG" };
+    const turns = buildConversation([
+      { ...user("look", "ana"), images: [png] },
+      { ...user("<@9> and this?"), images: [jpg] },
+    ]);
+    expect(turns).toEqual([
+      { role: "user", text: "ana: look\n12x: and this?", images: [png, jpg] },
+    ]);
+  });
+});

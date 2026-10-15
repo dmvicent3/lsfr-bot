@@ -88,3 +88,33 @@ test("LLM requests time out", async () => {
   });
   expect(signal).toBeInstanceOf(AbortSignal);
 });
+
+test("sends the system instruction and inline images", async () => {
+  let sent: unknown;
+  await generate(
+    [{ role: "user", text: "what is this?", images: [{ mimeType: "image/png", data: "QUJD" }] }],
+    {
+      apiKey: "k",
+      model: "m",
+      system: "You are Gork.",
+      fetchFn: async (_url, init) => {
+        sent = typeof init?.body === "string" ? JSON.parse(init.body) : null;
+        return new Response(
+          JSON.stringify({ candidates: [{ content: { parts: [{ text: "a" }] } }] }),
+        );
+      },
+    },
+  );
+  expect(sent).toEqual({
+    system_instruction: { parts: [{ text: "You are Gork." }] },
+    contents: [
+      {
+        role: "user",
+        parts: [
+          { text: "what is this?" },
+          { inline_data: { mime_type: "image/png", data: "QUJD" } },
+        ],
+      },
+    ],
+  });
+});
