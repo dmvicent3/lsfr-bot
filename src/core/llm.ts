@@ -15,16 +15,25 @@ function responseText(body: unknown): string {
     .join("");
 }
 
+export interface Turn {
+  role: "user" | "model";
+  text: string;
+}
+
+/** One prompt, or a whole conversation (oldest first, ending with the user's turn). */
 export async function generate(
-  prompt: string,
+  prompt: string | Turn[],
   opts: { apiKey: string; model: string; fetchFn?: FetchFn },
 ): Promise<string> {
+  const turns: Turn[] = typeof prompt === "string" ? [{ role: "user", text: prompt }] : prompt;
   const fetchFn = opts.fetchFn ?? fetch;
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${opts.model}:generateContent`;
   const res = await fetchFn(url, {
     method: "POST",
     headers: { "content-type": "application/json", "x-goog-api-key": opts.apiKey },
-    body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }] }),
+    body: JSON.stringify({
+      contents: turns.map((t) => ({ role: t.role, parts: [{ text: t.text }] })),
+    }),
     signal: AbortSignal.timeout(60_000),
   });
   if (!res.ok) {

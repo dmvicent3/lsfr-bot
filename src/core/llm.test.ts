@@ -27,6 +27,34 @@ describe("generate", () => {
     expect(seen.key).toBe("k");
   });
 
+  test("sends a conversation as Gemini contents", async () => {
+    let sent: unknown;
+    await generate(
+      [
+        { role: "user", text: "A" },
+        { role: "model", text: "B" },
+        { role: "user", text: "what did I type?" },
+      ],
+      {
+        apiKey: "k",
+        model: "m",
+        fetchFn: async (_url, init) => {
+          sent = typeof init?.body === "string" ? JSON.parse(init.body) : null;
+          return new Response(
+            JSON.stringify({ candidates: [{ content: { parts: [{ text: "A" }] } }] }),
+          );
+        },
+      },
+    );
+    expect(sent).toEqual({
+      contents: [
+        { role: "user", parts: [{ text: "A" }] },
+        { role: "model", parts: [{ text: "B" }] },
+        { role: "user", parts: [{ text: "what did I type?" }] },
+      ],
+    });
+  });
+
   test("rejects on a non-OK status", async () => {
     const err = await generate("hi", {
       apiKey: "k",

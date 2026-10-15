@@ -2,22 +2,23 @@ import { Events, Message } from "discord.js";
 import { generate } from "../../core/llm.ts";
 import { log } from "../../core/log.ts";
 import type { BotModule, Ctx } from "../../core/module.ts";
-import { buildPrompt, splitMessage, stripMentions } from "./text.ts";
+import { buildConversation, collectChain, splitMessage } from "./text.ts";
 
-async function referencedContent(message: Message): Promise<string | null> {
-  if (!message.reference?.messageId) return null;
-  try {
-    return (await message.fetchReference()).content.trim();
-  } catch (err) {
-    log.error("chat", "could not fetch the replied-to message", err);
-    return null;
-  }
-}
+const parentOf = async (m: Message): Promise<Message | null> =>
+  m.reference?.messageId ? m.fetchReference() : null;
 
 async function onMessage(ctx: Ctx, message: Message): Promise<void> {
   const me = ctx.client.user;
   if (message.author.bot || !me || !message.mentions.users.has(me.id)) return;
-  const prompt = buildPrompt(stripMentions(message.content), await referencedContent(message));
+  const chain = await collectChain(message, parentOf);
+  const prompt = buildConversation(
+    chain.map((m) => ({
+      fromBot: m.author.id === me.id,
+      author: m.member?.displayName ?? m.author.displayName,
+      text: m.content,
+    })),
+  );
+  if (prompt.length === 0) return;
   try {
     if ("sendTyping" in message.channel) await message.channel.sendTyping();
     const answer = await generate(prompt, {
@@ -35,7 +36,7 @@ export const chatModule: BotModule = {
   name: "chat",
   title: "💬 Chat",
   helpNote:
-    "Mention @Gork with a question (or reply to a message while mentioning it) for an AI answer.",
+    "Mention @Gork with a question for an AI answer. Reply to its answer (anyone can) to keep the conversation going; it remembers the reply chain.",
   events: [
     {
       event: Events.MessageCreate,
