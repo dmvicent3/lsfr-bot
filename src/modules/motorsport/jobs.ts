@@ -1,0 +1,151 @@
+import { type Guild, RESTJSONErrorCodes, type Role, type TextChannel } from "discord.js";
+import { log } from "../../core/log.ts";
+import type { Ctx, Job } from "../../core/module.ts";
+import { safely } from "../../core/scheduler.ts";
+import {
+  deleteSeriesChannel,
+  fetchSeriesChannel,
+  fetchSeriesRole,
+  isDiscordError,
+  updatePinned,
+} from "./channels.ts";
+import { currentEvent, PING_DELETE_AFTER_MS, sessionsToPing, shouldRename } from "./decisions.ts";
+import { getLeadMinutes } from "./lead.ts";
+import { refreshAll } from "./refresh.ts";
+import { renderPing } from "./render.ts";
+import { type Followed, MotorsportRepo } from "./repo.ts";
+import { seriesInfo } from "./series.ts";
+import { channelName } from "./time.ts";
+
+async function guildOf(ctx: Ctx): Promise<Guild> {
+  return ctx.client.guilds.fetch(ctx.config.guildId);
+}
+
+const refresh: Job = {
+  name: "refresh",
+  cron: "0 */6 * * *",
+  runOnStart: true,
+  async run(ctx) {
+    const repo = new MotorsportRepo(ctx.db);
+    const now = new Date();
+    const results = await refreshAll(repo, now);
+    log.info(
+      "motorsport:refresh",
+      results.map((r) => `${r.series}:${r.ok ? "ok" : "failed"}`).join(" "),
+    );
+    const guild = await guildOf(ctx);
+    for (const f of repo.listFollowed()) {
+      await safely(`motorsport:refresh:${f.series}`, async () => {
+        const channel = await fetchSeriesChannel(guild, f);
+        if (channel) await updatePinned(channel, repo, f, now.getTime());
+      });
+    }
+  },
+};
+
+async function sendPings(
+  guild: Guild,
+  repo: MotorsportRepo,
+  f: Followed,
+  channel: TextChannel,
+  role: Role,
+  leadMs: number,
+  now: number,
+): Promise<void> {
+  const due = sessionsToPing(repo.listSessions(f.series), repo.sentKeys(f.series), leadMs, now);
+  if (due.length === 0) return;
+  await guild.members.fetch();
+  const roleMemberIds = new Set(role.members.keys());
+  for (const session of due) {
+    const payload = renderPing({
+      info: seriesInfo(f.series),
+      session,
+      roleId: role.id,
+      roleHasMembers: roleMemberIds.size > 0,
+      roleMemberIds,
+      oneOffUserIds: repo.oneOffUsers(f.series, session.eventId, session.sessionId),
+    });
+    const message = payload
+      ? await channel.send({ content: payload.content, allowedMentions: payload.allowedMentions })
+      : null;
+    repo.insertSentPing({
+      series: f.series,
+      eventId: session.eventId,
+      sessionId: session.sessionId,
+      channelId: channel.id,
+      messageId: message?.id ?? null,
+      deleteAt: session.start.getTime() + PING_DELETE_AFTER_MS,
+    });
+    repo.clearOneOff(f.series, session.eventId, session.sessionId);
+    log.info("motorsport:tick", `${f.series} ${session.eventId}/${session.sessionId} pinged`);
+  }
+}
+
+async function tickSeries(guild: Guild, repo: MotorsportRepo, f: Followed, leadMs: number) {
+  const now = Date.now();
+  const [channel, role] = await Promise.all([
+    fetchSeriesChannel(guild, f),
+    fetchSeriesRole(guild, f),
+  ]);
+  if (!channel || !role) {
+    log.info("motorsport:tick", `${f.series} channel or role was deleted, unfollowing`);
+    await deleteSeriesChannel(guild, f);
+    repo.deleteSeries(f.series);
+    return;
+  }
+
+  const sessions = repo.listSessions(f.series);
+  const desired = channelName(f.series, sessions, new Date(now));
+  if (shouldRename(f.channelName, desired, f.renamedAt, now)) {
+    await channel.setName(desired);
+    repo.updateFollowed(f.series, { channelName: desired, renamedAt: now });
+  }
+
+  await sendPings(guild, repo, f, channel, role, leadMs, now);
+
+  if ((currentEvent(sessions, now)?.eventId ?? null) !== f.pinnedEventId) {
+    await updatePinned(channel, repo, f, now);
+  }
+}
+
+const tick: Job = {
+  name: "tick",
+  cron: "* * * * *",
+  async run(ctx) {
+    const repo = new MotorsportRepo(ctx.db);
+    const followed = repo.listFollowed();
+    if (followed.length === 0) return;
+    const guild = await guildOf(ctx);
+    const leadMs = getLeadMinutes(ctx.db) * 60_000;
+    for (const f of followed) {
+      await safely(`motorsport:tick:${f.series}`, () => tickSeries(guild, repo, f, leadMs));
+    }
+  },
+};
+
+const cleanup: Job = {
+  name: "cleanup",
+  cron: "* * * * *",
+  async run(ctx) {
+    const repo = new MotorsportRepo(ctx.db);
+    const due = repo.duePingDeletes(Date.now());
+    if (due.length === 0) return;
+    const guild = await guildOf(ctx);
+    for (const ping of due) {
+      await safely(`motorsport:cleanup:${ping.series}`, async () => {
+        try {
+          const channel = await guild.channels.fetch(ping.channelId);
+          if (channel?.isTextBased()) await channel.messages.delete(ping.messageId);
+        } catch (err) {
+          const gone =
+            isDiscordError(err, RESTJSONErrorCodes.UnknownChannel) ||
+            isDiscordError(err, RESTJSONErrorCodes.UnknownMessage);
+          if (!gone) throw err;
+        }
+        repo.markPingDeleted(ping.series, ping.eventId, ping.sessionId);
+      });
+    }
+  },
+};
+
+export const motorsportJobs: Job[] = [refresh, tick, cleanup];
