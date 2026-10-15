@@ -12,10 +12,10 @@ import { parseTunous } from "./sources/tunous.ts";
 const NOW = new Date("2026-03-10T00:00:00Z");
 let repo: MotorsportRepo;
 
-/** Hourly forecast with the same values for every hour of 13–15 March 2026. */
+/** Hourly forecast with the same values for every hour of 13–31 March 2026. */
 function hourly(temp: number): unknown {
   const time: string[] = [];
-  for (let d = 13; d <= 15; d++) {
+  for (let d = 13; d <= 31; d++) {
     for (let h = 0; h < 24; h++) time.push(`2026-03-${d}T${String(h).padStart(2, "0")}:00`);
   }
   return {
@@ -28,11 +28,18 @@ function hourly(temp: number): unknown {
   };
 }
 
-async function weatherFetch(openMeteoStatus = 200, temp = 20): Promise<FetchFn> {
+async function weatherFetch(
+  openMeteoStatus = 200,
+  temp = 20,
+  failLatitude: string | null = null,
+): Promise<FetchFn> {
   const stF1 = JSON.stringify(await fixture("st-f1"));
   return async (url) => {
     if (url.includes("sportstimes/f1/main/_db/f1/2026.json")) return new Response(stF1);
     if (url.startsWith("https://api.open-meteo.com/")) {
+      if (failLatitude !== null && url.includes(`latitude=${failLatitude}`)) {
+        return new Response("", { status: 503 });
+      }
       return new Response(JSON.stringify(hourly(temp)), { status: openMeteoStatus });
     }
     return new Response("", { status: 404 });
@@ -65,4 +72,13 @@ test("a failing forecast keeps the previous weather", async () => {
   await refreshWeather(repo, NOW, await weatherFetch(200, 20));
   await refreshWeather(repo, NOW, await weatherFetch(500, 30));
   expect(repo.weatherFor("f1").get("2026-chinese-grand-prix/race")?.tempC).toBe(20);
+});
+
+test("one track failing keeps its previous weather without discarding the others", async () => {
+  const now = new Date("2026-03-14T00:00:00Z");
+  await refreshWeather(repo, now, await weatherFetch(200, 20));
+  await refreshWeather(repo, now, await weatherFetch(200, 30, "31.3807"));
+  const weather = repo.weatherFor("f1");
+  expect(weather.get("2026-chinese-grand-prix/race")?.tempC).toBe(20);
+  expect(weather.get("2026-japanese-grand-prix/race")?.tempC).toBe(30);
 });

@@ -69,12 +69,24 @@ export async function refreshWeather(
       fetchFn,
     );
     const coords = coordsByEvent(sessions, calendar);
+    const previous = repo.weatherFor("f1");
     const rows: { eventId: string; sessionId: string; forecast: Forecast }[] = [];
     for (const eventId of new Set(upcoming.map((s) => s.eventId))) {
       const where = coords.get(eventId);
       if (!where) continue;
-      const json = await requireJson(forecastUrl(where), fetchFn);
-      for (const s of upcoming.filter((x) => x.eventId === eventId)) {
+      const eventSessions = upcoming.filter((x) => x.eventId === eventId);
+      let json: unknown;
+      try {
+        json = await requireJson(forecastUrl(where), fetchFn);
+      } catch (err) {
+        log.error("motorsport:weather", `${eventId} failed, keeping its previous weather`, err);
+        for (const s of eventSessions) {
+          const forecast = previous.get(`${eventId}/${s.sessionId}`);
+          if (forecast) rows.push({ eventId, sessionId: s.sessionId, forecast });
+        }
+        continue;
+      }
+      for (const s of eventSessions) {
         const forecast = forecastAt(json, s.start);
         if (forecast) rows.push({ eventId, sessionId: s.sessionId, forecast });
       }
