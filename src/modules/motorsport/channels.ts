@@ -9,6 +9,7 @@ import {
   type Role,
   type TextChannel,
 } from "discord.js";
+import { keyedLock } from "../../core/scheduler.ts";
 import { currentEvent } from "./decisions.ts";
 import { renderSchedule } from "./render.ts";
 import type { Followed, MotorsportRepo } from "./repo.ts";
@@ -114,11 +115,27 @@ export async function fetchSeriesRole(guild: Guild, f: Followed): Promise<Role |
   }
 }
 
+/** Refresh and tick both update pinned schedules; one series at a time, or both re-post. */
+const pinnedLock = keyedLock();
+
 /**
  * Re-renders the pinned schedule for the event that is current at `now`. Re-posts and pins
  * it if someone deleted the original.
  */
 export async function updatePinned(
+  channel: TextChannel,
+  repo: MotorsportRepo,
+  f: Followed,
+  now: number,
+): Promise<void> {
+  await pinnedLock(f.series, async () => {
+    // Re-read: another run may have re-posted (and re-pointed) the message meanwhile.
+    const current = repo.getFollowed(f.series);
+    if (current) await renderPinned(channel, repo, current, now);
+  });
+}
+
+async function renderPinned(
   channel: TextChannel,
   repo: MotorsportRepo,
   f: Followed,

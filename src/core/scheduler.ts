@@ -32,3 +32,21 @@ export function startJobs(entries: { module: string; job: Job }[], ctx: Ctx): vo
     log.info(scope, `scheduled (${job.cron})`);
   }
 }
+
+/**
+ * A per-key mutex: calls sharing a key run one after another, other keys run freely. A
+ * call that throws still releases the key.
+ */
+export function keyedLock(): <T>(key: string, fn: () => Promise<T>) => Promise<T> {
+  const tails = new Map<string, Promise<unknown>>();
+  return async (key, fn) => {
+    const previous = tails.get(key) ?? Promise.resolve();
+    const run = previous.catch(() => undefined).then(fn);
+    tails.set(key, run);
+    try {
+      return await run;
+    } finally {
+      if (tails.get(key) === run) tails.delete(key);
+    }
+  };
+}

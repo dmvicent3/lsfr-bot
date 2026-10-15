@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { nonOverlapping, safely } from "./scheduler.ts";
+import { keyedLock, nonOverlapping, safely } from "./scheduler.ts";
 
 describe("safely", () => {
   test("resolves when the function throws", async () => {
@@ -26,5 +26,37 @@ describe("nonOverlapping", () => {
     expect(runs).toBe(2);
     release?.();
     await third;
+  });
+});
+
+describe("keyedLock", () => {
+  test("runs calls with the same key one after another", async () => {
+    const lock = keyedLock();
+    const order: string[] = [];
+    const step = (name: string, ms: number) =>
+      lock("f1", async () => {
+        order.push(`${name} start`);
+        await Bun.sleep(ms);
+        order.push(`${name} end`);
+      });
+    await Promise.all([step("a", 20), step("b", 0)]);
+    expect(order).toEqual(["a start", "a end", "b start", "b end"]);
+  });
+
+  test("different keys run in parallel, and a failure frees the key", async () => {
+    const lock = keyedLock();
+    const order: string[] = [];
+    await Promise.all([
+      lock("f1", async () => {
+        await Bun.sleep(20);
+        order.push("f1");
+      }),
+      lock("wec", async () => {
+        order.push("wec");
+      }),
+    ]);
+    expect(order).toEqual(["wec", "f1"]);
+    await lock("f1", () => Promise.reject(new Error("boom"))).catch(() => undefined);
+    expect(await lock("f1", async () => "ok")).toBe("ok");
   });
 });
