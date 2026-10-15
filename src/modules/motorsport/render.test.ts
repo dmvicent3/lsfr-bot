@@ -33,8 +33,9 @@ describe("renderSchedule", () => {
     const { content } = renderSchedule(f1, event);
     const lines = content.split("\n");
     expect(lines[0]).toBe("## 🏁 F1 — Chinese Grand Prix");
-    expect(lines.some((l) => l.startsWith("▫️ **Practice 1** — <t:"))).toBe(true);
-    expect(lines.some((l) => l.startsWith("🔔 **Race** — <t:"))).toBe(true);
+    expect(lines.some((l) => l.startsWith("▫️ **Practice 1** · <t:"))).toBe(true);
+    expect(lines.some((l) => l.startsWith("🔔 **Race** · <t:"))).toBe(true);
+    expect(lines.some((l) => /^🔔 \*\*Race\*\* · <t:\d+:d> <t:\d+:t>$/.test(l))).toBe(true);
     expect(lines.at(-1)).toBe("-# 🔔 = pinged");
   });
 
@@ -150,7 +151,7 @@ test("session lines carry the forecast when there is one", () => {
   const weather = new Map([["chinese-grand-prix/race", { tempC: 20, rainChance: 10, code: 1 }]]);
   const { content } = renderSchedule(f1, event, weather);
   const raceLine = content.split("\n").find((l) => l.startsWith("🔔 **Race**")) ?? "";
-  expect(raceLine.endsWith(" · 🌤️ 20°C · 💧10%")).toBe(true);
+  expect(raceLine.endsWith(" · 🌤️ 20°C 💧10%")).toBe(true);
   const fpLine = content.split("\n").find((l) => l.startsWith("▫️ **Practice 1**")) ?? "";
   expect(fpLine).not.toContain("💧");
 });

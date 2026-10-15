@@ -35,7 +35,7 @@ export function weatherEmoji(code: number): string {
 }
 
 export function formatWeather(f: Forecast): string {
-  return `${weatherEmoji(f.code)} ${Math.round(f.tempC)}°C · 💧${f.rainChance}%`;
+  return `${weatherEmoji(f.code)} ${Math.round(f.tempC)}°C 💧${f.rainChance}%`;
 }
 
 function numberAt(values: unknown, i: number): number | null {

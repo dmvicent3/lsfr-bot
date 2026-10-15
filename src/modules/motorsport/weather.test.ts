@@ -37,7 +37,7 @@ describe("forecastAt", () => {
 });
 
 test("formatWeather", () => {
-  expect(formatWeather({ tempC: 21.6, rainChance: 30, code: 2 })).toBe("🌤️ 22°C · 💧30%");
+  expect(formatWeather({ tempC: 21.6, rainChance: 30, code: 2 })).toBe("🌤️ 22°C 💧30%");
 });
 
 test("forecastUrl", () => {
