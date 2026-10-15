@@ -13,3 +13,7 @@ export function find(
   if (!match) throw new Error(`no session ${eventId}/${sessionId}`);
   return match;
 }
+
+export async function textFixture(name: string): Promise<string> {
+  return Bun.file(new URL(`./fixtures/${name}`, import.meta.url)).text();
+}

@@ -10,10 +10,13 @@ import {
   RESTJSONErrorCodes,
   type Role,
   type TextChannel,
+  ThreadAutoArchiveDuration,
+  type ThreadChannel,
 } from "discord.js";
 import { keyedLock } from "../../core/scheduler.ts";
 import { currentEvent } from "./decisions.ts";
 import { renderSchedule } from "./render.ts";
+import type { PostTarget } from "./post.ts";
 import type { Followed, MotorsportRepo } from "./repo.ts";
 import { seriesInfo, type SeriesInfo } from "./series.ts";
 
@@ -37,6 +40,22 @@ export const BOT_CHANNEL_PERMISSIONS = [
   PermissionFlagsBits.PinMessages,
   PermissionFlagsBits.ManageChannels,
   PermissionFlagsBits.ReadMessageHistory,
+  PermissionFlagsBits.CreatePublicThreads,
+  PermissionFlagsBits.SendMessagesInThreads,
+  PermissionFlagsBits.ManageThreads,
+];
+
+/** Everyone reads the channel and talks in the bot's weekend threads, nothing else. */
+const EVERYONE_ALLOW = [
+  PermissionFlagsBits.ViewChannel,
+  PermissionFlagsBits.ReadMessageHistory,
+  PermissionFlagsBits.SendMessagesInThreads,
+];
+const EVERYONE_DENY = [
+  PermissionFlagsBits.SendMessages,
+  PermissionFlagsBits.AddReactions,
+  PermissionFlagsBits.CreatePublicThreads,
+  PermissionFlagsBits.CreatePrivateThreads,
 ];
 
 export function isDiscordError(err: unknown, code: RESTJSONErrorCodes): boolean {
@@ -71,17 +90,7 @@ export async function createSeriesChannel(
       parent: category.id,
       topic: `${info.name} schedule. Use the 🔔 button on the pinned message for pings.`,
       permissionOverwrites: [
-        {
-          id: guild.roles.everyone.id,
-          allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.ReadMessageHistory],
-          deny: [
-            PermissionFlagsBits.SendMessages,
-            PermissionFlagsBits.AddReactions,
-            PermissionFlagsBits.CreatePublicThreads,
-            PermissionFlagsBits.CreatePrivateThreads,
-            PermissionFlagsBits.SendMessagesInThreads,
-          ],
-        },
+        { id: guild.roles.everyone.id, allow: EVERYONE_ALLOW, deny: EVERYONE_DENY },
         {
           id: me.id,
           allow: BOT_CHANNEL_PERMISSIONS,
@@ -173,5 +182,66 @@ async function renderPinned(
   repo.updateFollowed(f.series, {
     pinnedMessageId: message.id,
     pinnedEventId: event?.eventId ?? null,
+  });
+}
+
+const permissionsUpdated = new Set<string>();
+
+/**
+ * Brings a channel made before weekend threads up to date: people may talk in threads, the
+ * bot may create and manage them. Once per channel per process.
+ */
+export async function ensureThreadPermissions(channel: SeriesChannel): Promise<void> {
+  if (permissionsUpdated.has(channel.id)) return;
+  const me = await channel.guild.members.fetchMe();
+  await channel.permissionOverwrites.edit(channel.guild.roles.everyone, {
+    SendMessagesInThreads: true,
+  });
+  await channel.permissionOverwrites.edit(me, {
+    CreatePublicThreads: true,
+    SendMessagesInThreads: true,
+    ManageThreads: true,
+  });
+  permissionsUpdated.add(channel.id);
+}
+
+const MAX_THREAD_NAME = 100;
+
+/** Results and rulings jobs may both open a weekend's thread at once: one at a time. */
+const threadLock = keyedLock();
+
+/**
+ * The weekend's results thread: the stored one (unarchived if it went quiet), or a new one
+ * started from a short message in the channel when there's none or it was deleted.
+ */
+export async function eventThread(
+  channel: SeriesChannel,
+  repo: MotorsportRepo,
+  target: PostTarget,
+): Promise<ThreadChannel> {
+  return threadLock(`${target.series}/${target.eventId}`, async () => {
+    const stored = repo.getThread(target.series, target.eventId);
+    if (stored) {
+      try {
+        const thread = await channel.threads.fetch(stored);
+        if (thread) {
+          if (thread.archived) await thread.setArchived(false);
+          return thread;
+        }
+      } catch (err) {
+        if (!isDiscordError(err, RESTJSONErrorCodes.UnknownChannel)) throw err;
+      }
+    }
+    const about = target.series === "f1" ? "results & stewards' rulings" : "results";
+    const starter = await channel.send({
+      content: `🏁 **${target.eventName}**: ${about} in the thread below`,
+      allowedMentions: { parse: [] },
+    });
+    const thread = await starter.startThread({
+      name: `🏁 ${target.eventName}`.slice(0, MAX_THREAD_NAME),
+      autoArchiveDuration: ThreadAutoArchiveDuration.OneWeek,
+    });
+    repo.setThread(target.series, target.eventId, thread.id);
+    return thread;
   });
 }

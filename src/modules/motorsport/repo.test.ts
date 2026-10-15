@@ -226,3 +226,20 @@ describe("predictions", () => {
     ]);
   });
 });
+
+test("one thread per series weekend", () => {
+  expect(repo.getThread("f1", "e")).toBeNull();
+  repo.setThread("f1", "e", "t1");
+  repo.setThread("f1", "e", "t2");
+  repo.setThread("motogp", "e", "t3");
+  expect(repo.getThread("f1", "e")).toBe("t2");
+  expect(repo.getThread("motogp", "e")).toBe("t3");
+});
+
+test("handled rulings are remembered per series, posted or not", () => {
+  repo.markRuling("f1", "e", "https://fia/a.pdf", true, 1);
+  repo.markRuling("f1", "e", "https://fia/b.pdf", false, 1);
+  repo.markRuling("f1", "e", "https://fia/b.pdf", false, 2);
+  expect(repo.handledRulings("f1")).toEqual(new Set(["https://fia/a.pdf", "https://fia/b.pdf"]));
+  expect(repo.handledRulings("motogp")).toEqual(new Set());
+});

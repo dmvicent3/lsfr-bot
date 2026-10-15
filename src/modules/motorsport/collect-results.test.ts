@@ -6,12 +6,13 @@ import { coreMigrations } from "../../core/settings.ts";
 import { collectResults, latestResult } from "./collect-results.ts";
 import { motorsportMigrations, MotorsportRepo } from "./repo.ts";
 import { fixture } from "./sources/testing.ts";
-import type { SeriesKey, Session } from "./types.ts";
+import type { PostMessage, PostTarget } from "./post.ts";
+import type { Session } from "./types.ts";
 
 const RACE_START = Date.parse("2026-10-11T12:00:00Z");
 const AFTER_RACE = RACE_START + 3 * 3_600_000;
 let repo: MotorsportRepo;
-let posts: { series: SeriesKey; text: string }[];
+let posts: { place: PostTarget["place"]; text: string }[];
 
 const race: Session = {
   series: "f1",
@@ -36,8 +37,8 @@ async function openf1(published: boolean): Promise<FetchFn> {
   };
 }
 
-const post = async (series: SeriesKey, text: string): Promise<void> => {
-  posts.push({ series, text });
+const post = async (target: PostTarget, message: PostMessage): Promise<void> => {
+  posts.push({ place: target.place, text: message.content });
 };
 
 beforeEach(() => {
@@ -53,17 +54,19 @@ test("posts a published result once and stores it", async () => {
   await collectResults(repo, AFTER_RACE, fetchFn, post);
   await collectResults(repo, AFTER_RACE + 300_000, fetchFn, post);
   expect(posts).toHaveLength(1);
+  expect(posts[0]?.place).toBe("thread");
   expect(posts[0]?.text).toStartWith("## 🏁 F1 — Singapore Grand Prix · Race results\n||`P1 ");
   expect(repo.latestResult("f1")?.rows[0]?.name).toBe("Verstappen");
 });
 
-test("predictions are scored in a second post under the results", async () => {
+test("predictions are scored in a second post, in the channel", async () => {
   repo.setPicks("u1", "f1", race.eventId, "race", ["3", "1", "4"], 0);
   repo.setPicks("u2", "f1", race.eventId, "race", ["3", null, null], 0);
   await collectResults(repo, AFTER_RACE, await openf1(true), post);
   expect(posts).toHaveLength(2);
   expect(posts[1]?.text).toStartWith("### 🔮 Predictions\n||<@u1> Verstappen · ");
   expect(posts[1]?.text).not.toContain("u2");
+  expect(posts[1]?.place).toBe("channel");
 });
 
 test("no predictions, no second post", async () => {

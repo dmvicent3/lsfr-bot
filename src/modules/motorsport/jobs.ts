@@ -1,23 +1,29 @@
-import { type Guild, RateLimitError, type Role } from "discord.js";
+import { AttachmentBuilder, type Guild, RateLimitError, type Role } from "discord.js";
+import { generate } from "../../core/llm.ts";
 import { log } from "../../core/log.ts";
 import type { Ctx, Job } from "../../core/module.ts";
 import { safely } from "../../core/scheduler.ts";
 import {
   deleteSeriesChannel,
+  ensureThreadPermissions,
+  eventThread,
   fetchSeriesChannel,
   fetchSeriesRole,
   type SeriesChannel,
   updatePinned,
 } from "./channels.ts";
 import { collectResults } from "./collect-results.ts";
+import { collectRulings } from "./collect-rulings.ts";
 import { currentEvent, PING_DELETE_AFTER_MS, sessionsToPing, shouldRename } from "./decisions.ts";
 import { pingDeleteIsHopeless } from "./errors.ts";
 import { getLeadMinutes } from "./lead.ts";
 import { memberLoader } from "./members.ts";
+import type { Post } from "./post.ts";
 import { refreshAll, refreshWeather } from "./refresh.ts";
 import { renderPing } from "./render.ts";
 import { type Followed, MotorsportRepo } from "./repo.ts";
 import { seriesInfo } from "./series.ts";
+import { pdfText } from "./sources/pdf.ts";
 import { channelName } from "./time.ts";
 
 async function guildOf(ctx: Ctx): Promise<Guild> {
@@ -41,7 +47,9 @@ const refresh: Job = {
     for (const f of repo.listFollowed()) {
       await safely(`motorsport:refresh:${f.series}`, async () => {
         const channel = await fetchSeriesChannel(guild, f);
-        if (channel) await updatePinned(channel, repo, f, now.getTime());
+        if (!channel) return;
+        await updatePinned(channel, repo, f, now.getTime());
+        await ensureThreadPermissions(channel);
       });
     }
   },
@@ -159,20 +167,51 @@ const cleanup: Job = {
   },
 };
 
-/** Posts session results (spoilered) into followed series channels as they get published. */
+/** Sends into a followed series' channel or its weekend thread; unfollowed series are skipped. */
+function poster(ctx: Ctx, repo: MotorsportRepo): Post {
+  return async (target, message) => {
+    const f = repo.getFollowed(target.series);
+    if (!f) return;
+    const channel = await fetchSeriesChannel(await guildOf(ctx), f);
+    if (!channel) return;
+    const destination =
+      target.place === "thread" ? await eventThread(channel, repo, target) : channel;
+    await destination.send({
+      content: message.content,
+      files: (message.files ?? []).map(
+        (file) => new AttachmentBuilder(Buffer.from(file.data), { name: file.name }),
+      ),
+      allowedMentions: { parse: [] },
+    });
+  };
+}
+
+/** Posts session results (spoilered) into the weekend threads as they get published. */
 const results: Job = {
   name: "results",
   cron: "*/5 * * * *",
   runOnStart: true,
   async run(ctx) {
     const repo = new MotorsportRepo(ctx.db);
-    await collectResults(repo, Date.now(), fetch, async (series, content) => {
-      const f = repo.getFollowed(series);
-      if (!f) return;
-      const channel = await fetchSeriesChannel(await guildOf(ctx), f);
-      if (channel) await channel.send({ content, allowedMentions: { parse: [] } });
+    await collectResults(repo, Date.now(), fetch, poster(ctx, repo));
+  },
+};
+
+/** F1 stewards' rulings published after their session, into the weekend thread. */
+const rulings: Job = {
+  name: "rulings",
+  cron: "*/10 * * * *",
+  runOnStart: true,
+  async run(ctx) {
+    const repo = new MotorsportRepo(ctx.db);
+    await collectRulings(repo, Date.now(), {
+      fetchFn: fetch,
+      pdfText,
+      summarize: (prompt) =>
+        generate(prompt, { apiKey: ctx.config.geminiApiKey, model: ctx.config.geminiModel }),
+      post: poster(ctx, repo),
     });
   },
 };
 
-export const motorsportJobs: Job[] = [refresh, tick, cleanup, results];
+export const motorsportJobs: Job[] = [refresh, tick, cleanup, results, rulings];

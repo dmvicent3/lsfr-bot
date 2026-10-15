@@ -95,6 +95,24 @@ export const motorsportMigrations: Migration[] = [
       );
     `,
   },
+  {
+    id: "motorsport-005-threads-rulings",
+    sql: `
+      CREATE TABLE motorsport_threads (
+        series TEXT NOT NULL,
+        event_id TEXT NOT NULL,
+        thread_id TEXT NOT NULL,
+        PRIMARY KEY (series, event_id)
+      );
+      CREATE TABLE motorsport_rulings (
+        url TEXT PRIMARY KEY,
+        series TEXT NOT NULL,
+        event_id TEXT NOT NULL,
+        posted INTEGER NOT NULL,
+        handled_at INTEGER NOT NULL
+      );
+    `,
+  },
 ];
 
 interface PicksRow {
@@ -552,5 +570,38 @@ export class MotorsportRepo {
           rows: isResultRows(rows) ? rows : [],
         };
       });
+  }
+
+  /** The weekend's results thread. */
+  getThread(s: SeriesKey, eventId: string): string | null {
+    const row = this.db
+      .query<{ thread_id: string }, [string, string]>(
+        "SELECT thread_id FROM motorsport_threads WHERE series = ? AND event_id = ?",
+      )
+      .get(s, eventId);
+    return row?.thread_id ?? null;
+  }
+
+  setThread(s: SeriesKey, eventId: string, threadId: string): void {
+    this.db.run(
+      "INSERT OR REPLACE INTO motorsport_threads (series, event_id, thread_id) VALUES (?, ?, ?)",
+      [s, eventId, threadId],
+    );
+  }
+
+  /** A ruling document dealt with: posted, or looked at and not for posting. */
+  markRuling(s: SeriesKey, eventId: string, url: string, posted: boolean, now: number): void {
+    this.db.run(
+      `INSERT OR REPLACE INTO motorsport_rulings (url, series, event_id, posted, handled_at)
+       VALUES (?, ?, ?, ?, ?)`,
+      [url, s, eventId, posted ? 1 : 0, now],
+    );
+  }
+
+  handledRulings(s: SeriesKey): Set<string> {
+    const rows = this.db
+      .query<{ url: string }, [string]>("SELECT url FROM motorsport_rulings WHERE series = ?")
+      .all(s);
+    return new Set(rows.map((r) => r.url));
   }
 }

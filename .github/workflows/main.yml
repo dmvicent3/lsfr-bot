@@ -14,6 +14,7 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.4.3
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends poppler-utils
       - run: bun install --frozen-lockfile
       - run: bun run check
 

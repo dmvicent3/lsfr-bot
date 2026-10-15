@@ -1,5 +1,6 @@
 import type { FetchFn } from "../../core/guards.ts";
 import { log } from "../../core/log.ts";
+import type { Post } from "./post.ts";
 import { renderPredictionResults } from "./predictions.ts";
 import type { MotorsportRepo, StoredResult } from "./repo.ts";
 import { renderResults, resultKind, resultSeries, resultsDue } from "./results.ts";
@@ -9,13 +10,14 @@ import type { SeriesKey, Session } from "./types.ts";
 
 /**
  * Looks for the results of sessions that ended recently, posts each once and stores it.
- * Anything that fails (fetch or post) is left unstored, so the next run tries again.
+ * Anything that fails (fetch or post) is left unstored, so the next run tries again. Results
+ * go in the weekend thread; the (short) predictions block stays in the channel.
  */
 export async function collectResults(
   repo: MotorsportRepo,
   now: number,
   fetchFn: FetchFn,
-  post: (series: SeriesKey, text: string) => Promise<void>,
+  post: Post,
 ): Promise<void> {
   for (const series of resultSeries()) {
     const sessions = repo.listSessions(series);
@@ -23,10 +25,14 @@ export async function collectResults(
       const kind = resultKind(series, session.sessionId);
       if (kind === null) continue;
       const race = raceOf(sessions, session);
+      const { eventId, eventName } = session;
       try {
         const result = await fetchResult(session, race, fetchFn);
         if (result === null) continue;
-        await post(series, renderResults(seriesInfo(series), session.eventName, kind, result));
+        await post(
+          { series, eventId, eventName, place: "thread" },
+          { content: renderResults(seriesInfo(series), eventName, kind, result) },
+        );
         repo.insertResult({
           series,
           eventId: session.eventId,
@@ -39,7 +45,10 @@ export async function collectResults(
         // After storing: a failure here must not re-post the results.
         const predictions = repo.completePredictions(series, session.eventId, session.sessionId);
         if (predictions.length > 0) {
-          await post(series, renderPredictionResults(predictions, result.rows));
+          await post(
+            { series, eventId, eventName, place: "channel" },
+            { content: renderPredictionResults(predictions, result.rows) },
+          );
         }
       } catch (err) {
         log.error("motorsport:results", `${series} ${session.eventId}/${session.sessionId}`, err);
