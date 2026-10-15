@@ -69,3 +69,9 @@ describe("parseRuling", () => {
     expect(parseRuling("Final Race Classification\n1 Verstappen")).toBeNull();
   });
 });
+
+test("poppler's layout (the one in production) parses the same", async () => {
+  const xpdf = parseRuling(await textFixture("fia-ruling-no-penalty.txt"));
+  const poppler = parseRuling(await textFixture("fia-ruling-no-penalty-poppler.txt"));
+  expect(poppler).toEqual(xpdf);
+});
