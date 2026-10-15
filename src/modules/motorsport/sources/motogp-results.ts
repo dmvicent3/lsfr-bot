@@ -1,5 +1,5 @@
 import { asText, isRecord, isString } from "../../../core/guards.ts";
-import { lapsDown, RESULT_ROWS, type ResultKind, type SessionResult } from "../results.ts";
+import { lapsDown, type ResultKind, type SessionResult } from "../results.ts";
 
 export const MOTOGP_RESULTS = "https://api.motogp.pulselive.com/motogp";
 
@@ -35,6 +35,10 @@ export function motogpSessionId(sessions: unknown, kind: ResultKind): string | n
   return idOf(records(sessions).find(match));
 }
 
+export function motogpQ1SessionId(sessions: unknown): string | null {
+  return idOf(records(sessions).find((s) => s["type"] === "Q" && s["number"] === 1));
+}
+
 /** "01:28.852" → "1:28.852". */
 const trimTime = (t: unknown): string => (isString(t) ? t.replace(/^0(\d:)/, "$1") : "");
 
@@ -42,27 +46,47 @@ function timeOf(kind: ResultKind, r: Record<string, unknown>, first: boolean): s
   const gap = isRecord(r["gap"]) ? r["gap"] : {};
   if (r["position"] === null) return "DNF";
   if (first) {
-    return trimTime(
-      kind === "qualifying" ? (isRecord(r["best_lap"]) ? r["best_lap"]["time"] : "") : r["time"],
-    );
+    return kind === "qualifying" ? bestLap(r) : trimTime(r["time"]);
   }
   const laps = Number(gap["lap"] ?? 0);
   if (laps > 0) return lapsDown(laps);
   return isString(gap["first"]) ? `+${gap["first"]}` : "";
 }
 
-/** A v2 `classifications` response → the top rows, or null when not published yet. */
-export function parseMotogp(kind: ResultKind, json: unknown): SessionResult | null {
-  if (!isRecord(json)) return null;
-  const rows = records(json["classification"])
-    .toSorted(
-      (a, b) =>
-        (typeof a["position"] === "number" ? a["position"] : Infinity) -
-        (typeof b["position"] === "number" ? b["position"] : Infinity),
-    )
-    .slice(0, RESULT_ROWS);
-  if (rows.length === 0) return null;
-  const names = rows.map((r) => {
+const position = (r: Record<string, unknown>): number =>
+  typeof r["position"] === "number" ? r["position"] : Infinity;
+
+const byPosition = (json: unknown): Record<string, unknown>[] =>
+  isRecord(json)
+    ? records(json["classification"]).toSorted((a, b) => position(a) - position(b))
+    : [];
+
+const riderId = (r: Record<string, unknown>): string =>
+  isRecord(r["rider"]) ? asText(r["rider"]["id"]) : "";
+
+const bestLap = (r: Record<string, unknown>): string =>
+  trimTime(isRecord(r["best_lap"]) ? r["best_lap"]["time"] : "");
+
+/**
+ * A v2 `classifications` response → every row, or null when not published yet. For
+ * qualifying, pass Q1 too: riders knocked out there fill the grid below Q2.
+ */
+export function parseMotogp(kind: ResultKind, json: unknown, q1?: unknown): SessionResult | null {
+  const main = byPosition(json);
+  if (main.length === 0) return null;
+  const entries = main.map((r, i) => ({
+    r,
+    pos: Number.isFinite(position(r)) ? String(position(r)) : "–",
+    time: timeOf(kind, r, i === 0 && r["position"] === 1),
+  }));
+  if (kind === "qualifying") {
+    const inQ2 = new Set(main.map(riderId));
+    const knockedOut = byPosition(q1).filter((r) => !inQ2.has(riderId(r)));
+    for (const [k, r] of knockedOut.entries()) {
+      entries.push({ r, pos: String(main.length + k + 1), time: `Q1 ${bestLap(r)}` });
+    }
+  }
+  const names = entries.map(({ r }) => {
     const full = isRecord(r["rider"]) ? asText(r["rider"]["full_name"]) : "";
     const [first = "", ...rest] = full.split(" ");
     return { first, surname: rest.join(" ") || first };
@@ -70,14 +94,14 @@ export function parseMotogp(kind: ResultKind, json: unknown): SessionResult | nu
   const surnameCount = new Map<string, number>();
   for (const n of names) surnameCount.set(n.surname, (surnameCount.get(n.surname) ?? 0) + 1);
   return {
-    rows: rows.map((r, i) => {
+    rows: entries.map(({ r, pos, time }, i) => {
       const n = names[i] ?? { first: "", surname: "" };
       const shared = (surnameCount.get(n.surname) ?? 0) > 1;
       return {
-        pos: typeof r["position"] === "number" ? String(r["position"]) : "–",
+        pos,
         name: shared ? `${n.first.slice(0, 1)}. ${n.surname}` : n.surname,
         team: isRecord(r["constructor"]) ? asText(r["constructor"]["name"]) : "",
-        time: timeOf(kind, r, i === 0 && r["position"] === 1),
+        time,
       };
     }),
   };

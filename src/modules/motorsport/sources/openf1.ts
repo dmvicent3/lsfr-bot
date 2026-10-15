@@ -1,11 +1,5 @@
 import { asText, isRecord, isString } from "../../../core/guards.ts";
-import {
-  lapsDown,
-  RESULT_ROWS,
-  type ResultKind,
-  type ResultRow,
-  type SessionResult,
-} from "../results.ts";
+import { lapsDown, type ResultKind, type ResultRow, type SessionResult } from "../results.ts";
 
 export const OPENF1 = "https://api.openf1.org/v1";
 
@@ -69,19 +63,27 @@ function raceTime(r: Record<string, unknown>, first: boolean): string {
 }
 
 /**
- * Pole's lap in the final segment, everyone else's gap in that segment. A driver with no
- * lap there (OpenF1 flags them `dnf`) has "no time".
+ * Pole's lap in the final segment and everyone else's gap in it. Drivers without a lap
+ * there (knocked out earlier, or no lap set) show their own best from the last segment
+ * they did set one in, e.g. "Q2 1:32.784".
  */
-function qualifyingTime(r: Record<string, unknown>, first: boolean, segment: number): string {
+function qualifyingTime(
+  r: Record<string, unknown>,
+  first: boolean,
+  segment: number,
+  prefix: string,
+): string {
   if (r["dsq"] === true) return "DSQ";
   const durations = Array.isArray(r["duration"]) ? (r["duration"] as unknown[]) : [];
   const gaps = Array.isArray(r["gap_to_leader"]) ? (r["gap_to_leader"] as unknown[]) : [];
   const lap = num(durations[segment]);
-  if (lap === null) return "no time";
-  return first ? formatDuration(lap) : gapText(gaps[segment]);
+  if (lap !== null) return first ? formatDuration(lap) : gapText(gaps[segment]);
+  const own = lastSegment(durations);
+  const best = num(durations[own]);
+  return best === null ? "no time" : `${prefix}${own + 1} ${formatDuration(best)}`;
 }
 
-/** OpenF1 `session_result` + `drivers` → the top rows, or null when not published yet. */
+/** OpenF1 `session_result` + `drivers` → every row, or null when not published yet. */
 export function parseOpenF1(
   kind: ResultKind,
   results: unknown,
@@ -101,10 +103,10 @@ export function parseOpenF1(
   }
   const classified = (results as unknown[])
     .filter(isRecord)
-    .toSorted((a, b) => (num(a["position"]) ?? Infinity) - (num(b["position"]) ?? Infinity))
-    .slice(0, RESULT_ROWS);
+    .toSorted((a, b) => (num(a["position"]) ?? Infinity) - (num(b["position"]) ?? Infinity));
   const racing = kind === "race" || kind === "sprint";
   const segment = lastSegment(classified[0]?.["duration"]);
+  const prefix = kind === "sprint-qualifying" ? "SQ" : "Q";
   const rows: ResultRow[] = classified.map((r, i) => {
     const position = num(r["position"]);
     const first = i === 0 && position === 1;
@@ -113,7 +115,7 @@ export function parseOpenF1(
       pos: position === null ? "–" : String(position),
       name: driver?.name ?? asText(r["driver_number"]),
       team: driver?.team ?? "",
-      time: racing ? raceTime(r, first) : qualifyingTime(r, first, segment),
+      time: racing ? raceTime(r, first) : qualifyingTime(r, first, segment, prefix),
     };
   });
   return { rows };

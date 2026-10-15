@@ -82,7 +82,7 @@ const data = new SlashCommandBuilder()
   .addSubcommand((sub) =>
     sub
       .setName("results")
-      .setDescription("Latest qualifying, sprint or race results (spoilered)")
+      .setDescription("Latest qualifying, sprint or race results")
       .addStringOption((o) =>
         o
           .setName("series")
@@ -213,7 +213,13 @@ async function results(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> 
   const latest = await latestResult(new MotorsportRepo(ctx.db), series, Date.now(), fetch);
   await i.editReply(
     latest
-      ? renderResults(info, latest.eventName, latest.kind, { rows: latest.rows })
+      ? renderResults(
+          info,
+          latest.eventName,
+          latest.kind,
+          { rows: latest.rows },
+          { spoiler: false },
+        )
       : `No ${info.name} results yet.`,
   );
 }

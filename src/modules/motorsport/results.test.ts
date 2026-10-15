@@ -95,6 +95,26 @@ describe("renderResults", () => {
     expect(text).toContain("`P1 Di Giannantonio Ducati 40:46.582`");
   });
 
+  test("without the spoiler", () => {
+    const text = renderResults(seriesInfo("f1"), "Singapore Grand Prix", "race", result, {
+      spoiler: false,
+    });
+    expect(text).not.toContain("||");
+    expect(text.split("\n")[1]).toBe("`P1  Verstappen Red Bull     1:42:00.785`");
+  });
+
+  test("a full grid fits in one message", () => {
+    const rows = Array.from({ length: 30 }, (_, i) => ({
+      pos: String(i + 1),
+      name: "Giovinazzi Long",
+      team: "Aston Martin",
+      time: "+1:23.456",
+    }));
+    const text = renderResults(seriesInfo("f1"), "Singapore Grand Prix", "race", { rows });
+    expect(text.length).toBeLessThanOrEqual(2000);
+    expect(text).toContain("P30");
+  });
+
   test("no rows says so", () => {
     expect(renderResults(seriesInfo("f1"), "X", "race", { rows: [] })).toContain(
       "No classification",

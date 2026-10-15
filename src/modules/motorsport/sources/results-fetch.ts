@@ -6,6 +6,7 @@ import {
   MOTOGP_RESULTS,
   motogpCategoryId,
   motogpEventId,
+  motogpQ1SessionId,
   motogpSeasonId,
   motogpSessionId,
   parseMotogp,
@@ -54,9 +55,12 @@ export async function fetchResult(
   );
   const sessionId = motogpSessionId(sessions, kind);
   if (sessionId === null) return null;
-  const classification = await getJson(
-    `${MOTOGP_RESULTS}/v2/results/classifications?session=${sessionId}&test=false`,
-    fetchFn,
+  const classification = (id: string): Promise<unknown> =>
+    getJson(`${MOTOGP_RESULTS}/v2/results/classifications?session=${id}&test=false`, fetchFn);
+  const q1Id = kind === "qualifying" ? motogpQ1SessionId(sessions) : null;
+  return parseMotogp(
+    kind,
+    await classification(sessionId),
+    q1Id === null ? undefined : await classification(q1Id),
   );
-  return parseMotogp(kind, classification);
 }

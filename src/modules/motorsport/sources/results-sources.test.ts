@@ -32,7 +32,8 @@ describe("OpenF1", () => {
       await fixture("openf1-result-race"),
       await fixture("openf1-drivers"),
     );
-    expect(result?.rows).toHaveLength(10);
+    expect(result?.rows).toHaveLength(22);
+    expect(result?.rows[21]).toMatchObject({ pos: "–", time: "DNF" });
     expect(result?.rows[0]).toEqual({
       pos: "1",
       name: "Verstappen",
@@ -60,8 +61,10 @@ describe("OpenF1", () => {
     const sq = parseOpenF1("sprint-qualifying", await fixture("openf1-result-sq"), drivers);
     expect(sq?.rows[0]?.time).toBe("1:31.156");
     expect(sq?.rows[1]?.time).toBe("+0.120");
-    expect(sq?.rows[8]).toMatchObject({ pos: "9", time: "no time" });
-    expect(sq?.rows[9]).toMatchObject({ pos: "10", time: "no time" });
+    expect(sq?.rows[8]).toMatchObject({ pos: "9", time: "SQ2 1:32.947" });
+    expect(sq?.rows[9]).toMatchObject({ pos: "10", time: "SQ2 1:33.155" });
+    expect(quali?.rows[10]).toMatchObject({ pos: "11", time: "Q2 1:32.784" });
+    expect(quali?.rows).toHaveLength(22);
   });
 
   test("lapped and retired drivers", () => {
@@ -143,7 +146,8 @@ describe("MotoGP", () => {
 
   test("race classification", async () => {
     const result = parseMotogp("race", await fixture("motogp-RAC"));
-    expect(result?.rows).toHaveLength(10);
+    expect(result?.rows).toHaveLength(21);
+    expect(result?.rows.at(-1)).toMatchObject({ time: "DNF" });
     expect(result?.rows[0]).toEqual({
       pos: "1",
       name: "Bezzecchi",
@@ -159,12 +163,25 @@ describe("MotoGP", () => {
   });
 
   test("qualifying: best lap, gaps, shared surnames get an initial", async () => {
-    const result = parseMotogp("qualifying", await fixture("motogp-Q2"));
+    const result = parseMotogp(
+      "qualifying",
+      await fixture("motogp-Q2"),
+      await fixture("motogp-Q1"),
+    );
     expect(result?.rows[0]?.time).toBe("1:28.852");
     expect(result?.rows[1]?.time).toBe("+0.109");
     expect(result?.rows[2]?.name).toBe("Di Giannantonio");
     expect(result?.rows[3]?.name).toBe("M. Marquez");
     expect(result?.rows[7]?.name).toBe("A. Marquez");
+    expect(result?.rows).toHaveLength(22);
+    expect(result?.rows[11]?.pos).toBe("12");
+    expect(result?.rows[12]).toEqual({
+      pos: "13",
+      name: "Rins",
+      team: "Yamaha",
+      time: "Q1 1:29.834",
+    });
+    expect(result?.rows[21]).toMatchObject({ pos: "22", name: "Espargaro" });
   });
 
   test("lapped and retired riders", () => {

@@ -34,9 +34,6 @@ export function isResultRows(value: unknown): value is ResultRow[] {
 /** Results are looked for this long after a session ends, then given up on. */
 export const RESULTS_WINDOW_MS = 6 * 3_600_000;
 
-/** How many classified rows a post shows. */
-export const RESULT_ROWS = 10;
-
 export const lapsDown = (n: number): string => `+${n} lap${n === 1 ? "" : "s"}`;
 
 const RESULT_SESSIONS: Partial<Record<SeriesKey, Record<string, ResultKind>>> = {
@@ -86,21 +83,23 @@ export function resultsDue(
 
 const MAX_NAME = 15;
 const MAX_TEAM = 12;
+const MAX_CONTENT = 2000;
 
 /**
- * Heading in the clear, then a monospace table (one inline code span per row, so it
- * aligns) inside a single spoiler.
+ * Heading in the clear, then the whole classification as a monospace table (one inline code
+ * span per row, so it aligns), behind a single spoiler unless `spoiler` is false.
  */
 export function renderResults(
   info: SeriesInfo,
   eventName: string,
   kind: ResultKind,
   result: SessionResult,
+  { spoiler = true }: { spoiler?: boolean } = {},
 ): string {
   const heading = `## 🏁 ${info.name} — ${eventName} · ${KIND_LABEL[kind]} results`;
   if (result.rows.length === 0) return `${heading}\nNo classification published.`;
   const rows = result.rows.map((r) => ({
-    pos: `P${r.pos}`,
+    pos: /^\d+$/.test(r.pos) ? `P${r.pos}` : r.pos,
     name: r.name.slice(0, MAX_NAME).trim(),
     team: r.team.slice(0, MAX_TEAM).trim(),
     time: r.time,
@@ -112,5 +111,9 @@ export function renderResults(
     (r) =>
       `\`${r.pos.padEnd(pos)} ${r.name.padEnd(name)} ${r.team.padEnd(team)} ${r.time.padStart(time)}\``,
   );
-  return `${heading}\n||${lines.join("\n")}||`;
+  const wrap = spoiler ? "||" : "";
+  const render = (shown: string[]): string => `${heading}\n${wrap}${shown.join("\n")}${wrap}`;
+  let shown = lines;
+  while (render(shown).length > MAX_CONTENT) shown = shown.slice(0, -1);
+  return render(shown);
 }
