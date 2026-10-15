@@ -1,8 +1,7 @@
-version: "3.12.2"
 services:
-  app:
-    restart: always
+  bot:
     build: .
+    restart: always
+    env_file: .env
     volumes:
-      - .:/lsfr-bot_src
-    command: python app.py
+      - ./data:/app/data

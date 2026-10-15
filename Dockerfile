@@ -1,19 +1,10 @@
-FROM python:3.12.2-slim-bullseye
-# Set environment variables
-ENV PIP_DISABLE_PIP_VERSION_CHECK 1
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-COPY . /lsfr-bot_src
-WORKDIR /lsfr-bot_src
-RUN pip install -r deps.txt
+FROM oven/bun:1.4.3
+WORKDIR /app
 
-#FORMAT
-RUN python3 -m black *.py
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
 
-#TESTS
-#RUN python3 -m pytest -vv test_app.py
+COPY . .
+RUN bun run check
 
-#LINTING
-RUN python3 -m pylint app.py --disable=R,C
-RUN	python3 -m pylint utils.py --disable=R,C
-EXPOSE 8443
+CMD ["bun", "run", "start"]
