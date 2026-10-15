@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { channelName, formatCountdown } from "./time.ts";
+import { channelName, formatCountdown, shortLabel } from "./time.ts";
 import type { Session } from "./types.ts";
 
 const MIN = 60_000;
@@ -40,15 +40,12 @@ function session(title: string, startOffset: number, length = HOUR): Session {
 
 describe("channelName", () => {
   test("counts down to the next session", () => {
-    expect(channelName("f1", [session("Qualifying", 2 * DAY + HOUR)], NOW)).toBe(
-      "f1・qualifying-2d",
-    );
+    expect(channelName("f1", [session("Qualifying", 2 * DAY + HOUR)], NOW)).toBe("f1・quali-2d");
   });
 
   test("shows a live session", () => {
-    expect(channelName("f1", [session("Sprint Qualification", -10 * MIN)], NOW)).toBe(
-      "f1・🔴-sprint-qualification-live",
-    );
+    const sq = { ...session("Sprint Qualification", -10 * MIN), sessionId: "sprint-qualification" };
+    expect(channelName("f1", [sq], NOW)).toBe("f1・🔴-sq-live");
   });
 
   test("off-season when everything is past", () => {
@@ -57,7 +54,7 @@ describe("channelName", () => {
 
   test("overlapping live sessions pick the earliest start", () => {
     const sessions = [session("Hyperpole", -5 * MIN), session("Qualifying", -20 * MIN)];
-    expect(channelName("wec", sessions, NOW)).toBe("wec・🔴-qualifying-live");
+    expect(channelName("wec", sessions, NOW)).toBe("wec・🔴-quali-live");
   });
 });
 
@@ -65,7 +62,7 @@ describe("channelName ignores sessions without pings", () => {
   test("counts down past practice to the next pinged session", () => {
     const fp = { ...session("Practice 1", HOUR), pingable: false };
     expect(channelName("f1", [fp, session("Qualifying", 2 * DAY + HOUR)], NOW)).toBe(
-      "f1・qualifying-2d",
+      "f1・quali-2d",
     );
   });
 
@@ -73,4 +70,32 @@ describe("channelName ignores sessions without pings", () => {
     const fp = { ...session("Practice 1", -10 * MIN), pingable: false };
     expect(channelName("f1", [fp, session("Race", 3 * HOUR)], NOW)).toBe("f1・race-3h");
   });
+});
+
+describe("shortLabel", () => {
+  const cases: [string, string, string][] = [
+    ["race", "Race", "race"],
+    ["gp", "Race", "race"],
+    ["feature", "Feature Race", "feature"],
+    ["qualifying", "Qualifying", "quali"],
+    ["qualifying1", "Qualifying", "quali"],
+    ["qualifying2", "Qualifying 2", "q2"],
+    ["sprint-qualification", "Sprint Qualification", "sq"],
+    ["sprint-race", "Sprint Race", "sprint"],
+    ["sprint", "Sprint", "sprint"],
+    ["qualifying-hypercar", "Qualifying - HYPERCAR", "quali-hy"],
+    ["hyperpole-lmgt3", "Hyperpole - LMGT3", "hp-gt3"],
+    ["hyperpole-lmp2", "Hyperpole - LMP2", "hp-p2"],
+    ["ss1", "SS1 Toudon / Saint-Antonin", "ss1"],
+    ["sss12", "SSS12 Monaco", "sss12"],
+    ["mystery", "Some Very Long Session Title", "some-very-lo"],
+  ];
+  for (const [sessionId, title, expected] of cases) {
+    test(`${sessionId} → ${expected}`, () => expect(shortLabel(sessionId, title)).toBe(expected));
+  }
+});
+
+test("channel names use short labels", () => {
+  const sq = { ...session("Sprint Qualification", 40 * MIN), sessionId: "sprint-qualification" };
+  expect(channelName("f1", [sq], NOW)).toBe("f1・sq-40m");
 });
