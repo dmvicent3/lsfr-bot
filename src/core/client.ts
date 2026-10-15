@@ -43,6 +43,12 @@ export async function startBot(
     void registerCommands(ready.application.id, router, ctx);
   });
 
+  // Without a listener, an emitted "error" event would crash the process.
+  client.on(Events.Error, (err) => log.error("core:client", "client error", err));
+  client.on(Events.ShardDisconnect, (event, shardId) =>
+    log.info("core:client", `shard ${shardId} disconnected (${event.code}), reconnecting`),
+  );
+
   client.on(Events.InteractionCreate, (interaction) => {
     void safely("core:interaction", () => routeInteraction(interaction, router, ctx));
   });
