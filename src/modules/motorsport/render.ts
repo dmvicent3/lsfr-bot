@@ -29,7 +29,7 @@ function sessionLine(s: Session, weather: WeatherMap): string {
   const t = unix(s.start);
   const forecast = weather.get(`${s.eventId}/${s.sessionId}`);
   const suffix = forecast ? ` · ${formatWeather(forecast)}` : "";
-  return `${s.pingable ? "🔔" : "▫️"} **${s.title}** · <t:${t}:d> <t:${t}:t>${suffix}`;
+  return `${s.pingable ? "🔔" : "▫️"} **${s.title}** · <t:${t}:d> <t:${t}:t> (<t:${t}:R>)${suffix}`;
 }
 
 /**

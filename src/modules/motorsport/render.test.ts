@@ -35,7 +35,9 @@ describe("renderSchedule", () => {
     expect(lines[0]).toBe("## 🏁 F1 — Chinese Grand Prix");
     expect(lines.some((l) => l.startsWith("▫️ **Practice 1** · <t:"))).toBe(true);
     expect(lines.some((l) => l.startsWith("🔔 **Race** · <t:"))).toBe(true);
-    expect(lines.some((l) => /^🔔 \*\*Race\*\* · <t:\d+:d> <t:\d+:t>$/.test(l))).toBe(true);
+    expect(lines.some((l) => /^🔔 \*\*Race\*\* · <t:\d+:d> <t:\d+:t> \(<t:\d+:R>\)$/.test(l))).toBe(
+      true,
+    );
     expect(lines.at(-1)?.startsWith("🔔 **Race**")).toBe(true);
   });
 
