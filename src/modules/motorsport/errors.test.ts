@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { DiscordAPIError, PermissionFlagsBits, RESTJSONErrorCodes } from "discord.js";
 import { BOT_CHANNEL_PERMISSIONS } from "./channels.ts";
-import { followErrorText } from "./errors.ts";
+import { followErrorText, pingDeleteIsHopeless } from "./errors.ts";
 
 function apiError(code: number): DiscordAPIError {
   return new DiscordAPIError({ code, message: "x" }, code, 403, "POST", "/x", {
@@ -22,4 +22,19 @@ test("other errors keep their message", () => {
 
 test("the bot can pin in its series channels", () => {
   expect(BOT_CHANNEL_PERMISSIONS).toContain(PermissionFlagsBits.PinMessages);
+});
+
+test("a ping that can't be deleted, ever, is given up on", () => {
+  for (const code of [
+    RESTJSONErrorCodes.UnknownChannel,
+    RESTJSONErrorCodes.UnknownMessage,
+    RESTJSONErrorCodes.MissingAccess,
+    RESTJSONErrorCodes.MissingPermissions,
+  ]) {
+    expect(pingDeleteIsHopeless(apiError(code))).toBe(true);
+  }
+  expect(pingDeleteIsHopeless(apiError(RESTJSONErrorCodes.InvalidFormBodyOrContentType))).toBe(
+    false,
+  );
+  expect(pingDeleteIsHopeless(new Error("network"))).toBe(false);
 });

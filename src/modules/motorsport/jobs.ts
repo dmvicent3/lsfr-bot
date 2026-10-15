@@ -1,4 +1,4 @@
-import { type Guild, RateLimitError, RESTJSONErrorCodes, type Role } from "discord.js";
+import { type Guild, RateLimitError, type Role } from "discord.js";
 import { log } from "../../core/log.ts";
 import type { Ctx, Job } from "../../core/module.ts";
 import { safely } from "../../core/scheduler.ts";
@@ -6,12 +6,12 @@ import {
   deleteSeriesChannel,
   fetchSeriesChannel,
   fetchSeriesRole,
-  isDiscordError,
   type SeriesChannel,
   updatePinned,
 } from "./channels.ts";
 import { collectResults } from "./collect-results.ts";
 import { currentEvent, PING_DELETE_AFTER_MS, sessionsToPing, shouldRename } from "./decisions.ts";
+import { pingDeleteIsHopeless } from "./errors.ts";
 import { getLeadMinutes } from "./lead.ts";
 import { memberLoader } from "./members.ts";
 import { refreshAll, refreshWeather } from "./refresh.ts";
@@ -151,10 +151,7 @@ const cleanup: Job = {
           const channel = await guild.channels.fetch(ping.channelId);
           if (channel?.isTextBased()) await channel.messages.delete(ping.messageId);
         } catch (err) {
-          const gone =
-            isDiscordError(err, RESTJSONErrorCodes.UnknownChannel) ||
-            isDiscordError(err, RESTJSONErrorCodes.UnknownMessage);
-          if (!gone) throw err;
+          if (!pingDeleteIsHopeless(err)) throw err;
         }
         repo.markPingDeleted(ping.series, ping.eventId, ping.sessionId);
       });
