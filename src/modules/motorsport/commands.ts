@@ -14,6 +14,7 @@ import { createSeriesChannel } from "./channels.ts";
 import { followErrorText } from "./errors.ts";
 import { currentEvent } from "./decisions.ts";
 import { formatLead, getLeadMinutes, LEAD_SETTING_KEY, parseLeadTime } from "./lead.ts";
+import { renderNext } from "./next.ts";
 import { renderSchedule } from "./render.ts";
 import { MotorsportRepo } from "./repo.ts";
 import { isSeriesKey, SERIES, seriesInfo } from "./series.ts";
@@ -75,6 +76,7 @@ const data = new SlashCommandBuilder()
         o.setName("session").setDescription("Session").setRequired(true).setAutocomplete(true),
       ),
   )
+  .addSubcommand((sub) => sub.setName("next").setDescription("Next session of every series"))
   .addSubcommand((sub) =>
     sub
       .setName("reminder-time")
@@ -178,6 +180,16 @@ async function remind(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
   await reply(i, toggleReminder(repo, i.user.id, series, event?.eventId ?? null, sessionId, now));
 }
 
+async function next(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
+  const repo = new MotorsportRepo(ctx.db);
+  const sessions = new Map(SERIES.map((s) => [s.key, repo.listSessions(s.key)] as const));
+  const followed = new Map(repo.listFollowed().map((f) => [f.series, f.channelId] as const));
+  await i.reply({
+    embeds: [renderNext(sessions, followed, Date.now())],
+    flags: MessageFlags.Ephemeral,
+  });
+}
+
 async function reminderTime(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
   const input = i.options.getString("time");
   if (input === null) {
@@ -234,6 +246,8 @@ export const motorsportCommand: SlashCommand = {
         return remind(i, ctx);
       case "reminder-time":
         return reminderTime(i, ctx);
+      case "next":
+        return next(i, ctx);
       default:
         throw new Error(`Unknown subcommand ${i.options.getSubcommand()}`);
     }
