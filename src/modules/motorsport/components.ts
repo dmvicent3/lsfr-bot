@@ -2,7 +2,7 @@ import { MessageFlags } from "discord.js";
 import type { ComponentHandler } from "../../core/module.ts";
 import { notFollowedText, setReminders, togglePings } from "./actions.ts";
 import { deleteSeriesChannel } from "./channels.ts";
-import { groupEvents } from "./decisions.ts";
+import { groupEvents, withoutPinged } from "./decisions.ts";
 import { renderReminderPicker } from "./render.ts";
 import { MotorsportRepo } from "./repo.ts";
 import { isSeriesKey, seriesInfo } from "./series.ts";
@@ -25,7 +25,8 @@ const pings: ComponentHandler = {
 };
 
 function eventOf(repo: MotorsportRepo, series: SeriesKey, eventId: string): EventSchedule | null {
-  return groupEvents(repo.listSessions(series)).find((e) => e.eventId === eventId) ?? null;
+  const event = groupEvents(repo.listSessions(series)).find((e) => e.eventId === eventId);
+  return event ? withoutPinged(event, repo.sentKeys(series)) : null;
 }
 
 /** "Remind me…" button: opens the viewer's private reminder picker for that event. */

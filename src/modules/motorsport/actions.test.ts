@@ -74,7 +74,27 @@ describe("toggleReminder", () => {
     expect(toggleReminder(repo, "u", "f1", "chinese-grand-prix", "sprint-race", T)).toBe(rejected);
     expect(toggleReminder(repo, "u", "f1", "other", "qualifying", T)).toBe(rejected);
   });
+
+  test("rejects a session whose ping already went out", () => {
+    follow();
+    pinged("qualifying");
+    expect(toggleReminder(repo, "u", "f1", "chinese-grand-prix", "qualifying", T)).toBe(
+      "Chinese Grand Prix Qualifying has already been pinged.",
+    );
+    expect(repo.oneOffUsers("f1", "chinese-grand-prix", "qualifying")).toEqual([]);
+  });
 });
+
+function pinged(sessionId: string): void {
+  repo.insertSentPing({
+    series: "f1",
+    eventId: "chinese-grand-prix",
+    sessionId,
+    channelId: "c",
+    messageId: "p",
+    deleteAt: T + 86_400_000,
+  });
+}
 
 describe("setReminders", () => {
   test("keeps only upcoming pinged sessions and describes the result", () => {
@@ -89,6 +109,15 @@ describe("setReminders", () => {
     );
     expect(text).toBe("Reminders for Chinese Grand Prix: Qualifying.");
     expect(repo.userOneOffs("u", "f1", "chinese-grand-prix")).toEqual(["qualifying"]);
+  });
+
+  test("skips sessions already pinged", () => {
+    follow();
+    pinged("qualifying");
+    expect(setReminders(repo, "u", "f1", "chinese-grand-prix", ["qualifying"], T)).toBe(
+      "No reminders for Chinese Grand Prix.",
+    );
+    expect(repo.userOneOffs("u", "f1", "chinese-grand-prix")).toEqual([]);
   });
 
   test("an empty selection clears them", () => {

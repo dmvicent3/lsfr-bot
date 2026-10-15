@@ -7,6 +7,7 @@ import {
   sessionsToPing,
   shouldDeleteMessage,
   shouldRename,
+  withoutPinged,
 } from "./decisions.ts";
 import type { Session } from "./types.ts";
 
@@ -99,4 +100,18 @@ describe("shouldDeleteMessage", () => {
   test("other channels are untouched", () => {
     expect(shouldDeleteMessage({ ...base, channelId: "c2" }, channels)).toBe(false);
   });
+});
+
+test("withoutPinged drops sessions whose ping went out", () => {
+  const event = {
+    eventId: "e",
+    eventName: "E",
+    sessions: [
+      session({ sessionId: "qualifying", start: T }),
+      session({ sessionId: "race", start: T + 60 * MIN }),
+    ],
+  };
+  expect(withoutPinged(event, new Set(["e/qualifying"])).sessions.map((s) => s.sessionId)).toEqual([
+    "race",
+  ]);
 });

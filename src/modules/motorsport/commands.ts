@@ -13,7 +13,7 @@ import { log } from "../../core/log.ts";
 import { createSeriesChannel } from "./channels.ts";
 import { latestResult } from "./collect-results.ts";
 import { followErrorText } from "./errors.ts";
-import { currentEvent } from "./decisions.ts";
+import { currentEvent, sessionKey } from "./decisions.ts";
 import { formatLead, getLeadMinutes, LEAD_SETTING_KEY, parseLeadTime } from "./lead.ts";
 import { renderNext } from "./next.ts";
 import { renderSchedule } from "./render.ts";
@@ -287,9 +287,11 @@ async function autocomplete(i: AutocompleteInteraction, ctx: Ctx): Promise<void>
   }
   const typed = i.options.getFocused().toLowerCase();
   const now = Date.now();
-  const event = currentEvent(new MotorsportRepo(ctx.db).listSessions(series), now);
+  const repo = new MotorsportRepo(ctx.db);
+  const event = currentEvent(repo.listSessions(series), now);
+  const sent = repo.sentKeys(series);
   const choices = (event?.sessions ?? [])
-    .filter((s) => s.pingable && s.start.getTime() > now)
+    .filter((s) => s.pingable && s.start.getTime() > now && !sent.has(sessionKey(s)))
     .filter((s) => s.title.toLowerCase().includes(typed))
     .slice(0, 25)
     .map((s) => ({ name: `${event?.eventName ?? ""} — ${s.title}`, value: s.sessionId }));

@@ -39,6 +39,9 @@ export function toggleReminder(
         s.eventId === eventId && s.sessionId === sessionId && s.pingable && s.start.getTime() > now,
     );
   if (!session) return `That session isn't in the next ${seriesInfo(series).name} event.`;
+  if (repo.sentKeys(series).has(`${session.eventId}/${session.sessionId}`)) {
+    return `${session.eventName} ${session.title} has already been pinged.`;
+  }
   const set = repo.toggleOneOff(userId, series, session.eventId, session.sessionId);
   return `Reminder ${set ? "set" : "removed"} for ${session.eventName} ${session.title}.`;
 }
@@ -59,8 +62,13 @@ export function setReminders(
   const eventSessions = repo.listSessions(series).filter((s) => s.eventId === eventId);
   const eventName = eventSessions[0]?.eventName ?? eventId;
   const wanted = new Set(sessionIds);
+  const sent = repo.sentKeys(series);
   const chosen = eventSessions.filter(
-    (s) => wanted.has(s.sessionId) && s.pingable && s.start.getTime() > now,
+    (s) =>
+      wanted.has(s.sessionId) &&
+      s.pingable &&
+      s.start.getTime() > now &&
+      !sent.has(`${s.eventId}/${s.sessionId}`),
   );
   repo.setOneOffs(
     userId,

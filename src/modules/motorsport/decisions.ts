@@ -56,3 +56,8 @@ export function shouldDeleteMessage(
 ): boolean {
   return seriesChannelIds.has(m.channelId) && (m.authorId !== m.botId || m.system);
 }
+
+/** The event without sessions whose ping already went out (too late for a reminder). */
+export function withoutPinged(event: EventSchedule, sent: ReadonlySet<string>): EventSchedule {
+  return { ...event, sessions: event.sessions.filter((s) => !sent.has(sessionKey(s))) };
+}
