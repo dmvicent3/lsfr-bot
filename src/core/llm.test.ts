@@ -45,3 +45,18 @@ describe("generate", () => {
     expect(err).toBeInstanceOf(LlmError);
   });
 });
+
+test("LLM requests time out", async () => {
+  let signal: AbortSignal | null | undefined;
+  await generate("hi", {
+    apiKey: "k",
+    model: "m",
+    fetchFn: async (_url, init) => {
+      signal = init?.signal;
+      return new Response(
+        JSON.stringify({ candidates: [{ content: { parts: [{ text: "a" }] } }] }),
+      );
+    },
+  });
+  expect(signal).toBeInstanceOf(AbortSignal);
+});

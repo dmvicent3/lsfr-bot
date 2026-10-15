@@ -11,6 +11,8 @@ import {
 import type { Config } from "./config.ts";
 import { log } from "./log.ts";
 import type { BotModule, Ctx } from "./module.ts";
+import { rejectRenameRateLimit } from "./rate-limit.ts";
+import { retry } from "./retry.ts";
 import { buildRouter, type Router } from "./router.ts";
 import { safely, startJobs } from "./scheduler.ts";
 
@@ -27,23 +29,31 @@ export async function startBot(
       GatewayIntentBits.MessageContent,
       GatewayIntentBits.GuildMembers,
     ],
+    rest: { rejectOnRateLimit: rejectRenameRateLimit },
   });
   const ctx: Ctx = { client, db, config };
 
   client.once(Events.ClientReady, (ready) => {
-    void safely("core:ready", async () => {
-      const rest = new REST().setToken(config.discordToken);
-      await rest.put(Routes.applicationGuildCommands(ready.application.id, config.guildId), {
-        body: router.commands.map((command) => command.data),
-      });
-      log.info("core", `logged in as ${ready.user.tag}, ${router.commands.length} commands`);
-      startJobs(
-        modules.flatMap((module) =>
-          (module.jobs ?? []).map((job) => ({ module: module.name, job })),
-        ),
-        ctx,
-      );
-    });
+    log.info("core", `logged in as ${ready.user.tag}`);
+    startJobs(
+      modules.flatMap((module) => (module.jobs ?? []).map((job) => ({ module: module.name, job }))),
+      ctx,
+    );
+    // Jobs run regardless; without commands the bot is unusable, so exit and let Docker restart.
+    const rest = new REST().setToken(config.discordToken);
+    retry(
+      () =>
+        rest.put(Routes.applicationGuildCommands(ready.application.id, config.guildId), {
+          body: router.commands.map((command) => command.data),
+        }),
+      { attempts: 5, delayMs: 5_000 },
+    ).then(
+      () => log.info("core", `registered ${router.commands.length} commands`),
+      (err: unknown) => {
+        log.error("core", "command registration failed, exiting", err);
+        process.exit(1);
+      },
+    );
   });
 
   client.on(Events.InteractionCreate, (interaction) => {

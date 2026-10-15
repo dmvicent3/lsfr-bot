@@ -16,7 +16,7 @@ export async function fetchSeries(
   fetchFn: FetchFn = fetch,
 ): Promise<ParsedSession[]> {
   const url = sourceUrl(info, year);
-  const res = await fetchFn(url);
+  const res = await fetchFn(url, { signal: AbortSignal.timeout(30_000) });
   if (res.status === 404) return [];
   if (!res.ok) throw new Error(`${url} returned ${res.status}`);
   const json: unknown = await res.json();

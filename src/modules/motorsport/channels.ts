@@ -16,6 +16,15 @@ import { seriesInfo, type SeriesInfo } from "./series.ts";
 
 const CATEGORY_NAME = "Motorsport";
 
+export const BOT_CHANNEL_PERMISSIONS = [
+  PermissionFlagsBits.ViewChannel,
+  PermissionFlagsBits.SendMessages,
+  PermissionFlagsBits.ManageMessages,
+  PermissionFlagsBits.PinMessages,
+  PermissionFlagsBits.ManageChannels,
+  PermissionFlagsBits.ReadMessageHistory,
+];
+
 export function isDiscordError(err: unknown, code: RESTJSONErrorCodes): boolean {
   return err instanceof DiscordAPIError && err.code === code;
 }
@@ -41,35 +50,34 @@ export async function createSeriesChannel(
     mentionable: true,
     reason: `Season pings for ${info.name}`,
   });
-  const channel = await guild.channels.create({
-    name: info.key,
-    type: ChannelType.GuildText,
-    parent: category.id,
-    topic: `${info.name} schedule. Use the 🔔 button on the pinned message for pings.`,
-    permissionOverwrites: [
-      {
-        id: guild.roles.everyone.id,
-        allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.ReadMessageHistory],
-        deny: [
-          PermissionFlagsBits.SendMessages,
-          PermissionFlagsBits.AddReactions,
-          PermissionFlagsBits.CreatePublicThreads,
-          PermissionFlagsBits.CreatePrivateThreads,
-          PermissionFlagsBits.SendMessagesInThreads,
-        ],
-      },
-      {
-        id: me.id,
-        allow: [
-          PermissionFlagsBits.ViewChannel,
-          PermissionFlagsBits.SendMessages,
-          PermissionFlagsBits.ManageMessages,
-          PermissionFlagsBits.ManageChannels,
-          PermissionFlagsBits.ReadMessageHistory,
-        ],
-      },
-    ],
-  });
+  const channel = await guild.channels
+    .create({
+      name: info.key,
+      type: ChannelType.GuildText,
+      parent: category.id,
+      topic: `${info.name} schedule. Use the 🔔 button on the pinned message for pings.`,
+      permissionOverwrites: [
+        {
+          id: guild.roles.everyone.id,
+          allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.ReadMessageHistory],
+          deny: [
+            PermissionFlagsBits.SendMessages,
+            PermissionFlagsBits.AddReactions,
+            PermissionFlagsBits.CreatePublicThreads,
+            PermissionFlagsBits.CreatePrivateThreads,
+            PermissionFlagsBits.SendMessagesInThreads,
+          ],
+        },
+        {
+          id: me.id,
+          allow: BOT_CHANNEL_PERMISSIONS,
+        },
+      ],
+    })
+    .catch(async (err: unknown) => {
+      await role.delete().catch(() => undefined);
+      throw err;
+    });
   return { channel, role };
 }
 

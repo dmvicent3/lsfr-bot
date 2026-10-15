@@ -25,6 +25,7 @@ export async function generate(
     method: "POST",
     headers: { "content-type": "application/json", "x-goog-api-key": opts.apiKey },
     body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }] }),
+    signal: AbortSignal.timeout(60_000),
   });
   if (!res.ok) {
     throw new LlmError(`Gemini returned ${res.status}: ${await res.text()}`);

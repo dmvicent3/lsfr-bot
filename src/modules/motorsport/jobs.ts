@@ -1,4 +1,10 @@
-import { type Guild, RESTJSONErrorCodes, type Role, type TextChannel } from "discord.js";
+import {
+  type Guild,
+  RateLimitError,
+  RESTJSONErrorCodes,
+  type Role,
+  type TextChannel,
+} from "discord.js";
 import { log } from "../../core/log.ts";
 import type { Ctx, Job } from "../../core/module.ts";
 import { safely } from "../../core/scheduler.ts";
@@ -94,17 +100,25 @@ async function tickSeries(guild: Guild, repo: MotorsportRepo, f: Followed, leadM
     return;
   }
 
-  const sessions = repo.listSessions(f.series);
-  const desired = channelName(f.series, sessions, new Date(now));
-  if (shouldRename(f.channelName, desired, f.renamedAt, now)) {
-    await channel.setName(desired);
-    repo.updateFollowed(f.series, { channelName: desired, renamedAt: now });
-  }
-
+  // Pings first: they are time-critical, the rename is cosmetic.
   await sendPings(guild, repo, f, channel, role, leadMs, now);
 
+  const sessions = repo.listSessions(f.series);
   if ((currentEvent(sessions, now)?.eventId ?? null) !== f.pinnedEventId) {
     await updatePinned(channel, repo, f, now);
+  }
+
+  const desired = channelName(f.series, sessions, new Date(now));
+  if (shouldRename(f.channelName, desired, f.renamedAt, now)) {
+    try {
+      await channel.setName(desired);
+      repo.updateFollowed(f.series, { channelName: desired, renamedAt: now });
+    } catch (err) {
+      if (!(err instanceof RateLimitError)) throw err;
+      // Someone else used the rename budget; back off for one throttle window.
+      repo.updateFollowed(f.series, { renamedAt: now });
+      log.info("motorsport:tick", `${f.series} rename rate-limited, retrying later`);
+    }
   }
 }
 

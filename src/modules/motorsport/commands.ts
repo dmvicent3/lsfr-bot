@@ -9,7 +9,9 @@ import {
 import type { Ctx, SlashCommand } from "../../core/module.ts";
 import { setSetting } from "../../core/settings.ts";
 import { notFollowedText, togglePings, toggleReminder } from "./actions.ts";
+import { log } from "../../core/log.ts";
 import { createSeriesChannel } from "./channels.ts";
+import { followErrorText } from "./errors.ts";
 import { currentEvent } from "./decisions.ts";
 import { formatLead, getLeadMinutes, LEAD_SETTING_KEY, parseLeadTime } from "./lead.ts";
 import { renderSchedule } from "./render.ts";
@@ -93,6 +95,9 @@ async function reply(i: ChatInputCommandInteraction, content: string): Promise<v
   await i.reply({ content, flags: MessageFlags.Ephemeral });
 }
 
+/** Series with a follow in flight, so a double submit can't create two channels. */
+const following = new Set<SeriesKey>();
+
 async function follow(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
   const repo = new MotorsportRepo(ctx.db);
   const series = seriesOption(i);
@@ -102,22 +107,39 @@ async function follow(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
     await reply(i, `${info.name} is already followed in <#${existing.channelId}>.`);
     return;
   }
-  await i.deferReply({ flags: MessageFlags.Ephemeral });
-  const guild = await ctx.client.guilds.fetch(ctx.config.guildId);
-  const { channel, role } = await createSeriesChannel(guild, info);
-  const event = currentEvent(repo.listSessions(series), Date.now());
-  const message = await channel.send(renderSchedule(info, event));
-  await message.pin();
-  repo.insertFollowed({
-    series,
-    channelId: channel.id,
-    roleId: role.id,
-    pinnedMessageId: message.id,
-    pinnedEventId: event?.eventId ?? null,
-    channelName: null,
-    renamedAt: null,
-  });
-  await i.editReply(`Following ${info.name} in <#${channel.id}>.`);
+  if (following.has(series)) {
+    await reply(i, `${info.name} is already being set up.`);
+    return;
+  }
+  following.add(series);
+  try {
+    await i.deferReply({ flags: MessageFlags.Ephemeral });
+    const guild = await ctx.client.guilds.fetch(ctx.config.guildId);
+    const created = await createSeriesChannel(guild, info);
+    try {
+      const event = currentEvent(repo.listSessions(series), Date.now());
+      const message = await created.channel.send(renderSchedule(info, event));
+      await message.pin();
+      repo.insertFollowed({
+        series,
+        channelId: created.channel.id,
+        roleId: created.role.id,
+        pinnedMessageId: message.id,
+        pinnedEventId: event?.eventId ?? null,
+        channelName: null,
+        renamedAt: null,
+      });
+    } catch (err) {
+      await Promise.allSettled([created.channel.delete(), created.role.delete()]);
+      throw err;
+    }
+    await i.editReply(`Following ${info.name} in <#${created.channel.id}>.`);
+  } catch (err) {
+    log.error("motorsport:follow", `${series} failed`, err);
+    await i.editReply(followErrorText(err));
+  } finally {
+    following.delete(series);
+  }
 }
 
 async function unfollow(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {

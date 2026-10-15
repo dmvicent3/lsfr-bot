@@ -37,3 +37,12 @@ describe("fetchSeries", () => {
     expect(sessions.every((s) => s.series === "f1")).toBe(true);
   });
 });
+
+test("requests time out", async () => {
+  let signal: AbortSignal | null | undefined;
+  await fetchSeries(seriesInfo("f2"), 2027, async (_url, init) => {
+    signal = init?.signal;
+    return new Response("", { status: 404 });
+  });
+  expect(signal).toBeInstanceOf(AbortSignal);
+});
