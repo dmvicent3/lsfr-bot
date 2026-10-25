@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { DiscordAPIError, PermissionFlagsBits, RESTJSONErrorCodes } from "discord.js";
-import { BOT_CHANNEL_PERMISSIONS } from "./channels.ts";
+import { BOT_CHANNEL_PERMISSIONS } from "./channels/channels.ts";
 import { followErrorText, pingDeleteIsHopeless } from "./errors.ts";
 
 function apiError(code: number): DiscordAPIError {

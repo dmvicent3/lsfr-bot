@@ -11,19 +11,24 @@ import {
   fetchSeriesRole,
   type SeriesChannel,
   updatePinned,
-} from "./channels.ts";
-import { collectResults } from "./collect-results.ts";
-import { collectRulings } from "./collect-rulings.ts";
-import { currentEvent, PING_DELETE_AFTER_MS, sessionsToPing, shouldRename } from "./decisions.ts";
+} from "./channels/channels.ts";
+import { collectResults } from "./results/collect-results.ts";
+import { collectRulings } from "./rulings/collect-rulings.ts";
+import {
+  currentEvent,
+  PING_DELETE_AFTER_MS,
+  sessionsToPing,
+  shouldRename,
+} from "./channels/decisions.ts";
 import { pingDeleteIsHopeless } from "./errors.ts";
-import { getLeadMinutes } from "./lead.ts";
-import { memberLoader } from "./members.ts";
+import { getLeadMinutes } from "./pings/lead.ts";
+import { memberLoader } from "./pings/members.ts";
 import type { Post } from "./post.ts";
-import { refreshAll, refreshWeather } from "./refresh.ts";
-import { renderPing } from "./render.ts";
+import { refreshAll, refreshWeather } from "./schedule/refresh.ts";
+import { renderPing } from "./channels/render.ts";
 import { type Followed, MotorsportRepo } from "./repo.ts";
 import { seriesInfo } from "./series.ts";
-import { pdfText } from "./sources/pdf.ts";
+import { pdfText } from "./rulings/pdf.ts";
 import { channelName } from "./time.ts";
 
 async function guildOf(ctx: Ctx): Promise<Guild> {

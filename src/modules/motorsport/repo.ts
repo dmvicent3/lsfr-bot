@@ -2,9 +2,9 @@ import type { Database } from "bun:sqlite";
 import type { Migration } from "../../core/db.ts";
 import { isSeriesKey } from "./series.ts";
 import type { SeriesKey, Session } from "./types.ts";
-import type { FullPicks, Picks, Prediction } from "./predictions.ts";
-import { isResultRows, type ResultKind, type ResultRow } from "./results.ts";
-import type { Forecast } from "./weather.ts";
+import type { FullPicks, Picks, Prediction } from "./predictions/predictions.ts";
+import { isResultRows, type ResultKind, type ResultRow } from "./results/results.ts";
+import type { Forecast } from "./weather/weather.ts";
 
 export const motorsportMigrations: Migration[] = [
   {

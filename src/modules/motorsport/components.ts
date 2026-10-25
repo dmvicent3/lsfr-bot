@@ -1,11 +1,11 @@
 import { MessageFlags } from "discord.js";
 import { log } from "../../core/log.ts";
 import type { ComponentHandler, Ctx } from "../../core/module.ts";
-import { notFollowedText, setReminders, togglePings } from "./actions.ts";
-import { deleteSeriesChannel, fetchSeriesChannel, updatePinned } from "./channels.ts";
-import { predictPicker, savePick } from "./predict-actions.ts";
-import { groupEvents, withoutPinged } from "./decisions.ts";
-import { renderReminderPicker } from "./render.ts";
+import { notFollowedText, setReminders, togglePings } from "./pings/actions.ts";
+import { deleteSeriesChannel, fetchSeriesChannel, updatePinned } from "./channels/channels.ts";
+import { predictPicker, savePick } from "./predictions/predict-actions.ts";
+import { groupEvents, withoutPinged } from "./channels/decisions.ts";
+import { renderReminderPicker } from "./channels/render.ts";
 import { MotorsportRepo } from "./repo.ts";
 import { isSeriesKey, seriesInfo } from "./series.ts";
 import type { EventSchedule, SeriesKey } from "./types.ts";
