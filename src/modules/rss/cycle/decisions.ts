@@ -1,3 +1,4 @@
+import type { JevOutcome } from "./types.ts";
 const DAY_MS = 24 * 3_600_000;
 const WARN_AT = 10;
 
@@ -5,9 +6,6 @@ const WARN_AT = 10;
 export function expiryCutoff(now: number): number {
   return now - DAY_MS;
 }
-
-/** How jev did this cycle: answered, failed, or was not needed. */
-export type JevOutcome = "ok" | "failed" | "unused";
 
 /** The notice to post, given whether jev was down at the last notice. */
 export function notice(wasDown: boolean, outcome: JevOutcome): "down" | "back" | null {

@@ -1,7 +1,8 @@
+import type { FollowRequest, FollowDeps } from "./types.ts";
 import { FeedError, parseFeed } from "./feeds/parse.ts";
 import { itemKey } from "./feeds/urls.ts";
-import type { Rule, RuleKind } from "./rules/rules.ts";
-import type { Feed } from "./store/feeds.ts";
+import type { Rule, RuleKind } from "./rules/types.ts";
+import type { Feed } from "./store/types.ts";
 import type { RssRepo } from "./store/repo.ts";
 
 /** Per server: each rule is one jev request per article. */
@@ -12,18 +13,6 @@ const MAX_NAME = 100;
 
 export class RuleError extends Error {
   override name = "RuleError";
-}
-
-export interface FollowRequest {
-  guildId: string;
-  url: string;
-  /** Shown on posts; null: the feed's title. */
-  name: string | null;
-}
-
-export interface FollowDeps {
-  fetchFeed: (url: string) => Promise<string>;
-  now: number;
 }
 
 /** Follows a feed: it must parse, and its current items are stored as posted so none floods the channel. */

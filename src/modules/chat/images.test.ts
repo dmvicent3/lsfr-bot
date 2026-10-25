@@ -1,12 +1,7 @@
 import { describe, expect, test } from "bun:test";
-import type { FetchFn } from "../../core/guards.ts";
-import {
-  downloadImages,
-  type ImageRef,
-  imageNotes,
-  MAX_IMAGE_BYTES,
-  selectImages,
-} from "./images.ts";
+import type { FetchFn } from "../../core/types.ts";
+import { downloadImages, imageNotes, MAX_IMAGE_BYTES, selectImages } from "./images.ts";
+import type { ImageRef } from "./types.ts";
 
 const img = (url: string, size = 1000, contentType: string | null = "image/png"): ImageRef => ({
   url,

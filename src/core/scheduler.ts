@@ -1,5 +1,5 @@
 import { log } from "./log.ts";
-import type { Ctx, Job } from "./module.ts";
+import type { Ctx, Job } from "./types.ts";
 
 export async function safely(scope: string, fn: () => Promise<void>): Promise<void> {
   try {

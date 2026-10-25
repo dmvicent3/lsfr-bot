@@ -1,12 +1,4 @@
-export interface Config {
-  discordToken: string;
-  guildId: string;
-  geminiApiKey: string;
-  geminiModel: string;
-  databasePath: string;
-  /** The jev service (RSS filtering); null leaves the rss module off. */
-  jevUrl: string | null;
-}
+import type { Config } from "./types.ts";
 
 export class ConfigError extends Error {
   override name = "ConfigError";

@@ -9,7 +9,7 @@ import {
   renderPredictPicker,
   scorePicks,
 } from "./predictions.ts";
-import type { ResultRow } from "../results/results.ts";
+import type { ResultRow } from "../results/types.ts";
 import { seriesInfo } from "../series.ts";
 import type { EventSchedule, Session } from "../types.ts";
 

@@ -1,25 +1,21 @@
-import type { FetchFn } from "../../../core/guards.ts";
+import type { PickOutcome } from "./types.ts";
+import type { FetchFn } from "../../../core/types.ts";
 import { latestResult } from "../results/collect-results.ts";
 import { groupEvents } from "../channels/decisions.ts";
 import {
   choosePick,
-  type Driver,
   isComplete,
   isPredictable,
   leaderboard,
   openPredictions,
-  type Picks,
   renderLeaderboard,
   renderPredictPicker,
 } from "./predictions.ts";
-import type { SchedulePayload } from "../channels/render.ts";
+import type { Driver } from "./types.ts";
+import type { SchedulePayload } from "../channels/types.ts";
 import type { MotorsportRepo } from "../repo.ts";
 import { seriesInfo } from "../series.ts";
 import type { SeriesKey } from "../types.ts";
-
-export type PickOutcome =
-  | { ok: true; picks: Picks; completed: boolean }
-  | { ok: false; text: string };
 
 /**
  * Puts `driverId` at podium position `index` (0 = P1) in the user's prediction, until the

@@ -1,7 +1,7 @@
 import { Database } from "bun:sqlite";
 import { beforeEach, describe, expect, test } from "bun:test";
 import { runMigrations } from "../../../core/db.ts";
-import type { FeedItem } from "../feeds/parse.ts";
+import type { FeedItem } from "../feeds/types.ts";
 import { rssMigrations } from "./migrations.ts";
 import { RssRepo } from "./repo.ts";
 

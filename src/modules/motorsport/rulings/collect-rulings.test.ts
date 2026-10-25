@@ -1,10 +1,11 @@
 import { Database } from "bun:sqlite";
 import { beforeEach, expect, test } from "bun:test";
 import { runMigrations } from "../../../core/db.ts";
-import type { FetchFn } from "../../../core/guards.ts";
+import type { FetchFn } from "../../../core/types.ts";
 import { coreMigrations } from "../../../core/settings.ts";
-import { collectRulings, type RulingDeps } from "./collect-rulings.ts";
-import type { PostMessage, PostTarget } from "../post.ts";
+import { collectRulings } from "./collect-rulings.ts";
+import type { RulingDeps } from "./types.ts";
+import type { PostMessage, PostTarget } from "../types.ts";
 import { motorsportMigrations, MotorsportRepo } from "../repo.ts";
 import { FIA_DOCUMENTS } from "./fia.ts";
 import { textFixture } from "../testing/fixtures.ts";

@@ -1,4 +1,4 @@
-import type { Migration } from "../../../core/db.ts";
+import type { Migration } from "../../../core/types.ts";
 
 export const rssMigrations: Migration[] = [
   {

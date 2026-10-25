@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { ApplicationCommandOptionType } from "discord.js";
-import type { BotModule } from "../../core/module.ts";
+import type { BotModule } from "../../core/types.ts";
 import { helpEmbed } from "./index.ts";
 
 const noop = async (): Promise<void> => {};

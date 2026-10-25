@@ -1,18 +1,7 @@
-import { JevError, type JevQuestion } from "../../../core/jev/http.ts";
-import type { FeedItem } from "../feeds/parse.ts";
-
-/** A block rule stops an article; with only-rules, an article must match one of them. */
-export type RuleKind = "block" | "only";
-
-export interface Rule {
-  id: number;
-  text: string;
-  kind: RuleKind;
-  /** The feeds it applies to; empty: every feed. */
-  feedIds: number[];
-}
-
-export type Verdict = { kind: "pass" } | { kind: "block"; rule: Rule } | { kind: "off-topic" };
+import type { RuleKind, Rule, Verdict } from "./types.ts";
+import { JevError } from "../../../core/jev/http.ts";
+import type { JevQuestion } from "../../../core/jev/types.ts";
+import type { FeedItem } from "../feeds/types.ts";
 
 /** A rule matches when its P(yes) reaches this. */
 export const MATCH_AT = 0.5;

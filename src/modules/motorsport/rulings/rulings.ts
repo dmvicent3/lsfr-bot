@@ -1,6 +1,6 @@
 import { groupEvents } from "../channels/decisions.ts";
 import { resultKind } from "../results/results.ts";
-import type { Ruling } from "./fia.ts";
+import type { Ruling } from "./types.ts";
 import { slugify } from "../time.ts";
 import type { EventSchedule, Session } from "../types.ts";
 

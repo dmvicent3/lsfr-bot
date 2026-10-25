@@ -1,23 +1,12 @@
-import type { FetchFn } from "../../../core/guards.ts";
+import type { RefreshResult } from "./types.ts";
+import type { FetchFn } from "../../../core/types.ts";
 import { log } from "../../../core/log.ts";
 import type { MotorsportRepo } from "../repo.ts";
 import { applyRules } from "../pings/rules.ts";
 import { SERIES } from "../series.ts";
 import { fetchSeries, getJson } from "./sources/fetch.ts";
-import type { SeriesKey } from "../types.ts";
-import {
-  coordsByEvent,
-  FORECAST_DAYS,
-  type Forecast,
-  forecastAt,
-  forecastUrl,
-} from "../weather/weather.ts";
-
-export interface RefreshResult {
-  series: SeriesKey;
-  ok: boolean;
-  error?: string;
-}
+import { coordsByEvent, FORECAST_DAYS, forecastAt, forecastUrl } from "../weather/weather.ts";
+import type { Forecast } from "../weather/types.ts";
 
 /**
  * Fetches this year's and next year's schedule for every series. A series whose fetch or

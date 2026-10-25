@@ -1,10 +1,11 @@
 import type { AutocompleteInteraction, ChatInputCommandInteraction } from "discord.js";
-import type { Ctx, SlashCommand } from "../../../core/module.ts";
+import type { Ctx, SlashCommand } from "../../../core/types.ts";
 import { describeRule } from "../rules/rules.ts";
 import { RssRepo } from "../store/repo.ts";
 import { data } from "./data.ts";
 import { feedHandlers } from "./feeds.ts";
-import { autocompleteChoices, type Handler, reply } from "./kit.ts";
+import { autocompleteChoices, reply } from "./kit.ts";
+import type { Handler } from "./types.ts";
 import { ruleHandlers } from "./rules.ts";
 
 const HANDLERS: Record<string, Handler> = { ...feedHandlers, ...ruleHandlers };

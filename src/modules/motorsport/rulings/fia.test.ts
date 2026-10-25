@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { isRuling, parisTime, parseFiaDocuments, parseRuling } from "./fia.ts";
+import { isRuling, parisTime, parseFiaDocuments } from "./fia.ts";
+import { parseRuling } from "./ruling.ts";
 import { textFixture } from "../testing/fixtures.ts";
 
 describe("parseFiaDocuments", () => {

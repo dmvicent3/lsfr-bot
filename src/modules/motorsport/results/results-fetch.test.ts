@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import type { FetchFn } from "../../../core/guards.ts";
+import type { FetchFn } from "../../../core/types.ts";
 import type { Session } from "../types.ts";
 import { fetchResult } from "./results-fetch.ts";
 import { fixture } from "../testing/fixtures.ts";

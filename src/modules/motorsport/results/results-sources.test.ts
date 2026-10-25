@@ -6,7 +6,8 @@ import {
   motogpSessionId,
   parseMotogp,
 } from "./motogp-results.ts";
-import { formatDuration, openf1SessionKey, parseOpenF1 } from "./openf1.ts";
+import { openf1SessionKey, parseOpenF1 } from "./openf1.ts";
+import { formatDuration } from "./openf1-times.ts";
 import { fixture } from "../testing/fixtures.ts";
 
 test("formatDuration", () => {

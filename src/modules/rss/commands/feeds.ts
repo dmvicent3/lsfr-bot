@@ -3,7 +3,8 @@ import { fetchFeed } from "../feeds/fetch.ts";
 import { FeedError } from "../feeds/parse.ts";
 import { httpUrl } from "../feeds/urls.ts";
 import { followFeed } from "../subscriptions.ts";
-import { channelHint, type CommandCtx, type Handler, reply } from "./kit.ts";
+import { channelHint, reply } from "./kit.ts";
+import type { CommandCtx, Handler } from "./types.ts";
 
 const channel: Handler = async ({ i, guildId, repo }) => {
   const channelId = i.options.getChannel("channel")?.id ?? i.channelId;

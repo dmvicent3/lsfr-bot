@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { type FetchFn, isRecord } from "../guards.ts";
+import { isRecord } from "../guards.ts";
+import type { FetchFn } from "../types.ts";
 import { JevError, postYesNo } from "./http.ts";
 import { createJev } from "./queue.ts";
 

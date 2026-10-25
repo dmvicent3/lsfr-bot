@@ -1,12 +1,6 @@
-import type { FetchFn } from "../../core/guards.ts";
-import type { InlineImage } from "../../core/llm.ts";
-
-/** A Discord attachment, before download. */
-export interface ImageRef {
-  url: string;
-  size: number;
-  contentType: string | null;
-}
+import type { ImageRef } from "./types.ts";
+import type { FetchFn } from "../../core/types.ts";
+import type { InlineImage } from "../../core/types.ts";
 
 export const MAX_IMAGES = 4;
 export const MAX_IMAGE_BYTES = 10 * 1024 * 1024;

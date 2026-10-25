@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import type { FetchFn } from "./guards.ts";
+import type { FetchFn } from "./types.ts";
 import { generate, LlmError } from "./llm.ts";
 
 function fakeFetch(status: number, body: unknown, seen?: { url?: string; key?: string | null }) {

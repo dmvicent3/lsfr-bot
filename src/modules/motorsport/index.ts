@@ -1,4 +1,4 @@
-import type { BotModule } from "../../core/module.ts";
+import type { BotModule } from "../../core/types.ts";
 import { motorsportCommand } from "./commands.ts";
 import { motorsportComponents } from "./components.ts";
 import { motorsportEvents } from "./events.ts";

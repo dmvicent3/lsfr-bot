@@ -1,33 +1,9 @@
+import type { FiaDocument, FiaPage } from "./types.ts";
 /** The F1 championship's documents page: the latest event's documents, newest first. */
 export const FIA_DOCUMENTS =
   "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14";
 
 const FIA_ORIGIN = "https://www.fia.com";
-
-export interface FiaDocument {
-  url: string;
-  /** Without the "Doc 61 - " prefix. */
-  title: string;
-  publishedAt: Date;
-}
-
-export interface FiaPage {
-  /** The event the listed documents belong to, e.g. "Singapore Grand Prix". */
-  event: string | null;
-  documents: FiaDocument[];
-}
-
-/** A stewards' ruling's labelled fields, whitespace collapsed. */
-export interface Ruling {
-  car: string;
-  driver: string;
-  competitor: string;
-  session: string;
-  fact: string;
-  infringement: string;
-  decision: string;
-  reason: string;
-}
 
 const ENTITIES: Record<string, string> = {
   "&amp;": "&",
@@ -40,7 +16,7 @@ const ENTITIES: Record<string, string> = {
 const decode = (s: string): string =>
   s.replaceAll(/&(amp|#039|quot|lt|gt);/g, (e) => ENTITIES[e] ?? e);
 
-const squash = (s: string): string => s.replaceAll(/\s+/g, " ").trim();
+export const squash = (s: string): string => s.replaceAll(/\s+/g, " ").trim();
 
 const paris = new Intl.DateTimeFormat("en-GB", {
   timeZone: "Europe/Paris",
@@ -94,54 +70,3 @@ export function parseFiaDocuments(html: string): FiaPage {
 /** Stewards' rulings about a car; summons, deleted lap times and notices aren't. */
 export const isRuling = (title: string): boolean =>
   /^(Decision|Infringement) - Car \d+/i.test(title);
-
-const LABELS = [
-  "No / Driver",
-  "Competitor",
-  "Time",
-  "Session",
-  "Fact",
-  "Infringement",
-  "Decision",
-  "Reason",
-] as const;
-type Label = (typeof LABELS)[number];
-
-const LABEL_LINE = new RegExp(`^(${LABELS.map((l) => l.replace("/", "\\/")).join("|")})\\b(.*)$`);
-
-/** The appeal and independence notices every ruling ends with. */
-const BOILERPLATE = /^(Competitors are reminded|Decisions of the Stewards are taken)/;
-
-/**
- * pdftotext -layout output of a ruling → its fields. A field runs from its label to the next
- * label or unindented line; continuation lines are indented.
- */
-export function parseRuling(text: string): Ruling | null {
-  const fields = new Map<Label, string[]>();
-  let current: Label | null = null;
-  for (const line of text.split(/\r?\n/)) {
-    const label = LABEL_LINE.exec(line);
-    if (label) {
-      current = LABELS.find((l) => l === label[1]) ?? null;
-      if (current) fields.set(current, [label[2] ?? ""]);
-      continue;
-    }
-    if (BOILERPLATE.test(line.trim())) current = null;
-    else if (current && (line.trim() === "" || /^\s/.test(line))) fields.get(current)?.push(line);
-    else current = null;
-  }
-  const field = (l: Label): string => squash((fields.get(l) ?? []).join(" "));
-  const driver = /^(\d+) - (.+)$/.exec(field("No / Driver"));
-  const decision = field("Decision");
-  if (!driver || !decision) return null;
-  return {
-    car: driver[1] ?? "",
-    driver: driver[2] ?? "",
-    competitor: field("Competitor"),
-    session: field("Session"),
-    fact: field("Fact"),
-    infringement: field("Infringement"),
-    decision,
-    reason: field("Reason"),
-  };
-}

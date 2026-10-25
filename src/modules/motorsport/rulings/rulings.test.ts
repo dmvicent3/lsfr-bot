@@ -9,7 +9,7 @@ import {
   rulingsEvent,
   summaryPrompt,
 } from "./rulings.ts";
-import type { Ruling } from "./fia.ts";
+import type { Ruling } from "./types.ts";
 import type { Session } from "../types.ts";
 
 const session = (sessionId: string, start: string, hours = 1): Session => ({

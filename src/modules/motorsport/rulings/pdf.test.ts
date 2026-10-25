@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { parseRuling } from "./fia.ts";
+import { parseRuling } from "./ruling.ts";
 import { pdfText } from "./pdf.ts";
 
 const fixture = new URL("../testing/fixtures/fia-ruling.pdf", import.meta.url);

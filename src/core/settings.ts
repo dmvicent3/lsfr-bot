@@ -1,5 +1,5 @@
 import type { Database } from "bun:sqlite";
-import type { Migration } from "./db.ts";
+import type { Migration } from "./types.ts";
 
 export const coreMigrations: Migration[] = [
   {

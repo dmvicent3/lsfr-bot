@@ -1,8 +1,10 @@
 import { MessageFlags } from "discord.js";
 import { ruleMessage, rulePicker } from "../rules/menus.ts";
-import { describeRule, type Rule, type RuleKind } from "../rules/rules.ts";
+import { describeRule } from "../rules/rules.ts";
+import type { Rule, RuleKind } from "../rules/types.ts";
 import { addRule, RuleError } from "../subscriptions.ts";
-import { type CommandCtx, type Handler, reply } from "./kit.ts";
+import { reply } from "./kit.ts";
+import type { CommandCtx, Handler } from "./types.ts";
 
 const LEGEND =
   "🚫 blocks an article when the answer is yes. ✅ only: with any of these on a feed, its articles need one yes.";

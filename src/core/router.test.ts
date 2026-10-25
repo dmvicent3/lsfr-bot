@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import type { BotModule, ComponentHandler, SlashCommand } from "./module.ts";
+import type { BotModule, ComponentHandler, SlashCommand } from "./types.ts";
 import { buildRouter } from "./router.ts";
 
 const noop = async (): Promise<void> => {};

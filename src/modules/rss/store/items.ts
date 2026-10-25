@@ -1,39 +1,8 @@
+import type { ItemState, StoredItem, NewItem, ItemRow } from "./types.ts";
 import type { Database } from "bun:sqlite";
-import type { FeedItem } from "../feeds/parse.ts";
 
 /** Only this much of a description is ever used (jev reads 1,500 characters). */
 const MAX_DESCRIPTION = 1_500;
-
-export type ItemState = "pending" | "passed" | "posted" | "blocked" | "expired";
-
-export interface StoredItem extends FeedItem {
-  id: number;
-  feedId: number;
-  state: ItemState;
-  createdAt: number;
-}
-
-export interface NewItem {
-  guildId: string;
-  feedId: number;
-  key: string;
-  item: FeedItem;
-  state: ItemState;
-  now: number;
-}
-
-interface ItemRow {
-  id: number;
-  feed_id: number;
-  title: string;
-  link: string | null;
-  guid: string | null;
-  description: string;
-  image: string | null;
-  published_at: number | null;
-  state: ItemState;
-  created_at: number;
-}
 
 const toItem = (r: ItemRow): StoredItem => ({
   id: r.id,

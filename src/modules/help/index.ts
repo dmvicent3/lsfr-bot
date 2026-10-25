@@ -1,5 +1,5 @@
 import { type APIEmbed, ApplicationCommandOptionType, MessageFlags } from "discord.js";
-import type { BotModule } from "../../core/module.ts";
+import type { BotModule } from "../../core/types.ts";
 
 const EMBED_COLOR = 0xe10600;
 

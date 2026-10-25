@@ -1,12 +1,7 @@
-import {
-  type APIActionRowComponent,
-  type APIStringSelectComponent,
-  ComponentType,
-} from "discord.js";
-import { describeRule, question, type Rule, type RuleKind, scopeOf } from "./rules.ts";
-
-type FeedRef = { id: number; name: string };
-type SelectRow = APIActionRowComponent<APIStringSelectComponent>;
+import type { FeedRef, SelectRow } from "./types.ts";
+import { ComponentType } from "discord.js";
+import { describeRule, question, scopeOf } from "./rules.ts";
+import type { Rule, RuleKind } from "./types.ts";
 
 /** Discord's cap on a select menu's options. */
 const MAX_OPTIONS = 25;

@@ -1,6 +1,6 @@
-import type { FetchFn } from "../../../core/guards.ts";
+import type { RulingDeps } from "./types.ts";
+import type { FetchFn } from "../../../core/types.ts";
 import { log } from "../../../core/log.ts";
-import type { Post } from "../post.ts";
 import type { MotorsportRepo } from "../repo.ts";
 import { resultKind } from "../results/results.ts";
 import {
@@ -12,16 +12,8 @@ import {
   rulingsEvent,
   summaryPrompt,
 } from "./rulings.ts";
-import { FIA_DOCUMENTS, isRuling, parseFiaDocuments, parseRuling } from "./fia.ts";
-
-export interface RulingDeps {
-  fetchFn: FetchFn;
-  /** A PDF's text, laid out (pdftotext -layout). */
-  pdfText: (pdf: Uint8Array) => Promise<string>;
-  /** Gemini; may throw (down, out of quota), and then the ruling posts without it. */
-  summarize: (prompt: string) => Promise<string>;
-  post: Post;
-}
+import { FIA_DOCUMENTS, isRuling, parseFiaDocuments } from "./fia.ts";
+import { parseRuling } from "./ruling.ts";
 
 const USER_AGENT = { "user-agent": "Mozilla/5.0 (compatible; Gork Discord bot)" };
 

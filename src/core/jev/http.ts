@@ -1,12 +1,9 @@
-import { type FetchFn, isRecord } from "../guards.ts";
+import type { JevQuestion } from "./types.ts";
+import { isRecord } from "../guards.ts";
+import type { FetchFn } from "../types.ts";
 
 export class JevError extends Error {
   override name = "JevError";
-}
-
-export interface JevQuestion {
-  key: string;
-  instructions: string;
 }
 
 const MAX_STATE = 1_500;

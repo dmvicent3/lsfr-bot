@@ -5,10 +5,10 @@ import {
   buildQuestions,
   describeRule,
   question,
-  type Rule,
   rulesFor,
   verdict,
 } from "./rules.ts";
+import type { Rule } from "./types.ts";
 
 const answers = (...pairs: [string, number][]) => new Map<string, number>(pairs);
 

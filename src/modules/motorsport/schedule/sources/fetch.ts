@@ -1,5 +1,5 @@
-import type { FetchFn } from "../../../../core/guards.ts";
-import type { SeriesInfo } from "../../series.ts";
+import type { FetchFn } from "../../../../core/types.ts";
+import type { SeriesInfo } from "../../types.ts";
 import type { ParsedSession } from "../../types.ts";
 import { parseSportstimes } from "./sportstimes.ts";
 import { parseTunous } from "./tunous.ts";

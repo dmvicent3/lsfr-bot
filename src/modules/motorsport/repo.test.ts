@@ -2,7 +2,8 @@ import { Database } from "bun:sqlite";
 import { beforeEach, describe, expect, test } from "bun:test";
 import { runMigrations } from "../../core/db.ts";
 import { coreMigrations } from "../../core/settings.ts";
-import { type Followed, motorsportMigrations, MotorsportRepo, type StoredResult } from "./repo.ts";
+import { motorsportMigrations, MotorsportRepo } from "./repo.ts";
+import type { Followed, StoredResult } from "./types.ts";
 import type { Session } from "./types.ts";
 
 let repo: MotorsportRepo;

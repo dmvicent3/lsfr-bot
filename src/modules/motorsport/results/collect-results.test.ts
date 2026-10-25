@@ -1,12 +1,12 @@
 import { Database } from "bun:sqlite";
 import { beforeEach, describe, expect, test } from "bun:test";
 import { runMigrations } from "../../../core/db.ts";
-import type { FetchFn } from "../../../core/guards.ts";
+import type { FetchFn } from "../../../core/types.ts";
 import { coreMigrations } from "../../../core/settings.ts";
 import { collectResults, latestResult } from "./collect-results.ts";
 import { motorsportMigrations, MotorsportRepo } from "../repo.ts";
 import { fixture } from "../testing/fixtures.ts";
-import type { PostMessage, PostTarget } from "../post.ts";
+import type { PostMessage, PostTarget } from "../types.ts";
 import type { Session } from "../types.ts";
 
 const RACE_START = Date.parse("2026-10-11T12:00:00Z");

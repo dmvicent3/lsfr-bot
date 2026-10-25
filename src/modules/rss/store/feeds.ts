@@ -1,22 +1,5 @@
+import type { Feed, FeedRow } from "./types.ts";
 import type { Database } from "bun:sqlite";
-
-export interface Feed {
-  id: number;
-  guildId: string;
-  url: string;
-  name: string;
-  failures: number;
-  warned: boolean;
-}
-
-interface FeedRow {
-  id: number;
-  guild_id: string;
-  url: string;
-  name: string;
-  failures: number;
-  warned: number;
-}
 
 const toFeed = (r: FeedRow): Feed => ({
   id: r.id,

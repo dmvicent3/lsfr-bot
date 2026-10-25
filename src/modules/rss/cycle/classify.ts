@@ -1,9 +1,10 @@
 import { JevError } from "../../../core/jev/http.ts";
-import { articleState, buildQuestions, type Rule, rulesFor, verdict } from "../rules/rules.ts";
-import type { StoredItem } from "../store/items.ts";
-import type { Server } from "../store/servers.ts";
-import type { CycleDeps } from "./cycle.ts";
-import type { JevOutcome } from "./decisions.ts";
+import { articleState, buildQuestions, rulesFor, verdict } from "../rules/rules.ts";
+import type { Rule } from "../rules/types.ts";
+import type { StoredItem } from "../store/types.ts";
+import type { Server } from "../store/types.ts";
+import type { CycleDeps } from "./types.ts";
+import type { JevOutcome } from "./types.ts";
 
 /** Articles classified per server per cycle; the rest wait for the next. */
 export const MAX_CLASSIFY = 30;

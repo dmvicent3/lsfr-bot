@@ -1,24 +1,9 @@
+import type { ResultKind, ResultRow, SessionResult } from "./types.ts";
 import { isRecord, isString } from "../../../core/guards.ts";
-import { isSeriesKey, type SeriesInfo } from "../series.ts";
+import { isSeriesKey } from "../series.ts";
+import type { SeriesInfo } from "../types.ts";
 import { fitName, fitTeam, formatTable, posLabel, tableMessage } from "../table.ts";
 import type { SeriesKey, Session } from "../types.ts";
-
-export type ResultKind = "qualifying" | "sprint-qualifying" | "sprint" | "race";
-
-export interface ResultRow {
-  /** "1".."20", or "–" for an unclassified finisher. */
-  pos: string;
-  /** Stable across sessions (F1 car number, MotoGP rider id); names can change form. */
-  id: string;
-  name: string;
-  team: string;
-  /** Winner's time, a gap ("+3.123", "+1 lap"), a lap time, or "DNF". */
-  time: string;
-}
-
-export interface SessionResult {
-  rows: ResultRow[];
-}
 
 export function isResultRows(value: unknown): value is ResultRow[] {
   return (

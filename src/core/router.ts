@@ -1,10 +1,5 @@
-import type { BotModule, ComponentHandler, SlashCommand } from "./module.ts";
-
-export interface Router {
-  command(name: string): SlashCommand | undefined;
-  component(customId: string): { handler: ComponentHandler; args: string[] } | undefined;
-  commands: SlashCommand[];
-}
+import type { Router } from "./types.ts";
+import type { BotModule, ComponentHandler, SlashCommand } from "./types.ts";
 
 export function buildRouter(modules: BotModule[]): Router {
   const commands = new Map<string, SlashCommand>();

@@ -1,6 +1,6 @@
 import { MessageFlags } from "discord.js";
 import { log } from "../../core/log.ts";
-import type { ComponentHandler, Ctx } from "../../core/module.ts";
+import type { ComponentHandler, Ctx } from "../../core/types.ts";
 import { notFollowedText, setReminders, togglePings } from "./pings/actions.ts";
 import { deleteSeriesChannel, fetchSeriesChannel, updatePinned } from "./channels/channels.ts";
 import { predictPicker, savePick } from "./predictions/predict-actions.ts";

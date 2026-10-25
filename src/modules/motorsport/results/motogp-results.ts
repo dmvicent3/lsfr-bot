@@ -1,5 +1,6 @@
 import { asText, isRecord, isString } from "../../../core/guards.ts";
-import { lapsDown, type ResultKind, type SessionResult } from "./results.ts";
+import { lapsDown } from "./results.ts";
+import type { ResultKind, SessionResult } from "./types.ts";
 
 export const MOTOGP_RESULTS = "https://api.motogp.pulselive.com/motogp";
 

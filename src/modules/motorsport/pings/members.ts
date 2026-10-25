@@ -1,7 +1,4 @@
-interface MemberSource {
-  id: string;
-  members: { fetch(): Promise<unknown> };
-}
+import type { MemberSource } from "./types.ts";
 
 /**
  * Loads a guild's full member list once per process. With the GuildMembers intent the

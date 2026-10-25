@@ -1,9 +1,5 @@
+import type { ProcessLike } from "./types.ts";
 import { log } from "./log.ts";
-
-interface ProcessLike {
-  on(event: "unhandledRejection" | "uncaughtException", listener: (err: unknown) => void): unknown;
-  exit(code: number): void;
-}
 
 /**
  * Last-resort handlers: a stray rejected promise is logged and the bot carries on; an

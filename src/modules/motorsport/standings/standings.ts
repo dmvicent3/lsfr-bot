@@ -1,5 +1,7 @@
-import { asText, type FetchFn, isRecord, isString } from "../../../core/guards.ts";
-import type { SeriesInfo } from "../series.ts";
+import type { Championship, Standings } from "./types.ts";
+import { asText, isRecord, isString } from "../../../core/guards.ts";
+import type { FetchFn } from "../../../core/types.ts";
+import type { SeriesInfo } from "../types.ts";
 import { getJson } from "../schedule/sources/fetch.ts";
 import {
   MOTOGP_RESULTS,
@@ -9,23 +11,6 @@ import {
 } from "../results/motogp-results.ts";
 import { fitName, fitTeam, formatTable, posLabel, tableMessage } from "../table.ts";
 import type { SeriesKey } from "../types.ts";
-
-export type Championship = "drivers" | "constructors";
-
-export interface StandingRow {
-  pos: string;
-  name: string;
-  /** Empty for constructors. */
-  team: string;
-  points: string;
-  wins: string;
-}
-
-export interface Standings {
-  /** The round the standings are after, when the source says. */
-  round: number | null;
-  rows: StandingRow[];
-}
 
 const JOLPICA = "https://api.jolpi.ca/ergast/f1/current";
 

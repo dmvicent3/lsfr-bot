@@ -1,16 +1,5 @@
+import type { Server, ServerRow } from "./types.ts";
 import type { Database } from "bun:sqlite";
-
-export interface Server {
-  guildId: string;
-  channelId: string;
-  jevDown: boolean;
-}
-
-interface ServerRow {
-  guild_id: string;
-  channel_id: string | null;
-  jev_down: number;
-}
 
 /** rss_servers: each server's news channel and whether it was last told jev is down. */
 export class ServerStore {

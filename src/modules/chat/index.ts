@@ -1,8 +1,11 @@
+import type { Picked, Mention } from "./types.ts";
 import { Events, Message } from "discord.js";
-import { generate, type InlineImage } from "../../core/llm.ts";
+import { generate } from "../../core/llm.ts";
+import type { InlineImage } from "../../core/types.ts";
 import { log } from "../../core/log.ts";
-import type { BotModule, Ctx } from "../../core/module.ts";
-import { downloadImages, type ImageRef, imageNotes, selectImages } from "./images.ts";
+import type { BotModule, Ctx } from "../../core/types.ts";
+import { downloadImages, imageNotes, selectImages } from "./images.ts";
+import type { ImageRef } from "./types.ts";
 import { PERSONALITY } from "./personality.ts";
 import { buildConversation, collectChain, splitMessage, stripMentions } from "./text.ts";
 
@@ -29,15 +32,6 @@ function promptOf(chain: Message[], botId: string, byUrl: Map<string, InlineImag
       images: refsOf(m, botId).flatMap((ref) => byUrl.get(ref.url) ?? []),
     })),
   );
-}
-
-type Picked = ReturnType<typeof selectImages>;
-
-/** The mention being answered: the message, its reply chain, and Gork's own user id. */
-interface Mention {
-  message: Message;
-  chain: Message[];
-  botId: string;
 }
 
 /** Downloads the chosen images, asks Gemini, and replies in Discord-sized chunks. */

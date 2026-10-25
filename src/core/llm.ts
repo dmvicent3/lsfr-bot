@@ -1,4 +1,6 @@
-import { type FetchFn, isRecord, isString } from "./guards.ts";
+import type { Turn } from "./types.ts";
+import { isRecord, isString } from "./guards.ts";
+import type { FetchFn } from "./types.ts";
 
 export class LlmError extends Error {
   override name = "LlmError";
@@ -13,18 +15,6 @@ function responseText(body: unknown): string {
   return parts
     .map((part: unknown) => (isRecord(part) && isString(part["text"]) ? part["text"] : ""))
     .join("");
-}
-
-/** Image bytes sent inline, base64-encoded. */
-export interface InlineImage {
-  mimeType: string;
-  data: string;
-}
-
-export interface Turn {
-  role: "user" | "model";
-  text: string;
-  images?: InlineImage[];
 }
 
 function turnParts(t: Turn): unknown[] {

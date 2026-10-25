@@ -1,7 +1,7 @@
 import { AttachmentBuilder, type Guild, RateLimitError, type Role } from "discord.js";
 import { generate } from "../../core/llm.ts";
 import { log } from "../../core/log.ts";
-import type { Ctx, Job } from "../../core/module.ts";
+import type { Ctx, Job } from "../../core/types.ts";
 import { safely } from "../../core/scheduler.ts";
 import {
   deleteSeriesChannel,
@@ -9,9 +9,9 @@ import {
   eventThread,
   fetchSeriesChannel,
   fetchSeriesRole,
-  type SeriesChannel,
   updatePinned,
 } from "./channels/channels.ts";
+import type { SeriesChannel } from "./channels/types.ts";
 import { collectResults } from "./results/collect-results.ts";
 import { collectRulings } from "./rulings/collect-rulings.ts";
 import {
@@ -23,10 +23,11 @@ import {
 import { pingDeleteIsHopeless } from "./errors.ts";
 import { getLeadMinutes } from "./pings/lead.ts";
 import { memberLoader } from "./pings/members.ts";
-import type { Post } from "./post.ts";
+import type { Post } from "./types.ts";
 import { refreshAll, refreshWeather } from "./schedule/refresh.ts";
 import { renderPing } from "./channels/render.ts";
-import { type Followed, MotorsportRepo } from "./repo.ts";
+import { MotorsportRepo } from "./repo.ts";
+import type { Followed } from "./types.ts";
 import { seriesInfo } from "./series.ts";
 import { pdfText } from "./rulings/pdf.ts";
 import { channelName } from "./time.ts";

@@ -1,9 +1,11 @@
-import { type APIEmbed, DiscordAPIError, RESTJSONErrorCodes } from "discord.js";
-import type { Jev } from "../../core/jev/queue.ts";
+import type { Message } from "./types.ts";
+import { DiscordAPIError, RESTJSONErrorCodes } from "discord.js";
+import type { Jev } from "../../core/jev/types.ts";
 import { log } from "../../core/log.ts";
-import type { Ctx, Job } from "../../core/module.ts";
+import type { Ctx, Job } from "../../core/types.ts";
 import { safely } from "../../core/scheduler.ts";
-import { type PostResult, runCycle } from "./cycle/cycle.ts";
+import { runCycle } from "./cycle/cycle.ts";
+import type { PostResult } from "./cycle/types.ts";
 import { fetchFeed } from "./feeds/fetch.ts";
 import { RssRepo } from "./store/repo.ts";
 
@@ -17,8 +19,6 @@ const LOST = new Set<unknown>([
 export function sendFailure(err: unknown): PostResult {
   return err instanceof DiscordAPIError && LOST.has(err.code) ? "lost-channel" : "failed";
 }
-
-type Message = { embeds: APIEmbed[] } | { content: string };
 
 /** Feed text is untrusted: a title like "@everyone" must not ping. */
 export function outgoing(message: Message): Message & { allowedMentions: { parse: [] } } {

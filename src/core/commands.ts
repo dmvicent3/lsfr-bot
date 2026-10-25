@@ -1,7 +1,7 @@
 import { REST, Routes } from "discord.js";
 import { isRecord, isString } from "./guards.ts";
 import { log } from "./log.ts";
-import type { Ctx, SlashCommand } from "./module.ts";
+import type { Ctx, SlashCommand } from "./types.ts";
 import { retry } from "./retry.ts";
 
 /** Global commands are registered for every server the bot is in; the rest for config.guildId only. */

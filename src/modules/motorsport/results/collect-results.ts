@@ -1,8 +1,9 @@
-import type { FetchFn } from "../../../core/guards.ts";
+import type { FetchFn } from "../../../core/types.ts";
 import { log } from "../../../core/log.ts";
-import type { Post } from "../post.ts";
+import type { Post } from "../types.ts";
 import { renderPredictionResults } from "../predictions/predictions.ts";
-import type { MotorsportRepo, StoredResult } from "../repo.ts";
+import type { MotorsportRepo } from "../repo.ts";
+import type { StoredResult } from "../types.ts";
 import { renderResults, resultKind, resultSeries, resultsDue } from "./results.ts";
 import { seriesInfo } from "../series.ts";
 import { fetchResult } from "./results-fetch.ts";

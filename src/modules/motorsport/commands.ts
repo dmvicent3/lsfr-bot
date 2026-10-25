@@ -6,7 +6,7 @@ import {
   MessageFlags,
   SlashCommandBuilder,
 } from "discord.js";
-import type { Ctx, SlashCommand } from "../../core/module.ts";
+import type { Ctx, SlashCommand } from "../../core/types.ts";
 import { setSetting } from "../../core/settings.ts";
 import { notFollowedText, togglePings, toggleReminder } from "./pings/actions.ts";
 import { log } from "../../core/log.ts";

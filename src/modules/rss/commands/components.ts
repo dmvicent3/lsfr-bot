@@ -1,5 +1,5 @@
 import { type MessageComponentInteraction, PermissionFlagsBits } from "discord.js";
-import type { ComponentHandler } from "../../../core/module.ts";
+import type { ComponentHandler } from "../../../core/types.ts";
 import { ruleMessage } from "../rules/menus.ts";
 import { RssRepo } from "../store/repo.ts";
 

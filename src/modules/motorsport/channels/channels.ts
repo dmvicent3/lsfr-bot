@@ -1,3 +1,4 @@
+import type { SeriesChannel } from "./types.ts";
 import {
   type CategoryChannel,
   ChannelType,
@@ -5,7 +6,6 @@ import {
   type Guild,
   type GuildBasedChannel,
   type Message,
-  type NewsChannel,
   PermissionFlagsBits,
   RESTJSONErrorCodes,
   type Role,
@@ -16,14 +16,13 @@ import {
 import { keyedLock } from "../../../core/scheduler.ts";
 import { currentEvent } from "./decisions.ts";
 import { renderSchedule } from "./render.ts";
-import type { PostTarget } from "../post.ts";
-import type { Followed, MotorsportRepo } from "../repo.ts";
-import { seriesInfo, type SeriesInfo } from "../series.ts";
+import type { PostTarget } from "../types.ts";
+import type { MotorsportRepo } from "../repo.ts";
+import type { Followed } from "../types.ts";
+import { seriesInfo } from "../series.ts";
+import type { SeriesInfo } from "../types.ts";
 
 const CATEGORY_NAME = "Motorsport";
-
-/** The series channel; admins may turn it into an announcement channel, which still works. */
-export type SeriesChannel = TextChannel | NewsChannel;
 
 export function isSeriesChannelType(type: ChannelType): boolean {
   return type === ChannelType.GuildText || type === ChannelType.GuildAnnouncement;

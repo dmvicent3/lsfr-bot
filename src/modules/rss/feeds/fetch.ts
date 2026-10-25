@@ -1,5 +1,6 @@
-import type { FetchFn } from "../../../core/guards.ts";
-import { checkHost, type Lookup, resolve } from "./host.ts";
+import type { FetchFn } from "../../../core/types.ts";
+import { checkHost, resolve } from "./host.ts";
+import type { Lookup } from "./types.ts";
 import { FeedError } from "./parse.ts";
 
 export const MAX_FEED_BYTES = 2_000_000;

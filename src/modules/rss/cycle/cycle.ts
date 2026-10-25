@@ -1,8 +1,6 @@
-import type { APIEmbed } from "discord.js";
-import type { Jev } from "../../../core/jev/queue.ts";
-import type { Feed } from "../store/feeds.ts";
-import type { RssRepo } from "../store/repo.ts";
-import type { Server } from "../store/servers.ts";
+import type { CycleDeps } from "./types.ts";
+import type { Feed } from "../store/types.ts";
+import type { Server } from "../store/types.ts";
 import { classify } from "./classify.ts";
 import { collect } from "./collect.ts";
 import { expiryCutoff, notice } from "./decisions.ts";
@@ -13,17 +11,6 @@ const KEEP_MS = 30 * 24 * 3_600_000;
 const MAX_POST = 50;
 const DOWN = "⚠️ jev is down, new articles will be checked once it's back.";
 const BACK = "✅ jev is back.";
-
-export type PostResult = "ok" | "lost-channel" | "failed";
-
-export interface CycleDeps {
-  repo: RssRepo;
-  jev: Jev;
-  fetchFeed: (url: string) => Promise<string>;
-  post: (channelId: string, embed: APIEmbed) => Promise<PostResult>;
-  say: (channelId: string, text: string) => Promise<void>;
-  now: () => number;
-}
 
 /** Tells the channel when jev goes down or comes back, once each way. */
 async function announce(server: Server, d: CycleDeps): Promise<void> {

@@ -1,12 +1,13 @@
 import type { Database } from "bun:sqlite";
 import { Client, Events, GatewayIntentBits } from "discord.js";
 import { registerCommands } from "./commands.ts";
-import type { Config } from "./config.ts";
+import type { Config } from "./types.ts";
 import { routeInteraction } from "./interactions.ts";
 import { log } from "./log.ts";
-import type { BotModule, Ctx } from "./module.ts";
+import type { BotModule, Ctx } from "./types.ts";
 import { rejectRenameRateLimit } from "./rate-limit.ts";
-import { buildRouter, type Router } from "./router.ts";
+import { buildRouter } from "./router.ts";
+import type { Router } from "./types.ts";
 import { safely, startJobs } from "./scheduler.ts";
 
 function createClient(): Client {

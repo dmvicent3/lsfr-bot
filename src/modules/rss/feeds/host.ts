@@ -1,8 +1,7 @@
+import type { Lookup } from "./types.ts";
 import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";
 import { FeedError } from "./parse.ts";
-
-export type Lookup = (host: string) => Promise<string[]>;
 
 export const resolve: Lookup = async (host) =>
   (await lookup(host, { all: true })).map((a) => a.address);

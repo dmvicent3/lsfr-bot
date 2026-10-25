@@ -1,12 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import {
-  buildConversation,
-  type ChainMessage,
-  collectChain,
-  MAX_CHAIN,
-  splitMessage,
-  stripMentions,
-} from "./text.ts";
+import { buildConversation, collectChain, MAX_CHAIN, splitMessage, stripMentions } from "./text.ts";
+import type { ChainMessage } from "./types.ts";
 
 test("stripMentions removes user mentions", () => {
   expect(stripMentions("<@1> hi <@!2>")).toBe("hi");

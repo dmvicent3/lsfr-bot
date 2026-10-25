@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { splitCommands } from "./commands.ts";
-import type { SlashCommand } from "./module.ts";
+import type { SlashCommand } from "./types.ts";
 
 function command(name: string, global?: true): SlashCommand {
   return {

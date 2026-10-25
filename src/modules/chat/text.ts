@@ -1,4 +1,5 @@
-import type { InlineImage, Turn } from "../../core/llm.ts";
+import type { ChainMessage } from "./types.ts";
+import type { Turn } from "../../core/types.ts";
 
 const MENTION = /<@!?\d+>/g;
 
@@ -8,13 +9,6 @@ export function stripMentions(content: string): string {
 
 /** How many messages of a reply chain (including the new one) Gork remembers. */
 export const MAX_CHAIN = 10;
-
-export interface ChainMessage {
-  fromBot: boolean;
-  author: string;
-  text: string;
-  images?: InlineImage[];
-}
 
 /**
  * Walks a reply chain back from `start` (at most MAX_CHAIN messages) and returns it oldest

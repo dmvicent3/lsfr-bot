@@ -1,25 +1,15 @@
-import {
-  type APIActionRowComponent,
-  type APIButtonComponentWithCustomId,
-  type APIComponentInMessageActionRow,
-  ButtonStyle,
-  ComponentType,
-} from "discord.js";
+import type {
+  WeatherMap,
+  PredictionCounts,
+  SchedulePayload,
+  PingInput,
+  PingPayload,
+} from "./types.ts";
+import { type APIButtonComponentWithCustomId, ButtonStyle, ComponentType } from "discord.js";
 import { isPredictable } from "../predictions/predictions.ts";
-import type { SeriesInfo } from "../series.ts";
+import type { SeriesInfo } from "../types.ts";
 import type { EventSchedule, Session } from "../types.ts";
-import { type Forecast, formatWeather } from "../weather/weather.ts";
-
-/** Forecasts keyed by `eventId/sessionId`. */
-export type WeatherMap = ReadonlyMap<string, Forecast>;
-
-/** Complete predictions per session id of the shown event. */
-export type PredictionCounts = ReadonlyMap<string, number>;
-
-export interface SchedulePayload {
-  content: string;
-  components: APIActionRowComponent<APIComponentInMessageActionRow>[];
-}
+import { formatWeather } from "../weather/weather.ts";
 
 const MAX_SELECT_OPTIONS = 25;
 
@@ -138,20 +128,6 @@ export function renderReminderPicker(
       },
     ],
   };
-}
-
-export interface PingInput {
-  info: SeriesInfo;
-  session: Session;
-  roleId: string;
-  roleHasMembers: boolean;
-  roleMemberIds: ReadonlySet<string>;
-  oneOffUserIds: string[];
-}
-
-export interface PingPayload {
-  content: string;
-  allowedMentions: { roles: string[]; users: string[] };
 }
 
 export function renderPing(p: PingInput): PingPayload | null {

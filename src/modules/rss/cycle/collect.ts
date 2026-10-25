@@ -1,8 +1,8 @@
 import { parseFeed } from "../feeds/parse.ts";
 import { itemKey } from "../feeds/urls.ts";
-import type { Feed } from "../store/feeds.ts";
-import type { Server } from "../store/servers.ts";
-import type { CycleDeps } from "./cycle.ts";
+import type { Feed } from "../store/types.ts";
+import type { Server } from "../store/types.ts";
+import type { CycleDeps } from "./types.ts";
 import { expiryCutoff, feedResult } from "./decisions.ts";
 
 const reason = (err: unknown): string => (err instanceof Error ? err.message : String(err));

@@ -1,5 +1,5 @@
 import type { APIEmbed } from "discord.js";
-import type { FeedItem } from "../feeds/parse.ts";
+import type { FeedItem } from "../feeds/types.ts";
 import { httpUrl } from "../feeds/urls.ts";
 
 const MAX_TITLE = 256;

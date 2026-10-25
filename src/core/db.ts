@@ -1,11 +1,7 @@
+import type { Migration } from "./types.ts";
 import { Database } from "bun:sqlite";
 import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
-
-export interface Migration {
-  id: string;
-  sql: string;
-}
 
 export function openDatabase(path: string): Database {
   mkdirSync(dirname(path), { recursive: true });

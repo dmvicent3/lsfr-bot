@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import type { FetchFn } from "../../../core/guards.ts";
+import type { FetchFn } from "../../../core/types.ts";
 import { fetchFeed, MAX_FEED_BYTES } from "./fetch.ts";
 import { FeedError } from "./parse.ts";
 

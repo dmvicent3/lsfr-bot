@@ -1,4 +1,4 @@
-import type { FeedItem } from "./parse.ts";
+import type { FeedItem } from "./types.ts";
 
 /**
  * What makes two items the same article: the guid, else the link without its fragment and utm_*

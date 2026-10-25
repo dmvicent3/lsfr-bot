@@ -1,10 +1,21 @@
+import type {
+  PicksRow,
+  StoredResult,
+  Followed,
+  SentPing,
+  DuePing,
+  FollowedRow,
+  SessionRow,
+  DueRow,
+} from "./types.ts";
 import type { Database } from "bun:sqlite";
-import type { Migration } from "../../core/db.ts";
+import type { Migration } from "../../core/types.ts";
 import { isSeriesKey } from "./series.ts";
 import type { SeriesKey, Session } from "./types.ts";
-import type { FullPicks, Picks, Prediction } from "./predictions/predictions.ts";
-import { isResultRows, type ResultKind, type ResultRow } from "./results/results.ts";
-import type { Forecast } from "./weather/weather.ts";
+import type { FullPicks, Picks, Prediction } from "./predictions/types.ts";
+import { isResultRows } from "./results/results.ts";
+import type { ResultKind, ResultRow } from "./results/types.ts";
+import type { Forecast } from "./weather/types.ts";
 
 export const motorsportMigrations: Migration[] = [
   {
@@ -115,78 +126,9 @@ export const motorsportMigrations: Migration[] = [
   },
 ];
 
-interface PicksRow {
-  user_id: string;
-  p1: string | null;
-  p2: string | null;
-  p3: string | null;
-}
-
 const picksOf = (r: PicksRow): Picks => [r.p1, r.p2, r.p3];
 
 const COMPLETE = "p1 IS NOT NULL AND p2 IS NOT NULL AND p3 IS NOT NULL";
-
-/** A session's classification, kept once posted (also the record F4 predictions score against). */
-export interface StoredResult {
-  series: SeriesKey;
-  eventId: string;
-  eventName: string;
-  sessionId: string;
-  kind: ResultKind;
-  rows: ResultRow[];
-  postedAt: number;
-}
-
-export interface Followed {
-  series: SeriesKey;
-  channelId: string;
-  roleId: string;
-  pinnedMessageId: string;
-  pinnedEventId: string | null;
-  channelName: string | null;
-  renamedAt: number | null;
-}
-
-export interface SentPing {
-  series: SeriesKey;
-  eventId: string;
-  sessionId: string;
-  channelId: string;
-  /** null = the session was handled but there was nobody to ping. */
-  messageId: string | null;
-  deleteAt: number;
-}
-
-export type DuePing = Omit<SentPing, "messageId" | "deleteAt"> & { messageId: string };
-
-interface FollowedRow {
-  series: string;
-  channel_id: string;
-  role_id: string;
-  pinned_message_id: string;
-  pinned_event_id: string | null;
-  channel_name: string | null;
-  renamed_at: number | null;
-}
-
-interface SessionRow {
-  series: string;
-  event_id: string;
-  event_name: string;
-  session_id: string;
-  title: string;
-  start: number;
-  end: number;
-  pingable: number;
-}
-
-interface DueRow {
-  series: string;
-  event_id: string;
-  session_id: string;
-  channel_id: string;
-  message_id: string;
-}
 
 function seriesKey(value: string): SeriesKey {
   if (!isSeriesKey(value)) throw new Error(`Unknown series in database: ${value}`);
@@ -213,7 +155,6 @@ const FOLLOWED_COLUMNS = {
   channelName: "channel_name",
   renamedAt: "renamed_at",
 } as const satisfies Record<Exclude<keyof Followed, "series">, string>;
-
 type FollowedPatchKey = keyof typeof FOLLOWED_COLUMNS;
 
 function isPatchKey(k: string): k is FollowedPatchKey {

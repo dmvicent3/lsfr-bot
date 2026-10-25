@@ -1,15 +1,9 @@
+import type { Upcoming } from "./types.ts";
 import type { APIEmbed } from "discord.js";
 import { SERIES } from "../series.ts";
 import type { SeriesKey, Session } from "../types.ts";
 
 const EMBED_COLOR = 0xe10600;
-
-interface Upcoming {
-  name: string;
-  session: Session;
-  live: boolean;
-  channelId: string | undefined;
-}
 
 /** The live or next pinged session of one series, or null when the season is over. */
 function upcomingOf(sessions: Session[], now: number): { session: Session; live: boolean } | null {

@@ -1,12 +1,5 @@
+import type { SeriesInfo } from "./types.ts";
 import type { SeriesKey } from "./types.ts";
-
-export interface SeriesInfo {
-  key: SeriesKey;
-  name: string;
-  source: "tunous" | "sportstimes";
-  /** Folder name in the source repo. */
-  path: string;
-}
 
 export const SERIES: readonly SeriesInfo[] = [
   { key: "f1", name: "F1", source: "tunous", path: "formula1" },

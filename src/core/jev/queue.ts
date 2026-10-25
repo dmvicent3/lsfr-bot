@@ -1,16 +1,7 @@
-import type { FetchFn } from "../guards.ts";
-import { JevError, type JevQuestion, postYesNo } from "./http.ts";
-
-export interface Jev {
-  yesNo(state: string, questions: JevQuestion[]): Promise<Map<string, number>>;
-}
-
-export interface JevOptions {
-  url: string;
-  fetchFn?: FetchFn;
-  now?: () => number;
-  sleep?: (ms: number) => Promise<void>;
-}
+import type { Jev, JevOptions } from "./types.ts";
+import type { FetchFn } from "../types.ts";
+import { JevError, postYesNo } from "./http.ts";
+import type { JevQuestion } from "./types.ts";
 
 const MIN_GAP_MS = 1_000;
 /** Pause after the 1st, 2nd, … consecutive failure; the last value repeats. */

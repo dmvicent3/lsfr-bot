@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { ComponentType } from "discord.js";
 import { feedMenu, ruleMessage, rulePicker } from "./menus.ts";
-import type { Rule } from "./rules.ts";
+import type { Rule } from "./types.ts";
 
 const feeds = [
   { id: 7, name: "TASS" },

@@ -1,7 +1,7 @@
 import { Database } from "bun:sqlite";
 import { beforeEach, describe, expect, test } from "bun:test";
 import { runMigrations } from "../../../core/db.ts";
-import type { FetchFn } from "../../../core/guards.ts";
+import type { FetchFn } from "../../../core/types.ts";
 import { coreMigrations } from "../../../core/settings.ts";
 import { predictionGrid, predictPicker, savePick, seasonLeaderboard } from "./predict-actions.ts";
 import { motorsportMigrations, MotorsportRepo } from "../repo.ts";

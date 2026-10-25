@@ -1,7 +1,7 @@
 import { type Interaction, MessageFlags, type RepliableInteraction } from "discord.js";
 import { log } from "./log.ts";
-import type { Ctx } from "./module.ts";
-import type { Router } from "./router.ts";
+import type { Ctx } from "./types.ts";
+import type { Router } from "./types.ts";
 
 /**
  * Buttons on old messages (e.g. from the previous bot) or a command Discord still lists

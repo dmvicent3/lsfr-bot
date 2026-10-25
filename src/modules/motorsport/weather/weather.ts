@@ -1,18 +1,6 @@
+import type { Forecast, Coords } from "./types.ts";
 import { isRecord, isString } from "../../../core/guards.ts";
 import type { Session } from "../types.ts";
-
-export interface Forecast {
-  tempC: number;
-  /** Precipitation probability, 0–100. */
-  rainChance: number;
-  /** WMO weather code. */
-  code: number;
-}
-
-export interface Coords {
-  lat: number;
-  lon: number;
-}
 
 /** Open-Meteo forecasts reach 16 days ahead. */
 export const FORECAST_DAYS = 16;
@@ -21,17 +9,23 @@ export function forecastUrl({ lat, lon }: Coords): string {
   return `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,precipitation_probability,weather_code&timezone=UTC&forecast_days=${FORECAST_DAYS}`;
 }
 
+/** [lowest WMO code, highest, emoji]: clear, fog, drizzle, rain, snow, thunderstorm. */
+const WMO_EMOJI: readonly (readonly [number, number, string])[] = [
+  [0, 0, "☀️"],
+  [1, 2, "🌤️"],
+  [3, 3, "☁️"],
+  [45, 48, "🌫️"],
+  [51, 57, "🌦️"],
+  [61, 67, "🌧️"],
+  [80, 82, "🌧️"],
+  [71, 77, "🌨️"],
+  [85, 86, "🌨️"],
+  [95, Infinity, "⛈️"],
+];
+
 /** WMO weather code → emoji. */
 export function weatherEmoji(code: number): string {
-  if (code === 0) return "☀️";
-  if (code <= 2) return "🌤️";
-  if (code === 3) return "☁️";
-  if (code === 45 || code === 48) return "🌫️";
-  if (code >= 51 && code <= 57) return "🌦️";
-  if ((code >= 61 && code <= 67) || (code >= 80 && code <= 82)) return "🌧️";
-  if ((code >= 71 && code <= 77) || code === 85 || code === 86) return "🌨️";
-  if (code >= 95) return "⛈️";
-  return "🌡️";
+  return WMO_EMOJI.find(([lo, hi]) => code >= lo && code <= hi)?.[2] ?? "🌡️";
 }
 
 export function formatWeather(f: Forecast): string {
@@ -62,22 +56,23 @@ export function forecastAt(json: unknown, at: Date): Forecast | null {
 
 const day = (d: Date): string => d.toISOString().slice(0, 10);
 
+/** A sportstimes race as [race UTC date, coordinates]; none when either is missing. */
+function raceCoords(race: unknown): [string, Coords][] {
+  if (!isRecord(race) || !isRecord(race["sessions"])) return [];
+  const gp = race["sessions"]["gp"];
+  const lat = Number(race["latitude"]);
+  const lon = Number(race["longitude"]);
+  if (!isString(gp) || Number.isNaN(lat) || Number.isNaN(lon)) return [];
+  return [[gp.slice(0, 10), { lat, lon }]];
+}
+
 /**
  * Tunous F1 data has no coordinates; sportstimes' F1 calendar does. Events are matched on
  * the race's UTC date.
  */
 export function coordsByEvent(f1Sessions: Session[], sportstimesF1: unknown): Map<string, Coords> {
-  const byRaceDay = new Map<string, Coords>();
-  if (isRecord(sportstimesF1) && Array.isArray(sportstimesF1["races"])) {
-    for (const race of sportstimesF1["races"] as unknown[]) {
-      if (!isRecord(race) || !isRecord(race["sessions"])) continue;
-      const gp = race["sessions"]["gp"];
-      const lat = Number(race["latitude"]);
-      const lon = Number(race["longitude"]);
-      if (!isString(gp) || Number.isNaN(lat) || Number.isNaN(lon)) continue;
-      byRaceDay.set(gp.slice(0, 10), { lat, lon });
-    }
-  }
+  const races = isRecord(sportstimesF1) ? sportstimesF1["races"] : undefined;
+  const byRaceDay = new Map(Array.isArray(races) ? races.flatMap(raceCoords) : []);
   const coords = new Map<string, Coords>();
   for (const s of f1Sessions) {
     if (s.sessionId !== "race") continue;

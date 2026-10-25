@@ -1,12 +1,6 @@
+import type { RuleRow } from "./types.ts";
 import type { Database } from "bun:sqlite";
-import type { Rule, RuleKind } from "../rules/rules.ts";
-
-interface RuleRow {
-  id: number;
-  text: string;
-  kind: RuleKind;
-  feed_ids: string | null;
-}
+import type { Rule, RuleKind } from "../rules/types.ts";
 
 const toRule = (r: RuleRow): Rule => ({
   id: r.id,

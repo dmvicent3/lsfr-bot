@@ -5,8 +5,8 @@ import {
   renderResults,
   resultKind,
   resultsDue,
-  type SessionResult,
 } from "./results.ts";
+import type { SessionResult } from "./types.ts";
 import { seriesInfo } from "../series.ts";
 import type { SeriesKey, Session } from "../types.ts";
 

@@ -1,40 +1,16 @@
+import type { Picks, FullPicks, Prediction, Score, Standing, Driver } from "./types.ts";
 import {
   type APIActionRowComponent,
   type APIComponentInMessageActionRow,
   ButtonStyle,
   ComponentType,
 } from "discord.js";
-import type { SchedulePayload } from "../channels/render.ts";
-import { resultKind, type ResultRow } from "../results/results.ts";
-import type { SeriesInfo } from "../series.ts";
+import type { SchedulePayload } from "../channels/types.ts";
+import { resultKind } from "../results/results.ts";
+import type { ResultRow } from "../results/types.ts";
+import type { SeriesInfo } from "../types.ts";
 import { tableMessage } from "../table.ts";
 import type { EventSchedule, SeriesKey, Session } from "../types.ts";
-
-/** P1, P2, P3 driver ids; null until picked. */
-export type Picks = [string | null, string | null, string | null];
-export type FullPicks = [string, string, string];
-
-export interface Prediction {
-  userId: string;
-  picks: FullPicks;
-}
-
-export interface Score {
-  points: number;
-  perfect: boolean;
-}
-
-export interface Standing {
-  userId: string;
-  points: number;
-  perfect: number;
-  played: number;
-}
-
-export interface Driver {
-  id: string;
-  name: string;
-}
 
 const EXACT = 5;
 const ON_PODIUM = 2;
