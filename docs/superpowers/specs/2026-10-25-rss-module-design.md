@@ -20,6 +20,7 @@ Replace the separate `rss-bot` (github.com/dmvicent3/rss-bot) with an `rss` modu
 | jev unavailable | Articles wait as `pending`; one down notice and one back notice per server in the news channel; pending older than 24 h expire |
 | Channel | One news channel per server |
 | Message | Embed: title linking to the article, short description, feed name, date, image if the item has one; no category |
+| Registration | `/rss` is a global command: `SlashCommand` gains `global?: true`; core registers global commands with `Routes.applicationCommands` and the rest per guild as now |
 | Permissions | `/rss` commands need Manage Server (the rest of Gork stays open to everyone: this module is multi-server) |
 | XML | `fast-xml-parser` as a second runtime dependency (hand-parsing RSS/Atom entities, CDATA and namespaces is not worth owning) |
 
@@ -73,10 +74,12 @@ src/modules/rss/
   parse.ts                  RSS 2.0 / Atom XML -> FeedItem[] (title, link, guid, description as plain text, date, image)
   dedupe.ts                 itemKey(item): guid, else normalised link (no fragment, no utm_* params, lowercase host)
   rules.ts                  question(rule), buildQuestions(rules), verdict(answers, rules) -> pass | block(rule)
-  decisions.ts              per check: which feeds are due, which items are new, which pending expire, which notices to send
+  decisions.ts              pure: expiry cut-off, notice transitions, feed failure bookkeeping
+  fetch.ts                  fetchFeed(url): timeout, 2 MB cap, FeedError
+  cycle.ts                  one check for one server, every effect injected (repo, fetchFeed, jev, post, clock): no Discord
   render.ts                 FeedItem + feed name -> embed
   repo.ts                   SQLite access (rss_* tables)
-  jobs.ts                   15-minute scheduler job: fetch, queue, classify, post
+  jobs.ts                   15-minute scheduler job: runs cycle.ts per server with Discord posting wired in
   commands.ts               /rss subcommands + autocomplete
   index.ts                  BotModule
 ```
