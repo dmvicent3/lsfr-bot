@@ -1,5 +1,5 @@
 import type { APIEmbed } from "discord.js";
-import type { Jev } from "../../../core/jev.ts";
+import type { Jev } from "../../../core/jev/queue.ts";
 import type { Feed } from "../store/feeds.ts";
 import type { RssRepo } from "../store/repo.ts";
 import type { Server } from "../store/servers.ts";

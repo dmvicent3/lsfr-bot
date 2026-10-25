@@ -48,22 +48,34 @@ export async function collectChain<M>(
  */
 export function buildConversation(chain: ChainMessage[]): Turn[] {
   const turns: Turn[] = [];
-  for (const m of chain) {
-    const images = m.images ?? [];
-    const text = stripMentions(m.text) || (images.length > 0 ? "(sent an image)" : "");
-    if (!text) continue;
-    const role = m.fromBot ? "model" : "user";
-    const line = m.fromBot ? text : `${m.author}: ${text}`;
-    const last = turns.at(-1);
-    if (last?.role === role) {
-      last.text += `\n${line}`;
-      if (images.length > 0) last.images = [...(last.images ?? []), ...images];
-    } else {
-      turns.push({ role, text: line, ...(images.length > 0 ? { images } : {}) });
-    }
+  for (const turn of chain.map(toTurn)) {
+    if (turn) append(turns, turn);
   }
   if (turns[0]?.role === "model") turns.unshift({ role: "user", text: "(earlier conversation)" });
   return turns;
+}
+
+/** One message as a turn; null when it has neither text nor an image. */
+function toTurn(m: ChainMessage): Turn | null {
+  const images = m.images ?? [];
+  const text = stripMentions(m.text) || (images.length > 0 ? "(sent an image)" : "");
+  if (!text) return null;
+  return {
+    role: m.fromBot ? "model" : "user",
+    text: m.fromBot ? text : `${m.author}: ${text}`,
+    ...(images.length > 0 ? { images } : {}),
+  };
+}
+
+/** Adds a turn, merging it into the last one when both are from the same side. */
+function append(turns: Turn[], turn: Turn): void {
+  const last = turns.at(-1);
+  if (last?.role !== turn.role) {
+    turns.push(turn);
+    return;
+  }
+  last.text += `\n${turn.text}`;
+  if (turn.images) last.images = [...(last.images ?? []), ...turn.images];
 }
 
 /** Splits text into Discord-sized chunks, cutting at the last newline inside the limit. */

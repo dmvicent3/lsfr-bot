@@ -1,5 +1,5 @@
 import { type APIEmbed, DiscordAPIError, RESTJSONErrorCodes } from "discord.js";
-import type { Jev } from "../../core/jev.ts";
+import type { Jev } from "../../core/jev/queue.ts";
 import { log } from "../../core/log.ts";
 import type { Ctx, Job } from "../../core/module.ts";
 import { safely } from "../../core/scheduler.ts";

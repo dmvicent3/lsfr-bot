@@ -1,4 +1,4 @@
-import { JevError, type JevQuestion } from "../../../core/jev.ts";
+import { JevError, type JevQuestion } from "../../../core/jev/http.ts";
 import type { FeedItem } from "../feeds/parse.ts";
 
 /** A block rule stops an article; with only-rules, an article must match one of them. */

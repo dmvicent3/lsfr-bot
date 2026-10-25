@@ -1,4 +1,4 @@
-import { createJev } from "../../core/jev.ts";
+import { createJev } from "../../core/jev/queue.ts";
 import type { BotModule } from "../../core/module.ts";
 import { rssCommand } from "./commands/commands.ts";
 import { rssComponents } from "./commands/components.ts";

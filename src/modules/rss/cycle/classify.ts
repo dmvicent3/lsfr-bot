@@ -1,4 +1,4 @@
-import { JevError } from "../../../core/jev.ts";
+import { JevError } from "../../../core/jev/http.ts";
 import { articleState, buildQuestions, type Rule, rulesFor, verdict } from "../rules/rules.ts";
 import type { StoredItem } from "../store/items.ts";
 import type { Server } from "../store/servers.ts";

@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
-import { type FetchFn, isRecord } from "./guards.ts";
-import { createJev, JevError, postYesNo } from "./jev.ts";
+import { type FetchFn, isRecord } from "../guards.ts";
+import { JevError, postYesNo } from "./http.ts";
+import { createJev } from "./queue.ts";
 
 const Q = [
   { key: "r1", instructions: "Is this article about sports?" },
