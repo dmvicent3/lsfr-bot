@@ -2,6 +2,8 @@ import { describe, expect, test } from "bun:test";
 import { JevError } from "../../core/jev.ts";
 import { articleState, buildQuestions, question, verdict } from "./rules.ts";
 
+const answers = (...pairs: [string, number][]) => new Map<string, number>(pairs);
+
 const rules = [
   { id: 3, text: "sports" },
   { id: 9, text: "Is it an advertisement?" },
@@ -25,41 +27,17 @@ describe("buildQuestions", () => {
 
 describe("verdict", () => {
   test("blocks at 0.5 and passes below", () => {
-    expect(
-      verdict(
-        new Map([
-          ["r3", 0.5],
-          ["r9", 0.1],
-        ]),
-        rules,
-      ),
-    ).toEqual({
+    expect(verdict(answers(["r3", 0.5], ["r9", 0.1]), rules)).toEqual({
       kind: "block",
-      rule: rules[0],
+      rule: { id: 3, text: "sports" },
     });
-    expect(
-      verdict(
-        new Map([
-          ["r3", 0.49],
-          ["r9", 0.1],
-        ]),
-        rules,
-      ),
-    ).toEqual({ kind: "pass" });
+    expect(verdict(answers(["r3", 0.49], ["r9", 0.1]), rules)).toEqual({ kind: "pass" });
   });
 
   test("reports the first blocking rule", () => {
-    expect(
-      verdict(
-        new Map([
-          ["r3", 0.9],
-          ["r9", 0.9],
-        ]),
-        rules,
-      ),
-    ).toEqual({
+    expect(verdict(answers(["r3", 0.9], ["r9", 0.9]), rules)).toEqual({
       kind: "block",
-      rule: rules[0],
+      rule: { id: 3, text: "sports" },
     });
   });
 
@@ -68,7 +46,7 @@ describe("verdict", () => {
   });
 
   test("treats a missing answer as a jev failure", () => {
-    expect(() => verdict(new Map([["r3", 0.1]]), rules)).toThrow(JevError);
+    expect(() => verdict(answers(["r3", 0.1]), rules)).toThrow(JevError);
   });
 });
 
