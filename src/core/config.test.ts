@@ -21,6 +21,18 @@ describe("loadConfig", () => {
       geminiApiKey: "k",
       geminiModel: "m",
       databasePath: "./data/gork.db",
+      jevUrl: null,
     });
+  });
+
+  test("reads an optional, trimmed JEV_URL", () => {
+    const base = {
+      DISCORD_TOKEN: "t",
+      DISCORD_GUILD_ID: "g",
+      GEMINI_API_KEY: "k",
+      GEMINI_MODEL: "m",
+    };
+    expect(loadConfig({ ...base, JEV_URL: " http://jev:8017 " }).jevUrl).toBe("http://jev:8017");
+    expect(loadConfig({ ...base, JEV_URL: "  " }).jevUrl).toBeNull();
   });
 });

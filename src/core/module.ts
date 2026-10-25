@@ -20,6 +20,8 @@ export interface Ctx {
 
 export interface SlashCommand {
   data: RESTPostAPIChatInputApplicationCommandsJSONBody;
+  /** Registered for every server the bot is in, not just config.guildId. */
+  global?: true;
   execute(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void>;
   autocomplete?(i: AutocompleteInteraction, ctx: Ctx): Promise<void>;
 }

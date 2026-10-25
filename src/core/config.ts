@@ -4,6 +4,8 @@ export interface Config {
   geminiApiKey: string;
   geminiModel: string;
   databasePath: string;
+  /** The jev service (RSS filtering); null leaves the rss module off. */
+  jevUrl: string | null;
 }
 
 export class ConfigError extends Error {
@@ -24,5 +26,6 @@ export function loadConfig(env: Record<string, string | undefined>): Config {
     geminiApiKey: value("GEMINI_API_KEY"),
     geminiModel: value("GEMINI_MODEL"),
     databasePath: env["DATABASE_PATH"]?.trim() || "./data/gork.db",
+    jevUrl: env["JEV_URL"]?.trim() || null,
   };
 }

@@ -9,6 +9,7 @@ import {
   type Interaction,
   type RepliableInteraction,
 } from "discord.js";
+import { splitCommands } from "./commands.ts";
 import type { Config } from "./config.ts";
 import { log } from "./log.ts";
 import type { BotModule, Ctx } from "./module.ts";
@@ -119,16 +120,27 @@ function commandIdPairs(registered: unknown): [string, string][] {
 /** Jobs run regardless; without commands the bot is unusable, so exit and let Docker restart. */
 async function registerCommands(appId: string, router: Router, ctx: Ctx): Promise<void> {
   const rest = new REST().setToken(ctx.config.discordToken);
+  const { guild, global } = splitCommands(router.commands);
   try {
     const registered = await retry(
-      () =>
-        rest.put(Routes.applicationGuildCommands(appId, ctx.config.guildId), {
-          body: router.commands.map((command) => command.data),
-        }),
+      async () => [
+        ...commandIdPairs(
+          await rest.put(Routes.applicationGuildCommands(appId, ctx.config.guildId), {
+            body: guild.map((command) => command.data),
+          }),
+        ),
+        ...(global.length > 0
+          ? commandIdPairs(
+              await rest.put(Routes.applicationCommands(appId), {
+                body: global.map((command) => command.data),
+              }),
+            )
+          : []),
+      ],
       { attempts: 5, delayMs: 5_000 },
     );
-    for (const [name, id] of commandIdPairs(registered)) ctx.commandIds.set(name, id);
-    log.info("core", `registered ${router.commands.length} commands`);
+    for (const [name, id] of registered) ctx.commandIds.set(name, id);
+    log.info("core", `registered ${guild.length} guild and ${global.length} global commands`);
   } catch (err) {
     log.error("core", "command registration failed, exiting", err);
     process.exit(1);
