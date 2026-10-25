@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { JevError } from "../../core/jev.ts";
+import { JevError } from "../../../core/jev.ts";
 import {
   articleState,
   buildQuestions,

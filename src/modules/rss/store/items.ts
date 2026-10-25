@@ -1,0 +1,108 @@
+import type { Database } from "bun:sqlite";
+import type { FeedItem } from "../feeds/parse.ts";
+
+/** Only this much of a description is ever used (jev reads 1,500 characters). */
+const MAX_DESCRIPTION = 1_500;
+
+export type ItemState = "pending" | "passed" | "posted" | "blocked" | "expired";
+
+export interface StoredItem extends FeedItem {
+  id: number;
+  feedId: number;
+  state: ItemState;
+  createdAt: number;
+}
+
+export interface NewItem {
+  guildId: string;
+  feedId: number;
+  key: string;
+  item: FeedItem;
+  state: ItemState;
+  now: number;
+}
+
+interface ItemRow {
+  id: number;
+  feed_id: number;
+  title: string;
+  link: string | null;
+  guid: string | null;
+  description: string;
+  image: string | null;
+  published_at: number | null;
+  state: ItemState;
+  created_at: number;
+}
+
+const toItem = (r: ItemRow): StoredItem => ({
+  id: r.id,
+  feedId: r.feed_id,
+  title: r.title,
+  link: r.link,
+  guid: r.guid,
+  description: r.description,
+  publishedAt: r.published_at,
+  image: r.image,
+  state: r.state,
+  createdAt: r.created_at,
+});
+
+/** rss_items: every article seen per server, by key, and where it is in the pipeline. */
+export class ItemStore {
+  constructor(private readonly db: Database) {}
+
+  /** False when the server already has an item with this key. */
+  insert({ guildId, feedId, key, item, state, now }: NewItem): boolean {
+    const { title, link, guid, image, publishedAt } = item;
+    const description = item.description.slice(0, MAX_DESCRIPTION);
+    const values = [guildId, key, feedId, title, link, guid, description, image, publishedAt];
+    return (
+      this.db.run(
+        `INSERT OR IGNORE INTO rss_items
+          (guild_id, item_key, feed_id, title, link, guid, description, image, published_at, state, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [...values, state, now],
+      ).changes > 0
+    );
+  }
+
+  inState(guildId: string, state: ItemState, limit: number): StoredItem[] {
+    return this.db
+      .query<ItemRow, [string, string, number]>(
+        "SELECT * FROM rss_items WHERE guild_id = ? AND state = ? ORDER BY created_at, id LIMIT ?",
+      )
+      .all(guildId, state, limit)
+      .map(toItem);
+  }
+
+  setState(id: number, state: ItemState): void {
+    this.db.run("UPDATE rss_items SET state = ? WHERE id = ?", [state, id]);
+  }
+
+  /** Waiting items (pending or passed) created before `before` become expired; returns how many. */
+  expire(guildId: string, before: number): number {
+    return this.db.run(
+      `UPDATE rss_items SET state = 'expired'
+       WHERE guild_id = ? AND state IN ('pending', 'passed') AND created_at < ?`,
+      [guildId, before],
+    ).changes;
+  }
+
+  /** Finished items (posted, blocked, expired) created before `before` are deleted; returns how many. */
+  prune(guildId: string, before: number): number {
+    return this.db.run(
+      `DELETE FROM rss_items
+       WHERE guild_id = ? AND state IN ('posted', 'blocked', 'expired') AND created_at < ?`,
+      [guildId, before],
+    ).changes;
+  }
+
+  /** A feed's items still waiting to be checked or posted; the rest stay for dedupe. */
+  dropWaiting(guildId: string, feedId: number): void {
+    this.db.run(
+      "DELETE FROM rss_items WHERE guild_id = ? AND feed_id = ? AND state IN ('pending', 'passed')",
+      [guildId, feedId],
+    );
+  }
+}

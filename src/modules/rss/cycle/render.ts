@@ -1,20 +1,10 @@
 import type { APIEmbed } from "discord.js";
-import type { FeedItem } from "./parse.ts";
+import type { FeedItem } from "../feeds/parse.ts";
+import { httpUrl } from "../feeds/urls.ts";
 
 const MAX_TITLE = 256;
 const MAX_DESCRIPTION = 300;
 const MAX_FOOTER = 100;
-
-/** Discord refuses an embed whose url or image is not an absolute http(s) URL. */
-function httpUrl(s: string | null): string | null {
-  if (!s) return null;
-  try {
-    const url = new URL(s);
-    return url.protocol === "http:" || url.protocol === "https:" ? url.href : null;
-  } catch {
-    return null;
-  }
-}
 
 function cut(text: string, max: number): string {
   return text.length > max ? `${text.slice(0, max - 1)}…` : text;

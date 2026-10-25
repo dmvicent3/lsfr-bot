@@ -4,7 +4,8 @@ import {
   InteractionContextType,
   PermissionFlagsBits,
 } from "discord.js";
-import { autocompleteChoices, rssCommand } from "./commands.ts";
+import { rssCommand } from "./commands.ts";
+import { autocompleteChoices } from "./kit.ts";
 
 function subOptions(name: string): Record<string, unknown>[] {
   const sub = rssCommand.data.options?.find((o) => o.name === name);

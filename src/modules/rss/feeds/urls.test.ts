@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { itemKey } from "./dedupe.ts";
+import { itemKey } from "./urls.ts";
 
 describe("itemKey", () => {
   test("uses the guid when there is one", () => {

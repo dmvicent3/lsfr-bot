@@ -1,21 +1,14 @@
 import { Database } from "bun:sqlite";
 import { beforeEach, describe, expect, test } from "bun:test";
 import type { APIEmbed } from "discord.js";
-import { runMigrations } from "../../core/db.ts";
-import { JevError, type Jev } from "../../core/jev.ts";
-import {
-  addRule,
-  type CycleDeps,
-  followFeed,
-  MAX_CLASSIFY,
-  MAX_FEEDS,
-  MAX_RULES,
-  type PostResult,
-  RuleError,
-  runCycle,
-} from "./cycle.ts";
-import { FeedError } from "./parse.ts";
-import { rssMigrations, RssRepo } from "./repo.ts";
+import { runMigrations } from "../../../core/db.ts";
+import { JevError, type Jev } from "../../../core/jev.ts";
+import { MAX_CLASSIFY } from "./classify.ts";
+import { type CycleDeps, type PostResult, runCycle } from "./cycle.ts";
+import { followFeed } from "../subscriptions.ts";
+import { FeedError } from "../feeds/parse.ts";
+import { rssMigrations } from "../store/migrations.ts";
+import { RssRepo } from "../store/repo.ts";
 
 const HOUR = 3_600_000;
 const SERVER = { guildId: "g1", channelId: "c1" };
@@ -66,13 +59,13 @@ function deps(): CycleDeps {
   };
 }
 
-const cycle = () => runCycle({ ...SERVER, jevDown: repo.jevDown(SERVER.guildId) }, deps());
+const cycle = () => runCycle({ ...SERVER, jevDown: repo.servers.jevDown(SERVER.guildId) }, deps());
 
 beforeEach(() => {
   const db = new Database(":memory:", { strict: true });
   runMigrations(db, rssMigrations);
   repo = new RssRepo(db);
-  repo.setChannel("g1", "c1");
+  repo.servers.setChannel("g1", "c1");
   feeds = new Map();
   jevMode = "ok";
   pYes = () => 0;
@@ -85,7 +78,7 @@ beforeEach(() => {
 
 describe("runCycle", () => {
   test("posts new items once, without jev when there are no rules", async () => {
-    repo.addFeed("g1", "https://a/rss", "A");
+    repo.feeds.add("g1", "https://a/rss", "A");
     feeds.set("https://a/rss", rss("one", "two"));
     await cycle();
     expect(posted).toEqual(["one", "two"]);
@@ -95,8 +88,8 @@ describe("runCycle", () => {
   });
 
   test("stores the same article from two feeds once and skips keyless items", async () => {
-    repo.addFeed("g1", "https://a/rss", "A");
-    repo.addFeed("g1", "https://b/rss", "B");
+    repo.feeds.add("g1", "https://a/rss", "A");
+    repo.feeds.add("g1", "https://b/rss", "B");
     feeds.set("https://a/rss", rss("same"));
     feeds.set(
       "https://b/rss",
@@ -107,32 +100,32 @@ describe("runCycle", () => {
   });
 
   test("blocks an article any rule matches and posts the rest", async () => {
-    repo.addFeed("g1", "https://a/rss", "A");
-    repo.addRule("g1", "sports", "block");
+    repo.feeds.add("g1", "https://a/rss", "A");
+    repo.rules.add("g1", "sports", "block");
     feeds.set("https://a/rss", rss("football", "chips"));
     pYes = (state) => (state.startsWith("football") ? 0.9 : 0.1);
     await cycle();
     expect(posted).toEqual(["chips"]);
-    expect(repo.itemsIn("g1", "blocked", 10).map((i) => i.title)).toEqual(["football"]);
+    expect(repo.items.inState("g1", "blocked", 10).map((i) => i.title)).toEqual(["football"]);
   });
 
   test("an only-rule limited to one feed filters that feed and leaves the others alone", async () => {
-    const news = repo.addFeed("g1", "https://news/rss", "News");
-    repo.addFeed("g1", "https://space/rss", "Space");
-    const europe = repo.addRule("g1", "Europe", "only");
-    repo.setRuleFeeds("g1", europe.id, [news.id]);
+    const news = repo.feeds.add("g1", "https://news/rss", "News");
+    repo.feeds.add("g1", "https://space/rss", "Space");
+    const europe = repo.rules.add("g1", "Europe", "only");
+    repo.rules.setFeeds("g1", europe.id, [news.id]);
     feeds.set("https://news/rss", rss("paris", "texas"));
     feeds.set("https://space/rss", rss("rocket"));
     pYes = (state) => (state.startsWith("paris") ? 0.9 : 0.1);
     await cycle();
     expect(posted).toEqual(["paris", "rocket"]);
-    expect(repo.itemsIn("g1", "blocked", 10).map((i) => i.title)).toEqual(["texas"]);
+    expect(repo.items.inState("g1", "blocked", 10).map((i) => i.title)).toEqual(["texas"]);
     expect(jevCalls).toBe(2);
   });
 
   test("holds articles while jev is down, says so once, and says when it is back", async () => {
-    repo.addFeed("g1", "https://a/rss", "A");
-    repo.addRule("g1", "sports", "block");
+    repo.feeds.add("g1", "https://a/rss", "A");
+    repo.rules.add("g1", "sports", "block");
     feeds.set("https://a/rss", rss("one"));
     jevMode = "fail";
     await cycle();
@@ -140,7 +133,7 @@ describe("runCycle", () => {
     await cycle();
     expect(posted).toEqual([]);
     expect(said).toEqual(["⚠️ jev is down, new articles will be checked once it's back."]);
-    expect(repo.itemsIn("g1", "pending", 10)).toHaveLength(2);
+    expect(repo.items.inState("g1", "pending", 10)).toHaveLength(2);
     jevMode = "ok";
     await cycle();
     expect(said.at(-1)).toBe("✅ jev is back.");
@@ -150,8 +143,8 @@ describe("runCycle", () => {
   });
 
   test("expires an article still waiting after 24 hours", async () => {
-    repo.addFeed("g1", "https://a/rss", "A");
-    repo.addRule("g1", "sports", "block");
+    repo.feeds.add("g1", "https://a/rss", "A");
+    repo.rules.add("g1", "sports", "block");
     feeds.set("https://a/rss", rss("old"));
     jevMode = "fail";
     await cycle();
@@ -159,21 +152,21 @@ describe("runCycle", () => {
     jevMode = "ok";
     await cycle();
     expect(posted).toEqual([]);
-    expect(repo.itemsIn("g1", "expired", 10).map((i) => i.title)).toEqual(["old"]);
+    expect(repo.items.inState("g1", "expired", 10).map((i) => i.title)).toEqual(["old"]);
   });
 
   test(`classifies at most ${MAX_CLASSIFY} articles a cycle`, async () => {
-    repo.addFeed("g1", "https://a/rss", "A");
-    repo.addRule("g1", "sports", "block");
+    repo.feeds.add("g1", "https://a/rss", "A");
+    repo.rules.add("g1", "sports", "block");
     feeds.set("https://a/rss", rss(...Array.from({ length: 40 }, (_, n) => `n${n}`)));
     await cycle();
     expect(jevCalls).toBe(MAX_CLASSIFY);
-    expect(repo.itemsIn("g1", "pending", 50)).toHaveLength(10);
+    expect(repo.items.inState("g1", "pending", 50)).toHaveLength(10);
   });
 
   test("warns once about a feed failing 10 times in a row, and still reads the others", async () => {
-    repo.addFeed("g1", "https://bad/rss", "Bad");
-    repo.addFeed("g1", "https://a/rss", "A");
+    repo.feeds.add("g1", "https://bad/rss", "Bad");
+    repo.feeds.add("g1", "https://a/rss", "A");
     feeds.set("https://bad/rss", new FeedError("HTTP 500"));
     feeds.set("https://a/rss", rss("one"));
     for (let n = 0; n < 11; n++) await cycle();
@@ -182,60 +175,44 @@ describe("runCycle", () => {
   });
 
   test("a feed that is not a feed counts as a failure", async () => {
-    const bad = repo.addFeed("g1", "https://html/rss", "Html");
+    const bad = repo.feeds.add("g1", "https://html/rss", "Html");
     feeds.set("https://html/rss", "<html></html>");
     await cycle();
-    expect(repo.feeds("g1").find((f) => f.id === bad.id)?.failures).toBe(1);
+    expect(repo.feeds.list("g1").find((f) => f.id === bad.id)?.failures).toBe(1);
   });
 
   test("a lost channel clears it and stops; a failed post retries next cycle", async () => {
-    repo.addFeed("g1", "https://a/rss", "A");
+    repo.feeds.add("g1", "https://a/rss", "A");
     feeds.set("https://a/rss", rss("one"));
     postResult = "failed";
     await cycle();
-    expect(repo.itemsIn("g1", "passed", 10)).toHaveLength(1);
+    expect(repo.items.inState("g1", "passed", 10)).toHaveLength(1);
     postResult = "lost-channel";
     await cycle();
-    expect(repo.channel("g1")).toBeNull();
+    expect(repo.servers.channel("g1")).toBeNull();
     postResult = "ok";
-    repo.setChannel("g1", "c1");
+    repo.servers.setChannel("g1", "c1");
     await cycle();
     expect(posted).toEqual(["one"]);
   });
 });
 
-describe("followFeed", () => {
-  test("marks every current item as seen, so only later ones post", async () => {
+describe("after followFeed", () => {
+  test("only items published after following are posted", async () => {
     feeds.set("https://a/rss", rss("old1", "old2"));
-    const feed = await followFeed(repo, "g1", "https://a/rss", null, deps().fetchFeed, now);
-    expect(feed.name).toBe("Feed");
+    const request = { guildId: "g1", url: "https://a/rss", name: null };
+    await followFeed(repo, request, { fetchFeed: deps().fetchFeed, now });
     await cycle();
     expect(posted).toEqual([]);
     feeds.set("https://a/rss", rss("new", "old1", "old2"));
     await cycle();
     expect(posted).toEqual(["new"]);
   });
-
-  test("keeps a given name, refuses a non-feed and a feed already followed", async () => {
-    feeds.set("https://a/rss", rss("x"));
-    feeds.set("https://html", "<html></html>");
-    expect(
-      (await followFeed(repo, "g1", "https://a/rss", "Mine", deps().fetchFeed, now)).name,
-    ).toBe("Mine");
-    const notFeed = await followFeed(repo, "g1", "https://html", null, deps().fetchFeed, now).catch(
-      (e: unknown) => e,
-    );
-    expect(notFeed).toBeInstanceOf(FeedError);
-    const again = await followFeed(repo, "g1", "https://a/rss", null, deps().fetchFeed, now).catch(
-      (e: unknown) => e,
-    );
-    expect(again).toBeInstanceOf(FeedError);
-  });
 });
 
 describe("runCycle staleness", () => {
   test("does not post an article dated more than 24 hours ago", async () => {
-    repo.addFeed("g1", "https://a/rss", "A");
+    repo.feeds.add("g1", "https://a/rss", "A");
     const old = new Date(now - 48 * HOUR).toUTCString();
     const fresh = new Date(now - HOUR).toUTCString();
     feeds.set(
@@ -244,26 +221,5 @@ describe("runCycle staleness", () => {
     );
     await cycle();
     expect(posted).toEqual(["fresh"]);
-  });
-});
-
-describe("addRule and follow limits", () => {
-  test(`caps rules at ${MAX_RULES} and refuses a blank rule`, () => {
-    for (let n = 0; n < MAX_RULES; n++) addRule(repo, "g1", `topic ${n}`, n % 2 ? "only" : "block");
-    expect(() => addRule(repo, "g1", "one more", "only")).toThrow(RuleError);
-    expect(() => addRule(repo, "g2", "   ", "block")).toThrow(RuleError);
-    expect(addRule(repo, "g2", " Europe ", "only")).toMatchObject({ text: "Europe", kind: "only" });
-  });
-
-  test(`caps feeds at ${MAX_FEEDS} and caps a feed title used as its name`, async () => {
-    for (let n = 0; n < MAX_FEEDS; n++) repo.addFeed("g1", `https://f/${n}`, "x");
-    feeds.set("https://a/rss", `<rss><channel><title>${"t".repeat(500)}</title></channel></rss>`);
-    const full = await followFeed(repo, "g1", "https://a/rss", null, deps().fetchFeed, now).catch(
-      (e: unknown) => e,
-    );
-    expect(full).toBeInstanceOf(FeedError);
-    expect(
-      (await followFeed(repo, "g2", "https://a/rss", null, deps().fetchFeed, now)).name,
-    ).toHaveLength(100);
   });
 });

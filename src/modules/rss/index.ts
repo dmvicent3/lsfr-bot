@@ -1,8 +1,9 @@
 import { createJev } from "../../core/jev.ts";
 import type { BotModule } from "../../core/module.ts";
-import { rssCommand, rssComponents } from "./commands.ts";
+import { rssCommand } from "./commands/commands.ts";
+import { rssComponents } from "./commands/components.ts";
 import { rssJobs } from "./jobs.ts";
-import { rssMigrations } from "./repo.ts";
+import { rssMigrations } from "./store/migrations.ts";
 
 /** On only when JEV_URL is set: every article of a server with rules goes through jev. */
 export function rssModule(jevUrl: string): BotModule {

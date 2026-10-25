@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import type { FeedItem } from "./parse.ts";
+import type { FeedItem } from "../feeds/parse.ts";
 import { renderItem } from "./render.ts";
 
 const item: FeedItem = {

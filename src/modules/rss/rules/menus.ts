@@ -3,7 +3,7 @@ import {
   type APIStringSelectComponent,
   ComponentType,
 } from "discord.js";
-import { describeRule, question, type Rule } from "./rules.ts";
+import { describeRule, question, type Rule, type RuleKind, scopeOf } from "./rules.ts";
 
 type FeedRef = { id: number; name: string };
 type SelectRow = APIActionRowComponent<APIStringSelectComponent>;
@@ -55,20 +55,22 @@ export function rulePicker(rules: Rule[], feeds: FeedRef[]): SelectRow | null {
   };
 }
 
+const EFFECT: Record<RuleKind, (q: string) => string> = {
+  block: (q) => `Articles are not posted when the answer to "${q}" is yes.`,
+  only: (q) =>
+    `Articles are posted only when the answer to "${q}" is yes (with several only-rules, one yes is enough).`,
+};
+
 /** What a rule does and where, with its feed menu. */
 export function ruleMessage(
   rule: Rule,
   feeds: FeedRef[],
 ): { content: string; components: SelectRow[] } {
-  const q = question(rule.text);
-  const what =
-    rule.kind === "block"
-      ? `Articles are not posted when the answer to "${q}" is yes.`
-      : `Articles are posted only when the answer to "${q}" is yes (with several only-rules, one yes is enough).`;
-  const names = feeds.filter((f) => rule.feedIds.includes(f.id)).map((f) => f.name);
-  const where =
-    rule.feedIds.length === 0 ? "Applies to: all feeds." : `Applies to: ${names.join(", ")}.`;
   const menu = feedMenu(rule, feeds);
-  const hint = menu ? (rule.feedIds.length === 0 ? " Pick feeds below to limit it." : "") : "";
-  return { content: `${what}\n${where}${hint}`, components: menu ? [menu] : [] };
+  const hint = menu && rule.feedIds.length === 0 ? " Pick feeds below to limit it." : "";
+  const where = `Applies to: ${scopeOf(rule, feeds)}.${hint}`;
+  return {
+    content: `${EFFECT[rule.kind](question(rule.text))}\n${where}`,
+    components: menu ? [menu] : [],
+  };
 }

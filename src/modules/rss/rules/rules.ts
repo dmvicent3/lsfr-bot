@@ -1,5 +1,5 @@
-import { JevError, type JevQuestion } from "../../core/jev.ts";
-import type { FeedItem } from "./parse.ts";
+import { JevError, type JevQuestion } from "../../../core/jev.ts";
+import type { FeedItem } from "../feeds/parse.ts";
 
 /** A block rule stops an article; with only-rules, an article must match one of them. */
 export type RuleKind = "block" | "only";
@@ -47,12 +47,20 @@ export function verdict(answers: Map<string, number>, rules: Rule[]): Verdict {
   return onTopic ? { kind: "pass" } : { kind: "off-topic" };
 }
 
+const MARK: Record<RuleKind, string> = { block: "🚫", only: "✅ only:" };
+
+/** "all feeds" or the names of the feeds a rule is limited to. */
+export function scopeOf(rule: Rule, feeds: { id: number; name: string }[]): string {
+  if (rule.feedIds.length === 0) return "all feeds";
+  return feeds
+    .filter((f) => rule.feedIds.includes(f.id))
+    .map((f) => f.name)
+    .join(", ");
+}
+
 /** "🚫 <question> (all feeds)" or "✅ only: <question> (TASS, Euronews)". */
 export function describeRule(rule: Rule, feeds: { id: number; name: string }[]): string {
-  const names = feeds.filter((f) => rule.feedIds.includes(f.id)).map((f) => f.name);
-  const scope = rule.feedIds.length === 0 ? "all feeds" : names.join(", ");
-  const kind = rule.kind === "block" ? "🚫" : "✅ only:";
-  return `${kind} ${question(rule.text)} (${scope})`;
+  return `${MARK[rule.kind]} ${question(rule.text)} (${scopeOf(rule, feeds)})`;
 }
 
 /** The text jev reads for an article. */
