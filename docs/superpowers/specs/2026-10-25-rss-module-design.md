@@ -43,6 +43,28 @@ Answer: `{"answers": {"r12": {"type": "noul", "noul": 0.93}}, ...}`. One request
 
 A rule is stored as typed. A rule ending in `?` is sent as written; anything else is a topic and is sent as `Is this article about <rule>?`.
 
+## Resource limits (keep the Pi up)
+
+Three layers; no separate queue service (Gork is jev's only caller).
+
+**jev container.** Lives in this repo: `docker/jev/Dockerfile` builds jev from source at the pinned release tag (`jevos-v5`) for ARM64 and bakes in the model; `docker-compose.yml` adds the `jev` service.
+
+- Command: `jev serve --host 0.0.0.0 --threads 2 --ctx 2048` plus a small `--state-cache` (sized in the spike).
+- Compose: `cpus: 2`, `mem_limit: 2g`, `restart: unless-stopped`, healthcheck `GET /health` every 30 s. A memory overrun kills and restarts only this container.
+- No published port: reachable only from Gork on the compose network (`JEV_URL=http://jev:8017`), so no API key.
+
+**Gork's client (`core/jev.ts`), the queue.**
+
+- One request in flight: callers queue in order (shared by any future module that uses jev).
+- At most 1 request a second; the rss check classifies at most 30 items per cycle, the rest stay `pending` for the next.
+- `state` cut to 1,500 characters before sending.
+- After a failure, no call for 1 min, then 2, 4, 8, capped at 15 min; any success resets it. Calls during the pause fail fast as `JevError` without touching the network.
+
+**Gork itself.**
+
+- Feed download capped at 2 MB (stopped reading past that, counted as a failure) and the first 50 items of a feed.
+- Gork's container: `mem_limit: 512m`.
+
 ## Module layout
 
 ```
@@ -108,7 +130,8 @@ TDD; `bun run check` must pass.
 - `dedupe`: guid vs link, tracking parameters, fragments, host case.
 - `rules`: topic vs question wording, request keys, threshold edge (0.5 blocks, 0.49 passes), no rules, missing answer key is an error.
 - `decisions`: due feeds, new-item detection across feeds, 24 h expiry, notice transitions (down once, back once), failure warning at the 10th failure only.
-- `core/jev.ts`: fake `fetch` for success, non-2xx, timeout, malformed body.
+- `core/jev.ts`: fake `fetch` for success, non-2xx, timeout, malformed body; one request in flight under concurrent callers; 1 per second spacing and the back-off schedule with an injected clock; fail-fast during the pause; `state` truncation.
+- Check cycle: the 30-item cap leaves the rest `pending`; the 2 MB and 50-item feed caps.
 - `repo`: in-memory SQLite.
 - No live network in tests. After the spike, one manual run against the Pi's jev with a few real feeds.
 
