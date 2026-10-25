@@ -14,8 +14,8 @@ Replace the separate `rss-bot` (github.com/dmvicent3/rss-bot) with an `rss` modu
 | Servers | Multi-server: feeds, rules and channel are per guild (module tables, not `core/settings.ts`) |
 | Filtering | Exclusion only: an article posts unless a rule matches |
 | Default rules | None: a new server starts with no rules |
-| Classifier | jev (github.com/feder-cr/jev, jevos model), a yes/no question per rule, blocked at P(yes) >= 0.5 |
-| jev hosting | Its own service in `docker-compose.yml` on the Pi, built from source for ARM64; Gork reaches it at `JEV_URL` |
+| Classifier | jevos model (github.com/feder-cr/jev) on llama.cpp, a yes/no question per rule, blocked at P(yes) >= 0.5 |
+| jev hosting | Its own service in `docker-compose.yml` on the Pi (llama.cpp server + GGUF); Gork reaches it at `JEV_URL` |
 | Posting | As articles arrive: feeds checked every 15 minutes, one message per article |
 | jev unavailable | Articles wait as `pending`; one down notice and one back notice per server in the news channel; pending older than 24 h expire |
 | Channel | One news channel per server |
@@ -33,14 +33,17 @@ Before the plan is executed, check on the Pi 5 (ARM64, 8 GB) that jev builds fro
 
 ## jev
 
-`POST {JEV_URL}/v1/systemone`:
+**Spike outcome (2026-10-25):** jev's own server builds on the Pi but holds ~4 GB (OpenVINO on ARM unpacks the int8 weights), so the jevos model runs on `llama-server` (llama.cpp) from the release's `jevos-v5-q4_k_m.gguf` (~1 GB), with the prompt and probability reading jev uses. Verdicts match jev's on the test questions.
+
+For each question, `POST {JEV_URL}/completion`:
 
 ```json
-{"model": "jev-latest", "state": "<title>\n\n<description>",
- "questions": {"r12": {"type": "noul", "instructions": "Is this article about sports?"}}}
+{"prompt": "<evidence>\n<title>\n\n<description>\n</evidence>\n\nQuestion: Is this article about sports?\nAnswer:",
+ "n_predict": 1, "grammar": "root ::= [01]", "temperature": 1, "top_k": 0, "top_p": 1, "min_p": 0,
+ "n_probs": 2, "post_sampling_probs": true, "cache_prompt": true}
 ```
 
-Answer: `{"answers": {"r12": {"type": "noul", "noul": 0.93}}, ...}`. One request carries every rule of the server, keyed `r<rule id>`. `GET {JEV_URL}/health` is not used for the down notice: a failed classification call is the signal.
+P(yes) is the probability of token `1` in `completion_probabilities[0].top_probs` (0 when absent). A server's rules are asked one after another about the same article; `cache_prompt` reuses the shared evidence prefix. `/health` is not used for the down notice: a failed classification call is the signal.
 
 A rule is stored as typed. A rule ending in `?` is sent as written; anything else is a topic and is sent as `Is this article about <rule>?`.
 
@@ -48,16 +51,16 @@ A rule is stored as typed. A rule ending in `?` is sent as written; anything els
 
 Three layers; no separate queue service (Gork is jev's only caller).
 
-**jev container.** Lives in this repo: `docker/jev/Dockerfile` builds jev from source at the pinned release tag (`jevos-v5`) for ARM64 and bakes in the model; `docker-compose.yml` adds the `jev` service.
+**jev container.** Lives in this repo: `docker/jev/Dockerfile` is the pinned `llama.cpp` server image (`server-b11870`) plus the `jevos-v5` Q4_K_M GGUF, checked against the release's `SHA256SUMS.txt`; `docker-compose.yml` adds the `jev` service.
 
-- Command: `jev serve --host 0.0.0.0 --threads 2 --ctx 2048` plus a small `--state-cache` (sized in the spike).
-- Compose: `cpus: 2`, `mem_limit: 2g`, `restart: unless-stopped`, healthcheck `GET /health` every 30 s. A memory overrun kills and restarts only this container.
+- Command: `llama-server -m <gguf> --port 8017 -t 2 -c 2048 --parallel 1`.
+- Compose: `cpus: 2`, `mem_limit: 1536m`, `restart: unless-stopped`, healthcheck `GET /health` every 30 s. Note: the Pi's kernel has memory cgroups off (`cgroup_enable=memory cgroup_memory=1` missing from `/boot/firmware/cmdline.txt`), so `mem_limit` only takes effect once those are enabled and the Pi rebooted; `cpus` works regardless.
 - No published port: reachable only from Gork on the compose network (`JEV_URL=http://jev:8017`), so no API key.
 
 **Gork's client (`core/jev.ts`), the queue.**
 
 - One request in flight: callers queue in order (shared by any future module that uses jev).
-- At most 1 request a second; the rss check classifies at most 30 items per cycle, the rest stay `pending` for the next.
+- At most one article (`yesNo` call) a second; the rss check classifies at most 30 items per cycle, the rest stay `pending` for the next.
 - `state` cut to 1,500 characters before sending.
 - After a failure, no call for 1 min, then 2, 4, 8, capped at 15 min; any success resets it. Calls during the pause fail fast as `JevError` without touching the network.
 
