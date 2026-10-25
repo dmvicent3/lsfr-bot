@@ -82,12 +82,57 @@ describe("feeds", () => {
 
 describe("rules", () => {
   test("adds, lists and removes, per server", () => {
-    const r = repo.addRule("g1", "sports");
-    repo.addRule("g2", "religion");
-    expect(repo.rules("g1")).toEqual([{ id: r.id, text: "sports" }]);
+    const r = repo.addRule("g1", "sports", "block");
+    repo.addRule("g2", "religion", "block");
+    expect(repo.rules("g1")).toEqual([{ id: r.id, text: "sports", kind: "block", feedIds: [] }]);
     expect(repo.removeRule("g2", r.id)).toBe(false);
     expect(repo.removeRule("g1", r.id)).toBe(true);
     expect(repo.rules("g1")).toEqual([]);
+  });
+
+  test("limits a rule to some of the server's feeds", () => {
+    const a = repo.addFeed("g1", "https://a/rss", "A");
+    const b = repo.addFeed("g1", "https://b/rss", "B");
+    const theirs = repo.addFeed("g2", "https://c/rss", "C");
+    const r = repo.addRule("g1", "Europe", "only");
+    expect(repo.setRuleFeeds("g1", r.id, [b.id, a.id, theirs.id])).toBe(true);
+    expect(repo.rule("g1", r.id)).toEqual({
+      id: r.id,
+      text: "Europe",
+      kind: "only",
+      feedIds: [a.id, b.id],
+    });
+    expect(repo.setRuleFeeds("g1", r.id, [])).toBe(true);
+    expect(repo.rule("g1", r.id)?.feedIds).toEqual([]);
+    expect(repo.setRuleFeeds("g2", r.id, [theirs.id])).toBe(false);
+    expect(repo.rule("g2", r.id)).toBeNull();
+  });
+
+  test("unfollowing a feed removes a rule left with no feeds, never widening it to all", () => {
+    const a = repo.addFeed("g1", "https://a/rss", "A");
+    const b = repo.addFeed("g1", "https://b/rss", "B");
+    const onlyA = repo.addRule("g1", "x", "only");
+    const aAndB = repo.addRule("g1", "y", "only");
+    const everywhere = repo.addRule("g1", "z", "block");
+    repo.setRuleFeeds("g1", onlyA.id, [a.id]);
+    repo.setRuleFeeds("g1", aAndB.id, [a.id, b.id]);
+    repo.removeFeed("g1", a.id);
+    expect(repo.rules("g1").map((r) => [r.id, r.feedIds])).toEqual([
+      [aAndB.id, [b.id]],
+      [everywhere.id, []],
+    ]);
+  });
+});
+
+describe("rss-002 migration", () => {
+  test("keeps existing rules as block rules for every feed", () => {
+    const db = new Database(":memory:", { strict: true });
+    runMigrations(db, rssMigrations.slice(0, 1));
+    db.run("INSERT INTO rss_rules (guild_id, text) VALUES ('g1', 'sports')");
+    runMigrations(db, rssMigrations);
+    expect(new RssRepo(db).rules("g1")).toEqual([
+      { id: 1, text: "sports", kind: "block", feedIds: [] },
+    ]);
   });
 });
 

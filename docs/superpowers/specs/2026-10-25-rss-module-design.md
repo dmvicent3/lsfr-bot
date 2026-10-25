@@ -12,7 +12,7 @@ Replace the separate `rss-bot` (github.com/dmvicent3/rss-bot) with an `rss` modu
 | Topic | Decision |
 |---|---|
 | Servers | Multi-server: feeds, rules and channel are per guild (module tables, not `core/settings.ts`) |
-| Filtering | Exclusion only: an article posts unless a rule matches |
+| Filtering | Block rules (an article posts unless one matches) and only-rules (with any on its feed, an article needs one to match). A rule applies to every feed or to the feeds ticked in its select menu (added 2026-10-25: exclusion alone could not express "concerns Europe") |
 | Default rules | None: a new server starts with no rules |
 | Classifier | jevos model (github.com/feder-cr/jev) on llama.cpp, a yes/no question per rule, blocked at P(yes) >= 0.5 |
 | jev hosting | Its own service in `docker-compose.yml` on the Pi (llama.cpp server + GGUF); Gork reaches it at `JEV_URL` |
@@ -93,7 +93,8 @@ Pure files (`parse`, `dedupe`, `rules`, `decisions`, `render`) have no runtime `
 
 - `rss_servers(guild_id PK, channel_id NULL, jev_down INT)`
 - `rss_feeds(id PK, guild_id, url, name, last_fetched_at NULL, failures INT, warned INT)`, unique `(guild_id, url)`
-- `rss_rules(id PK, guild_id, text)`
+- `rss_rules(id PK, guild_id, text, kind)`, `kind` in `block | only`
+- `rss_rule_feeds(rule_id, feed_id)` PK both: no rows means every feed
 - `rss_items(id PK, guild_id, item_key, feed_id, title, link, description, image NULL, published_at NULL, state, created_at)`, unique `(guild_id, item_key)`; `state` in `pending | passed | posted | blocked | expired`
 
 ## Commands
@@ -104,9 +105,10 @@ Pure files (`parse`, `dedupe`, `rules`, `decisions`, `render`) have no runtime `
 - `follow url [name]`: fetches and parses the feed first (a URL that is not a feed is refused with the reason); stores every current item as `posted` so nothing old floods the channel. Name defaults to the feed title.
 - `unfollow feed`: autocomplete over the server's feeds.
 - `feeds`: lists feeds with failure state.
-- `block rule`: adds a rule (1–200 chars).
-- `unblock rule`: autocomplete over the server's rules.
-- `rules`: lists rules.
+- `block rule` / `only rule`: adds a rule (1–200 chars) for every feed; the reply carries a multi-select of the server's feeds to limit it (nothing ticked: every feed). Feeds are capped at 25, a select menu's limit.
+- `remove-rule rule`: autocomplete over the server's rules, shown with kind and feeds.
+- `rules`: lists rules, with a picker that opens a rule's feed menu.
+- Unfollowing a feed removes the rules that applied to it alone (left with no feeds they would apply to every feed).
 
 Replies are ephemeral. Feed or rule commands before a channel is set still work; nothing is checked until a channel exists.
 
@@ -116,7 +118,7 @@ For each server with a channel:
 
 1. Fetch each feed (timeout 20 s; feeds independent, one failure never stops the others). New items (item key not in `rss_items` for the guild) are stored `pending`. The same article from two feeds is stored once.
 2. Expire: `pending` and `passed` items older than 24 h become `expired`.
-3. Classify `pending` items, oldest first. No rules: `passed` without calling jev. Else one jev call per item: block at any rule >= 0.5 (`blocked`), otherwise `passed`. On `JevError`, stop classifying for this cycle.
+3. Classify `pending` items, oldest first, against the rules that apply to the item's feed. None: `passed` without calling jev. Else one jev call per item: `blocked` when a block rule reaches 0.5 or when the feed has only-rules and none reaches 0.5, otherwise `passed`. On `JevError`, stop classifying for this cycle.
 4. Post `passed` items, oldest first, one embed each; success sets `posted`.
 5. Notices: jev failed and `jev_down` was 0, send "⚠️ jev is down, new articles will be checked once it's back." and set it; a jev call succeeded and `jev_down` was 1, send "✅ jev is back." and clear it.
 

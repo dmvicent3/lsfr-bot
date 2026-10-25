@@ -3,16 +3,29 @@ import {
   ChannelType,
   type ChatInputCommandInteraction,
   InteractionContextType,
+  type MessageComponentInteraction,
   MessageFlags,
   PermissionFlagsBits,
   SlashCommandBuilder,
+  type SlashCommandStringOption,
 } from "discord.js";
-import type { Ctx, SlashCommand } from "../../core/module.ts";
+import type { ComponentHandler, Ctx, SlashCommand } from "../../core/module.ts";
 import { addRule, followFeed, RuleError } from "./cycle.ts";
 import { fetchFeed } from "./fetch.ts";
+import { ruleMessage, rulePicker } from "./menus.ts";
 import { FeedError } from "./parse.ts";
 import { RssRepo } from "./repo.ts";
-import { question } from "./rules.ts";
+import { describeRule, type RuleKind } from "./rules.ts";
+
+function ruleOption(description: string) {
+  return (o: SlashCommandStringOption): SlashCommandStringOption =>
+    o
+      .setName("rule")
+      .setDescription(description)
+      .setRequired(true)
+      .setMinLength(1)
+      .setMaxLength(200);
+}
 
 const data = new SlashCommandBuilder()
   .setName("rss")
@@ -55,18 +68,17 @@ const data = new SlashCommandBuilder()
     sub
       .setName("block")
       .setDescription("Don't post articles about a topic (or matching a yes/no question)")
-      .addStringOption((o) =>
-        o
-          .setName("rule")
-          .setDescription('A topic ("sports") or a question ("Is it an advertisement?")')
-          .setRequired(true)
-          .setMinLength(1)
-          .setMaxLength(200),
-      ),
+      .addStringOption(ruleOption('A topic ("sports") or a question ("Is it an advertisement?")')),
   )
   .addSubcommand((sub) =>
     sub
-      .setName("unblock")
+      .setName("only")
+      .setDescription("Post only articles about a topic (or matching a yes/no question)")
+      .addStringOption(ruleOption('A topic ("Europe") or a question ("Does it affect Europe?")')),
+  )
+  .addSubcommand((sub) =>
+    sub
+      .setName("remove-rule")
       .setDescription("Remove a rule")
       .addStringOption((o) =>
         o.setName("rule").setDescription("Rule").setRequired(true).setAutocomplete(true),
@@ -152,35 +164,46 @@ async function execute(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> 
       );
       return reply(i, `Posting ${channelHint()}:\n${lines.join("\n")}`.slice(0, 2000));
     }
-    case "block": {
+    case "block":
+    case "only": {
+      const kind: RuleKind = i.options.getSubcommand() === "only" ? "only" : "block";
       let rule;
       try {
-        rule = addRule(repo, guildId, i.options.getString("rule", true));
+        rule = addRule(repo, guildId, i.options.getString("rule", true), kind);
       } catch (err) {
         if (err instanceof RuleError) return reply(i, `Couldn't add that rule: ${err.message}.`);
         throw err;
       }
-      return reply(
-        i,
-        `New rule: articles are not posted when the answer to "${question(rule.text)}" is yes.`,
-      );
+      const msg = ruleMessage(rule, repo.feeds(guildId));
+      await i.reply({ ...msg, content: `New rule. ${msg.content}`, flags: MessageFlags.Ephemeral });
+      return;
     }
-    case "unblock": {
+    case "remove-rule": {
       const id = Number(i.options.getString("rule", true));
       const removed = Number.isInteger(id) && repo.removeRule(guildId, id);
       return reply(i, removed ? "Rule removed." : "No such rule; pick one from the list.");
     }
     case "rules": {
       const rules = repo.rules(guildId);
-      if (rules.length === 0)
-        return reply(i, "No rules: every new article is posted. Add one with `/rss block`.");
-      return reply(
-        i,
-        `Articles are not posted when any answer is yes:\n${rules.map((r) => `- ${question(r.text)}`).join("\n")}`.slice(
-          0,
-          2000,
-        ),
-      );
+      const feeds = repo.feeds(guildId);
+      if (rules.length === 0) {
+        return reply(
+          i,
+          "No rules: every new article is posted. Add one with `/rss block` or `/rss only`.",
+        );
+      }
+      const lines = rules.map((r) => `- ${describeRule(r, feeds)}`).join("\n");
+      const picker = rulePicker(rules, feeds);
+      await i.reply({
+        content:
+          `🚫 blocks an article when the answer is yes. ✅ only: with any of these on a feed, its articles need one yes.\n${lines}`.slice(
+            0,
+            2000,
+          ),
+        components: picker && feeds.length > 0 ? [picker] : [],
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
     }
     default:
       return reply(i, "Unknown subcommand.");
@@ -191,11 +214,53 @@ async function autocomplete(i: AutocompleteInteraction, ctx: Ctx): Promise<void>
   const guildId = i.guildId;
   if (!guildId) return i.respond([]);
   const repo = new RssRepo(ctx.db);
+  const feeds = repo.feeds(guildId);
   const items =
     i.options.getSubcommand() === "unfollow"
-      ? repo.feeds(guildId).map((f) => ({ name: f.name, value: String(f.id) }))
-      : repo.rules(guildId).map((r) => ({ name: r.text, value: String(r.id) }));
+      ? feeds.map((f) => ({ name: f.name, value: String(f.id) }))
+      : repo.rules(guildId).map((r) => ({ name: describeRule(r, feeds), value: String(r.id) }));
   await i.respond(autocompleteChoices(items, i.options.getFocused()));
 }
 
 export const rssCommand: SlashCommand = { data, global: true, execute, autocomplete };
+
+/** Component replies are ephemeral to whoever ran /rss, but check anyway. */
+function canManage(i: MessageComponentInteraction): string | null {
+  return i.guildId && i.memberPermissions?.has(PermissionFlagsBits.ManageGuild) ? i.guildId : null;
+}
+
+/** A rule's feed menu: the ticked feeds become the rule's feeds (none: every feed). */
+const ruleFeeds: ComponentHandler = {
+  id: "rss:feeds",
+  async handle(i, args, ctx) {
+    const guildId = canManage(i);
+    if (!i.isStringSelectMenu() || !guildId) return;
+    const repo = new RssRepo(ctx.db);
+    const ruleId = Number(args[0]);
+    const feedIds = i.values.map(Number);
+    if (!repo.setRuleFeeds(guildId, ruleId, feedIds)) {
+      await i.update({ content: "That rule no longer exists.", components: [] });
+      return;
+    }
+    const rule = repo.rule(guildId, ruleId);
+    if (rule) await i.update(ruleMessage(rule, repo.feeds(guildId)));
+  },
+};
+
+/** /rss rules' picker: shows the chosen rule with its feed menu. */
+const pickRule: ComponentHandler = {
+  id: "rss:pick",
+  async handle(i, _args, ctx) {
+    const guildId = canManage(i);
+    if (!i.isStringSelectMenu() || !guildId) return;
+    const repo = new RssRepo(ctx.db);
+    const rule = repo.rule(guildId, Number(i.values[0]));
+    await i.update(
+      rule
+        ? ruleMessage(rule, repo.feeds(guildId))
+        : { content: "That rule no longer exists.", components: [] },
+    );
+  },
+};
+
+export const rssComponents: ComponentHandler[] = [ruleFeeds, pickRule];

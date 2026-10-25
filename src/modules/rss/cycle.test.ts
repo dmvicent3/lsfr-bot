@@ -108,7 +108,7 @@ describe("runCycle", () => {
 
   test("blocks an article any rule matches and posts the rest", async () => {
     repo.addFeed("g1", "https://a/rss", "A");
-    repo.addRule("g1", "sports");
+    repo.addRule("g1", "sports", "block");
     feeds.set("https://a/rss", rss("football", "chips"));
     pYes = (state) => (state.startsWith("football") ? 0.9 : 0.1);
     await cycle();
@@ -116,9 +116,23 @@ describe("runCycle", () => {
     expect(repo.itemsIn("g1", "blocked", 10).map((i) => i.title)).toEqual(["football"]);
   });
 
+  test("an only-rule limited to one feed filters that feed and leaves the others alone", async () => {
+    const news = repo.addFeed("g1", "https://news/rss", "News");
+    repo.addFeed("g1", "https://space/rss", "Space");
+    const europe = repo.addRule("g1", "Europe", "only");
+    repo.setRuleFeeds("g1", europe.id, [news.id]);
+    feeds.set("https://news/rss", rss("paris", "texas"));
+    feeds.set("https://space/rss", rss("rocket"));
+    pYes = (state) => (state.startsWith("paris") ? 0.9 : 0.1);
+    await cycle();
+    expect(posted).toEqual(["paris", "rocket"]);
+    expect(repo.itemsIn("g1", "blocked", 10).map((i) => i.title)).toEqual(["texas"]);
+    expect(jevCalls).toBe(2);
+  });
+
   test("holds articles while jev is down, says so once, and says when it is back", async () => {
     repo.addFeed("g1", "https://a/rss", "A");
-    repo.addRule("g1", "sports");
+    repo.addRule("g1", "sports", "block");
     feeds.set("https://a/rss", rss("one"));
     jevMode = "fail";
     await cycle();
@@ -137,7 +151,7 @@ describe("runCycle", () => {
 
   test("expires an article still waiting after 24 hours", async () => {
     repo.addFeed("g1", "https://a/rss", "A");
-    repo.addRule("g1", "sports");
+    repo.addRule("g1", "sports", "block");
     feeds.set("https://a/rss", rss("old"));
     jevMode = "fail";
     await cycle();
@@ -150,7 +164,7 @@ describe("runCycle", () => {
 
   test(`classifies at most ${MAX_CLASSIFY} articles a cycle`, async () => {
     repo.addFeed("g1", "https://a/rss", "A");
-    repo.addRule("g1", "sports");
+    repo.addRule("g1", "sports", "block");
     feeds.set("https://a/rss", rss(...Array.from({ length: 40 }, (_, n) => `n${n}`)));
     await cycle();
     expect(jevCalls).toBe(MAX_CLASSIFY);
@@ -235,10 +249,10 @@ describe("runCycle staleness", () => {
 
 describe("addRule and follow limits", () => {
   test(`caps rules at ${MAX_RULES} and refuses a blank rule`, () => {
-    for (let n = 0; n < MAX_RULES; n++) addRule(repo, "g1", `topic ${n}`);
-    expect(() => addRule(repo, "g1", "one more")).toThrow(RuleError);
-    expect(() => addRule(repo, "g2", "   ")).toThrow(RuleError);
-    expect(addRule(repo, "g2", " sports ").text).toBe("sports");
+    for (let n = 0; n < MAX_RULES; n++) addRule(repo, "g1", `topic ${n}`, n % 2 ? "only" : "block");
+    expect(() => addRule(repo, "g1", "one more", "only")).toThrow(RuleError);
+    expect(() => addRule(repo, "g2", "   ", "block")).toThrow(RuleError);
+    expect(addRule(repo, "g2", " Europe ", "only")).toMatchObject({ text: "Europe", kind: "only" });
   });
 
   test(`caps feeds at ${MAX_FEEDS} and caps a feed title used as its name`, async () => {

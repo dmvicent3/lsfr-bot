@@ -1,6 +1,6 @@
 import { createJev } from "../../core/jev.ts";
 import type { BotModule } from "../../core/module.ts";
-import { rssCommand } from "./commands.ts";
+import { rssCommand, rssComponents } from "./commands.ts";
 import { rssJobs } from "./jobs.ts";
 import { rssMigrations } from "./repo.ts";
 
@@ -10,8 +10,9 @@ export function rssModule(jevUrl: string): BotModule {
     name: "rss",
     title: "📰 News",
     helpNote:
-      "Feeds are checked every 15 minutes. New articles are posted unless a rule matches; rules are judged by a local model (jev), so they work by meaning, not keywords.",
+      "Feeds are checked every 15 minutes. A new article is posted unless a block rule matches and, if its feed has only-rules, when one of them matches. Rules can be limited to some feeds and are judged by a local model (jev), so they work by meaning, not keywords.",
     commands: [rssCommand],
+    components: rssComponents,
     jobs: rssJobs(createJev({ url: jevUrl })),
     migrations: rssMigrations,
   };

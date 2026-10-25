@@ -5,13 +5,21 @@ import { itemKey } from "./dedupe.ts";
 import { FeedError, parseFeed } from "./parse.ts";
 import { renderItem } from "./render.ts";
 import type { Feed, RssRepo, Server } from "./repo.ts";
-import { articleState, buildQuestions, type Rule, verdict } from "./rules.ts";
+import {
+  articleState,
+  buildQuestions,
+  type Rule,
+  type RuleKind,
+  rulesFor,
+  verdict,
+} from "./rules.ts";
 
 /** Articles classified per server per cycle; the rest wait for the next. */
 export const MAX_CLASSIFY = 30;
 /** Per server: each rule is one jev request per article, each feed one fetch per cycle. */
 export const MAX_RULES = 25;
-export const MAX_FEEDS = 50;
+/** 25: a Discord select menu (the rule feed picker) holds at most 25 options. */
+export const MAX_FEEDS = 25;
 const MAX_NAME = 100;
 /** Finished items are kept this long for dedupe (far longer than an item stays in a 50-item feed). */
 const KEEP_MS = 30 * 24 * 3_600_000;
@@ -76,13 +84,14 @@ async function classify(server: Server, d: CycleDeps): Promise<JevOutcome> {
   const rules = d.repo.rules(server.guildId);
   let outcome: JevOutcome = "unused";
   for (const item of d.repo.itemsIn(server.guildId, "pending", MAX_CLASSIFY)) {
-    if (rules.length === 0) {
+    const applicable = rulesFor(rules, item.feedId);
+    if (applicable.length === 0) {
       d.repo.setState(item.id, "passed");
       continue;
     }
     try {
-      const answers = await d.jev.yesNo(articleState(item), buildQuestions(rules));
-      d.repo.setState(item.id, verdict(answers, rules).kind === "block" ? "blocked" : "passed");
+      const answers = await d.jev.yesNo(articleState(item), buildQuestions(applicable));
+      d.repo.setState(item.id, verdict(answers, applicable).kind === "pass" ? "passed" : "blocked");
       outcome = "ok";
     } catch (err) {
       if (!(err instanceof JevError)) throw err;
@@ -142,12 +151,12 @@ export async function followFeed(
   return feed;
 }
 
-/** Adds a rule: not blank, at most MAX_RULES per server. */
-export function addRule(repo: RssRepo, guildId: string, text: string): Rule {
+/** Adds a rule for every feed: not blank, at most MAX_RULES per server. */
+export function addRule(repo: RssRepo, guildId: string, text: string, kind: RuleKind): Rule {
   const t = text.trim();
   if (!t) throw new RuleError("a rule can't be blank");
   if (repo.rules(guildId).length >= MAX_RULES) {
     throw new RuleError(`a server can have at most ${MAX_RULES} rules`);
   }
-  return repo.addRule(guildId, t);
+  return repo.addRule(guildId, t, kind);
 }

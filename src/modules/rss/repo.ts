@@ -1,7 +1,7 @@
 import type { Database } from "bun:sqlite";
 import type { Migration } from "../../core/db.ts";
 import type { FeedItem } from "./parse.ts";
-import type { Rule } from "./rules.ts";
+import type { Rule, RuleKind } from "./rules.ts";
 
 export const rssMigrations: Migration[] = [
   {
@@ -42,6 +42,17 @@ export const rssMigrations: Migration[] = [
         UNIQUE (guild_id, item_key)
       );
       CREATE INDEX rss_items_state ON rss_items (guild_id, state, created_at);
+    `,
+  },
+  {
+    id: "rss-002-rule-kinds",
+    sql: `
+      ALTER TABLE rss_rules ADD COLUMN kind TEXT NOT NULL DEFAULT 'block';
+      CREATE TABLE rss_rule_feeds (
+        rule_id INTEGER NOT NULL,
+        feed_id INTEGER NOT NULL,
+        PRIMARY KEY (rule_id, feed_id)
+      );
     `,
   },
 ];
@@ -94,6 +105,25 @@ interface ItemRow {
   state: ItemState;
   created_at: number;
 }
+
+interface RuleRow {
+  id: number;
+  text: string;
+  kind: RuleKind;
+  feed_ids: string | null;
+}
+
+const toRule = (r: RuleRow): Rule => ({
+  id: r.id,
+  text: r.text,
+  kind: r.kind,
+  feedIds: (r.feed_ids?.split(",").map(Number) ?? []).toSorted((a, b) => a - b),
+});
+
+const RULES_SQL = `
+  SELECT r.id, r.text, r.kind, group_concat(f.feed_id) AS feed_ids
+  FROM rss_rules r LEFT JOIN rss_rule_feeds f ON f.rule_id = r.id
+  WHERE r.guild_id = ?`;
 
 const toFeed = (r: FeedRow): Feed => ({
   id: r.id,
@@ -177,7 +207,10 @@ export class RssRepo {
     return toFeed(row);
   }
 
-  /** Also drops the feed's items still waiting to be checked or posted; the rest stay for dedupe. */
+  /**
+   * Also drops the feed's items still waiting to be checked or posted (the rest stay for dedupe)
+   * and the rules that applied to this feed alone: with no feeds left they'd apply to every feed.
+   */
   removeFeed(guildId: string, id: number): boolean {
     return this.db.transaction(() => {
       const removed =
@@ -188,6 +221,19 @@ export class RssRepo {
           "DELETE FROM rss_items WHERE guild_id = ? AND feed_id = ? AND state IN ('pending', 'passed')",
           [guildId, id],
         );
+        const scoped = this.db
+          .query<{ rule_id: number }, [number]>(
+            "SELECT rule_id FROM rss_rule_feeds WHERE feed_id = ?",
+          )
+          .all(id)
+          .map((r) => r.rule_id);
+        this.db.run("DELETE FROM rss_rule_feeds WHERE feed_id = ?", [id]);
+        for (const ruleId of scoped) {
+          this.db.run(
+            "DELETE FROM rss_rules WHERE id = ? AND NOT EXISTS (SELECT 1 FROM rss_rule_feeds WHERE rule_id = ?)",
+            [ruleId, ruleId],
+          );
+        }
       }
       return removed;
     })();
@@ -208,28 +254,54 @@ export class RssRepo {
     ]);
   }
 
-  addRule(guildId: string, text: string): Rule {
+  addRule(guildId: string, text: string, kind: RuleKind): Rule {
     const row = this.db
-      .query<{ id: number; text: string }, [string, string]>(
-        "INSERT INTO rss_rules (guild_id, text) VALUES (?, ?) RETURNING id, text",
+      .query<{ id: number }, [string, string, string]>(
+        "INSERT INTO rss_rules (guild_id, text, kind) VALUES (?, ?, ?) RETURNING id",
       )
-      .get(guildId, text);
+      .get(guildId, text, kind);
     if (!row) throw new Error("rule insert returned nothing");
-    return row;
+    return { id: row.id, text, kind, feedIds: [] };
   }
 
   removeRule(guildId: string, id: number): boolean {
-    return (
-      this.db.run("DELETE FROM rss_rules WHERE guild_id = ? AND id = ?", [guildId, id]).changes > 0
-    );
+    return this.db.transaction(() => {
+      const removed =
+        this.db.run("DELETE FROM rss_rules WHERE guild_id = ? AND id = ?", [guildId, id]).changes >
+        0;
+      if (removed) this.db.run("DELETE FROM rss_rule_feeds WHERE rule_id = ?", [id]);
+      return removed;
+    })();
   }
 
   rules(guildId: string): Rule[] {
     return this.db
-      .query<{ id: number; text: string }, [string]>(
-        "SELECT id, text FROM rss_rules WHERE guild_id = ? ORDER BY id",
-      )
-      .all(guildId);
+      .query<RuleRow, [string]>(`${RULES_SQL} GROUP BY r.id ORDER BY r.id`)
+      .all(guildId)
+      .map(toRule);
+  }
+
+  rule(guildId: string, id: number): Rule | null {
+    const row = this.db
+      .query<RuleRow, [string, number]>(`${RULES_SQL} AND r.id = ? GROUP BY r.id`)
+      .get(guildId, id);
+    return row ? toRule(row) : null;
+  }
+
+  /** Limits a rule to these of the server's feeds (others are ignored); [] means every feed. */
+  setRuleFeeds(guildId: string, ruleId: number, feedIds: number[]): boolean {
+    return this.db.transaction(() => {
+      if (!this.rule(guildId, ruleId)) return false;
+      this.db.run("DELETE FROM rss_rule_feeds WHERE rule_id = ?", [ruleId]);
+      for (const feedId of feedIds) {
+        this.db.run(
+          `INSERT OR IGNORE INTO rss_rule_feeds (rule_id, feed_id)
+           SELECT ?, id FROM rss_feeds WHERE guild_id = ? AND id = ?`,
+          [ruleId, guildId, feedId],
+        );
+      }
+      return true;
+    })();
   }
 
   /** False when the server already has an item with this key. */

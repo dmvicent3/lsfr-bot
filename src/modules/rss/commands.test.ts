@@ -22,7 +22,7 @@ describe("rssCommand", () => {
     expect(data.contexts).toEqual([InteractionContextType.Guild]);
   });
 
-  test("has the seven subcommands", () => {
+  test("has the eight subcommands", () => {
     const subs = (data.options ?? []).filter(
       (o) => o.type === ApplicationCommandOptionType.Subcommand,
     );
@@ -32,7 +32,8 @@ describe("rssCommand", () => {
       "unfollow",
       "feeds",
       "block",
-      "unblock",
+      "only",
+      "remove-rule",
       "rules",
     ]);
   });
@@ -44,7 +45,8 @@ describe("rssCommand", () => {
       min_length: 1,
       max_length: 200,
     });
-    expect(subOptions("unblock")[0]).toMatchObject({ name: "rule", autocomplete: true });
+    expect(subOptions("only")[0]).toMatchObject({ name: "rule", required: true, max_length: 200 });
+    expect(subOptions("remove-rule")[0]).toMatchObject({ name: "rule", autocomplete: true });
     expect(subOptions("unfollow")[0]).toMatchObject({ name: "feed", autocomplete: true });
     expect(subOptions("follow").map((o) => o["name"])).toEqual(["url", "name"]);
   });
