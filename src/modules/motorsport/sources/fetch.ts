@@ -25,10 +25,14 @@ export async function fetchSeries(
     : parseSportstimes(info.key, year, json);
 }
 
-/** JSON from `url`; null on 404 (nothing there yet). Other failures throw. */
-export async function getJson(url: string, fetchFn: FetchFn = fetch): Promise<unknown> {
+/** JSON from `url`; null on a `notYet` status (404: nothing there yet). Other failures throw. */
+export async function getJson(
+  url: string,
+  fetchFn: FetchFn = fetch,
+  notYet: readonly number[] = [404],
+): Promise<unknown> {
   const res = await fetchFn(url, { signal: AbortSignal.timeout(30_000) });
-  if (res.status === 404) return null;
+  if (notYet.includes(res.status)) return null;
   if (!res.ok) throw new Error(`${url} returned ${res.status}`);
   return res.json();
 }

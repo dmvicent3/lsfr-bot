@@ -84,3 +84,10 @@ test("series without a results source is null", async () => {
   expect(await fetchResult(race, race, fetchFn)).toBeNull();
   expect(fetchFn.urls).toEqual([]);
 });
+
+const liveLockout: FetchFn = async () => new Response('{"detail":"Live session"}', { status: 401 });
+
+test("F1 during a live session (OpenF1 401) is null, retried quietly", async () => {
+  const race = session("f1", "race", "2026-10-11T12:00:00Z");
+  expect(await fetchResult(race, race, liveLockout)).toBeNull();
+});

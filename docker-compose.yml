@@ -1,3 +1,10 @@
+# Docker keeps container logs forever by default; cap each service at 3 x 10 MB.
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: "3"
+
 services:
   bot:
     build: .
@@ -10,6 +17,7 @@ services:
     # Caps take effect only where the kernel has memory cgroups (the Pi needs
     # cgroup_enable=memory cgroup_memory=1 in /boot/firmware/cmdline.txt).
     mem_limit: 512m
+    logging: *logging
 
   # jevos on llama.cpp, for RSS filtering. No published port: only the bot reaches it.
   jev:
@@ -17,6 +25,7 @@ services:
     restart: unless-stopped
     cpus: 2
     mem_limit: 1536m
+    logging: *logging
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8017/health"]
       interval: 30s

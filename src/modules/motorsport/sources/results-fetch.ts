@@ -13,6 +13,9 @@ import {
 } from "./motogp-results.ts";
 import { OPENF1, openf1SessionKey, parseOpenF1 } from "./openf1.ts";
 
+/** OpenF1 answers 401 to free users while any session is live: not out yet, try later. */
+const OPENF1_NOT_YET = [401, 404];
+
 const day = (d: Date): string => d.toISOString().slice(0, 10);
 
 /**
@@ -30,12 +33,16 @@ export async function fetchResult(
   const year = race.start.getUTCFullYear();
 
   if (session.series === "f1") {
-    const sessions = await getJson(`${OPENF1}/sessions?year=${year}`, fetchFn);
+    const openf1 = (path: string): Promise<unknown> =>
+      getJson(`${OPENF1}${path}`, fetchFn, OPENF1_NOT_YET);
+    const sessions = await openf1(`/sessions?year=${year}`);
+    if (sessions === null) return null;
     const key = openf1SessionKey(sessions, kind, session.start);
     if (key === null) return null;
-    const results = await getJson(`${OPENF1}/session_result?session_key=${key}`, fetchFn);
+    const results = await openf1(`/session_result?session_key=${key}`);
     if (results === null) return null;
-    const drivers = await getJson(`${OPENF1}/drivers?session_key=${key}`, fetchFn);
+    const drivers = await openf1(`/drivers?session_key=${key}`);
+    if (drivers === null) return null;
     return parseOpenF1(kind, results, drivers);
   }
 
