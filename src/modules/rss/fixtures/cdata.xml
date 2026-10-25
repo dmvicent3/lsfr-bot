@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title><![CDATA[CDATA Times]]></title>
+    <item>
+      <title><![CDATA[It&#8217;s   <i>here</i>]]></title>
+      <link>https://cdata.example.com/a</link>
+      <description><![CDATA[<p>First&nbsp;line &amp; more</p>
+        <p>Second    line</p><script>alert(1)</script>]]></description>
+    </item>
+  </channel>
+</rss>

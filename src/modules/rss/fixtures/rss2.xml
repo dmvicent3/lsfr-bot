@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Example News</title>
+    <link>https://news.example.com/</link>
+    <item>
+      <title>EU agrees new chip law</title>
+      <link>https://news.example.com/chips?utm_source=rss</link>
+      <guid isPermaLink="false">news-1001</guid>
+      <pubDate>Sat, 24 Oct 2026 09:30:00 GMT</pubDate>
+      <description>Member states back a &amp; plan for semiconductors.</description>
+    </item>
+    <item>
+      <title>Second story</title>
+      <link>https://news.example.com/second</link>
+      <description>Plain text.</description>
+    </item>
+  </channel>
+</rss>
