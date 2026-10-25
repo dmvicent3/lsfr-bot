@@ -82,3 +82,55 @@ async function askOne(url: string, prompt: string, fetchFn: FetchFn): Promise<nu
   if (typeof p !== "number" || p < 0 || p > 1) throw new JevError("jev returned a bad probability");
   return p;
 }
+
+export interface Jev {
+  yesNo(state: string, questions: JevQuestion[]): Promise<Map<string, number>>;
+}
+
+const MIN_GAP_MS = 1_000;
+/** Pause after the 1st, 2nd, … consecutive failure; the last value repeats. */
+const BACKOFF_MS = [60_000, 120_000, 240_000, 480_000, 900_000];
+
+/**
+ * The one door to jev, so the Pi is never flooded: calls queue and run one at a time, at most one
+ * a second; after a failure, calls fail fast (no request) for a back-off that grows to 15 minutes.
+ */
+export function createJev(opts: {
+  url: string;
+  fetchFn?: FetchFn;
+  now?: () => number;
+  sleep?: (ms: number) => Promise<void>;
+}): Jev {
+  const fetchFn = opts.fetchFn ?? fetch;
+  const now = opts.now ?? Date.now;
+  const sleep = opts.sleep ?? ((ms: number) => Bun.sleep(ms));
+  let tail: Promise<unknown> = Promise.resolve();
+  let lastStart = -Infinity;
+  let failures = 0;
+  let pausedUntil = 0;
+
+  async function run(state: string, questions: JevQuestion[]): Promise<Map<string, number>> {
+    if (now() < pausedUntil) throw new JevError("jev is paused after a failure");
+    const wait = lastStart + MIN_GAP_MS - now();
+    if (wait > 0) await sleep(wait);
+    lastStart = now();
+    try {
+      const answers = await postYesNo(opts.url, state, questions, fetchFn);
+      failures = 0;
+      pausedUntil = 0;
+      return answers;
+    } catch (err) {
+      failures++;
+      pausedUntil = now() + (BACKOFF_MS[Math.min(failures, BACKOFF_MS.length) - 1] ?? 0);
+      throw err;
+    }
+  }
+
+  return {
+    yesNo(state, questions) {
+      const result = tail.catch(() => undefined).then(() => run(state, questions));
+      tail = result;
+      return result;
+    },
+  };
+}

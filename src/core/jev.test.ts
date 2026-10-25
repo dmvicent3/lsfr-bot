@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { type FetchFn, isRecord } from "./guards.ts";
-import { JevError, postYesNo } from "./jev.ts";
+import { createJev, JevError, postYesNo } from "./jev.ts";
 
 const Q = [
   { key: "r1", instructions: "Is this article about sports?" },
@@ -101,5 +101,105 @@ describe("postYesNo", () => {
 
   test("wraps a network failure", async () => {
     expect(await failure(postYesNo("http://jev", "s", Q, down))).toBeInstanceOf(JevError);
+  });
+});
+
+function clock() {
+  const c = {
+    t: 0,
+    slept: [] as number[],
+    now: () => c.t,
+    sleep: async (ms: number) => {
+      c.slept.push(ms);
+      c.t += ms;
+    },
+  };
+  return c;
+}
+
+const ONE = [{ key: "r1", instructions: "q" }];
+
+describe("createJev", () => {
+  test("sends one request at a time, in call order", async () => {
+    const c = clock();
+    let inFlight = 0;
+    let most = 0;
+    const order: string[] = [];
+    const jev = createJev({
+      url: "http://jev",
+      now: c.now,
+      sleep: c.sleep,
+      fetchFn: async (_u, init) => {
+        inFlight++;
+        most = Math.max(most, inFlight);
+        order.push(String(bodyOf(init)["prompt"]).split("\n")[1] ?? "");
+        await Bun.sleep(1);
+        inFlight--;
+        return new Response(JSON.stringify(completion(0.5)));
+      },
+    });
+    await Promise.all(["a", "b", "c"].map((s) => jev.yesNo(s, ONE)));
+    expect(most).toBe(1);
+    expect(order).toEqual(["a", "b", "c"]);
+  });
+
+  test("keeps a second between article requests", async () => {
+    const c = clock();
+    const jev = createJev({
+      url: "http://jev",
+      now: c.now,
+      sleep: c.sleep,
+      fetchFn: reply(200, completion(0.5)),
+    });
+    await jev.yesNo("a", ONE);
+    c.t += 300;
+    await jev.yesNo("b", ONE);
+    expect(c.slept).toEqual([700]);
+  });
+
+  test("backs off after failures: 1, 2, 4, 8, 15, 15 minutes, failing fast in between", async () => {
+    const c = clock();
+    let calls = 0;
+    const jev = createJev({
+      url: "http://jev",
+      now: c.now,
+      sleep: c.sleep,
+      fetchFn: async () => {
+        calls++;
+        return new Response("{}", { status: 503 });
+      },
+    });
+    const pauses = [60, 120, 240, 480, 900, 900].map((m) => m * 1000);
+    for (const pause of pauses) {
+      const before = calls;
+      expect(await failure(jev.yesNo("s", ONE))).toBeInstanceOf(JevError);
+      expect(calls).toBe(before + 1);
+      c.t += pause - 1;
+      expect(await failure(jev.yesNo("s", ONE))).toBeInstanceOf(JevError);
+      expect(calls).toBe(before + 1);
+      c.t += 1;
+    }
+  });
+
+  test("a success clears the back-off", async () => {
+    const c = clock();
+    let fail = true;
+    const jev = createJev({
+      url: "http://jev",
+      now: c.now,
+      sleep: c.sleep,
+      fetchFn: async () =>
+        fail ? new Response("{}", { status: 503 }) : new Response(JSON.stringify(completion(0.5))),
+    });
+    expect(await failure(jev.yesNo("s", ONE))).toBeInstanceOf(JevError);
+    c.t += 60_000;
+    fail = false;
+    expect((await jev.yesNo("s", ONE)).get("r1")).toBe(0.5);
+    fail = true;
+    c.t += 1_000;
+    expect(await failure(jev.yesNo("s", ONE))).toBeInstanceOf(JevError);
+    c.t += 60_000;
+    fail = false;
+    expect((await jev.yesNo("s", ONE)).get("r1")).toBe(0.5);
   });
 });
