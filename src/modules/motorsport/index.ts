@@ -1,6 +1,6 @@
 import type { BotModule } from "../../core/types.ts";
-import { motorsportCommand } from "./commands.ts";
-import { motorsportComponents } from "./components.ts";
+import { motorsportCommand } from "./commands/commands.ts";
+import { motorsportComponents } from "./components/components.ts";
 import { motorsportEvents } from "./events.ts";
 import { motorsportJobs } from "./jobs.ts";
 import { motorsportMigrations } from "./store/migrations.ts";

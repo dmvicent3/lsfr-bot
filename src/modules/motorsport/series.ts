@@ -16,9 +16,9 @@ export function isSeriesKey(s: string): s is SeriesKey {
   return SERIES.some((info) => info.key === s);
 }
 
-/** A series key read back from storage; anything else is corruption. */
+/** A series key from storage, a command option or a button id; anything else is a bug. */
 export function toSeriesKey(value: string): SeriesKey {
-  if (!isSeriesKey(value)) throw new Error(`Unknown series in database: ${value}`);
+  if (!isSeriesKey(value)) throw new Error(`Unknown series ${value}`);
   return value;
 }
 

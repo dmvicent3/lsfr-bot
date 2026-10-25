@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { ChannelType } from "discord.js";
-import { isSeriesChannelType } from "./channels.ts";
+import { isSeriesChannelType } from "./lookup.ts";
 
 test("text and announcement channels count as the series channel", () => {
   expect(isSeriesChannelType(ChannelType.GuildText)).toBe(true);

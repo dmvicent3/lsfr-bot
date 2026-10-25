@@ -6,5 +6,25 @@
     "suspicious": "error"
   },
   "env": { "es2024": true },
+  "rules": {
+    "max-lines": ["error", { "max": 100, "skipBlankLines": true, "skipComments": true }],
+    "max-lines-per-function": [
+      "error",
+      { "max": 30, "skipBlankLines": true, "skipComments": true }
+    ],
+    "max-depth": ["error", 3],
+    "max-params": ["error", 4],
+    "complexity": ["error", 10],
+    "no-else-return": ["error", { "allowElseIf": false }],
+    "no-lonely-if": "error",
+    "no-nested-ternary": "error",
+    "typescript/no-explicit-any": "error"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.ts", "**/testing/**"],
+      "rules": { "max-lines": "off", "max-lines-per-function": "off", "complexity": "off" }
+    }
+  ],
   "ignorePatterns": ["docs/**", ".superpowers/**"]
 }

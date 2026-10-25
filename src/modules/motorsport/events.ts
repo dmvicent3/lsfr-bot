@@ -1,6 +1,6 @@
 import { Events, Message, RESTJSONErrorCodes } from "discord.js";
 import type { EventHandler } from "../../core/types.ts";
-import { isDiscordError } from "./channels/channels.ts";
+import { isDiscordError } from "./channels/lookup.ts";
 import { shouldDeleteMessage } from "./channels/decisions.ts";
 import { MotorsportRepo } from "./repo.ts";
 import { pickRoast } from "./roasts.ts";
