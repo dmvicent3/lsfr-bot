@@ -22,7 +22,7 @@
   },
   "overrides": [
     {
-      "files": ["**/*.test.ts", "**/testing/**"],
+      "files": ["test/**"],
       "rules": { "max-lines": "off", "max-lines-per-function": "off", "complexity": "off" }
     }
   ],
