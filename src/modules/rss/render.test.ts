@@ -44,3 +44,15 @@ describe("renderItem", () => {
     expect(renderItem({ ...item, title: "" }, "F").title).toBe("(untitled)");
   });
 });
+
+describe("renderItem URL safety", () => {
+  test("drops links and images that are not absolute http(s) URLs, and caps the footer", () => {
+    const embed = renderItem(
+      { ...item, link: "/rel/path", image: "javascript:alert(1)" },
+      "f".repeat(3000),
+    );
+    expect(embed.url).toBeUndefined();
+    expect(embed.image).toBeUndefined();
+    expect(embed.footer?.text).toHaveLength(100);
+  });
+});

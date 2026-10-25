@@ -5,10 +5,20 @@ import { itemKey } from "./dedupe.ts";
 import { FeedError, parseFeed } from "./parse.ts";
 import { renderItem } from "./render.ts";
 import type { Feed, RssRepo, Server } from "./repo.ts";
-import { articleState, buildQuestions, verdict } from "./rules.ts";
+import { articleState, buildQuestions, type Rule, verdict } from "./rules.ts";
 
 /** Articles classified per server per cycle; the rest wait for the next. */
 export const MAX_CLASSIFY = 30;
+/** Per server: each rule is one jev request per article, each feed one fetch per cycle. */
+export const MAX_RULES = 25;
+export const MAX_FEEDS = 50;
+const MAX_NAME = 100;
+/** Finished items are kept this long for dedupe (far longer than an item stays in a 50-item feed). */
+const KEEP_MS = 30 * 24 * 3_600_000;
+
+export class RuleError extends Error {
+  override name = "RuleError";
+}
 const MAX_POST = 50;
 
 export type PostResult = "ok" | "lost-channel" | "failed";
@@ -36,7 +46,18 @@ async function collect(server: Server, feeds: Feed[], d: CycleDeps): Promise<voi
     try {
       for (const item of parseFeed(await d.fetchFeed(feed.url)).items) {
         const key = itemKey(item);
-        if (key) d.repo.insertItem(server.guildId, feed.id, key, item, "pending", d.now());
+        // Dated more than a day ago (a guid change, a reordered feed): seen, never posted.
+        const stale = item.publishedAt !== null && item.publishedAt < expiryCutoff(d.now());
+        if (key) {
+          d.repo.insertItem(
+            server.guildId,
+            feed.id,
+            key,
+            item,
+            stale ? "expired" : "pending",
+            d.now(),
+          );
+        }
       }
     } catch (err) {
       failure = reason(err);
@@ -76,6 +97,7 @@ export async function runCycle(server: Server, d: CycleDeps): Promise<void> {
   const feeds = d.repo.feeds(server.guildId);
   await collect(server, feeds, d);
   d.repo.expire(server.guildId, expiryCutoff(d.now()));
+  d.repo.prune(server.guildId, d.now() - KEEP_MS);
 
   const change = notice(server.jevDown, await classify(server, d));
   if (change) {
@@ -106,14 +128,26 @@ export async function followFeed(
   fetchFeed: (url: string) => Promise<string>,
   now: number,
 ): Promise<Feed> {
-  if (repo.feeds(guildId).some((f) => f.url === url)) {
+  const feeds = repo.feeds(guildId);
+  if (feeds.some((f) => f.url === url))
     throw new FeedError("this server already follows that feed");
-  }
+  if (feeds.length >= MAX_FEEDS)
+    throw new FeedError(`a server can follow at most ${MAX_FEEDS} feeds`);
   const parsed = parseFeed(await fetchFeed(url));
-  const feed = repo.addFeed(guildId, url, name?.trim() || parsed.title || url);
+  const feed = repo.addFeed(guildId, url, (name?.trim() || parsed.title || url).slice(0, MAX_NAME));
   for (const item of parsed.items) {
     const key = itemKey(item);
     if (key) repo.insertItem(guildId, feed.id, key, item, "posted", now);
   }
   return feed;
+}
+
+/** Adds a rule: not blank, at most MAX_RULES per server. */
+export function addRule(repo: RssRepo, guildId: string, text: string): Rule {
+  const t = text.trim();
+  if (!t) throw new RuleError("a rule can't be blank");
+  if (repo.rules(guildId).length >= MAX_RULES) {
+    throw new RuleError(`a server can have at most ${MAX_RULES} rules`);
+  }
+  return repo.addRule(guildId, t);
 }

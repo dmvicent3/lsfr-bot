@@ -3,7 +3,17 @@ import { beforeEach, describe, expect, test } from "bun:test";
 import type { APIEmbed } from "discord.js";
 import { runMigrations } from "../../core/db.ts";
 import { JevError, type Jev } from "../../core/jev.ts";
-import { type CycleDeps, followFeed, MAX_CLASSIFY, type PostResult, runCycle } from "./cycle.ts";
+import {
+  addRule,
+  type CycleDeps,
+  followFeed,
+  MAX_CLASSIFY,
+  MAX_FEEDS,
+  MAX_RULES,
+  type PostResult,
+  RuleError,
+  runCycle,
+} from "./cycle.ts";
 import { FeedError } from "./parse.ts";
 import { rssMigrations, RssRepo } from "./repo.ts";
 
@@ -206,5 +216,40 @@ describe("followFeed", () => {
       (e: unknown) => e,
     );
     expect(again).toBeInstanceOf(FeedError);
+  });
+});
+
+describe("runCycle staleness", () => {
+  test("does not post an article dated more than 24 hours ago", async () => {
+    repo.addFeed("g1", "https://a/rss", "A");
+    const old = new Date(now - 48 * HOUR).toUTCString();
+    const fresh = new Date(now - HOUR).toUTCString();
+    feeds.set(
+      "https://a/rss",
+      `<rss><channel><title>F</title><item><title>old</title><link>https://n.example/old</link><pubDate>${old}</pubDate></item><item><title>fresh</title><link>https://n.example/fresh</link><pubDate>${fresh}</pubDate></item></channel></rss>`,
+    );
+    await cycle();
+    expect(posted).toEqual(["fresh"]);
+  });
+});
+
+describe("addRule and follow limits", () => {
+  test(`caps rules at ${MAX_RULES} and refuses a blank rule`, () => {
+    for (let n = 0; n < MAX_RULES; n++) addRule(repo, "g1", `topic ${n}`);
+    expect(() => addRule(repo, "g1", "one more")).toThrow(RuleError);
+    expect(() => addRule(repo, "g2", "   ")).toThrow(RuleError);
+    expect(addRule(repo, "g2", " sports ").text).toBe("sports");
+  });
+
+  test(`caps feeds at ${MAX_FEEDS} and caps a feed title used as its name`, async () => {
+    for (let n = 0; n < MAX_FEEDS; n++) repo.addFeed("g1", `https://f/${n}`, "x");
+    feeds.set("https://a/rss", `<rss><channel><title>${"t".repeat(500)}</title></channel></rss>`);
+    const full = await followFeed(repo, "g1", "https://a/rss", null, deps().fetchFeed, now).catch(
+      (e: unknown) => e,
+    );
+    expect(full).toBeInstanceOf(FeedError);
+    expect(
+      (await followFeed(repo, "g2", "https://a/rss", null, deps().fetchFeed, now)).name,
+    ).toHaveLength(100);
   });
 });

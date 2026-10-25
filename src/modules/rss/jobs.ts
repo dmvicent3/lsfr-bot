@@ -10,25 +10,32 @@ import { RssRepo } from "./repo.ts";
 const LOST = new Set<unknown>([
   RESTJSONErrorCodes.MissingAccess,
   RESTJSONErrorCodes.UnknownChannel,
-  RESTJSONErrorCodes.MissingPermissions,
   RESTJSONErrorCodes.UnknownGuild,
 ]);
 
+/** A send error: the channel or server gone is "lost-channel"; anything else is retried next cycle. */
+export function sendFailure(err: unknown): PostResult {
+  return err instanceof DiscordAPIError && LOST.has(err.code) ? "lost-channel" : "failed";
+}
+
+type Message = { embeds: APIEmbed[] } | { content: string };
+
+/** Feed text is untrusted: a title like "@everyone" must not ping. */
+export function outgoing(message: Message): Message & { allowedMentions: { parse: [] } } {
+  return { ...message, allowedMentions: { parse: [] } };
+}
+
 /** Sends to a channel; a channel the bot can no longer use is "lost-channel". */
-async function send(
-  ctx: Ctx,
-  channelId: string,
-  message: { embeds: APIEmbed[] } | { content: string },
-): Promise<PostResult> {
+async function send(ctx: Ctx, channelId: string, message: Message): Promise<PostResult> {
   try {
     const channel = await ctx.client.channels.fetch(channelId);
     if (!channel?.isSendable()) return "lost-channel";
-    await channel.send(message);
+    await channel.send(outgoing(message));
     return "ok";
   } catch (err) {
-    if (err instanceof DiscordAPIError && LOST.has(err.code)) return "lost-channel";
-    log.error("rss:post", `send to ${channelId} failed`, err);
-    return "failed";
+    const result = sendFailure(err);
+    if (result === "failed") log.error("rss:post", `send to ${channelId} failed`, err);
+    return result;
   }
 }
 

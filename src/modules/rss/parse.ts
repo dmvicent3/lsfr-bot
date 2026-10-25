@@ -146,7 +146,7 @@ function atomEntry(entry: Record<string, unknown>): FeedItem {
 export function parseFeed(xml: string): ParsedFeed {
   let doc: unknown;
   try {
-    doc = parser.parse(xml, true);
+    doc = parser.parse(xml.trimStart());
   } catch (err) {
     throw new FeedError(`not valid XML: ${err instanceof Error ? err.message : String(err)}`);
   }

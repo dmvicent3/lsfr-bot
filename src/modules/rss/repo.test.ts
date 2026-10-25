@@ -130,3 +130,21 @@ describe("items", () => {
     expect(repo.itemsIn("g2", "pending", 10)).toHaveLength(1);
   });
 });
+
+describe("item storage limits", () => {
+  test("keeps at most 1,500 characters of a description", () => {
+    repo.insertItem("g1", 1, "k", { ...item("a"), description: "d".repeat(5000) }, "pending", 1);
+    expect(repo.itemsIn("g1", "pending", 1)[0]?.description).toHaveLength(1500);
+  });
+
+  test("prunes finished items older than the cut-off, keeping waiting ones", () => {
+    repo.insertItem("g1", 1, "posted", item("a"), "posted", 10);
+    repo.insertItem("g1", 1, "blocked", item("b"), "blocked", 10);
+    repo.insertItem("g1", 1, "pending", item("c"), "pending", 10);
+    repo.insertItem("g1", 1, "recent", item("d"), "posted", 100);
+    expect(repo.prune("g1", 50)).toBe(2);
+    expect(repo.insertItem("g1", 1, "posted", item("a"), "posted", 200)).toBe(true);
+    expect(repo.insertItem("g1", 1, "recent", item("d"), "posted", 200)).toBe(false);
+    expect(repo.itemsIn("g1", "pending", 10)).toHaveLength(1);
+  });
+});

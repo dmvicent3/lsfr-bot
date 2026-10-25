@@ -46,6 +46,9 @@ export const rssMigrations: Migration[] = [
   },
 ];
 
+/** Only this much of a description is ever used (jev reads 1,500 characters). */
+const MAX_DESCRIPTION = 1_500;
+
 export type ItemState = "pending" | "passed" | "posted" | "blocked" | "expired";
 
 export interface Server {
@@ -250,7 +253,7 @@ export class RssRepo {
           item.title,
           item.link,
           item.guid,
-          item.description,
+          item.description.slice(0, MAX_DESCRIPTION),
           item.image,
           item.publishedAt,
           state,
@@ -278,6 +281,15 @@ export class RssRepo {
     return this.db.run(
       `UPDATE rss_items SET state = 'expired'
        WHERE guild_id = ? AND state IN ('pending', 'passed') AND created_at < ?`,
+      [guildId, before],
+    ).changes;
+  }
+
+  /** Finished items (posted, blocked, expired) created before `before` are deleted; returns how many. */
+  prune(guildId: string, before: number): number {
+    return this.db.run(
+      `DELETE FROM rss_items
+       WHERE guild_id = ? AND state IN ('posted', 'blocked', 'expired') AND created_at < ?`,
       [guildId, before],
     ).changes;
   }

@@ -8,7 +8,7 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 import type { Ctx, SlashCommand } from "../../core/module.ts";
-import { followFeed } from "./cycle.ts";
+import { addRule, followFeed, RuleError } from "./cycle.ts";
 import { fetchFeed } from "./fetch.ts";
 import { FeedError } from "./parse.ts";
 import { RssRepo } from "./repo.ts";
@@ -153,7 +153,13 @@ async function execute(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> 
       return reply(i, `Posting ${channelHint()}:\n${lines.join("\n")}`.slice(0, 2000));
     }
     case "block": {
-      const rule = repo.addRule(guildId, i.options.getString("rule", true).trim());
+      let rule;
+      try {
+        rule = addRule(repo, guildId, i.options.getString("rule", true));
+      } catch (err) {
+        if (err instanceof RuleError) return reply(i, `Couldn't add that rule: ${err.message}.`);
+        throw err;
+      }
       return reply(
         i,
         `New rule: articles are not posted when the answer to "${question(rule.text)}" is yes.`,

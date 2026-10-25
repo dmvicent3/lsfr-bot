@@ -78,3 +78,14 @@ describe("parseFeed", () => {
     expect(() => parseFeed("")).toThrow(FeedError);
   });
 });
+
+describe("parseFeed leniency (real-world feeds)", () => {
+  test("accepts whitespace before the XML declaration, a bare & and unclosed HTML", () => {
+    const feed = parseFeed(
+      `\n<?xml version="1.0"?><rss><channel><title>T</title><item><title>A &amp; B</title><link>https://x.example/?a=1&b=2</link><description>one<br>two</description></item></channel></rss>`,
+    );
+    expect(feed.items[0]?.title).toBe("A & B");
+    expect(feed.items[0]?.link).toBe("https://x.example/?a=1&b=2");
+    expect(feed.items[0]?.description).toContain("one");
+  });
+});
