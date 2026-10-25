@@ -1,5 +1,6 @@
 import type { FetchFn } from "../../../core/types.ts";
-import type { Post } from "../types.ts";
+import type { EventSchedule, Post } from "../types.ts";
+import type { MotorsportRepo } from "../repo.ts";
 
 export interface RulingDeps {
   fetchFn: FetchFn;
@@ -33,4 +34,20 @@ export interface Ruling {
   infringement: string;
   decision: string;
   reason: string;
+}
+
+/** One collectRulings run: the weekend it checks and what it needs. */
+export interface RulingRun {
+  repo: MotorsportRepo;
+  now: number;
+  deps: RulingDeps;
+  event: EventSchedule;
+}
+
+/** A ruling document checked: `posted` false means it wasn't a post-session ruling. */
+export interface RulingMark {
+  eventId: string;
+  url: string;
+  posted: boolean;
+  now: number;
 }

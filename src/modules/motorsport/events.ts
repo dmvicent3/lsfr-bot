@@ -13,7 +13,7 @@ const keepSeriesChannelsClean: EventHandler = {
     const botId = ctx.client.user?.id;
     if (!(message instanceof Message) || !botId) return;
     const seriesChannelIds = new Set(
-      new MotorsportRepo(ctx.db).listFollowed().map((f) => f.channelId),
+      new MotorsportRepo(ctx.db).followed.list().map((f) => f.channelId),
     );
     const candidate = {
       channelId: message.channelId,

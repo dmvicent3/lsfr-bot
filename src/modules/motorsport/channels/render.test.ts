@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { ComponentType } from "discord.js";
-import { renderPing, renderReminderPicker, renderSchedule } from "./render.ts";
+import { renderSchedule } from "./render.ts";
+import { renderPing, renderReminderPicker } from "../pings/render.ts";
 import { seriesInfo } from "../series.ts";
 import type { EventSchedule, Session } from "../types.ts";
 

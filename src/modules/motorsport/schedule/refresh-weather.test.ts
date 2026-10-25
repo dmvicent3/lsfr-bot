@@ -4,7 +4,8 @@ import { runMigrations } from "../../../core/db.ts";
 import type { FetchFn } from "../../../core/types.ts";
 import { coreMigrations } from "../../../core/settings.ts";
 import { refreshWeather } from "./refresh.ts";
-import { motorsportMigrations, MotorsportRepo } from "../repo.ts";
+import { MotorsportRepo } from "../repo.ts";
+import { motorsportMigrations } from "../store/migrations.ts";
 import { applyRules } from "../pings/rules.ts";
 import { fixture } from "../testing/fixtures.ts";
 import { parseTunous } from "./sources/tunous.ts";
@@ -50,7 +51,7 @@ beforeEach(async () => {
   const db = new Database(":memory:", { strict: true });
   runMigrations(db, [...coreMigrations, ...motorsportMigrations]);
   repo = new MotorsportRepo(db);
-  repo.replaceSessions(
+  repo.sessions.replace(
     "f1",
     applyRules(parseTunous("f1", 2026, await fixture("tunous-formula1"))),
     0,
@@ -59,7 +60,7 @@ beforeEach(async () => {
 
 test("stores forecasts for upcoming F1 sessions within range", async () => {
   await refreshWeather(repo, NOW, await weatherFetch());
-  const weather = repo.weatherFor("f1");
+  const weather = repo.weather.bySession("f1");
   expect(weather.get("2026-chinese-grand-prix/race")).toEqual({
     tempC: 20,
     rainChance: 10,
@@ -71,14 +72,14 @@ test("stores forecasts for upcoming F1 sessions within range", async () => {
 test("a failing forecast keeps the previous weather", async () => {
   await refreshWeather(repo, NOW, await weatherFetch(200, 20));
   await refreshWeather(repo, NOW, await weatherFetch(500, 30));
-  expect(repo.weatherFor("f1").get("2026-chinese-grand-prix/race")?.tempC).toBe(20);
+  expect(repo.weather.bySession("f1").get("2026-chinese-grand-prix/race")?.tempC).toBe(20);
 });
 
 test("one track failing keeps its previous weather without discarding the others", async () => {
   const now = new Date("2026-03-14T00:00:00Z");
   await refreshWeather(repo, now, await weatherFetch(200, 20));
   await refreshWeather(repo, now, await weatherFetch(200, 30, "31.3807"));
-  const weather = repo.weatherFor("f1");
+  const weather = repo.weather.bySession("f1");
   expect(weather.get("2026-chinese-grand-prix/race")?.tempC).toBe(20);
   expect(weather.get("2026-japanese-grand-prix/race")?.tempC).toBe(30);
 });

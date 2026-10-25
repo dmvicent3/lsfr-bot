@@ -45,13 +45,6 @@ export interface PostMessage {
 
 export type Post = (target: PostTarget, message: PostMessage) => Promise<void>;
 
-export interface PicksRow {
-  user_id: string;
-  p1: string | null;
-  p2: string | null;
-  p3: string | null;
-}
-
 /** A session's classification, kept once posted (also the record F4 predictions score against). */
 export interface StoredResult {
   series: SeriesKey;
@@ -85,39 +78,23 @@ export interface SentPing {
 
 export type DuePing = Omit<SentPing, "messageId" | "deleteAt"> & { messageId: string };
 
-export interface FollowedRow {
-  series: string;
-  channel_id: string;
-  role_id: string;
-  pinned_message_id: string;
-  pinned_event_id: string | null;
-  channel_name: string | null;
-  renamed_at: number | null;
-}
-
-export interface SessionRow {
-  series: string;
-  event_id: string;
-  event_name: string;
-  session_id: string;
-  title: string;
-  start: number;
-  end: number;
-  pingable: number;
-}
-
-export interface DueRow {
-  series: string;
-  event_id: string;
-  session_id: string;
-  channel_id: string;
-  message_id: string;
-}
-
 export interface SeriesInfo {
   key: SeriesKey;
   name: string;
   source: "tunous" | "sportstimes";
   /** Folder name in the source repo. */
   path: string;
+}
+
+/** Who is acting on a button or command, and when. */
+export interface Viewer {
+  userId: string;
+  now: number;
+}
+
+/** One session of one event, as buttons and commands name it. */
+export interface SessionRef {
+  series: SeriesKey;
+  eventId: string;
+  sessionId: string;
 }

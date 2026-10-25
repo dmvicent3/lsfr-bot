@@ -12,3 +12,9 @@ export interface RefreshResult {
   ok: boolean;
   error?: string;
 }
+
+/** An event's sessions that start within the forecast range. */
+export interface UpcomingEvent {
+  eventId: string;
+  sessions: Session[];
+}

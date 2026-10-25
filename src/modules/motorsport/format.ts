@@ -39,3 +39,7 @@ const MAX_TEAM = 12;
 /** Cut long names so tables stay phone-width. */
 export const fitName = (name: string): string => name.slice(0, MAX_NAME).trim();
 export const fitTeam = (team: string): string => team.slice(0, MAX_TEAM).trim();
+
+/** A Discord timestamp, shown in each viewer's time zone: d date, t time, f both, R relative. */
+export const timestamp = (date: Date, style: "d" | "t" | "f" | "R"): string =>
+  `<t:${Math.floor(date.getTime() / 1000)}:${style}>`;

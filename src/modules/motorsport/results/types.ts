@@ -1,5 +1,6 @@
 import type { FetchFn } from "../../../core/types.ts";
-import type { Session } from "../types.ts";
+import type { Post, SeriesInfo, Session } from "../types.ts";
+import type { MotorsportRepo } from "../repo.ts";
 
 export type ResultKind = "qualifying" | "sprint-qualifying" | "sprint" | "race";
 
@@ -31,4 +32,19 @@ export interface ResultRow {
 
 export interface SessionResult {
   rows: ResultRow[];
+}
+
+/** What a results post is headed with. */
+export interface ResultHeading {
+  info: SeriesInfo;
+  eventName: string;
+  kind: ResultKind;
+}
+
+/** What the results job needs to fetch, post and store a result. */
+export interface CollectDeps {
+  repo: MotorsportRepo;
+  now: number;
+  fetchFn: FetchFn;
+  post: Post;
 }

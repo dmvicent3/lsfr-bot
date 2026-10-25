@@ -1,6 +1,7 @@
 import type { Upcoming } from "./types.ts";
 import type { APIEmbed } from "discord.js";
 import { SERIES } from "../series.ts";
+import { timestamp } from "../format.ts";
 import type { SeriesKey, Session } from "../types.ts";
 
 const EMBED_COLOR = 0xe10600;
@@ -19,9 +20,8 @@ function upcomingOf(sessions: Session[], now: number): { session: Session; live:
 function line(u: Upcoming): string {
   const { title, eventName, start } = u.session;
   if (u.live) return `🔴 **${u.name}** · ${title} · ${eventName} · **LIVE now**`;
-  const t = Math.floor(start.getTime() / 1000);
   const channel = u.channelId ? ` · <#${u.channelId}>` : "";
-  return `🏁 **${u.name}** · ${title} · ${eventName} · <t:${t}:R> (<t:${t}:f>)${channel}`;
+  return `🏁 **${u.name}** · ${title} · ${eventName} · ${timestamp(start, "R")} (${timestamp(start, "f")})${channel}`;
 }
 
 /** `/motorsport next`: every series' live or next pinged session, live first, then soonest. */

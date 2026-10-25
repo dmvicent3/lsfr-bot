@@ -3,7 +3,8 @@ import { beforeEach, describe, expect, test } from "bun:test";
 import { runMigrations } from "../../../core/db.ts";
 import { coreMigrations } from "../../../core/settings.ts";
 import { setReminders, toggleReminder } from "./actions.ts";
-import { motorsportMigrations, MotorsportRepo } from "../repo.ts";
+import { MotorsportRepo } from "../repo.ts";
+import { motorsportMigrations } from "../store/migrations.ts";
 import type { Session } from "../types.ts";
 
 const T = Date.parse("2026-03-14T07:00:00Z");
@@ -26,7 +27,7 @@ beforeEach(() => {
   const db = new Database(":memory:", { strict: true });
   runMigrations(db, [...coreMigrations, ...motorsportMigrations]);
   repo = new MotorsportRepo(db);
-  repo.replaceSessions(
+  repo.sessions.replace(
     "f1",
     [
       session("practice-1", "Practice 1", false, T + 3_600_000),
@@ -38,7 +39,7 @@ beforeEach(() => {
 });
 
 function follow(): void {
-  repo.insertFollowed({
+  repo.followed.insert({
     series: "f1",
     channelId: "c",
     roleId: "r",
@@ -51,42 +52,76 @@ function follow(): void {
 
 describe("toggleReminder", () => {
   test("requires the series to be followed", () => {
-    expect(toggleReminder(repo, "u", "f1", "chinese-grand-prix", "qualifying", T)).toBe(
-      "F1 isn't followed. Use /motorsport follow first.",
-    );
+    expect(
+      toggleReminder(
+        repo,
+        { userId: "u", now: T },
+        { series: "f1", eventId: "chinese-grand-prix", sessionId: "qualifying" },
+      ),
+    ).toBe("F1 isn't followed. Use /motorsport follow first.");
   });
 
   test("sets then removes a reminder", () => {
     follow();
-    expect(toggleReminder(repo, "u", "f1", "chinese-grand-prix", "qualifying", T)).toBe(
-      "Reminder set for Chinese Grand Prix Qualifying.",
-    );
-    expect(repo.oneOffUsers("f1", "chinese-grand-prix", "qualifying")).toEqual(["u"]);
-    expect(toggleReminder(repo, "u", "f1", "chinese-grand-prix", "qualifying", T)).toBe(
-      "Reminder removed for Chinese Grand Prix Qualifying.",
-    );
+    expect(
+      toggleReminder(
+        repo,
+        { userId: "u", now: T },
+        { series: "f1", eventId: "chinese-grand-prix", sessionId: "qualifying" },
+      ),
+    ).toBe("Reminder set for Chinese Grand Prix Qualifying.");
+    expect(repo.reminders.users("f1", "chinese-grand-prix", "qualifying")).toEqual(["u"]);
+    expect(
+      toggleReminder(
+        repo,
+        { userId: "u", now: T },
+        { series: "f1", eventId: "chinese-grand-prix", sessionId: "qualifying" },
+      ),
+    ).toBe("Reminder removed for Chinese Grand Prix Qualifying.");
   });
 
   test("rejects practice, past sessions and other events", () => {
     follow();
     const rejected = "That session isn't in the next F1 event.";
-    expect(toggleReminder(repo, "u", "f1", "chinese-grand-prix", "practice-1", T)).toBe(rejected);
-    expect(toggleReminder(repo, "u", "f1", "chinese-grand-prix", "sprint-race", T)).toBe(rejected);
-    expect(toggleReminder(repo, "u", "f1", "other", "qualifying", T)).toBe(rejected);
+    expect(
+      toggleReminder(
+        repo,
+        { userId: "u", now: T },
+        { series: "f1", eventId: "chinese-grand-prix", sessionId: "practice-1" },
+      ),
+    ).toBe(rejected);
+    expect(
+      toggleReminder(
+        repo,
+        { userId: "u", now: T },
+        { series: "f1", eventId: "chinese-grand-prix", sessionId: "sprint-race" },
+      ),
+    ).toBe(rejected);
+    expect(
+      toggleReminder(
+        repo,
+        { userId: "u", now: T },
+        { series: "f1", eventId: "other", sessionId: "qualifying" },
+      ),
+    ).toBe(rejected);
   });
 
   test("rejects a session whose ping already went out", () => {
     follow();
     pinged("qualifying");
-    expect(toggleReminder(repo, "u", "f1", "chinese-grand-prix", "qualifying", T)).toBe(
-      "Chinese Grand Prix Qualifying has already been pinged.",
-    );
-    expect(repo.oneOffUsers("f1", "chinese-grand-prix", "qualifying")).toEqual([]);
+    expect(
+      toggleReminder(
+        repo,
+        { userId: "u", now: T },
+        { series: "f1", eventId: "chinese-grand-prix", sessionId: "qualifying" },
+      ),
+    ).toBe("Chinese Grand Prix Qualifying has already been pinged.");
+    expect(repo.reminders.users("f1", "chinese-grand-prix", "qualifying")).toEqual([]);
   });
 });
 
 function pinged(sessionId: string): void {
-  repo.insertSentPing({
+  repo.pings.insert({
     series: "f1",
     eventId: "chinese-grand-prix",
     sessionId,
@@ -101,31 +136,38 @@ describe("setReminders", () => {
     follow();
     const text = setReminders(
       repo,
-      "u",
-      "f1",
-      "chinese-grand-prix",
+      { userId: "u", now: T },
+      { series: "f1", eventId: "chinese-grand-prix" },
       ["qualifying", "practice-1", "sprint-race"],
-      T,
     );
     expect(text).toBe("Reminders for Chinese Grand Prix: Qualifying.");
-    expect(repo.userOneOffs("u", "f1", "chinese-grand-prix")).toEqual(["qualifying"]);
+    expect(repo.reminders.ofUser("u", "f1", "chinese-grand-prix")).toEqual(["qualifying"]);
   });
 
   test("skips sessions already pinged", () => {
     follow();
     pinged("qualifying");
-    expect(setReminders(repo, "u", "f1", "chinese-grand-prix", ["qualifying"], T)).toBe(
-      "No reminders for Chinese Grand Prix.",
-    );
-    expect(repo.userOneOffs("u", "f1", "chinese-grand-prix")).toEqual([]);
+    expect(
+      setReminders(repo, { userId: "u", now: T }, { series: "f1", eventId: "chinese-grand-prix" }, [
+        "qualifying",
+      ]),
+    ).toBe("No reminders for Chinese Grand Prix.");
+    expect(repo.reminders.ofUser("u", "f1", "chinese-grand-prix")).toEqual([]);
   });
 
   test("an empty selection clears them", () => {
     follow();
-    setReminders(repo, "u", "f1", "chinese-grand-prix", ["qualifying"], T);
-    expect(setReminders(repo, "u", "f1", "chinese-grand-prix", [], T)).toBe(
-      "No reminders for Chinese Grand Prix.",
-    );
-    expect(repo.userOneOffs("u", "f1", "chinese-grand-prix")).toEqual([]);
+    setReminders(repo, { userId: "u", now: T }, { series: "f1", eventId: "chinese-grand-prix" }, [
+      "qualifying",
+    ]);
+    expect(
+      setReminders(
+        repo,
+        { userId: "u", now: T },
+        { series: "f1", eventId: "chinese-grand-prix" },
+        [],
+      ),
+    ).toBe("No reminders for Chinese Grand Prix.");
+    expect(repo.reminders.ofUser("u", "f1", "chinese-grand-prix")).toEqual([]);
   });
 });

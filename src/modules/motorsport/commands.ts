@@ -19,7 +19,8 @@ import { renderNext } from "./schedule/next.ts";
 import { seasonLeaderboard } from "./predictions/predict-actions.ts";
 import { renderSchedule } from "./channels/render.ts";
 import { renderResults, resultSeries } from "./results/results.ts";
-import { fetchStandings, renderStandings, STANDINGS_SERIES } from "./standings/standings.ts";
+import { fetchStandings, STANDINGS_SERIES } from "./standings/fetch.ts";
+import { renderStandings } from "./standings/standings.ts";
 import { MotorsportRepo } from "./repo.ts";
 import { isSeriesKey, SERIES, seriesInfo } from "./series.ts";
 import type { SeriesKey } from "./types.ts";
@@ -153,7 +154,7 @@ async function follow(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
   const repo = new MotorsportRepo(ctx.db);
   const series = seriesOption(i);
   const info = seriesInfo(series);
-  const existing = repo.getFollowed(series);
+  const existing = repo.followed.get(series);
   if (existing) {
     await reply(i, `${info.name} is already followed in <#${existing.channelId}>.`);
     return;
@@ -168,12 +169,12 @@ async function follow(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
     const guild = await ctx.client.guilds.fetch(ctx.config.guildId);
     const created = await createSeriesChannel(guild, info);
     try {
-      const event = currentEvent(repo.listSessions(series), Date.now());
+      const event = currentEvent(repo.sessions.list(series), Date.now());
       const message = await created.channel.send(
-        renderSchedule(info, event, repo.weatherFor(series)),
+        renderSchedule(info, event, repo.weather.bySession(series)),
       );
       await message.pin();
-      repo.insertFollowed({
+      repo.followed.insert({
         series,
         channelId: created.channel.id,
         roleId: created.role.id,
@@ -197,7 +198,7 @@ async function follow(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
 
 async function unfollow(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
   const series = seriesOption(i);
-  const followed = new MotorsportRepo(ctx.db).getFollowed(series);
+  const followed = new MotorsportRepo(ctx.db).followed.get(series);
   if (!followed) {
     await reply(i, notFollowedText(series));
     return;
@@ -226,15 +227,22 @@ async function remind(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
   const repo = new MotorsportRepo(ctx.db);
   const series = seriesOption(i);
   const now = Date.now();
-  const event = currentEvent(repo.listSessions(series), now);
+  const event = currentEvent(repo.sessions.list(series), now);
   const sessionId = i.options.getString("session", true);
-  await reply(i, toggleReminder(repo, i.user.id, series, event?.eventId ?? null, sessionId, now));
+  await reply(
+    i,
+    toggleReminder(
+      repo,
+      { userId: i.user.id, now },
+      { series, eventId: event?.eventId ?? null, sessionId },
+    ),
+  );
 }
 
 async function next(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
   const repo = new MotorsportRepo(ctx.db);
-  const sessions = new Map(SERIES.map((s) => [s.key, repo.listSessions(s.key)] as const));
-  const followed = new Map(repo.listFollowed().map((f) => [f.series, f.channelId] as const));
+  const sessions = new Map(SERIES.map((s) => [s.key, repo.sessions.list(s.key)] as const));
+  const followed = new Map(repo.followed.list().map((f) => [f.series, f.channelId] as const));
   await i.reply({
     embeds: [renderNext(sessions, followed, Date.now())],
     flags: MessageFlags.Ephemeral,
@@ -249,9 +257,7 @@ async function results(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> 
   await i.editReply(
     latest
       ? renderResults(
-          info,
-          latest.eventName,
-          latest.kind,
+          { info, eventName: latest.eventName, kind: latest.kind },
           { rows: latest.rows },
           { spoiler: false },
         )
@@ -301,8 +307,8 @@ async function autocomplete(i: AutocompleteInteraction, ctx: Ctx): Promise<void>
   const typed = i.options.getFocused().toLowerCase();
   const now = Date.now();
   const repo = new MotorsportRepo(ctx.db);
-  const event = currentEvent(repo.listSessions(series), now);
-  const sent = repo.sentKeys(series);
+  const event = currentEvent(repo.sessions.list(series), now);
+  const sent = repo.pings.sentKeys(series);
   const choices = (event?.sessions ?? [])
     .filter((s) => s.pingable && s.start.getTime() > now && !sent.has(sessionKey(s)))
     .filter((s) => s.title.toLowerCase().includes(typed))

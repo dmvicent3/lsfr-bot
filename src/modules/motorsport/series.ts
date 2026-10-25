@@ -16,6 +16,12 @@ export function isSeriesKey(s: string): s is SeriesKey {
   return SERIES.some((info) => info.key === s);
 }
 
+/** A series key read back from storage; anything else is corruption. */
+export function toSeriesKey(value: string): SeriesKey {
+  if (!isSeriesKey(value)) throw new Error(`Unknown series in database: ${value}`);
+  return value;
+}
+
 export function seriesInfo(key: SeriesKey): SeriesInfo {
   const info = SERIES.find((s) => s.key === key);
   if (!info) throw new Error(`Unknown series ${key}`);

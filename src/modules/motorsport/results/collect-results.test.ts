@@ -4,7 +4,8 @@ import { runMigrations } from "../../../core/db.ts";
 import type { FetchFn } from "../../../core/types.ts";
 import { coreMigrations } from "../../../core/settings.ts";
 import { collectResults, latestResult } from "./collect-results.ts";
-import { motorsportMigrations, MotorsportRepo } from "../repo.ts";
+import { MotorsportRepo } from "../repo.ts";
+import { motorsportMigrations } from "../store/migrations.ts";
 import { fixture } from "../testing/fixtures.ts";
 import type { PostMessage, PostTarget } from "../types.ts";
 import type { Session } from "../types.ts";
@@ -45,7 +46,7 @@ beforeEach(() => {
   const db = new Database(":memory:", { strict: true });
   runMigrations(db, [...coreMigrations, ...motorsportMigrations]);
   repo = new MotorsportRepo(db);
-  repo.replaceSessions("f1", [race], 0);
+  repo.sessions.replace("f1", [race], 0);
   posts = [];
 });
 
@@ -56,12 +57,20 @@ test("posts a published result once and stores it", async () => {
   expect(posts).toHaveLength(1);
   expect(posts[0]?.place).toBe("thread");
   expect(posts[0]?.text).toStartWith("## 🏁 F1 — Singapore Grand Prix · Race results\n||`P1 ");
-  expect(repo.latestResult("f1")?.rows[0]?.name).toBe("Verstappen");
+  expect(repo.results.latest("f1")?.rows[0]?.name).toBe("Verstappen");
 });
 
 test("predictions are scored in a second post, in the channel", async () => {
-  repo.setPicks("u1", "f1", race.eventId, "race", ["3", "1", "4"], 0);
-  repo.setPicks("u2", "f1", race.eventId, "race", ["3", null, null], 0);
+  repo.predictions.set(
+    { userId: "u1", now: 0 },
+    { series: "f1", eventId: race.eventId, sessionId: "race" },
+    ["3", "1", "4"],
+  );
+  repo.predictions.set(
+    { userId: "u2", now: 0 },
+    { series: "f1", eventId: race.eventId, sessionId: "race" },
+    ["3", null, null],
+  );
   await collectResults(repo, AFTER_RACE, await openf1(true), post);
   expect(posts).toHaveLength(2);
   expect(posts[1]?.text).toStartWith("### 🔮 Predictions\n||<@u1> Verstappen · ");
@@ -77,7 +86,7 @@ test("no predictions, no second post", async () => {
 test("nothing published yet: nothing posted or stored", async () => {
   await collectResults(repo, AFTER_RACE, await openf1(false), post);
   expect(posts).toEqual([]);
-  expect(repo.latestResult("f1")).toBeNull();
+  expect(repo.results.latest("f1")).toBeNull();
 });
 
 test("a failed post is retried on the next run", async () => {
@@ -85,7 +94,7 @@ test("a failed post is retried on the next run", async () => {
   await collectResults(repo, AFTER_RACE, fetchFn, async () => {
     throw new Error("discord down");
   });
-  expect(repo.latestResult("f1")).toBeNull();
+  expect(repo.results.latest("f1")).toBeNull();
   await collectResults(repo, AFTER_RACE, fetchFn, post);
   expect(posts).toHaveLength(1);
 });
@@ -104,12 +113,12 @@ describe("latestResult", () => {
   };
 
   test("fetches the most recent finished session live when nothing is stored", async () => {
-    repo.replaceSessions("f1", [qualifying, race], 0);
+    repo.sessions.replace("f1", [qualifying, race], 0);
     const latest = await latestResult(repo, "f1", AFTER_RACE + 86_400_000, await openf1(true));
     expect(latest?.kind).toBe("race");
     expect(latest?.eventName).toBe("Singapore Grand Prix");
     expect(latest?.rows[0]?.name).toBe("Verstappen");
-    expect(repo.latestResult("f1")).toBeNull();
+    expect(repo.results.latest("f1")).toBeNull();
   });
 
   test("uses the stored result when it is the latest session", async () => {

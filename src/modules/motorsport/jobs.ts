@@ -25,7 +25,7 @@ import { getLeadMinutes } from "./pings/lead.ts";
 import { memberLoader } from "./pings/members.ts";
 import type { Post } from "./types.ts";
 import { refreshAll, refreshWeather } from "./schedule/refresh.ts";
-import { renderPing } from "./channels/render.ts";
+import { renderPing } from "./pings/render.ts";
 import { MotorsportRepo } from "./repo.ts";
 import type { Followed } from "./types.ts";
 import { seriesInfo } from "./series.ts";
@@ -50,7 +50,7 @@ const refresh: Job = {
     );
     await refreshWeather(repo, now);
     const guild = await guildOf(ctx);
-    for (const f of repo.listFollowed()) {
+    for (const f of repo.followed.list()) {
       await safely(`motorsport:refresh:${f.series}`, async () => {
         const channel = await fetchSeriesChannel(guild, f);
         if (!channel) return;
@@ -72,7 +72,12 @@ async function sendPings(
   leadMs: number,
   now: number,
 ): Promise<void> {
-  const due = sessionsToPing(repo.listSessions(f.series), repo.sentKeys(f.series), leadMs, now);
+  const due = sessionsToPing(
+    repo.sessions.list(f.series),
+    repo.pings.sentKeys(f.series),
+    leadMs,
+    now,
+  );
   if (due.length === 0) return;
   await ensureMembers(guild);
   const roleMemberIds = new Set(role.members.keys());
@@ -83,12 +88,12 @@ async function sendPings(
       roleId: role.id,
       roleHasMembers: roleMemberIds.size > 0,
       roleMemberIds,
-      oneOffUserIds: repo.oneOffUsers(f.series, session.eventId, session.sessionId),
+      oneOffUserIds: repo.reminders.users(f.series, session.eventId, session.sessionId),
     });
     const message = payload
       ? await channel.send({ content: payload.content, allowedMentions: payload.allowedMentions })
       : null;
-    repo.insertSentPing({
+    repo.pings.insert({
       series: f.series,
       eventId: session.eventId,
       sessionId: session.sessionId,
@@ -96,7 +101,7 @@ async function sendPings(
       messageId: message?.id ?? null,
       deleteAt: session.start.getTime() + PING_DELETE_AFTER_MS,
     });
-    repo.clearOneOff(f.series, session.eventId, session.sessionId);
+    repo.reminders.clear(f.series, session.eventId, session.sessionId);
     log.info("motorsport:tick", `${f.series} ${session.eventId}/${session.sessionId} pinged`);
   }
 }
@@ -117,7 +122,7 @@ async function tickSeries(guild: Guild, repo: MotorsportRepo, f: Followed, leadM
   // Pings first: they are time-critical, the rename is cosmetic.
   await sendPings(guild, repo, f, channel, role, leadMs, now);
 
-  const sessions = repo.listSessions(f.series);
+  const sessions = repo.sessions.list(f.series);
   if ((currentEvent(sessions, now)?.eventId ?? null) !== f.pinnedEventId) {
     await updatePinned(channel, repo, f, now);
   }
@@ -126,11 +131,11 @@ async function tickSeries(guild: Guild, repo: MotorsportRepo, f: Followed, leadM
   if (shouldRename(f.channelName, desired, f.renamedAt, now)) {
     try {
       await channel.setName(desired);
-      repo.updateFollowed(f.series, { channelName: desired, renamedAt: now });
+      repo.followed.update(f.series, { channelName: desired, renamedAt: now });
     } catch (err) {
       if (!(err instanceof RateLimitError)) throw err;
       // Someone else used the rename budget; back off for one throttle window.
-      repo.updateFollowed(f.series, { renamedAt: now });
+      repo.followed.update(f.series, { renamedAt: now });
       log.info("motorsport:tick", `${f.series} rename rate-limited, retrying later`);
     }
   }
@@ -141,7 +146,7 @@ const tick: Job = {
   cron: "* * * * *",
   async run(ctx) {
     const repo = new MotorsportRepo(ctx.db);
-    const followed = repo.listFollowed();
+    const followed = repo.followed.list();
     if (followed.length === 0) return;
     const guild = await guildOf(ctx);
     const leadMs = getLeadMinutes(ctx.db) * 60_000;
@@ -156,7 +161,7 @@ const cleanup: Job = {
   cron: "* * * * *",
   async run(ctx) {
     const repo = new MotorsportRepo(ctx.db);
-    const due = repo.duePingDeletes(Date.now());
+    const due = repo.pings.dueDeletes(Date.now());
     if (due.length === 0) return;
     const guild = await guildOf(ctx);
     for (const ping of due) {
@@ -167,7 +172,7 @@ const cleanup: Job = {
         } catch (err) {
           if (!pingDeleteIsHopeless(err)) throw err;
         }
-        repo.markPingDeleted(ping.series, ping.eventId, ping.sessionId);
+        repo.pings.markDeleted(ping.series, ping.eventId, ping.sessionId);
       });
     }
   },
@@ -176,7 +181,7 @@ const cleanup: Job = {
 /** Sends into a followed series' channel or its weekend thread; unfollowed series are skipped. */
 function poster(ctx: Ctx, repo: MotorsportRepo): Post {
   return async (target, message) => {
-    const f = repo.getFollowed(target.series);
+    const f = repo.followed.get(target.series);
     if (!f) return;
     const channel = await fetchSeriesChannel(await guildOf(ctx), f);
     if (!channel) return;

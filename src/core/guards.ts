@@ -11,3 +11,8 @@ export function asText(value: unknown): string {
   if (typeof value === "string") return value;
   return typeof value === "number" ? String(value) : "";
 }
+
+/** The records in an array; anything else as []. */
+export function records(value: unknown): Record<string, unknown>[] {
+  return Array.isArray(value) ? (value as unknown[]).filter(isRecord) : [];
+}

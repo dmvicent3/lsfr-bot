@@ -2,12 +2,9 @@ import { describe, expect, test } from "bun:test";
 import type { FetchFn } from "../../../core/types.ts";
 import { seriesInfo } from "../series.ts";
 import { fixture } from "../testing/fixtures.ts";
-import {
-  fetchStandings,
-  parseJolpicaStandings,
-  parseMotogpStandings,
-  renderStandings,
-} from "./standings.ts";
+import { fetchStandings } from "./fetch.ts";
+import { parseJolpicaStandings, parseMotogpStandings } from "./parse.ts";
+import { renderStandings } from "./standings.ts";
 
 describe("parseJolpicaStandings", () => {
   test("drivers, with each driver's latest team", async () => {

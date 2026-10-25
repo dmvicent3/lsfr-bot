@@ -69,7 +69,10 @@ describe("renderResults", () => {
   };
 
   test("visible heading, aligned table hidden behind one spoiler", () => {
-    const text = renderResults(seriesInfo("f1"), "Singapore Grand Prix", "race", result);
+    const text = renderResults(
+      { info: seriesInfo("f1"), eventName: "Singapore Grand Prix", kind: "race" },
+      result,
+    );
     expect(text).toBe(
       [
         "## 🏁 F1 — Singapore Grand Prix · Race results",
@@ -81,27 +84,43 @@ describe("renderResults", () => {
   });
 
   test("sprint qualifying label", () => {
-    const text = renderResults(seriesInfo("f1"), "Singapore Grand Prix", "sprint-qualifying", {
-      rows: [{ pos: "1", id: "1", name: "Verstappen", team: "Red Bull", time: "1:31.156" }],
-    });
+    const text = renderResults(
+      { info: seriesInfo("f1"), eventName: "Singapore Grand Prix", kind: "sprint-qualifying" },
+      {
+        rows: [{ pos: "1", id: "1", name: "Verstappen", team: "Red Bull", time: "1:31.156" }],
+      },
+    );
     expect(text).toBe(
       "## 🏁 F1 — Singapore Grand Prix · Sprint Qualifying results\n||`P1 Verstappen Red Bull 1:31.156`||",
     );
   });
 
   test("long names are cut so the table stays narrow", () => {
-    const text = renderResults(seriesInfo("motogp"), "X", "race", {
-      rows: [
-        { pos: "1", id: "1", name: "Di Giannantonio Longname", team: "Ducati", time: "40:46.582" },
-      ],
-    });
+    const text = renderResults(
+      { info: seriesInfo("motogp"), eventName: "X", kind: "race" },
+      {
+        rows: [
+          {
+            pos: "1",
+            id: "1",
+            name: "Di Giannantonio Longname",
+            team: "Ducati",
+            time: "40:46.582",
+          },
+        ],
+      },
+    );
     expect(text).toContain("`P1 Di Giannantonio Ducati 40:46.582`");
   });
 
   test("without the spoiler", () => {
-    const text = renderResults(seriesInfo("f1"), "Singapore Grand Prix", "race", result, {
-      spoiler: false,
-    });
+    const text = renderResults(
+      { info: seriesInfo("f1"), eventName: "Singapore Grand Prix", kind: "race" },
+      result,
+      {
+        spoiler: false,
+      },
+    );
     expect(text).not.toContain("||");
     expect(text.split("\n")[1]).toBe("`P1  Verstappen Red Bull     1:42:00.785`");
   });
@@ -114,15 +133,18 @@ describe("renderResults", () => {
       team: "Aston Martin",
       time: "+1:23.456",
     }));
-    const text = renderResults(seriesInfo("f1"), "Singapore Grand Prix", "race", { rows });
+    const text = renderResults(
+      { info: seriesInfo("f1"), eventName: "Singapore Grand Prix", kind: "race" },
+      { rows },
+    );
     expect(text.length).toBeLessThanOrEqual(2000);
     expect(text).toContain("P30");
   });
 
   test("no rows says so", () => {
-    expect(renderResults(seriesInfo("f1"), "X", "race", { rows: [] })).toContain(
-      "No classification",
-    );
+    expect(
+      renderResults({ info: seriesInfo("f1"), eventName: "X", kind: "race" }, { rows: [] }),
+    ).toContain("No classification");
   });
 });
 

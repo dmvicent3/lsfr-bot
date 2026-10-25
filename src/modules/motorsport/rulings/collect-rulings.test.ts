@@ -6,7 +6,8 @@ import { coreMigrations } from "../../../core/settings.ts";
 import { collectRulings } from "./collect-rulings.ts";
 import type { RulingDeps } from "./types.ts";
 import type { PostMessage, PostTarget } from "../types.ts";
-import { motorsportMigrations, MotorsportRepo } from "../repo.ts";
+import { MotorsportRepo } from "../repo.ts";
+import { motorsportMigrations } from "../store/migrations.ts";
 import { FIA_DOCUMENTS } from "./fia.ts";
 import { textFixture } from "../testing/fixtures.ts";
 import type { Session } from "../types.ts";
@@ -33,7 +34,7 @@ beforeEach(() => {
   const db = new Database(":memory:", { strict: true });
   runMigrations(db, [...coreMigrations, ...motorsportMigrations]);
   repo = new MotorsportRepo(db);
-  repo.replaceSessions(
+  repo.sessions.replace(
     "f1",
     [
       session("practice-1", "2026-10-09T08:30:00Z"),
@@ -44,7 +45,7 @@ beforeEach(() => {
     ],
     0,
   );
-  repo.insertFollowed({
+  repo.followed.insert({
     series: "f1",
     channelId: "c",
     roleId: "r",
@@ -151,9 +152,9 @@ test("nothing outside the weekend window, unfollowed, or when the page is anothe
   await collectRulings(repo, Date.parse("2026-10-13T00:00:00Z"), await deps());
   expect(fetched).toEqual([]);
 
-  repo.replaceSessions(
+  repo.sessions.replace(
     "f1",
-    repo.listSessions("f1").map((s) => ({ ...s, eventName: "Japanese Grand Prix" })),
+    repo.sessions.list("f1").map((s) => ({ ...s, eventName: "Japanese Grand Prix" })),
     1,
   );
   await collectRulings(repo, AFTER_RACE, await deps());

@@ -1,26 +1,14 @@
-import type {
-  WeatherMap,
-  PredictionCounts,
-  SchedulePayload,
-  PingInput,
-  PingPayload,
-} from "./types.ts";
+import type { WeatherMap, PredictionCounts, SchedulePayload } from "./types.ts";
 import { type APIButtonComponentWithCustomId, ButtonStyle, ComponentType } from "discord.js";
 import { isPredictable } from "../predictions/predictions.ts";
 import type { SeriesInfo } from "../types.ts";
 import type { EventSchedule, Session } from "../types.ts";
 import { formatWeather } from "../weather/weather.ts";
-
-const MAX_SELECT_OPTIONS = 25;
+import { timestamp } from "../format.ts";
 
 const MAX_CONTENT = 2000;
 
-function unix(date: Date): number {
-  return Math.floor(date.getTime() / 1000);
-}
-
 function sessionLine(s: Session, weather: WeatherMap, predictions: PredictionCounts): string {
-  const t = unix(s.start);
   const forecast = weather.get(`${s.eventId}/${s.sessionId}`);
   const count = predictions.get(s.sessionId) ?? 0;
   const suffix = [
@@ -29,7 +17,7 @@ function sessionLine(s: Session, weather: WeatherMap, predictions: PredictionCou
   ]
     .map((part) => ` · ${part}`)
     .join("");
-  return `${s.pingable ? "🔔" : "▫️"} **${s.title}** · <t:${t}:d> <t:${t}:t> (<t:${t}:R>)${suffix}`;
+  return `${s.pingable ? "🔔" : "▫️"} **${s.title}** · ${timestamp(s.start, "d")} ${timestamp(s.start, "t")} (${timestamp(s.start, "R")})${suffix}`;
 }
 
 /**
@@ -52,92 +40,40 @@ function scheduleText(
   return short.join("\n").slice(0, MAX_CONTENT);
 }
 
+const button = (customId: string, label: string): APIButtonComponentWithCustomId => ({
+  type: ComponentType.Button,
+  custom_id: customId,
+  label,
+  style: ButtonStyle.Secondary,
+});
+
+/** Season pings always; reminders and predictions when the event has sessions for them. */
+function scheduleButtons(
+  info: SeriesInfo,
+  event: EventSchedule | null,
+): APIButtonComponentWithCustomId[] {
+  const buttons = [button(`motorsport:pings:${info.key}`, "🔔 Season pings")];
+  if (!event) return buttons;
+  if (event.sessions.some((s) => s.pingable)) {
+    buttons.push(button(`motorsport:remindmenu:${info.key}:${event.eventId}`, "⏰ Remind me…"));
+  }
+  if (event.sessions.some((s) => isPredictable(info.key, s.sessionId))) {
+    buttons.push(button(`motorsport:predictmenu:${info.key}:${event.eventId}`, "🔮 Predict"));
+  }
+  return buttons;
+}
+
 export function renderSchedule(
   info: SeriesInfo,
   event: EventSchedule | null,
   weather: WeatherMap = new Map(),
   predictions: PredictionCounts = new Map(),
 ): SchedulePayload {
-  const buttons: APIButtonComponentWithCustomId[] = [
-    {
-      type: ComponentType.Button,
-      custom_id: `motorsport:pings:${info.key}`,
-      label: "🔔 Season pings",
-      style: ButtonStyle.Secondary,
-    },
+  const components = [
+    { type: ComponentType.ActionRow as const, components: scheduleButtons(info, event) },
   ];
-  if (event?.sessions.some((s) => s.pingable)) {
-    buttons.push({
-      type: ComponentType.Button,
-      custom_id: `motorsport:remindmenu:${info.key}:${event.eventId}`,
-      label: "⏰ Remind me…",
-      style: ButtonStyle.Secondary,
-    });
-  }
-  if (event?.sessions.some((s) => isPredictable(info.key, s.sessionId))) {
-    buttons.push({
-      type: ComponentType.Button,
-      custom_id: `motorsport:predictmenu:${info.key}:${event.eventId}`,
-      label: "🔮 Predict",
-      style: ButtonStyle.Secondary,
-    });
-  }
-  const components = [{ type: ComponentType.ActionRow as const, components: buttons }];
   const content = event
     ? scheduleText(info, event, weather, predictions)
     : `## 🏁 ${info.name}\nNo upcoming events this season.`;
   return { content, components };
-}
-
-/**
- * The private picker opened by "Remind me…": a multi-select of the event's upcoming pinged
- * sessions with the viewer's current reminders ticked. Submitting sets exactly that selection.
- */
-export function renderReminderPicker(
-  info: SeriesInfo,
-  event: EventSchedule,
-  selected: ReadonlySet<string>,
-  now: number,
-): SchedulePayload {
-  const upcoming = event.sessions
-    .filter((s) => s.pingable && s.start.getTime() > now)
-    .slice(0, MAX_SELECT_OPTIONS);
-  if (upcoming.length === 0) {
-    return { content: "No upcoming sessions to remind about.", components: [] };
-  }
-  return {
-    content: `Pick the ${info.name} ${event.eventName} sessions to ping you about (this weekend only):`,
-    components: [
-      {
-        type: ComponentType.ActionRow,
-        components: [
-          {
-            type: ComponentType.StringSelect,
-            custom_id: `motorsport:reminders:${info.key}:${event.eventId}`,
-            placeholder: "No reminders",
-            min_values: 0,
-            max_values: upcoming.length,
-            options: upcoming.map((s) => ({
-              label: s.title,
-              value: s.sessionId,
-              description: s.start.toUTCString().slice(0, 22) + " UTC",
-              default: selected.has(s.sessionId),
-            })),
-          },
-        ],
-      },
-    ],
-  };
-}
-
-export function renderPing(p: PingInput): PingPayload | null {
-  const users = p.oneOffUserIds.filter((id) => !p.roleMemberIds.has(id));
-  const roles = p.roleHasMembers ? [p.roleId] : [];
-  if (roles.length === 0 && users.length === 0) return null;
-  const mentions = [...roles.map((id) => `<@&${id}>`), ...users.map((id) => `<@${id}>`)];
-  const { eventName, title, start } = p.session;
-  return {
-    content: `${mentions.join(" ")} 🏁 ${eventName} ${title} starts <t:${unix(start)}:R>`,
-    allowedMentions: { roles, users },
-  };
 }

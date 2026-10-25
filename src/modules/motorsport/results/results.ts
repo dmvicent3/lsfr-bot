@@ -1,8 +1,7 @@
-import type { ResultKind, ResultRow, SessionResult } from "./types.ts";
+import type { ResultHeading, ResultKind, ResultRow, SessionResult } from "./types.ts";
 import { isRecord, isString } from "../../../core/guards.ts";
 import { isSeriesKey } from "../series.ts";
-import type { SeriesInfo } from "../types.ts";
-import { fitName, fitTeam, formatTable, posLabel, tableMessage } from "../table.ts";
+import { fitName, fitTeam, formatTable, posLabel, tableMessage } from "../format.ts";
 import type { SeriesKey, Session } from "../types.ts";
 
 export function isResultRows(value: unknown): value is ResultRow[] {
@@ -18,6 +17,12 @@ export function isResultRows(value: unknown): value is ResultRow[] {
         isString(r["time"]),
     )
   );
+}
+
+/** Stored result rows; anything unreadable as none. */
+export function parseResultRows(json: string): ResultRow[] {
+  const rows: unknown = JSON.parse(json);
+  return isResultRows(rows) ? rows : [];
 }
 
 /** Results are looked for this long after a session ends, then given up on. */
@@ -75,9 +80,7 @@ export function resultsDue(
  * single spoiler unless `spoiler` is false.
  */
 export function renderResults(
-  info: SeriesInfo,
-  eventName: string,
-  kind: ResultKind,
+  { info, eventName, kind }: ResultHeading,
   result: SessionResult,
   { spoiler = true }: { spoiler?: boolean } = {},
 ): string {

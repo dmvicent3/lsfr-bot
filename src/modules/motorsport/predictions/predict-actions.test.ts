@@ -4,7 +4,8 @@ import { runMigrations } from "../../../core/db.ts";
 import type { FetchFn } from "../../../core/types.ts";
 import { coreMigrations } from "../../../core/settings.ts";
 import { predictionGrid, predictPicker, savePick, seasonLeaderboard } from "./predict-actions.ts";
-import { motorsportMigrations, MotorsportRepo } from "../repo.ts";
+import { MotorsportRepo } from "../repo.ts";
+import { motorsportMigrations } from "../store/migrations.ts";
 import type { Session } from "../types.ts";
 
 const T = Date.parse("2026-03-14T07:00:00Z");
@@ -27,7 +28,7 @@ beforeEach(() => {
   const db = new Database(":memory:", { strict: true });
   runMigrations(db, [...coreMigrations, ...motorsportMigrations]);
   repo = new MotorsportRepo(db);
-  repo.replaceSessions(
+  repo.sessions.replace(
     "f1",
     [
       session("qualifying", "Qualifying", T + 3_600_000),
@@ -46,7 +47,7 @@ const notFound: FetchFn = async () => new Response("{}", { status: 404 });
 
 /** A stored qualifying result: the grid to pick from. */
 function stored(): void {
-  repo.insertResult({
+  repo.results.insert({
     series: "f1",
     eventId: "e",
     eventName: "E",
@@ -60,33 +61,66 @@ function stored(): void {
 describe("savePick", () => {
   test("saves, swaps, and reports when the prediction becomes complete", () => {
     const pick = (index: number, id: string) =>
-      savePick(repo, "u1", "f1", "e", "race", index, id, T);
+      savePick(
+        repo,
+        { userId: "u1", now: T },
+        { series: "f1", eventId: "e", sessionId: "race" },
+        { index: index, driverId: id },
+      );
     expect(pick(0, "3")).toEqual({ ok: true, picks: ["3", null, null], completed: false });
     pick(1, "4");
     expect(pick(2, "16")).toEqual({ ok: true, picks: ["3", "4", "16"], completed: true });
     expect(pick(0, "16")).toEqual({ ok: true, picks: ["16", "4", "3"], completed: false });
-    expect(repo.getPicks("u1", "f1", "e", "race")).toEqual(["16", "4", "3"]);
+    expect(repo.predictions.get("u1", "f1", "e", "race")).toEqual(["16", "4", "3"]);
   });
 
   test("locked once the session starts", () => {
-    expect(savePick(repo, "u1", "f1", "e", "sprint-race", 0, "3", T)).toEqual({
+    expect(
+      savePick(
+        repo,
+        { userId: "u1", now: T },
+        { series: "f1", eventId: "e", sessionId: "sprint-race" },
+        { index: 0, driverId: "3" },
+      ),
+    ).toEqual({
       ok: false,
       text: "🔒 Predictions for the Chinese Grand Prix Sprint closed at the start.",
     });
-    expect(repo.getPicks("u1", "f1", "e", "sprint-race")).toEqual([null, null, null]);
+    expect(repo.predictions.get("u1", "f1", "e", "sprint-race")).toEqual([null, null, null]);
   });
 
   test("only races and sprints on the schedule, positions 0 to 2", () => {
     const gone = { ok: false as const, text: "That session isn't open for predictions." };
-    expect(savePick(repo, "u1", "f1", "e", "qualifying", 0, "3", T)).toEqual(gone);
-    expect(savePick(repo, "u1", "f1", "x", "race", 0, "3", T)).toEqual(gone);
-    expect(savePick(repo, "u1", "f1", "e", "race", 3, "3", T)).toEqual(gone);
+    expect(
+      savePick(
+        repo,
+        { userId: "u1", now: T },
+        { series: "f1", eventId: "e", sessionId: "qualifying" },
+        { index: 0, driverId: "3" },
+      ),
+    ).toEqual(gone);
+    expect(
+      savePick(
+        repo,
+        { userId: "u1", now: T },
+        { series: "f1", eventId: "x", sessionId: "race" },
+        { index: 0, driverId: "3" },
+      ),
+    ).toEqual(gone);
+    expect(
+      savePick(
+        repo,
+        { userId: "u1", now: T },
+        { series: "f1", eventId: "e", sessionId: "race" },
+        { index: 3, driverId: "3" },
+      ),
+    ).toEqual(gone);
   });
 });
 
 describe("predictionGrid", () => {
   test("drivers of the latest stored result, in finishing order", async () => {
-    repo.insertResult({
+    repo.results.insert({
       series: "f1",
       eventId: "e",
       eventName: "E",
@@ -112,25 +146,40 @@ describe("predictionGrid", () => {
 describe("predictPicker", () => {
   test("the requested open session, else the first open one", async () => {
     stored();
-    const first = await predictPicker(repo, "f1", "e", undefined, "u1", T, notFound);
+    const first = await predictPicker(
+      repo,
+      { userId: "u1", now: T },
+      { series: "f1", eventId: "e", sessionId: undefined },
+      notFound,
+    );
     expect(typeof first === "string" ? first : first.content).toStartWith(
       "🔮 **F1 Chinese Grand Prix Race** podium",
     );
   });
 
   test("nothing open, or no drivers known yet, explains why", async () => {
-    expect(await predictPicker(repo, "f1", "e", "race", "u1", T + 86_400_000, notFound)).toBe(
-      "No races or sprints left to predict this weekend.",
-    );
-    expect(await predictPicker(repo, "f1", "e", "race", "u1", T, notFound)).toBe(
-      "No driver list yet: predictions open once the first session's results are in.",
-    );
+    expect(
+      await predictPicker(
+        repo,
+        { userId: "u1", now: T + 86_400_000 },
+        { series: "f1", eventId: "e", sessionId: "race" },
+        notFound,
+      ),
+    ).toBe("No races or sprints left to predict this weekend.");
+    expect(
+      await predictPicker(
+        repo,
+        { userId: "u1", now: T },
+        { series: "f1", eventId: "e", sessionId: "race" },
+        notFound,
+      ),
+    ).toBe("No driver list yet: predictions open once the first session's results are in.");
   });
 });
 
 test("season leaderboard counts only this year's results", () => {
   const result = (eventId: string, postedAt: number) =>
-    repo.insertResult({
+    repo.results.insert({
       series: "f1",
       eventId,
       eventName: "E",
@@ -145,8 +194,16 @@ test("season leaderboard counts only this year's results", () => {
     });
   result("last-year", Date.parse("2025-12-07T15:00:00Z"));
   result("e", T);
-  repo.setPicks("u1", "f1", "last-year", "race", ["3", "4", "16"], 0);
-  repo.setPicks("u1", "f1", "e", "race", ["3", "16", "4"], 0);
+  repo.predictions.set(
+    { userId: "u1", now: 0 },
+    { series: "f1", eventId: "last-year", sessionId: "race" },
+    ["3", "4", "16"],
+  );
+  repo.predictions.set(
+    { userId: "u1", now: 0 },
+    { series: "f1", eventId: "e", sessionId: "race" },
+    ["3", "16", "4"],
+  );
   expect(seasonLeaderboard(repo, "f1", T)).toBe(
     "## 🔮 F1 predictions — 2026 season\n**1.** <@u1> · **9** pts · 1 race",
   );

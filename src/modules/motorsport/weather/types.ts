@@ -10,3 +10,10 @@ export interface Coords {
   lat: number;
   lon: number;
 }
+
+/** One session's stored forecast. */
+export interface WeatherRow {
+  eventId: string;
+  sessionId: string;
+  forecast: Forecast;
+}

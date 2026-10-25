@@ -5,7 +5,7 @@ import { notFollowedText, setReminders, togglePings } from "./pings/actions.ts";
 import { deleteSeriesChannel, fetchSeriesChannel, updatePinned } from "./channels/channels.ts";
 import { predictPicker, savePick } from "./predictions/predict-actions.ts";
 import { groupEvents, withoutPinged } from "./channels/decisions.ts";
-import { renderReminderPicker } from "./channels/render.ts";
+import { renderReminderPicker } from "./pings/render.ts";
 import { MotorsportRepo } from "./repo.ts";
 import { isSeriesKey, seriesInfo } from "./series.ts";
 import type { EventSchedule, SeriesKey } from "./types.ts";
@@ -27,8 +27,8 @@ const pings: ComponentHandler = {
 };
 
 function eventOf(repo: MotorsportRepo, series: SeriesKey, eventId: string): EventSchedule | null {
-  const event = groupEvents(repo.listSessions(series)).find((e) => e.eventId === eventId);
-  return event ? withoutPinged(event, repo.sentKeys(series)) : null;
+  const event = groupEvents(repo.sessions.list(series)).find((e) => e.eventId === eventId);
+  return event ? withoutPinged(event, repo.pings.sentKeys(series)) : null;
 }
 
 /** "Remind me…" button: opens the viewer's private reminder picker for that event. */
@@ -38,14 +38,14 @@ const remindMenu: ComponentHandler = {
     const series = seriesArg(args);
     const repo = new MotorsportRepo(ctx.db);
     const event = eventOf(repo, series, args[1] ?? "");
-    if (!repo.getFollowed(series) || !event) {
+    if (!repo.followed.get(series) || !event) {
       await i.reply({
         content: "That event isn't on the schedule any more.",
         flags: MessageFlags.Ephemeral,
       });
       return;
     }
-    const selected = new Set(repo.userOneOffs(i.user.id, series, event.eventId));
+    const selected = new Set(repo.reminders.ofUser(i.user.id, series, event.eventId));
     const picker = renderReminderPicker(seriesInfo(series), event, selected, Date.now());
     await i.reply({ ...picker, flags: MessageFlags.Ephemeral });
   },
@@ -60,9 +60,9 @@ const reminders: ComponentHandler = {
     const eventId = args[1] ?? "";
     const repo = new MotorsportRepo(ctx.db);
     const now = Date.now();
-    const text = setReminders(repo, i.user.id, series, eventId, i.values, now);
+    const text = setReminders(repo, { userId: i.user.id, now }, { series, eventId }, i.values);
     const event = eventOf(repo, series, eventId);
-    const selected = new Set(repo.userOneOffs(i.user.id, series, eventId));
+    const selected = new Set(repo.reminders.ofUser(i.user.id, series, eventId));
     const picker = event ? renderReminderPicker(seriesInfo(series), event, selected, now) : null;
     await i.update({ content: text, components: picker?.components ?? [] });
   },
@@ -84,11 +84,8 @@ const predictMenu: ComponentHandler = {
     const repo = new MotorsportRepo(ctx.db);
     const picker = await predictPicker(
       repo,
-      series,
-      args[1] ?? "",
-      sessionId,
-      i.user.id,
-      Date.now(),
+      { userId: i.user.id, now: Date.now() },
+      { series, eventId: args[1] ?? "", sessionId },
       fetch,
     );
     await i.editReply(asReply(picker));
@@ -98,7 +95,7 @@ const predictMenu: ComponentHandler = {
 /** Re-renders the pinned schedule so its prediction count is current. Best effort. */
 async function refreshPinned(ctx: Ctx, repo: MotorsportRepo, series: SeriesKey): Promise<void> {
   try {
-    const f = repo.getFollowed(series);
+    const f = repo.followed.get(series);
     if (!f) return;
     const channel = await fetchSeriesChannel(await ctx.client.guilds.fetch(ctx.config.guildId), f);
     if (channel) await updatePinned(channel, repo, f, Date.now());
@@ -115,16 +112,12 @@ const predict: ComponentHandler = {
     const series = seriesArg(args);
     const [, eventId = "", sessionId = "", index = ""] = args;
     const repo = new MotorsportRepo(ctx.db);
-    const now = Date.now();
+    const viewer = { userId: i.user.id, now: Date.now() };
     const outcome = savePick(
       repo,
-      i.user.id,
-      series,
-      eventId,
-      sessionId,
-      Number(index),
-      i.values[0] ?? "",
-      now,
+      viewer,
+      { series, eventId, sessionId },
+      { index: Number(index), driverId: i.values[0] ?? "" },
     );
     if (!outcome.ok) {
       await i.update({ content: outcome.text, components: [] });
@@ -132,7 +125,7 @@ const predict: ComponentHandler = {
     }
     await i.deferUpdate();
     await i.editReply(
-      asReply(await predictPicker(repo, series, eventId, sessionId, i.user.id, now, fetch)),
+      asReply(await predictPicker(repo, viewer, { series, eventId, sessionId }, fetch)),
     );
     if (outcome.completed) await refreshPinned(ctx, repo, series);
   },
@@ -143,7 +136,7 @@ const unfollow: ComponentHandler = {
   async handle(i, args, ctx) {
     const series = seriesArg(args);
     const repo = new MotorsportRepo(ctx.db);
-    const followed = repo.getFollowed(series);
+    const followed = repo.followed.get(series);
     if (!followed) {
       await i.update({ content: notFollowedText(series), components: [] });
       return;

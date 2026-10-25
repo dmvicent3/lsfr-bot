@@ -9,18 +9,18 @@ function session(
   series: SeriesKey,
   title: string,
   startOffsetH: number,
-  pingable = true,
-  eventName = "Chinese Grand Prix",
+  extra: Partial<Session> = {},
 ): Session {
   return {
     series,
     eventId: "e",
-    eventName,
+    eventName: "Chinese Grand Prix",
     sessionId: title.toLowerCase(),
     title,
     start: new Date(NOW + startOffsetH * H),
     end: new Date(NOW + (startOffsetH + 1) * H),
-    pingable,
+    pingable: true,
+    ...extra,
   };
 }
 
@@ -28,9 +28,9 @@ const unix = (offsetH: number): number => Math.floor((NOW + offsetH * H) / 1000)
 
 test("one line per series, soonest first, live on top, practice skipped", () => {
   const sessions = new Map<SeriesKey, Session[]>([
-    ["f1", [session("f1", "Practice 1", 1, false), session("f1", "Qualifying", 5)]],
-    ["motogp", [session("motogp", "Race", -0.5, true, "Thailand")]],
-    ["wec", [session("wec", "Race", 48, true, "6 Hours of Imola")]],
+    ["f1", [session("f1", "Practice 1", 1, { pingable: false }), session("f1", "Qualifying", 5)]],
+    ["motogp", [session("motogp", "Race", -0.5, { eventName: "Thailand" })]],
+    ["wec", [session("wec", "Race", 48, { eventName: "6 Hours of Imola" })]],
     ["f2", [session("f2", "Feature Race", -100)]],
   ]);
   const embed = renderNext(sessions, new Map([["f1", "c1"]]), NOW);

@@ -1,4 +1,5 @@
-import type { RulingDeps } from "./types.ts";
+import type { FiaDocument, FiaPage, RulingDeps, RulingRun } from "./types.ts";
+import type { EventSchedule } from "../types.ts";
 import type { FetchFn } from "../../../core/types.ts";
 import { log } from "../../../core/log.ts";
 import type { MotorsportRepo } from "../repo.ts";
@@ -42,44 +43,57 @@ export async function collectRulings(
   now: number,
   deps: RulingDeps,
 ): Promise<void> {
-  if (!repo.getFollowed("f1")) return;
-  const event = rulingsEvent(repo.listSessions("f1"), now);
+  if (!repo.followed.get("f1")) return;
+  const event = rulingsEvent(repo.sessions.list("f1"), now);
   if (!event) return;
   const page = parseFiaDocuments(await (await download(FIA_DOCUMENTS, deps.fetchFn)).text());
   if (!matchesEvent(page.event, event.eventName)) return;
+  const run = { repo, now, deps, event };
+  for (const doc of freshRulings(page, event, repo.rulings.handled("f1"))) {
+    try {
+      await handleRuling(run, doc);
+    } catch (err) {
+      log.error("motorsport:rulings", doc.title, err);
+    }
+  }
+}
+
+/** Unhandled ruling documents published after the weekend's first result session, oldest first. */
+function freshRulings(page: FiaPage, event: EventSchedule, handled: Set<string>): FiaDocument[] {
   const opens = Math.min(
     ...event.sessions
       .filter((s) => resultKind(s.series, s.sessionId) !== null)
       .map((s) => s.end.getTime()),
   );
-  const handled = repo.handledRulings("f1");
-  const fresh = page.documents
+  return page.documents
     .filter((d) => isRuling(d.title) && !handled.has(d.url) && d.publishedAt.getTime() > opens)
     .toSorted((a, b) => a.publishedAt.getTime() - b.publishedAt.getTime());
+}
+
+/** Posts one document if it is a post-session ruling; either way it is marked handled. */
+async function handleRuling(
+  { repo, now, deps, event }: RulingRun,
+  doc: FiaDocument,
+): Promise<void> {
+  const pdf = new Uint8Array(await (await download(doc.url, deps.fetchFn)).arrayBuffer());
+  const text = await deps.pdfText(pdf);
+  const ruling = parseRuling(text);
+  const mark = { eventId: event.eventId, url: doc.url, now };
+  if (!ruling || !isPostSession(ruling.session, doc.publishedAt, event.sessions)) {
+    repo.rulings.mark("f1", { ...mark, posted: false });
+    return;
+  }
+  const penalty = isPenalty(ruling.decision);
+  const summary = penalty ? await summaryOf(summaryPrompt(ruling), deps) : null;
   const target = {
     series: "f1",
     eventId: event.eventId,
     eventName: event.eventName,
     place: "thread",
   } as const;
-  for (const doc of fresh) {
-    try {
-      const pdf = new Uint8Array(await (await download(doc.url, deps.fetchFn)).arrayBuffer());
-      const text = await deps.pdfText(pdf);
-      const ruling = parseRuling(text);
-      if (!ruling || !isPostSession(ruling.session, doc.publishedAt, event.sessions)) {
-        repo.markRuling("f1", event.eventId, doc.url, false, now);
-        continue;
-      }
-      const penalty = isPenalty(ruling.decision);
-      const summary = penalty ? await summaryOf(summaryPrompt(ruling), deps) : null;
-      await deps.post(target, {
-        content: renderRuling(ruling, summary),
-        files: penalty ? [rulingFile(doc.title, text)] : [],
-      });
-      repo.markRuling("f1", event.eventId, doc.url, true, now);
-    } catch (err) {
-      log.error("motorsport:rulings", doc.title, err);
-    }
-  }
+  await deps.post(target, {
+    content: renderRuling(ruling, summary),
+    files: penalty ? [rulingFile(doc.title, text)] : [],
+  });
+  repo.rulings.mark("f1", { ...mark, posted: true });
 }

@@ -151,7 +151,7 @@ export async function updatePinned(
 ): Promise<void> {
   await pinnedLock(f.series, async () => {
     // Re-read: another run may have re-posted (and re-pointed) the message meanwhile.
-    const current = repo.getFollowed(f.series);
+    const current = repo.followed.get(f.series);
     if (current) await renderPinned(channel, repo, current, now);
   });
 }
@@ -162,12 +162,12 @@ async function renderPinned(
   f: Followed,
   now: number,
 ): Promise<void> {
-  const event = currentEvent(repo.listSessions(f.series), now);
+  const event = currentEvent(repo.sessions.list(f.series), now);
   const payload = renderSchedule(
     seriesInfo(f.series),
     event,
-    repo.weatherFor(f.series),
-    event ? repo.predictionCounts(f.series, event.eventId) : new Map(),
+    repo.weather.bySession(f.series),
+    event ? repo.predictions.counts(f.series, event.eventId) : new Map(),
   );
   let message: Message;
   try {
@@ -178,7 +178,7 @@ async function renderPinned(
     message = await channel.send(payload);
     await message.pin();
   }
-  repo.updateFollowed(f.series, {
+  repo.followed.update(f.series, {
     pinnedMessageId: message.id,
     pinnedEventId: event?.eventId ?? null,
   });
@@ -219,7 +219,7 @@ export async function eventThread(
   target: PostTarget,
 ): Promise<ThreadChannel> {
   return threadLock(`${target.series}/${target.eventId}`, async () => {
-    const stored = repo.getThread(target.series, target.eventId);
+    const stored = repo.threads.get(target.series, target.eventId);
     if (stored) {
       try {
         const thread = await channel.threads.fetch(stored);
@@ -240,7 +240,7 @@ export async function eventThread(
       name: `🏁 ${target.eventName}`.slice(0, MAX_THREAD_NAME),
       autoArchiveDuration: ThreadAutoArchiveDuration.OneWeek,
     });
-    repo.setThread(target.series, target.eventId, thread.id);
+    repo.threads.set(target.series, target.eventId, thread.id);
     return thread;
   });
 }

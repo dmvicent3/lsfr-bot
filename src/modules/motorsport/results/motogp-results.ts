@@ -1,11 +1,8 @@
-import { asText, isRecord, isString } from "../../../core/guards.ts";
+import { asText, isRecord, isString, records } from "../../../core/guards.ts";
 import { lapsDown } from "./results.ts";
 import type { ResultKind, SessionResult } from "./types.ts";
 
 export const MOTOGP_RESULTS = "https://api.motogp.pulselive.com/motogp";
-
-const records = (json: unknown): Record<string, unknown>[] =>
-  Array.isArray(json) ? (json as unknown[]).filter(isRecord) : [];
 
 const idOf = (r: Record<string, unknown> | undefined): string | null =>
   r && isString(r["id"]) ? r["id"] : null;

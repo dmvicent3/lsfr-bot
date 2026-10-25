@@ -1,14 +1,7 @@
 import { describe, expect, test } from "bun:test";
-import {
-  choosePick,
-  isPredictable,
-  leaderboard,
-  openPredictions,
-  renderLeaderboard,
-  renderPredictionResults,
-  renderPredictPicker,
-  scorePicks,
-} from "./predictions.ts";
+import { choosePick, isPredictable, openPredictions } from "./predictions.ts";
+import { renderPredictPicker } from "./picker.ts";
+import { leaderboard, renderLeaderboard, renderPredictionResults, scorePicks } from "./scoring.ts";
 import type { ResultRow } from "../results/types.ts";
 import { seriesInfo } from "../series.ts";
 import type { EventSchedule, Session } from "../types.ts";
@@ -151,14 +144,14 @@ describe("renderPredictPicker", () => {
   const grid = rows.map(({ id, name }) => ({ id, name }));
 
   test("three selects with the user's picks preselected", () => {
-    const picker = renderPredictPicker(
-      seriesInfo("f1"),
-      "Austin",
-      race,
-      grid,
-      ["4", null, null],
-      [],
-    );
+    const picker = renderPredictPicker({
+      info: seriesInfo("f1"),
+      eventName: "Austin",
+      session: race,
+      grid: grid,
+      picks: ["4", null, null],
+      others: [],
+    });
     expect(picker.content).toBe(
       "🔮 **F1 Austin Race** podium · locks <t:1792350000:R>\nPick all three to enter.",
     );
@@ -173,14 +166,14 @@ describe("renderPredictPicker", () => {
   });
 
   test("complete picks say so; other open sessions get a switch button", () => {
-    const picker = renderPredictPicker(
-      seriesInfo("f1"),
-      "Austin",
-      sprint,
-      grid,
-      ["3", "4", "16"],
-      [race],
-    );
+    const picker = renderPredictPicker({
+      info: seriesInfo("f1"),
+      eventName: "Austin",
+      session: sprint,
+      grid: grid,
+      picks: ["3", "4", "16"],
+      others: [race],
+    });
     expect(picker.content).toEndWith(
       "✅ Entered: Verstappen · Norris · Leclerc. Change any time before the start.",
     );
@@ -192,14 +185,14 @@ describe("renderPredictPicker", () => {
 
   test("at most 25 drivers to choose from", () => {
     const many = Array.from({ length: 30 }, (_, i) => ({ id: String(i), name: `D${i}` }));
-    const picker = renderPredictPicker(
-      seriesInfo("motogp"),
-      "X",
-      race,
-      many,
-      [null, null, null],
-      [],
-    );
+    const picker = renderPredictPicker({
+      info: seriesInfo("motogp"),
+      eventName: "X",
+      session: race,
+      grid: many,
+      picks: [null, null, null],
+      others: [],
+    });
     expect(JSON.stringify(picker.components[0]).match(/"value"/g)).toHaveLength(25);
   });
 });
