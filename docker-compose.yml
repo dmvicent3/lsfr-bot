@@ -12,6 +12,7 @@ services:
     env_file: .env
     environment:
       JEV_URL: http://jev:8017
+      EMBED_URL: http://embed:8018
     volumes:
       - ./data:/app/data
     # Caps take effect only where the kernel has memory cgroups (the Pi needs
@@ -28,6 +29,20 @@ services:
     logging: *logging
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8017/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+  # EmbeddingGemma 2 on llama.cpp, for the RSS repeat check. No published port either.
+  embed:
+    build: docker/embed
+    restart: unless-stopped
+    cpus: 1
+    mem_limit: 768m
+    logging: *logging
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8018/health"]
       interval: 30s
       timeout: 5s
       retries: 3

@@ -31,9 +31,11 @@ Decisions live in pure files with no runtime `discord.js` import (in motorsport:
 - Types and interfaces go in the folder's `types.ts`; a type derived from a value (`keyof typeof X`) stays beside the value.
 - Tests and fixtures live in `test/`, mirroring `src/`.
 
-## jev
+## jev and embed
 
 The rss module filters articles with jevos (github.com/feder-cr/jev) on llama.cpp: the `jev` compose service, built from `docker/jev/`, reached at `JEV_URL`; without `JEV_URL` the module is off. jev's own OpenVINO server holds ~4 GB on the Pi, hence llama.cpp. Compose `mem_limit`s do nothing on the Pi until memory cgroups are enabled in `/boot/firmware/cmdline.txt`.
+
+Repeats of a story posted in the last 24 h are skipped by comparing title embeddings from EmbeddingGemma 2: the `embed` service (`docker/embed/`, `EMBED_URL`; without it nothing is skipped). The 0.90 cutoff was picked by scoring two days of real posts; re-score real posts before changing the model or the cutoff.
 
 ## Schedule data
 
