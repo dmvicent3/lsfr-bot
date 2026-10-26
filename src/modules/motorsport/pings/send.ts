@@ -8,6 +8,7 @@ import { renderPing } from "./render.ts";
 import { seriesInfo } from "../series.ts";
 import type { Session } from "../types.ts";
 
+/** Role member lists come from the guild member cache, loaded once per process. */
 const ensureMembers = memberLoader();
 
 /** Pings every session now within the lead time, once each. */
