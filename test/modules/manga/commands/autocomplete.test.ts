@@ -29,6 +29,12 @@ describe("titleChoices", () => {
     expect(await titleChoices(down.ctx.repo, down.ctx.get, { ...req, typed: "  " })).toEqual([]);
   });
 
+  test("a search slower than the deadline offers nothing", async () => {
+    const { ctx } = fakeCommand({ get: () => new Promise(() => undefined) });
+    const req = { sub: "follow", typed: "x", userId: "u1" };
+    expect(await titleChoices(ctx.repo, ctx.get, req, 20)).toEqual([]);
+  });
+
   test("unfollow offers the member's follows", async () => {
     const { ctx } = fakeCommand();
     ctx.repo.series.add(series({ id: "m1", title: "Akane" }));

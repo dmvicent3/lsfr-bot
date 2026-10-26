@@ -62,8 +62,11 @@ describe("createClient", () => {
     expect(await failure(client()("/a", {}))).toBeInstanceOf(MangaDexError);
   });
 
-  test("a 404 is a MangaDexError", async () => {
-    statuses = [404, 404, 404];
-    expect(await failure(client()("/a", {}))).toEqual(new MangaDexError("HTTP 404"));
+  test("a 400 is a MangaDexError, not retried", async () => {
+    statuses = [400, 200];
+    const err = await failure(client()("/a", {}));
+    expect(err).toBeInstanceOf(MangaDexError);
+    expect(err).toMatchObject({ message: "HTTP 400", status: 400 });
+    expect(requests).toHaveLength(1);
   });
 });

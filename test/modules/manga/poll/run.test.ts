@@ -40,11 +40,20 @@ describe("runPoll", () => {
     expect(repo.series.get("m2")?.highest).toBe(2);
   });
 
-  test("a failed send stops the run", async () => {
+  test("a lost channel stops the run", async () => {
     const { get, paths } = fakeMangaDex({ details: changed, feeds: both });
     const { deps } = pollDeps(repo, get, [{ result: "lost-channel" }]);
     await runPoll(deps);
     expect(paths).not.toContain("/manga/m2/feed");
+  });
+
+  test("a post Discord refuses skips that series only, to retry next run", async () => {
+    const { get } = fakeMangaDex({ details: changed, feeds: both });
+    const { deps, sent } = pollDeps(repo, get, [{ result: "failed" }]);
+    await runPoll(deps);
+    expect(sent).toHaveLength(2);
+    expect(repo.series.get("m1")).toMatchObject({ highest: 1, latestUpload: "old" });
+    expect(repo.series.get("m2")?.highest).toBe(2);
   });
 
   test("the pre-check failing rejects before any send", async () => {

@@ -1,3 +1,4 @@
+import { log } from "../../../core/log.ts";
 import { mangaDetails } from "../api/details.ts";
 import { checkSeries } from "./check-series.ts";
 import { toCheck } from "./to-check.ts";
@@ -7,7 +8,7 @@ const KEEP_UNNUMBERED_MS = 30 * 24 * 3_600_000;
 
 /**
  * One poll: a pre-check of every followed manga, then a feed check of those that changed, one
- * after another; a failed send ends the run. A failing pre-check rejects.
+ * after another; a lost channel ends the run. A failing pre-check rejects.
  */
 export async function runPoll(deps: PollDeps): Promise<void> {
   const startedAt = deps.now();
@@ -26,6 +27,10 @@ export async function runPoll(deps: PollDeps): Promise<void> {
 
     if (!manga) continue;
 
-    if ((await checkSeries(deps, s, manga, startedAt)) === "send-failed") return;
+    const result = await checkSeries(deps, s, manga, startedAt);
+
+    if (result === "channel-lost") {
+      return log.error("manga:poll", "the manga channel is gone; set one with /manga channel");
+    }
   }
 }

@@ -1,5 +1,6 @@
 import { MessageFlags } from "discord.js";
 import { reply } from "../../../core/replies.ts";
+import { MangaDexError } from "../api/client.ts";
 import { followManga } from "../follow.ts";
 import { mangaChannel } from "../settings.ts";
 import type { FollowResult } from "../types.ts";
@@ -18,12 +19,23 @@ function followReply(result: FollowResult, channelSet: boolean): string {
   return REPLIES[result.kind]("title" in result ? result.title : "", channelSet);
 }
 
+async function followOrExplain({ i, db, repo, get }: CommandCtx): Promise<string> {
+  try {
+    const result = await followManga(
+      { repo, get, now: Date.now() },
+      { userId: i.user.id, mangaId: i.options.getString("title", true).trim() },
+    );
+
+    return followReply(result, mangaChannel(db) !== null);
+  } catch (err) {
+    if (err instanceof MangaDexError) return "MangaDex isn't answering; try again in a bit.";
+
+    throw err;
+  }
+}
+
 /** The title option's value is a MangaDex id picked from autocomplete. */
-export async function follow({ i, db, repo, get }: CommandCtx): Promise<void> {
-  await i.deferReply({ flags: MessageFlags.Ephemeral });
-  const result = await followManga(
-    { repo, get, now: Date.now() },
-    { userId: i.user.id, mangaId: i.options.getString("title", true).trim() },
-  );
-  await reply(i, followReply(result, mangaChannel(db) !== null));
+export async function follow(c: CommandCtx): Promise<void> {
+  await c.i.deferReply({ flags: MessageFlags.Ephemeral });
+  await reply(c.i, await followOrExplain(c));
 }

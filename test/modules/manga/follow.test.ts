@@ -6,6 +6,7 @@ import { POLE_STAR, responses } from "./fixtures.ts";
 import { freshRepo, series } from "./store/fixtures.ts";
 
 const NOW = 7000;
+const UNKNOWN = "00000000-0000-4000-8000-000000000000";
 
 let repo: MangaRepo;
 let paths: string[];
@@ -64,9 +65,14 @@ describe("followManga", () => {
     expect(paths).toEqual([]);
   });
 
+  test("text that isn't a MangaDex id is not found, without asking MangaDex", async () => {
+    expect(await follow("u1", "one piece")).toEqual({ kind: "not-found" });
+    expect(paths).toEqual([]);
+  });
+
   test("an unknown manga stores nothing", async () => {
-    expect(await follow("u1", "nope")).toEqual({ kind: "not-found" });
-    expect(repo.series.get("nope")).toBeNull();
+    expect(await follow("u1", UNKNOWN)).toEqual({ kind: "not-found" });
+    expect(repo.series.get(UNKNOWN)).toBeNull();
     expect(repo.follows.count("u1")).toBe(0);
   });
 });

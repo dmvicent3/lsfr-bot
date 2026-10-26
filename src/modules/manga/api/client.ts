@@ -6,7 +6,18 @@ const GAP_MS = 250;
 const TIMEOUT_MS = 20_000;
 const HEADERS = { "user-agent": "Gork (Discord bot)", accept: "application/json" };
 
-export class MangaDexError extends Error {}
+export class MangaDexError extends Error {
+  constructor(
+    message: string,
+    readonly status: number,
+  ) {
+    super(message);
+  }
+}
+
+/** Network errors, rate limits and server errors may pass; another 4xx won't. */
+const retryable = (err: unknown): boolean =>
+  !(err instanceof MangaDexError) || err.status === 429 || err.status >= 500;
 
 function url(path: string, query: Query): string {
   const params = new URLSearchParams();
@@ -22,7 +33,7 @@ function url(path: string, query: Query): string {
 
 /**
  * One MangaDex client per process: calls are spaced GAP_MS apart (MangaDex allows ~5/s) and
- * failures are retried 3 times; a non-2xx answer is a MangaDexError.
+ * retryable failures are tried 3 times; a non-2xx answer is a MangaDexError.
  */
 export function createClient(o: ClientOptions): MangaDexGet {
   // The per-client throttle: when the last request started.
@@ -39,11 +50,15 @@ export function createClient(o: ClientOptions): MangaDexGet {
       signal: AbortSignal.timeout(TIMEOUT_MS),
     });
 
-    if (!res.ok) throw new MangaDexError(`HTTP ${res.status}`);
+    if (!res.ok) throw new MangaDexError(`HTTP ${res.status}`, res.status);
 
     return res.json();
   };
 
   return (path, query) =>
-    retry(() => once(url(path, query)), { attempts: 3, delayMs: o.retryDelayMs ?? 2000 });
+    retry(() => once(url(path, query)), {
+      attempts: 3,
+      delayMs: o.retryDelayMs ?? 2000,
+      retryable,
+    });
 }

@@ -9,12 +9,12 @@ import type { TitleRequest } from "./types.ts";
 
 type Choice = { name: string; value: string };
 
-/** MangaDex's hits as typed; nothing on a blank or failed search (Discord waits only 3 s). */
-async function searchChoices(get: MangaDexGet, typed: string): Promise<Choice[]> {
-  if (typed.trim() === "") return [];
+/** Discord drops an autocomplete answer after 3 s. */
+const DEADLINE_MS = 2500;
 
+async function search(get: MangaDexGet, typed: string): Promise<Choice[]> {
   try {
-    const hits = await searchManga(get, typed.trim());
+    const hits = await searchManga(get, typed);
 
     return autocompleteChoices(
       hits.map((h) => ({ name: h.title, value: h.id })),
@@ -27,13 +27,23 @@ async function searchChoices(get: MangaDexGet, typed: string): Promise<Choice[]>
   }
 }
 
+/** MangaDex's hits as typed; nothing on a blank, failed or too slow search. */
+async function searchChoices(get: MangaDexGet, typed: string, deadlineMs: number) {
+  if (typed.trim() === "") return [];
+
+  const late = new Promise<Choice[]>((resolve) => setTimeout(() => resolve([]), deadlineMs));
+
+  return Promise.race([search(get, typed.trim()), late]);
+}
+
 /** follow searches MangaDex; unfollow offers the member's own follows. */
 export async function titleChoices(
   repo: MangaRepo,
   get: MangaDexGet,
   req: TitleRequest,
+  deadlineMs = DEADLINE_MS,
 ): Promise<Choice[]> {
-  if (req.sub === "follow") return searchChoices(get, req.typed);
+  if (req.sub === "follow") return searchChoices(get, req.typed, deadlineMs);
 
   const follows = repo.follows.byUser(req.userId).map((s) => ({ name: s.title, value: s.id }));
 

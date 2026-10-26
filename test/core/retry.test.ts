@@ -29,3 +29,16 @@ test("gives up after the last attempt", async () => {
   expect(calls).toBe(2);
   expect(err).toBeInstanceOf(Error);
 });
+
+test("an error that isn't retryable is thrown at once", async () => {
+  let calls = 0;
+  const err = await retry(
+    async () => {
+      calls++;
+      throw new Error("bad request");
+    },
+    { attempts: 3, delayMs: 0, retryable: () => false },
+  ).catch((e: unknown) => e);
+  expect(calls).toBe(1);
+  expect(err).toBeInstanceOf(Error);
+});

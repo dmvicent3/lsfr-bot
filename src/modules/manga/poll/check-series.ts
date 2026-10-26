@@ -1,4 +1,5 @@
 import { log } from "../../../core/log.ts";
+import type { SendResult } from "../../../core/types.ts";
 import { mangaFeed } from "../api/feed.ts";
 import type { Chapter, MangaInfo } from "../api/types.ts";
 import type { Series } from "../store/types.ts";
@@ -20,10 +21,14 @@ async function feed(deps: PollDeps, s: Series): Promise<Chapter[] | null> {
 }
 
 /** Sends a post's messages; the first one (with the embed) decides. Stores it once sent. */
-async function sendPost(deps: PollDeps, p: Post, manga: MangaInfo): Promise<boolean> {
+async function sendPost(deps: PollDeps, p: Post, manga: MangaInfo): Promise<SendResult["result"]> {
   const [first, ...rest] = renderPost(p, manga, deps.repo.follows.followers(manga.id));
 
-  if (!first || (await deps.send(first)).result !== "ok") return false;
+  if (!first) return "ok";
+
+  const { result } = await deps.send(first);
+
+  if (result !== "ok") return result;
 
   for (const m of rest) await deps.send(m);
 
@@ -31,8 +36,13 @@ async function sendPost(deps: PollDeps, p: Post, manga: MangaInfo): Promise<bool
 
   if (p.unnumberedId) deps.repo.unnumbered.add(p.unnumberedId, deps.now());
 
-  return true;
+  return "ok";
 }
+
+const SEND_FAILED: Record<"lost-channel" | "failed", CheckResult> = {
+  "lost-channel": "channel-lost",
+  failed: "send-failed",
+};
 
 /** One series: its new chapters posted, then the check stored (left as is when a send fails). */
 export async function checkSeries(
@@ -48,7 +58,9 @@ export async function checkSeries(
   const seen = { highest: s.highest, unnumbered: deps.repo.unnumbered.ids() };
 
   for (const p of decide(chapters, seen)) {
-    if (!(await sendPost(deps, p, manga))) return "send-failed";
+    const result = await sendPost(deps, p, manga);
+
+    if (result !== "ok") return SEND_FAILED[result];
   }
 
   deps.repo.series.markChecked(s.id, {

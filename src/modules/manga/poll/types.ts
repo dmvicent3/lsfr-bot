@@ -11,8 +11,11 @@ export interface PollDeps {
   now: () => number;
 }
 
-/** "send-failed" ends the run: the channel is gone or Discord refused, so later posts would be too. */
-export type CheckResult = "ok" | "fetch-failed" | "send-failed";
+/**
+ * "send-failed": Discord refused this series' post; it is retried next run, other series go on.
+ * "channel-lost": the channel or server is gone, so the run ends.
+ */
+export type CheckResult = "ok" | "fetch-failed" | "send-failed" | "channel-lost";
 
 /** A message of a chapter post; only the users it names can be pinged. */
 export interface PostMessage {

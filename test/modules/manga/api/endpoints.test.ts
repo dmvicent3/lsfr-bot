@@ -36,6 +36,12 @@ describe("latestChapter", () => {
     expect(await latestChapter(recording(() => responses.latest).get, POLE_STAR)).toBe(36);
     expect(await latestChapter(recording(() => responses.latestEmpty).get, FRIEREN)).toBeNull();
   });
+
+  test("leaves out chapters scheduled for later", async () => {
+    const { get, calls } = recording(() => responses.latest);
+    await latestChapter(get, POLE_STAR);
+    expect(calls[0]?.q["includeFutureUpdates"]).toBe("0");
+  });
 });
 
 describe("mangaDetails", () => {

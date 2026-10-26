@@ -1,6 +1,6 @@
 export async function retry<T>(
   fn: () => Promise<T>,
-  opts: { attempts: number; delayMs: number },
+  opts: { attempts: number; delayMs: number; retryable?: (err: unknown) => boolean },
 ): Promise<T> {
   let lastError: unknown;
 
@@ -9,6 +9,8 @@ export async function retry<T>(
       return await fn();
     } catch (err) {
       lastError = err;
+
+      if (opts.retryable && !opts.retryable(err)) throw err;
 
       if (attempt < opts.attempts) await Bun.sleep(opts.delayMs * attempt);
     }

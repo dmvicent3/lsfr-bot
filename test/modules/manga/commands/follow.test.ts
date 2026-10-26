@@ -1,9 +1,14 @@
 import { describe, expect, test } from "bun:test";
+import { MangaDexError } from "../../../../src/modules/manga/api/client.ts";
 import { follow } from "../../../../src/modules/manga/commands/follow.ts";
 import { setMangaChannel } from "../../../../src/modules/manga/settings.ts";
 import { POLE_STAR, responses } from "../fixtures.ts";
 import { series } from "../store/fixtures.ts";
 import { fakeCommand } from "./fake.ts";
+
+const down = async () => {
+  throw new MangaDexError("HTTP 503", 503);
+};
 
 const get = async (path: string) => (path === "/manga" ? responses.details : responses.latest);
 
@@ -47,5 +52,11 @@ describe("/manga follow", () => {
     const { ctx, replies } = fakeCommand({ strings: { title: "typed text" }, get });
     await follow(ctx);
     expect(replies).toEqual(["Couldn't find that manga; pick one from the list."]);
+  });
+
+  test("MangaDex down", async () => {
+    const { ctx, replies } = fakeCommand({ strings: { title: POLE_STAR }, get: down });
+    await follow(ctx);
+    expect(replies).toEqual(["MangaDex isn't answering; try again in a bit."]);
   });
 });
