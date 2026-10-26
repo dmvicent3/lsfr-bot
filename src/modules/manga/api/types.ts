@@ -13,3 +13,29 @@ export interface ClientOptions {
   /** Base delay between attempts; tests pass 0. */
   retryDelayMs?: number;
 }
+
+export interface MangaInfo {
+  id: string;
+  title: string;
+  /** The newest chapter upload in any language; it changing means the feed may have news. */
+  latestUpload: string | null;
+  coverFile: string | null;
+  author: string | null;
+}
+
+export interface Chapter {
+  id: string;
+  mangaId: string;
+  /** As MangaDex gives it ("42", "10.5"); null for oneshots. */
+  number: string | null;
+  title: string | null;
+  group: string | null;
+  /** Official releases (MangaPlus and the like) link out instead of reading on MangaDex. */
+  externalUrl: string | null;
+  readableAt: string;
+}
+
+export interface SearchHit {
+  id: string;
+  title: string;
+}

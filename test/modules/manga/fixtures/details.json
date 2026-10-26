@@ -1,0 +1,162 @@
+{
+  "result": "ok",
+  "response": "collection",
+  "data": [
+    {
+      "id": "73a46c78-f4f7-452e-b4ed-e3a5c8da1032",
+      "type": "manga",
+      "attributes": {
+        "title": {
+          "ja-ro": "POLE STAR"
+        },
+        "altTitles": [
+          {
+            "ja": "POLE STAR"
+          },
+          {
+            "ja": "ポールスター"
+          },
+          {
+            "en": "POLE STAR"
+          }
+        ],
+        "latestUploadedChapter": "83ee246e-347d-403c-a2ca-f02ca992ebca"
+      },
+      "relationships": [
+        {
+          "id": "00d2d6c7-81ec-499a-b77a-a2c0ab7fb135",
+          "type": "author",
+          "attributes": {
+            "name": "NON"
+          }
+        },
+        {
+          "id": "00d2d6c7-81ec-499a-b77a-a2c0ab7fb135",
+          "type": "artist"
+        },
+        {
+          "id": "1b028141-e32f-4999-a2a1-22b095e29fe4",
+          "type": "cover_art",
+          "attributes": {
+            "fileName": "5edb8b2c-9051-481f-ab81-e57c21b5d96c.jpg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "c37d93a8-9c50-49b3-bd71-143937f4288e",
+      "type": "manga",
+      "attributes": {
+        "title": {
+          "ja-ro": "Gantz: E"
+        },
+        "altTitles": [
+          {
+            "ru": "Ганц:Э"
+          },
+          {
+            "ja": "ガンツイー"
+          },
+          {
+            "ja-ro": "GANTZ:E"
+          }
+        ],
+        "latestUploadedChapter": "e1c0ace1-55d1-4486-af20-f1ff84f3d066"
+      },
+      "relationships": [
+        {
+          "id": "e80fb089-bb76-4a30-88e5-da94a8cc3978",
+          "type": "author",
+          "attributes": {
+            "name": "Oku Hiroya"
+          }
+        },
+        {
+          "id": "c7e3de04-2fa5-40c8-b475-0dc3450fc148",
+          "type": "artist"
+        },
+        {
+          "id": "0f4e6914-ab7c-4f64-9b9d-ca7218449273",
+          "type": "cover_art",
+          "attributes": {
+            "fileName": "c8755224-2f04-4185-876c-9520ae2009d5.jpg"
+          }
+        }
+      ]
+    },
+    {
+      "id": "b0b721ff-c388-4486-aa0f-c2b0bb321512",
+      "type": "manga",
+      "attributes": {
+        "title": {
+          "ja-ro": "Sousou no Frieren"
+        },
+        "altTitles": [
+          {
+            "en": "Frieren: Beyond Journey's End"
+          },
+          {
+            "en": "Frieren at the Funeral"
+          },
+          {
+            "ru": "Фрирен, провожающая в последний путь"
+          },
+          {
+            "ja": "葬送のフリーレン"
+          },
+          {
+            "zh-hk": "葬送的芙莉蓮"
+          },
+          {
+            "ko": "장송의 프리렌"
+          },
+          {
+            "th": "คำอธิษฐานในวันที่จากลา Frieren"
+          },
+          {
+            "el": "Φρίρεν: Πέρα από το Τέλος του Ταξιδιού"
+          },
+          {
+            "de": "Frieren: Nach dem Ende der Reise"
+          },
+          {
+            "en": "Frieren: Remnants Of The Departed"
+          },
+          {
+            "es-la": "Frieren: Más allá del final"
+          },
+          {
+            "es-la": "Frieren: Más allá del fin del viaje"
+          },
+          {
+            "vi": "Pháp Sư Tiễn Táng Frieren"
+          }
+        ],
+        "latestUploadedChapter": "db0d5822-0a6f-4166-86bb-83985ecb8d7c"
+      },
+      "relationships": [
+        {
+          "id": "b3136811-9761-4606-93cf-583a00dde5e9",
+          "type": "author",
+          "attributes": {
+            "name": "Yamada Kanehito"
+          }
+        },
+        {
+          "id": "ff98c5c0-daca-4c97-8c3d-1e2b98d04d9b",
+          "type": "artist"
+        },
+        {
+          "id": "baf9cd12-10cb-4596-a17a-1f9b9bace8ca",
+          "type": "cover_art",
+          "attributes": {
+            "fileName": "b9a049b0-186b-4714-a83e-bb965458914a.jpg"
+          }
+        }
+      ]
+    }
+  ],
+  "limit": 100,
+  "offset": 0,
+  "total": 3
+}

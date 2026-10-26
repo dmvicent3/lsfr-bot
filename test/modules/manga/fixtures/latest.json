@@ -1,0 +1,33 @@
+{
+  "result": "ok",
+  "response": "collection",
+  "data": [
+    {
+      "id": "83ee246e-347d-403c-a2ca-f02ca992ebca",
+      "type": "chapter",
+      "attributes": {
+        "volume": "4",
+        "chapter": "36",
+        "title": "Proof",
+        "translatedLanguage": "en",
+        "externalUrl": null,
+        "publishAt": "2026-10-26T20:05:11+00:00",
+        "readableAt": "2026-10-26T20:05:11+00:00",
+        "createdAt": "2026-10-26T20:05:09+00:00"
+      },
+      "relationships": [
+        {
+          "id": "22287dbd-afca-46e9-bc29-55d74ee68316",
+          "type": "scanlation_group"
+        },
+        {
+          "id": "73a46c78-f4f7-452e-b4ed-e3a5c8da1032",
+          "type": "manga"
+        }
+      ]
+    }
+  ],
+  "limit": 1,
+  "offset": 0,
+  "total": 32
+}

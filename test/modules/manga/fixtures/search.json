@@ -1,0 +1,156 @@
+{
+  "result": "ok",
+  "response": "collection",
+  "data": [
+    {
+      "id": "9906dfa8-52c9-40ac-8eef-1099a85c8611",
+      "type": "manga",
+      "attributes": {
+        "title": {
+          "ja-ro": "Sousou no Frieren Anthology: Kotonaru Tabi o Tanoshimu Mahou"
+        },
+        "altTitles": [
+          {
+            "ja": "葬送のフリーレン　アンソロジー～異なる旅を楽しむ魔法～"
+          },
+          {
+            "en": "Funeral Frieren Anthology: The Magic of Enjoying a Divergent Journey"
+          }
+        ],
+        "latestUploadedChapter": "727e703b-1ab9-44c5-a6c1-5192adc380fb"
+      },
+      "relationships": [
+        {
+          "id": "152b4216-ce74-4fa7-b408-8af9d332db55",
+          "type": "author",
+          "attributes": {}
+        },
+        {
+          "id": "52333290-d0b6-4c83-8848-1c23c998dc8b",
+          "type": "author",
+          "attributes": {}
+        },
+        {
+          "id": "8057f2f9-ddb8-4e25-8337-0a4519aaf108",
+          "type": "author",
+          "attributes": {}
+        },
+        {
+          "id": "b7685513-57b4-43c0-ad90-6da4418209cb",
+          "type": "author",
+          "attributes": {}
+        },
+        {
+          "id": "c0ba420c-674f-4eb5-bfae-593a137c9ca5",
+          "type": "author",
+          "attributes": {}
+        },
+        {
+          "id": "152b4216-ce74-4fa7-b408-8af9d332db55",
+          "type": "artist"
+        },
+        {
+          "id": "52333290-d0b6-4c83-8848-1c23c998dc8b",
+          "type": "artist"
+        },
+        {
+          "id": "8057f2f9-ddb8-4e25-8337-0a4519aaf108",
+          "type": "artist"
+        },
+        {
+          "id": "b7685513-57b4-43c0-ad90-6da4418209cb",
+          "type": "artist"
+        },
+        {
+          "id": "c0ba420c-674f-4eb5-bfae-593a137c9ca5",
+          "type": "artist"
+        },
+        {
+          "id": "5adbebfd-0888-41cc-8d0b-bd66d427a361",
+          "type": "cover_art",
+          "attributes": {}
+        }
+      ]
+    },
+    {
+      "id": "1d55e985-8379-41bc-aeca-acd069bcadd0",
+      "type": "manga",
+      "attributes": {
+        "title": {
+          "en": "Sousou no Frieren -  Fern ga Ookiku Naru Ohanashi (Doujinshi)"
+        },
+        "altTitles": [
+          {
+            "ja": "葬送のフリーレン - フェルンが大きくなるお話"
+          },
+          {
+            "en": "Frieren at the Funeral -  Dreams About Fern"
+          },
+          {
+            "en": "Frieren: Beyond Journey’s End - Dreams About Fern"
+          }
+        ],
+        "latestUploadedChapter": "cb05c792-699c-4b07-bcf0-a0caac859a92"
+      },
+      "relationships": [
+        {
+          "id": "2d7512ee-19c6-4ecd-9d19-bba0413c612b",
+          "type": "author",
+          "attributes": {}
+        },
+        {
+          "id": "2d7512ee-19c6-4ecd-9d19-bba0413c612b",
+          "type": "artist"
+        },
+        {
+          "id": "f11597f5-e406-49da-becc-fd57fa5cc237",
+          "type": "cover_art",
+          "attributes": {}
+        }
+      ]
+    },
+    {
+      "id": "03f3f742-e2da-4f3c-b057-0bb9da6757ee",
+      "type": "manga",
+      "attributes": {
+        "title": {
+          "en": "Sousou no Frieren - Gaku Paro na Shutaferu (Doujinshi)"
+        },
+        "altTitles": [
+          {
+            "ja": "葬送のフリーレン - 学パロなシュタフェル"
+          },
+          {
+            "en": "Frieren at the Funeral - Stark X Fern: School AU"
+          },
+          {
+            "en": "Frieren: Beyond Journey’s End - Stark X Fern: School AU"
+          },
+          {
+            "uk": "Фрірен: подорож після кінця. Старк x Ферн: Шкільний Всесвіт"
+          }
+        ],
+        "latestUploadedChapter": "df30e55f-10ae-49ad-8b14-7ded4e6721a9"
+      },
+      "relationships": [
+        {
+          "id": "081552d5-5033-4fc8-acf5-f0f96423a07f",
+          "type": "author",
+          "attributes": {}
+        },
+        {
+          "id": "081552d5-5033-4fc8-acf5-f0f96423a07f",
+          "type": "artist"
+        },
+        {
+          "id": "e4cf9402-325a-4492-b7f1-1f6d5bb51ba3",
+          "type": "cover_art",
+          "attributes": {}
+        }
+      ]
+    }
+  ],
+  "limit": 3,
+  "offset": 0,
+  "total": 9
+}
