@@ -64,6 +64,8 @@ export interface DueDeps {
   /** False when the member can't be reached. */
   dm: (userId: string, m: MessageCreateOptions) => Promise<boolean>;
   guildName: (guildId: string) => string;
+  /** False once the role is deleted (it would show as "@deleted-role" and ping no one). */
+  roleExists: (guildId: string, roleId: string) => boolean;
   now: () => number;
 }
 
@@ -76,6 +78,8 @@ export interface NewRequest {
   what: string;
   /** Null: the author. */
   who: Target | null;
+  /** The author could ping the `who` role themselves (it's mentionable, or they may ping any role). */
+  rolePingable: boolean;
   now: number;
   pending: number;
 }

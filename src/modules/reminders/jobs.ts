@@ -29,6 +29,8 @@ export const remindersJobs: Job[] = [
         send: (channelId, m) => sendTo(ctx.client, channelId, m),
         dm: (userId, m) => dm(ctx, userId, m),
         guildName: (id) => ctx.client.guilds.cache.get(id)?.name ?? "a server",
+        roleExists: (guildId, roleId) =>
+          ctx.client.guilds.cache.get(guildId)?.roles.cache.has(roleId) ?? true,
         now: () => Date.now(),
       }),
   },

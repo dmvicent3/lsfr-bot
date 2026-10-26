@@ -65,6 +65,12 @@ describe("listMessage", () => {
     expect(labels).toEqual(["Cancel #1", "Cancel #2"]);
   });
 
+  test("25 reminders of 500 characters fit in one message", () => {
+    const rs = Array.from({ length: 25 }, (_, n) => reminder({ id: n, text: "a".repeat(500) }));
+
+    expect(listMessage(rs).content.length).toBeLessThanOrEqual(2000);
+  });
+
   test("an empty list says so", () => {
     expect(listMessage([])).toEqual({ content: "You have no reminders.", components: [] });
   });

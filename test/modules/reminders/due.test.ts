@@ -6,7 +6,7 @@ import type { SendResult } from "../../../src/core/types.ts";
 import { runDue } from "../../../src/modules/reminders/due.ts";
 import { remindersMigrations } from "../../../src/modules/reminders/store/migrations.ts";
 import { ReminderStore } from "../../../src/modules/reminders/store/reminders.ts";
-import type { DueDeps } from "../../../src/modules/reminders/types.ts";
+import type { DueDeps, Target } from "../../../src/modules/reminders/types.ts";
 
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;
@@ -42,15 +42,16 @@ const deps = (): DueDeps => ({
     return dmWorks;
   },
   guildName: (id) => (id === "g1" ? "Pit Wall" : "?"),
+  roleExists: (_guildId, id) => id !== "gone",
   now: () => now,
 });
 
-function add(dueAt: number) {
+function add(dueAt: number, target: Target = { kind: "user", id: "u1" }) {
   return store.add({
     guildId: "g1",
     channelId: "c1",
     authorId: "u1",
-    target: { kind: "user", id: "u1" },
+    target,
     text: "stretch",
     dueAt,
     createdAt: 0,
@@ -101,6 +102,24 @@ describe("runDue", () => {
 
     expect(sent).toHaveLength(2);
     expect(store.get(r.id)?.messageId).toBe("m2");
+  });
+
+  test("a channel still failing a day after due gives up and DMs the author", async () => {
+    sendResult = { result: "failed" };
+    const r = add(now - DAY - 60_000);
+    await runDue(deps());
+
+    expect(dms).toHaveLength(1);
+    expect(store.get(r.id)?.sentAt).toBe(now);
+  });
+
+  test("a deleted target role DMs the author instead of pinging nobody", async () => {
+    const r = add(now, { kind: "role", id: "gone" });
+    await runDue(deps());
+
+    expect(sent).toEqual([]);
+    expect(dms[0]?.m.content).toContain("stretch");
+    expect(store.get(r.id)?.sentAt).toBe(now);
   });
 
   test("prunes reminders sent more than 7 days ago", async () => {

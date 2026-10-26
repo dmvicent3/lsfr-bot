@@ -54,6 +54,10 @@ export function newReminder(req: NewRequest): { reminder: NewReminder } | { erro
   if (refusedTarget(target, req.guildId))
     return { error: "Pick a member or a role other than @everyone." };
 
+  if (target.kind === "role" && !req.rolePingable) {
+    return { error: "You can't ping that role yourself, so I won't either." };
+  }
+
   if ("error" in when) return when;
 
   const error = checkNew({ at: when.at, now: req.now, text, pending: req.pending });

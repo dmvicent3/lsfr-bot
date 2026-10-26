@@ -3,9 +3,24 @@ import type { DueDeps, Reminder } from "./types.ts";
 
 /** Sent reminders are kept this long, so their buttons still work. */
 const KEEP_MS = 7 * 24 * 3_600_000;
+/** A channel still refusing the ping this long after due (e.g. no send permission) is given up on. */
+const GIVE_UP_MS = 24 * 3_600_000;
 
-/** Sends one reminder; a lost channel sends it to the author instead, and it counts as sent. */
+async function toAuthor(r: Reminder, now: number, d: DueDeps): Promise<void> {
+  await d.dm(r.authorId, lostMessage(r, d.guildName(r.guildId)));
+  d.store.markSent(r.id, now, null);
+}
+
+const targetGone = (r: Reminder, d: DueDeps): boolean =>
+  r.target.kind === "role" && !d.roleExists(r.guildId, r.target.id);
+
+/**
+ * Sends one reminder. A lost channel, a deleted target role, or a channel failing for a day
+ * sends it to the author instead, and it counts as sent.
+ */
 async function deliver(r: Reminder, now: number, d: DueDeps): Promise<void> {
+  if (targetGone(r, d)) return toAuthor(r, now, d);
+
   const sent = await d.send(r.channelId, dueMessage(r, now));
 
   if (sent.result === "ok") {
@@ -14,10 +29,9 @@ async function deliver(r: Reminder, now: number, d: DueDeps): Promise<void> {
     return;
   }
 
-  if (sent.result === "failed") return;
+  if (sent.result === "failed" && now - r.dueAt <= GIVE_UP_MS) return;
 
-  await d.dm(r.authorId, lostMessage(r, d.guildName(r.guildId)));
-  d.store.markSent(r.id, now, null);
+  await toAuthor(r, now, d);
 }
 
 /** Sends every due reminder, oldest first, then drops old sent ones. */

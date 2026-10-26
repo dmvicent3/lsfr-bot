@@ -1,5 +1,5 @@
 import type { CommandCtx } from "./types.ts";
-import type { ChatInputCommandInteraction } from "discord.js";
+import { type ChatInputCommandInteraction, PermissionFlagsBits } from "discord.js";
 import { reply } from "./kit.ts";
 import { confirmation } from "../render.ts";
 import { newReminder } from "../rules.ts";
@@ -16,6 +16,17 @@ function targetOf(i: ChatInputCommandInteraction): Target | null {
   return null;
 }
 
+/** A role only pings when it's mentionable, unless the author may mention every role. */
+function rolePingable(i: ChatInputCommandInteraction): boolean {
+  const role = i.options.get("who")?.role;
+
+  return (
+    !role ||
+    role.mentionable ||
+    (i.memberPermissions?.has(PermissionFlagsBits.MentionEveryone) ?? false)
+  );
+}
+
 export async function set({ i, guildId, store }: CommandCtx): Promise<void> {
   const made = newReminder({
     guildId,
@@ -24,6 +35,7 @@ export async function set({ i, guildId, store }: CommandCtx): Promise<void> {
     when: i.options.getString("when", true),
     what: i.options.getString("what", true),
     who: targetOf(i),
+    rolePingable: rolePingable(i),
     now: Date.now(),
     pending: store.pendingByAuthor(guildId, i.user.id).length,
   });

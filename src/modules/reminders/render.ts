@@ -8,6 +8,10 @@ const SNOOZES = [
   { minutes: 60, label: "+1 h" },
 ];
 const ROW_SIZE = 5;
+/** Discord's message limit, with room for the line prefixes in listMessage. */
+const LIST_TEXT_BUDGET = 1900;
+const LIST_LINE_OVERHEAD = 60;
+const MIN_LIST_TEXT = 20;
 
 const stamp = (ms: number, style: "t" | "F" | "R"): string =>
   `<t:${Math.floor(ms / 1000)}:${style}>`;
@@ -55,17 +59,25 @@ export function confirmation(r: Reminder): string {
   return `⏰ ${stamp(r.dueAt, "R")} (${stamp(r.dueAt, "F")})${who}: ${r.text}`;
 }
 
-function listLine(r: Reminder, n: number): string {
+const clip = (text: string, max: number): string =>
+  text.length > max ? `${text.slice(0, max - 1)}…` : text;
+
+function listLine(r: Reminder, n: number, max: number): string {
   const who = forOther(r) ? ` for ${mention(r)}` : "";
 
-  return `**#${n}** ${stamp(r.dueAt, "R")}${who}: ${r.text}`;
+  return `**#${n}** ${stamp(r.dueAt, "R")}${who}: ${clip(r.text, max)}`;
 }
 
 export function listMessage(rs: Reminder[]): ListMessage {
   if (rs.length === 0) return { content: "You have no reminders.", components: [] };
 
+  const max = Math.max(
+    MIN_LIST_TEXT,
+    Math.floor(LIST_TEXT_BUDGET / rs.length) - LIST_LINE_OVERHEAD,
+  );
+
   return {
-    content: rs.map((r, i) => listLine(r, i + 1)).join("\n"),
+    content: rs.map((r, i) => listLine(r, i + 1, max)).join("\n"),
     components: rows(rs.map((r, i) => button(`reminders:cancel:${r.id}`, `Cancel #${i + 1}`))),
   };
 }

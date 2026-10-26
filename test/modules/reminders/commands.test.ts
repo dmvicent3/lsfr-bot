@@ -13,6 +13,7 @@ const ask = (over: Partial<NewRequest> = {}) =>
     when: "2h",
     what: " stretch ",
     who: null,
+    rolePingable: true,
     now: NOW,
     pending: 0,
     ...over,
@@ -37,6 +38,11 @@ describe("newReminder", () => {
     expect(ask({ who: { kind: "role", id: "r1" } })).toMatchObject({
       reminder: { target: { kind: "role", id: "r1" } },
     });
+  });
+
+  test("a role the author couldn't ping themselves is refused", () => {
+    expect(ask({ who: { kind: "role", id: "r1" }, rolePingable: false })).toHaveProperty("error");
+    expect(ask({ rolePingable: false })).toHaveProperty("reminder");
   });
 
   test("@everyone, an unreadable time and the 26th reminder are refused", () => {
