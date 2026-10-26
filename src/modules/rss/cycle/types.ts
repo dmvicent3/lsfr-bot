@@ -22,9 +22,9 @@ export type JevOutcome = "ok" | "failed" | "unused";
 /** What the repeat check found: a repeat, or the vector to store (null: not checked). */
 export type Check = "repeat" | Float32Array | null;
 
-/** One postPassed call: its server, deps, and whether an embed failure was logged yet. */
+/** One postPassed call: its server, deps, and whether embed failed (the rest is posted unchecked). */
 export interface Pass {
   guildId: string;
   d: CycleDeps;
-  logged: boolean;
+  embedFailed: boolean;
 }

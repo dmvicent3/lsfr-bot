@@ -21,16 +21,17 @@ async function check(text: string | null, pass: Pass): Promise<Check> {
   return isRepeat(vector, recent) ? "repeat" : vector;
 }
 
-/** The check, or null when embed failed; only the first failure of a pass is logged. */
+/** The check, or null once embed has failed in this pass (a hung embed would cost 10 s an item). */
 async function checkOrSkip(text: string | null, pass: Pass): Promise<Check> {
+  if (pass.embedFailed) return null;
+
   try {
     return await check(text, pass);
   } catch (err) {
     if (!(err instanceof EmbedError)) throw err;
 
-    if (!pass.logged) log.error("rss:dedupe", "embed failed, posting unchecked", err);
-
-    pass.logged = true;
+    log.error("rss:dedupe", "embed failed, posting the rest of this pass unchecked", err);
+    pass.embedFailed = true;
 
     return null;
   }
@@ -39,7 +40,7 @@ async function checkOrSkip(text: string | null, pass: Pass): Promise<Check> {
 /** Posts passed items, oldest first, skipping repeats; a channel the bot lost stops the server's checks. */
 export async function postPassed(server: Server, feeds: Feed[], d: CycleDeps): Promise<void> {
   const byId = new Map(feeds.map((f) => [f.id, f]));
-  const pass: Pass = { guildId: server.guildId, d, logged: false };
+  const pass: Pass = { guildId: server.guildId, d, embedFailed: false };
 
   for (const item of d.repo.items.inState(server.guildId, "passed", MAX_POST)) {
     const feed = byId.get(item.feedId);

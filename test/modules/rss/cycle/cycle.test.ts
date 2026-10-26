@@ -307,6 +307,13 @@ describe("runCycle repeat check", () => {
     expect(repo.items.recentEmbeddings("g1", 0)).toEqual([]);
   });
 
+  test("stops calling embed for the rest of the pass after it fails", async () => {
+    embedMode = "fail";
+    feeds.set("https://a/rss", rss("a", "b", "c"));
+    await cycle();
+    expect(embedCalls).toBe(1);
+  });
+
   test("a failed post stores no vector and is posted later", async () => {
     vectors.set("story", X);
     feeds.set("https://a/rss", rss("story"));
