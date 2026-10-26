@@ -22,5 +22,6 @@ export function loadConfig(env: Record<string, string | undefined>): Config {
     geminiModel: value("GEMINI_MODEL"),
     databasePath: env["DATABASE_PATH"]?.trim() || "./data/gork.db",
     jevUrl: env["JEV_URL"]?.trim() || null,
+    embedUrl: env["EMBED_URL"]?.trim() || null,
   };
 }

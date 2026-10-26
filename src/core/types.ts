@@ -16,6 +16,8 @@ export interface Config {
   databasePath: string;
   /** The jev service (RSS filtering); null leaves the rss module off. */
   jevUrl: string | null;
+  /** The embed service (RSS repeat check); null posts repeats as before. */
+  embedUrl: string | null;
 }
 
 export interface Migration {

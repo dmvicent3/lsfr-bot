@@ -22,6 +22,7 @@ describe("loadConfig", () => {
       geminiModel: "m",
       databasePath: "./data/gork.db",
       jevUrl: null,
+      embedUrl: null,
     });
   });
 
@@ -34,5 +35,19 @@ describe("loadConfig", () => {
     };
     expect(loadConfig({ ...base, JEV_URL: " http://jev:8017 " }).jevUrl).toBe("http://jev:8017");
     expect(loadConfig({ ...base, JEV_URL: "  " }).jevUrl).toBeNull();
+  });
+
+  test("reads an optional, trimmed EMBED_URL", () => {
+    const base = {
+      DISCORD_TOKEN: "t",
+      DISCORD_GUILD_ID: "g",
+      GEMINI_API_KEY: "k",
+      GEMINI_MODEL: "m",
+    };
+    expect(loadConfig({ ...base, EMBED_URL: " http://embed:8018 " }).embedUrl).toBe(
+      "http://embed:8018",
+    );
+    expect(loadConfig({ ...base, EMBED_URL: "  " }).embedUrl).toBeNull();
+    expect(loadConfig(base).embedUrl).toBeNull();
   });
 });
