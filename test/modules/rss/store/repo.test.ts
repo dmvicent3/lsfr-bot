@@ -362,3 +362,46 @@ describe("item storage limits", () => {
     expect(repo.items.inState("g1", "pending", 10)).toHaveLength(1);
   });
 });
+
+describe("item embeddings", () => {
+  const add = (guildId: string, key: string, state: "passed" | "posted", now: number): number => {
+    repo.items.insert({ guildId, feedId: 1, key, item: item(key), state, now });
+
+    return repo.items.inState(guildId, state, 50).find((i) => i.title === key)?.id ?? -1;
+  };
+
+  test("setPosted stores the vector and recentEmbeddings reads it back", () => {
+    const id = add("g1", "a", "passed", 10);
+    repo.items.setPosted(id, Float32Array.of(0.6, 0.8));
+    expect(repo.items.recentEmbeddings("g1", 0)).toEqual([Float32Array.of(0.6, 0.8)]);
+    expect(repo.items.inState("g1", "posted", 10).map((i) => i.title)).toEqual(["a"]);
+  });
+
+  test("a vector stored from an offset view reads back whole", () => {
+    const id = add("g1", "a", "passed", 10);
+    const view = new Float32Array(Float32Array.of(9, 0.6, 0.8).buffer, 4, 2);
+    repo.items.setPosted(id, view);
+    expect(repo.items.recentEmbeddings("g1", 0)).toEqual([Float32Array.of(0.6, 0.8)]);
+  });
+
+  test("recentEmbeddings skips old, unposted, other-server and vectorless rows", () => {
+    repo.items.setPosted(add("g1", "old", "passed", 5), Float32Array.of(1, 0));
+    repo.items.setPosted(add("g1", "new", "passed", 20), Float32Array.of(0, 1));
+    repo.items.setPosted(add("g2", "other", "passed", 20), Float32Array.of(1, 0));
+    repo.items.setPosted(add("g1", "bare", "passed", 20), null);
+    add("g1", "waiting", "passed", 20);
+    expect(repo.items.recentEmbeddings("g1", 10)).toEqual([Float32Array.of(0, 1)]);
+  });
+
+  test("setPosted(id, null) posts without a vector", () => {
+    repo.items.setPosted(add("g1", "a", "passed", 10), null);
+    expect(repo.items.inState("g1", "posted", 10).map((i) => i.title)).toEqual(["a"]);
+    expect(repo.items.recentEmbeddings("g1", 0)).toEqual([]);
+  });
+
+  test("prune deletes old duplicates", () => {
+    const id = add("g1", "a", "passed", 10);
+    repo.items.setState(id, "duplicate");
+    expect(repo.items.prune("g1", 11)).toBe(1);
+  });
+});

@@ -52,4 +52,8 @@ export const rssMigrations: Migration[] = [
       );
     `,
   },
+  {
+    id: "rss-003-embeddings",
+    sql: "ALTER TABLE rss_items ADD COLUMN embedding BLOB",
+  },
 ];

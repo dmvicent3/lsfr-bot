@@ -19,7 +19,8 @@ export interface FeedRow {
   warned: number;
 }
 
-export type ItemState = "pending" | "passed" | "posted" | "blocked" | "expired";
+/** `duplicate`: passed the rules but repeats a story already posted. */
+export type ItemState = "pending" | "passed" | "posted" | "blocked" | "expired" | "duplicate";
 
 export interface StoredItem extends FeedItem {
   id: number;

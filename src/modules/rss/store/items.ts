@@ -50,6 +50,23 @@ export class ItemStore {
     this.db.run("UPDATE rss_items SET state = ? WHERE id = ?", [state, id]);
   }
 
+  /** Marks an item posted with its story's vector (null when it couldn't be embedded). */
+  setPosted(id: number, embedding: Float32Array | null): void {
+    const blob = embedding && new Uint8Array(embedding.buffer, embedding.byteOffset, embedding.byteLength);
+    this.db.run("UPDATE rss_items SET state = 'posted', embedding = ? WHERE id = ?", [blob, id]);
+  }
+
+  /** Vectors of the server's posted items created since `since`. */
+  recentEmbeddings(guildId: string, since: number): Float32Array[] {
+    return this.db
+      .query<{ embedding: Uint8Array }, [string, number]>(
+        `SELECT embedding FROM rss_items
+         WHERE guild_id = ? AND state = 'posted' AND embedding IS NOT NULL AND created_at >= ?`,
+      )
+      .all(guildId, since)
+      .map((r) => new Float32Array(new Uint8Array(r.embedding).slice().buffer));
+  }
+
   /** Waiting items (pending or passed) created before `before` become expired; returns how many. */
   expire(guildId: string, before: number): number {
     return this.db.run(
@@ -59,11 +76,11 @@ export class ItemStore {
     ).changes;
   }
 
-  /** Finished items (posted, blocked, expired) created before `before` are deleted; returns how many. */
+  /** Finished items (posted, blocked, expired, duplicate) created before `before` are deleted; returns how many. */
   prune(guildId: string, before: number): number {
     return this.db.run(
       `DELETE FROM rss_items
-       WHERE guild_id = ? AND state IN ('posted', 'blocked', 'expired') AND created_at < ?`,
+       WHERE guild_id = ? AND state IN ('posted', 'blocked', 'expired', 'duplicate') AND created_at < ?`,
       [guildId, before],
     ).changes;
   }
