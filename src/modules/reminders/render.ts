@@ -1,4 +1,4 @@
-import type { MessageMentionOptions } from "discord.js";
+import type { MessageCreateOptions, MessageMentionOptions } from "discord.js";
 import { ButtonStyle, ComponentType } from "discord.js";
 import { lateBy } from "./rules.ts";
 import type { ButtonRow, DueMessage, ListMessage, Reminder } from "./types.ts";
@@ -88,6 +88,15 @@ export function dueMessage(r: Reminder, now: number): DueMessage {
     content: `⏰ ${mention(r)}: ${r.text}${notes.join("")}`,
     components: rows(buttons),
     allowedMentions,
+  };
+}
+
+/** The reminder sent to its author when its channel is gone; nothing in it pings. */
+export function lostMessage(r: Reminder, guildName: string): MessageCreateOptions {
+  return {
+    content: `⏰ ${r.text}
+-# Set in <#${r.channelId}> on **${guildName}**, where I can't post any more.`,
+    allowedMentions: { parse: [] },
   };
 }
 

@@ -1,8 +1,11 @@
 import type {
   APIActionRowComponent,
   APIButtonComponentWithCustomId,
+  MessageCreateOptions,
   MessageMentionOptions,
 } from "discord.js";
+import type { SendResult } from "../../core/types.ts";
+import type { ReminderStore } from "./store/reminders.ts";
 
 /** Who gets pinged: a member, or everyone holding a role. */
 export interface Target {
@@ -53,4 +56,13 @@ export interface DueMessage {
   content: string;
   components: ButtonRow[];
   allowedMentions: MessageMentionOptions;
+}
+
+export interface DueDeps {
+  store: ReminderStore;
+  send: (channelId: string, m: MessageCreateOptions) => Promise<SendResult>;
+  /** False when the member can't be reached. */
+  dm: (userId: string, m: MessageCreateOptions) => Promise<boolean>;
+  guildName: (guildId: string) => string;
+  now: () => number;
 }
