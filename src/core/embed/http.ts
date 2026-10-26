@@ -31,19 +31,20 @@ async function request(url: string, text: string, fetchFn: FetchFn): Promise<unk
   });
 }
 
+const isNumber = (x: unknown): x is number => typeof x === "number" && Number.isFinite(x);
+
 /** The first result's vector; llama.cpp nests it one level deeper with pooling on. */
 function vectorOf(body: unknown): number[] {
   const first: unknown = Array.isArray(body) ? body[0] : undefined;
   const raw = isRecord(first) ? first["embedding"] : undefined;
   const flat: unknown = Array.isArray(raw) && Array.isArray(raw[0]) ? raw[0] : raw;
+  const values: unknown[] = Array.isArray(flat) ? flat : [];
 
-  if (!Array.isArray(flat) || flat.length === 0) throw new EmbedError("embed returned no vector");
+  if (values.length === 0) throw new EmbedError("embed returned no vector");
 
-  if (!flat.every((x) => typeof x === "number" && Number.isFinite(x))) {
-    throw new EmbedError("embed returned a non-numeric vector");
-  }
+  if (!values.every(isNumber)) throw new EmbedError("embed returned a non-numeric vector");
 
-  return flat as number[];
+  return values;
 }
 
 function normalized(v: number[]): Float32Array {

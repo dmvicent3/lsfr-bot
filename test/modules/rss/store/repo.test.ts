@@ -363,13 +363,14 @@ describe("item storage limits", () => {
   });
 });
 
+/** Inserts an item and returns its id. */
+function add(guildId: string, key: string, state: "passed" | "posted", now: number): number {
+  repo.items.insert({ guildId, feedId: 1, key, item: item(key), state, now });
+
+  return repo.items.inState(guildId, state, 50).find((i) => i.title === key)?.id ?? -1;
+}
+
 describe("item embeddings", () => {
-  const add = (guildId: string, key: string, state: "passed" | "posted", now: number): number => {
-    repo.items.insert({ guildId, feedId: 1, key, item: item(key), state, now });
-
-    return repo.items.inState(guildId, state, 50).find((i) => i.title === key)?.id ?? -1;
-  };
-
   test("setPosted stores the vector and recentEmbeddings reads it back", () => {
     const id = add("g1", "a", "passed", 10);
     repo.items.setPosted(id, Float32Array.of(0.6, 0.8));

@@ -15,6 +15,12 @@ function failure(p: Promise<unknown>): Promise<unknown> {
   );
 }
 
+const down: FetchFn = async () => {
+  throw new TypeError("connection refused");
+};
+
+const notJson: FetchFn = async () => new Response("not json");
+
 const close = (v: Float32Array, expected: number[]) =>
   expect([...v].map((x) => Math.round(x * 1e6) / 1e6)).toEqual(expected);
 
@@ -23,7 +29,7 @@ describe("createEmbedder", () => {
     const calls: { url: string; body: unknown }[] = [];
 
     const fetchFn: FetchFn = async (url, init) => {
-      calls.push({ url, body: JSON.parse(String(init?.body)) });
+      calls.push({ url, body: typeof init?.body === "string" ? JSON.parse(init.body) : null });
 
       return new Response(JSON.stringify([{ index: 0, embedding: [[3, 4]] }]));
     };
@@ -38,20 +44,15 @@ describe("createEmbedder", () => {
   });
 
   test("throws EmbedError when unreachable", async () => {
-    const fetchFn: FetchFn = async () => {
-      throw new TypeError("connection refused");
-    };
-
-    expect(await failure(createEmbedder({ url: URL, fetchFn }).embed("hi"))).toBeInstanceOf(
+    expect(await failure(createEmbedder({ url: URL, fetchFn: down }).embed("hi"))).toBeInstanceOf(
       EmbedError,
     );
   });
 
   test("throws EmbedError on invalid JSON", async () => {
-    const fetchFn: FetchFn = async () => new Response("not json");
-    expect(await failure(createEmbedder({ url: URL, fetchFn }).embed("hi"))).toBeInstanceOf(
-      EmbedError,
-    );
+    expect(
+      await failure(createEmbedder({ url: URL, fetchFn: notJson }).embed("hi")),
+    ).toBeInstanceOf(EmbedError);
   });
 
   const bad: [string, number, unknown][] = [

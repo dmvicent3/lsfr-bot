@@ -52,7 +52,8 @@ export class ItemStore {
 
   /** Marks an item posted with its story's vector (null when it couldn't be embedded). */
   setPosted(id: number, embedding: Float32Array | null): void {
-    const blob = embedding && new Uint8Array(embedding.buffer, embedding.byteOffset, embedding.byteLength);
+    const blob =
+      embedding && new Uint8Array(embedding.buffer, embedding.byteOffset, embedding.byteLength);
     this.db.run("UPDATE rss_items SET state = 'posted', embedding = ? WHERE id = ?", [blob, id]);
   }
 
