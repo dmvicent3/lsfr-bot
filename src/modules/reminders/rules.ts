@@ -1,4 +1,5 @@
-import type { Clicker, NewCheck, Reminder, Target } from "./types.ts";
+import type { Clicker, NewCheck, NewReminder, NewRequest, Reminder, Target } from "./types.ts";
+import { parseWhen, TIME_ZONE } from "./when/parse.ts";
 
 export const MAX_PENDING = 25;
 export const MAX_TEXT = 500;
@@ -42,4 +43,26 @@ export function lateBy(dueAt: number, sentAt: number): number | null {
   const late = sentAt - dueAt;
 
   return late > LATE_AFTER ? late : null;
+}
+
+/** A /remind set request checked against every limit: the reminder to store, or why not. */
+export function newReminder(req: NewRequest): { reminder: NewReminder } | { error: string } {
+  const target = req.who ?? { kind: "user", id: req.authorId };
+  const when = parseWhen(req.when, req.now, TIME_ZONE);
+  const text = req.what.trim();
+
+  if (refusedTarget(target, req.guildId))
+    return { error: "Pick a member or a role other than @everyone." };
+
+  if ("error" in when) return when;
+
+  const error = checkNew({ at: when.at, now: req.now, text, pending: req.pending });
+
+  if (error) return { error };
+
+  const { guildId, channelId, authorId, now } = req;
+
+  return {
+    reminder: { guildId, channelId, authorId, target, text, dueAt: when.at, createdAt: now },
+  };
 }

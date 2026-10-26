@@ -66,3 +66,16 @@ export interface DueDeps {
   guildName: (guildId: string) => string;
   now: () => number;
 }
+
+/** What /remind set was given, with the context to check it in. */
+export interface NewRequest {
+  guildId: string;
+  channelId: string;
+  authorId: string;
+  when: string;
+  what: string;
+  /** Null: the author. */
+  who: Target | null;
+  now: number;
+  pending: number;
+}
