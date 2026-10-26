@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { DiscordAPIError, RESTJSONErrorCodes } from "discord.js";
-import { outgoing, sendFailure } from "../../../src/modules/rss/jobs.ts";
+import { outgoing, sendFailure } from "../../src/core/send.ts";
 
 function apiError(code: number): DiscordAPIError {
   return new DiscordAPIError({ code, message: "x" }, code, 403, "POST", "/channels/1/messages", {});
@@ -21,6 +21,13 @@ describe("outgoing", () => {
     expect(outgoing({ content: "@everyone" })).toEqual({
       content: "@everyone",
       allowedMentions: { parse: [] },
+    });
+  });
+
+  test("outgoing allows exactly the given mentions", () => {
+    expect(outgoing({ content: "x" }, { users: ["1"] })).toEqual({
+      content: "x",
+      allowedMentions: { users: ["1"] },
     });
   });
 });

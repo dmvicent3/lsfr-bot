@@ -25,6 +25,11 @@ export interface Migration {
   sql: string;
 }
 
+/** What a channel send came to; "lost-channel": the channel or server is gone for good. */
+export type SendResult =
+  | { result: "ok"; messageId: string }
+  | { result: "lost-channel" | "failed" };
+
 export type FetchFn = (url: string, init?: RequestInit) => Promise<Response>;
 
 /** Image bytes sent inline, base64-encoded. */

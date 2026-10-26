@@ -1,7 +1,3 @@
-import type { APIEmbed } from "discord.js";
-
-export type Message = { embeds: APIEmbed[] } | { content: string };
-
 export interface FollowRequest {
   guildId: string;
   url: string;
