@@ -22,7 +22,7 @@ Decisions live in pure files with no runtime `discord.js` import (in motorsport:
 
 `.oxlintrc.json` enforces the size limits and bans `else` after `return`, nested ternaries and `any`; `test/**` is exempt from the size limits. The rest is judgment:
 
-- One responsibility per file, grouped by area (`motorsport/predictions/`, `rss/feeds/`), so the files that change together sit together.
+- One responsibility per file, class and function: a file holds one subcommand handler, one store, one job, one decision. Two handlers sharing a file (`follow` and `unfollow`) are two files; shared helpers move to the folder's own file. Files group by area (`motorsport/predictions/`, `rss/feeds/`), so the files that change together sit together.
 - Values that travel together become one parameter object (`Viewer`, `SessionRef`).
 - Branching on a key is a lookup map, as `HANDLERS` in each `commands/commands.ts`.
 - Dependencies (repo, fetch, clock, poster) arrive as arguments, and functions return their result. Module-level state is limited to locks and once-per-process caches, each with a comment.
