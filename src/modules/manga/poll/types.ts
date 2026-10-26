@@ -1,4 +1,12 @@
+import type { APIEmbed } from "discord.js";
 import type { Chapter } from "../api/types.ts";
+
+/** A message of a chapter post; only the users it names can be pinged. */
+export interface PostMessage {
+  content: string;
+  allowedMentions: { users: string[] };
+  embeds?: APIEmbed[];
+}
 
 /** What a series has already posted: the highest chapter number, and oneshot ids. */
 export interface Seen {
