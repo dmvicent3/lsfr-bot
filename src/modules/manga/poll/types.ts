@@ -1,5 +1,18 @@
 import type { APIEmbed } from "discord.js";
-import type { Chapter } from "../api/types.ts";
+import type { SendResult } from "../../../core/types.ts";
+import type { Chapter, MangaDexGet } from "../api/types.ts";
+import type { MangaRepo } from "../store/repo.ts";
+
+export interface PollDeps {
+  repo: MangaRepo;
+  get: MangaDexGet;
+  /** Sends to the manga channel. */
+  send: (m: PostMessage) => Promise<SendResult>;
+  now: () => number;
+}
+
+/** "send-failed" ends the run: the channel is gone or Discord refused, so later posts would be too. */
+export type CheckResult = "ok" | "fetch-failed" | "send-failed";
 
 /** A message of a chapter post; only the users it names can be pinged. */
 export interface PostMessage {
