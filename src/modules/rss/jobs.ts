@@ -22,9 +22,9 @@ export function rssJobs(jev: Jev, embedder: Embedder | null): Job[] {
               jev,
               fetchFeed: (url) => fetchFeed(url),
               post: async (channelId, embed) =>
-                (await sendTo(ctx.client, channelId, { embeds: [embed] })).result,
+                (await sendTo(ctx.client, channelId, { embeds: [embed] }, "rss:post")).result,
               say: async (channelId, text) => {
-                await sendTo(ctx.client, channelId, { content: text });
+                await sendTo(ctx.client, channelId, { content: text }, "rss:post");
               },
               now: () => Date.now(),
               embedder,

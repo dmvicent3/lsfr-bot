@@ -1,6 +1,7 @@
-import { describe, expect, test } from "bun:test";
-import { DiscordAPIError, RESTJSONErrorCodes } from "discord.js";
-import { outgoing, sendFailure } from "../../src/core/send.ts";
+import { describe, expect, spyOn, test } from "bun:test";
+import { type Client, DiscordAPIError, RESTJSONErrorCodes } from "discord.js";
+import { log } from "../../src/core/log.ts";
+import { outgoing, sendFailure, sendTo } from "../../src/core/send.ts";
 
 function apiError(code: number): DiscordAPIError {
   return new DiscordAPIError({ code, message: "x" }, code, 403, "POST", "/channels/1/messages", {});
@@ -29,5 +30,22 @@ describe("outgoing", () => {
       content: "x",
       allowedMentions: { users: ["1"] },
     });
+  });
+});
+
+describe("sendTo", () => {
+  test("logs a failed send under the caller's scope", async () => {
+    const channel = {
+      isSendable: () => true,
+      send: () => Promise.reject(new Error("boom")),
+    };
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a stand-in for the one call sendTo makes
+    const client = { channels: { fetch: async () => channel } } as unknown as Client;
+    const error = spyOn(log, "error").mockImplementation(() => {});
+
+    expect(await sendTo(client, "c1", { content: "x" }, "rss:post")).toEqual({ result: "failed" });
+    expect(error.mock.calls[0]?.[0]).toBe("rss:post");
+
+    error.mockRestore();
   });
 });

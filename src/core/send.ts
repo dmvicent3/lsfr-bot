@@ -22,11 +22,12 @@ export function outgoing<T>(
   return { ...message, allowedMentions: allowed };
 }
 
-/** Sends to a channel; a channel the bot can no longer use is "lost-channel". */
+/** Sends to a channel; a channel the bot can no longer use is "lost-channel". Failures log under `scope`. */
 export async function sendTo(
   client: Client,
   channelId: string,
   message: MessageCreateOptions,
+  scope: string,
 ): Promise<SendResult> {
   try {
     const channel = await client.channels.fetch(channelId);
@@ -39,7 +40,7 @@ export async function sendTo(
   } catch (err) {
     const result = sendFailure(err);
 
-    if (result === "failed") log.error("send", `send to ${channelId} failed`, err);
+    if (result === "failed") log.error(scope, `send to ${channelId} failed`, err);
 
     return { result };
   }

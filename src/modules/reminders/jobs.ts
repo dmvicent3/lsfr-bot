@@ -26,7 +26,7 @@ export const remindersJobs: Job[] = [
     run: (ctx) =>
       runDue({
         store: new ReminderStore(ctx.db),
-        send: (channelId, m) => sendTo(ctx.client, channelId, m),
+        send: (channelId, m) => sendTo(ctx.client, channelId, m, "reminders:due"),
         dm: (userId, m) => dm(ctx, userId, m),
         guildName: (id) => ctx.client.guilds.cache.get(id)?.name ?? "a server",
         roleExists: (guildId, roleId) =>
