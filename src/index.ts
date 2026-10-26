@@ -6,6 +6,7 @@ import { guardProcess } from "./core/process.ts";
 import { coreMigrations } from "./core/settings.ts";
 import { chatModule } from "./modules/chat/index.ts";
 import { helpModule } from "./modules/help/index.ts";
+import { mangaModule } from "./modules/manga/index.ts";
 import { motorsportModule } from "./modules/motorsport/index.ts";
 import { remindersModule } from "./modules/reminders/index.ts";
 import { rssModule } from "./modules/rss/index.ts";
@@ -16,6 +17,7 @@ const modules: BotModule[] = [
   motorsportModule,
   chatModule,
   remindersModule,
+  mangaModule(),
   ...(config.jevUrl ? [rssModule(config.jevUrl, config.embedUrl)] : []),
 ];
 const db = openDatabase(config.databasePath);
