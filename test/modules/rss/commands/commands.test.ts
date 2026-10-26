@@ -5,7 +5,6 @@ import {
   PermissionFlagsBits,
 } from "discord.js";
 import { rssCommand } from "../../../../src/modules/rss/commands/commands.ts";
-import { autocompleteChoices } from "../../../../src/modules/rss/commands/kit.ts";
 
 function subOptions(name: string): Record<string, unknown>[] {
   const sub = rssCommand.data.options?.find((o) => o.name === name);
@@ -51,32 +50,5 @@ describe("rssCommand", () => {
     expect(subOptions("remove-rule")[0]).toMatchObject({ name: "rule", autocomplete: true });
     expect(subOptions("unfollow")[0]).toMatchObject({ name: "feed", autocomplete: true });
     expect(subOptions("follow").map((o) => o["name"])).toEqual(["url", "name"]);
-  });
-});
-
-describe("autocompleteChoices", () => {
-  const items = Array.from({ length: 30 }, (_, n) => ({ name: `Feed ${n}`, value: String(n) }));
-
-  test("filters case-insensitively and caps at 25", () => {
-    expect(autocompleteChoices(items, "")).toHaveLength(25);
-    expect(autocompleteChoices(items, "fEeD 2").map((c) => c.value)).toEqual([
-      "2",
-      "20",
-      "21",
-      "22",
-      "23",
-      "24",
-      "25",
-      "26",
-      "27",
-      "28",
-      "29",
-    ]);
-  });
-
-  test("cuts names to Discord's 100 characters", () => {
-    expect(autocompleteChoices([{ name: "x".repeat(150), value: "1" }], "")[0]?.name).toHaveLength(
-      100,
-    );
   });
 });

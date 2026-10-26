@@ -14,16 +14,3 @@ export function channelHint({ repo, guildId }: CommandCtx): string {
 
   return channel ? `in <#${channel}>` : "once a channel is set with `/rss channel`";
 }
-
-/** Choices matching what was typed, within Discord's 25 choices of 100 characters. */
-export function autocompleteChoices(
-  items: { name: string; value: string }[],
-  typed: string,
-): { name: string; value: string }[] {
-  const t = typed.toLowerCase();
-
-  return items
-    .filter((c) => c.name.toLowerCase().includes(t))
-    .slice(0, 25)
-    .map((c) => ({ name: c.name.slice(0, 100), value: c.value }));
-}

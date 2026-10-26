@@ -4,7 +4,8 @@ import { describeRule } from "../rules/rules.ts";
 import { RssRepo } from "../store/repo.ts";
 import { data } from "./data.ts";
 import { feedHandlers } from "./feeds.ts";
-import { autocompleteChoices, reply } from "./kit.ts";
+import { autocompleteChoices } from "../../../core/replies.ts";
+import { reply } from "./kit.ts";
 import type { Handler } from "./types.ts";
 import { ruleHandlers } from "./rules.ts";
 
