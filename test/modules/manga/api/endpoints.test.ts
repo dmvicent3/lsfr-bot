@@ -64,7 +64,7 @@ describe("mangaFeed", () => {
     expect(calls[0]?.path).toBe(`/manga/${POLE_STAR}/feed`);
     expect(calls[0]?.q).toMatchObject({
       "translatedLanguage[]": ["en"],
-      readableAtSince: "2026-10-26T12:00:00",
+      publishAtSince: "2026-10-26T12:00:00",
       includeFutureUpdates: "0",
       "order[readableAt]": "asc",
       "includes[]": ["scanlation_group"],

@@ -8,7 +8,7 @@ const PAGE = 100;
 /** MangaDex wants YYYY-MM-DDTHH:mm:ss in UTC, without millis or zone. */
 const since = (at: number): string => new Date(at).toISOString().slice(0, 19);
 
-/** A manga's English chapters readable since `sinceAt`, oldest first, every page. */
+/** A manga's English chapters published since `sinceAt` (future ones left out), oldest first, every page. */
 export async function mangaFeed(
   get: MangaDexGet,
   mangaId: string,
@@ -20,7 +20,7 @@ export async function mangaFeed(
     const page = collection(
       await get(`/manga/${mangaId}/feed`, {
         "translatedLanguage[]": [LANGUAGE],
-        readableAtSince: since(sinceAt),
+        publishAtSince: since(sinceAt),
         includeFutureUpdates: "0",
         "order[readableAt]": "asc",
         "includes[]": ["scanlation_group"],
