@@ -1,5 +1,6 @@
 import type { Message } from "./types.ts";
 import { DiscordAPIError, RESTJSONErrorCodes } from "discord.js";
+import type { Embedder } from "../../core/embed/types.ts";
 import type { Jev } from "../../core/jev/types.ts";
 import { log } from "../../core/log.ts";
 import type { Ctx, Job } from "../../core/types.ts";
@@ -44,7 +45,7 @@ async function send(ctx: Ctx, channelId: string, message: Message): Promise<Post
   }
 }
 
-export function rssJobs(jev: Jev): Job[] {
+export function rssJobs(jev: Jev, embedder: Embedder | null): Job[] {
   return [
     {
       name: "check",
@@ -63,6 +64,7 @@ export function rssJobs(jev: Jev): Job[] {
                 await send(ctx, channelId, { content: text });
               },
               now: () => Date.now(),
+              embedder,
             }),
           );
         }

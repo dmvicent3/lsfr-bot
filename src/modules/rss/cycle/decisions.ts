@@ -1,5 +1,5 @@
 import type { JevOutcome } from "./types.ts";
-const DAY_MS = 24 * 3_600_000;
+export const DAY_MS = 24 * 3_600_000;
 const WARN_AT = 10;
 
 /** Waiting items created before this expire. */

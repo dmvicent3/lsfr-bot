@@ -14,7 +14,7 @@ const config = loadConfig(process.env);
 const modules: BotModule[] = [
   motorsportModule,
   chatModule,
-  ...(config.jevUrl ? [rssModule(config.jevUrl)] : []),
+  ...(config.jevUrl ? [rssModule(config.jevUrl, config.embedUrl)] : []),
 ];
 const db = openDatabase(config.databasePath);
 runMigrations(db, [...coreMigrations, ...modules.flatMap((m) => m.migrations ?? [])]);

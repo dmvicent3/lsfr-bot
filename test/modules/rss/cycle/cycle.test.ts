@@ -2,6 +2,8 @@ import { Database } from "bun:sqlite";
 import { beforeEach, describe, expect, test } from "bun:test";
 import type { APIEmbed } from "discord.js";
 import { runMigrations } from "../../../../src/core/db.ts";
+import { EmbedError } from "../../../../src/core/embed/http.ts";
+import type { Embedder } from "../../../../src/core/embed/types.ts";
 import { JevError } from "../../../../src/core/jev/http.ts";
 import type { Jev } from "../../../../src/core/jev/types.ts";
 import { MAX_CLASSIFY } from "../../../../src/modules/rss/cycle/classify.ts";
@@ -32,6 +34,10 @@ let posted: string[];
 let said: string[];
 let postResult: PostResult;
 let now: number;
+/** Story vectors by title; a title without one gets [1, 0]. */
+let vectors: Map<string, Float32Array>;
+let embedMode: "ok" | "fail" | "off";
+let embedCalls: number;
 
 const jev: Jev = {
   async yesNo(state, questions) {
@@ -40,6 +46,16 @@ const jev: Jev = {
     if (jevMode === "fail") throw new JevError("down");
 
     return new Map(questions.map((q) => [q.key, pYes(state)]));
+  },
+};
+
+const embedder: Embedder = {
+  async embed(text) {
+    embedCalls++;
+
+    if (embedMode === "fail") throw new EmbedError("down");
+
+    return vectors.get(text.slice(text.indexOf("query: ") + 7)) ?? Float32Array.of(1, 0);
   },
 };
 
@@ -65,6 +81,7 @@ function deps(): CycleDeps {
       said.push(text);
     },
     now: () => now,
+    embedder: embedMode === "off" ? null : embedder,
   };
 }
 
@@ -83,6 +100,9 @@ beforeEach(() => {
   said = [];
   postResult = "ok";
   now = 1_000 * HOUR;
+  vectors = new Map();
+  embedMode = "off";
+  embedCalls = 0;
 });
 
 describe("runCycle", () => {
@@ -232,5 +252,80 @@ describe("runCycle staleness", () => {
     );
     await cycle();
     expect(posted).toEqual(["fresh"]);
+  });
+});
+
+describe("runCycle repeat check", () => {
+  const X = Float32Array.of(1, 0);
+  const Y = Float32Array.of(0, 1);
+
+  beforeEach(() => {
+    embedMode = "ok";
+    repo.feeds.add("g1", "https://a/rss", "A");
+  });
+
+  test("drops a story already posted", async () => {
+    vectors.set("vucic-concedes", X).set("vucic-defeat", X);
+    feeds.set("https://a/rss", rss("vucic-concedes"));
+    await cycle();
+    feeds.set("https://a/rss", rss("vucic-concedes", "vucic-defeat"));
+    await cycle();
+    expect(posted).toEqual(["vucic-concedes"]);
+    expect(repo.items.inState("g1", "duplicate", 10).map((i) => i.title)).toEqual(["vucic-defeat"]);
+  });
+
+  test("posts a new story and stores its vector", async () => {
+    vectors.set("serbia", X).set("brazil", Y);
+    feeds.set("https://a/rss", rss("serbia", "brazil"));
+    await cycle();
+    expect(posted).toEqual(["serbia", "brazil"]);
+    expect(repo.items.recentEmbeddings("g1", 0)).toHaveLength(2);
+  });
+
+  test("two repeats in one batch post once", async () => {
+    vectors.set("one", X).set("two", X);
+    feeds.set("https://a/rss", rss("one", "two"));
+    await cycle();
+    expect(posted).toEqual(["one"]);
+  });
+
+  test("compares only the last 24 hours", async () => {
+    vectors.set("old", X).set("again", X);
+    feeds.set("https://a/rss", rss("old"));
+    await cycle();
+    now += 25 * HOUR;
+    feeds.set("https://a/rss", rss("again"));
+    await cycle();
+    expect(posted).toEqual(["old", "again"]);
+  });
+
+  test("posts without a vector when embed fails", async () => {
+    embedMode = "fail";
+    feeds.set("https://a/rss", rss("a", "b", "c"));
+    await cycle();
+    expect(posted).toEqual(["a", "b", "c"]);
+    expect(repo.items.recentEmbeddings("g1", 0)).toEqual([]);
+  });
+
+  test("a failed post stores no vector and is posted later", async () => {
+    vectors.set("story", X);
+    feeds.set("https://a/rss", rss("story"));
+    postResult = "failed";
+    await cycle();
+    expect(repo.items.recentEmbeddings("g1", 0)).toEqual([]);
+    expect(repo.items.inState("g1", "passed", 10).map((i) => i.title)).toEqual(["story"]);
+    postResult = "ok";
+    await cycle();
+    expect(posted).toEqual(["story"]);
+  });
+
+  test("blank titles skip the check", async () => {
+    feeds.set(
+      "https://a/rss",
+      `<rss><channel><title>A</title><item><title> </title><link>https://n.example/1</link></item><item><title> </title><link>https://n.example/2</link></item></channel></rss>`,
+    );
+    await cycle();
+    expect(posted).toHaveLength(2);
+    expect(embedCalls).toBe(0);
   });
 });
