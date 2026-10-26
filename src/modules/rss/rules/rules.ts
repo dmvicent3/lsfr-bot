@@ -3,8 +3,8 @@ import { JevError } from "../../../core/jev/http.ts";
 import type { JevQuestion } from "../../../core/jev/types.ts";
 import type { FeedItem } from "../feeds/types.ts";
 
-/** A rule matches when its P(yes) reaches this. */
-export const MATCH_AT = 0.5;
+/** A rule matches when its P(yes) reaches this; only-rules ask for more, so a hesitant yes stays out. */
+export const MATCH_AT: Record<RuleKind, number> = { block: 0.5, only: 0.65 };
 
 /** A rule ending in "?" is asked as written; anything else is a topic. */
 export function question(text: string): string {
@@ -30,7 +30,7 @@ export function verdict(answers: Map<string, number>, rules: Rule[]): Verdict {
 
     if (p === undefined) throw new JevError(`no answer for rule ${rule.id}`);
 
-    return p >= MATCH_AT;
+    return p >= MATCH_AT[rule.kind];
   };
 
   const matched = rules.filter(matches);

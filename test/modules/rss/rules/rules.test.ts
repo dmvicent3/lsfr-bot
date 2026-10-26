@@ -79,12 +79,12 @@ describe("verdict", () => {
     expect(() => verdict(answers(["r3", 0.9]), rules)).toThrow(JevError);
   });
 
-  test("with only-rules, needs one of them to match", () => {
+  test("with only-rules, needs one of them to match at 0.65", () => {
     const europe = only(4, "Europe");
     const space = only(5, "space");
     const both = [europe, space];
-    expect(verdict(answers(["r4", 0.2], ["r5", 0.49]), both)).toEqual({ kind: "off-topic" });
-    expect(verdict(answers(["r4", 0.2], ["r5", 0.5]), both)).toEqual({ kind: "pass" });
+    expect(verdict(answers(["r4", 0.2], ["r5", 0.64]), both)).toEqual({ kind: "off-topic" });
+    expect(verdict(answers(["r4", 0.2], ["r5", 0.65]), both)).toEqual({ kind: "pass" });
   });
 
   test("a matching block rule wins over a matching only-rule", () => {
