@@ -19,6 +19,7 @@ export class RulingStore {
     const rows = this.db
       .query<{ url: string }, [string]>("SELECT url FROM motorsport_rulings WHERE series = ?")
       .all(s);
+
     return new Set(rows.map((r) => r.url));
   }
 }

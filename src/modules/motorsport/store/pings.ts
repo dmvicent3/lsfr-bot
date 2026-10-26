@@ -13,6 +13,7 @@ export class PingStore {
         "SELECT event_id, session_id FROM motorsport_sent_pings WHERE series = ?",
       )
       .all(s);
+
     return new Set(rows.map((row) => `${row.event_id}/${row.session_id}`));
   }
 

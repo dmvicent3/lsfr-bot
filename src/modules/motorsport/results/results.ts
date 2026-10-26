@@ -22,6 +22,7 @@ export function isResultRows(value: unknown): value is ResultRow[] {
 /** Stored result rows; anything unreadable as none. */
 export function parseResultRows(json: string): ResultRow[] {
   const rows: unknown = JSON.parse(json);
+
   return isResultRows(rows) ? rows : [];
 }
 
@@ -66,6 +67,7 @@ export function resultsDue(
 ): Session[] {
   return sessions.filter((s) => {
     const end = s.end.getTime();
+
     return (
       resultKind(s.series, s.sessionId) !== null &&
       end <= now &&
@@ -85,10 +87,13 @@ export function renderResults(
   { spoiler = true }: { spoiler?: boolean } = {},
 ): string {
   const heading = `## 🏁 ${info.name} — ${eventName} · ${KIND_LABEL[kind]} results`;
+
   if (result.rows.length === 0) return `${heading}\nNo classification published.`;
+
   const lines = formatTable(
     result.rows.map((r) => [posLabel(r.pos), fitName(r.name), fitTeam(r.team), r.time]),
     new Set([3]),
   );
+
   return tableMessage(heading, lines, spoiler);
 }

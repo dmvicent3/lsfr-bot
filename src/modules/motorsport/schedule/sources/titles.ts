@@ -15,9 +15,13 @@ const TITLES: Record<string, string> = {
 
 export function sessionTitle(key: string): string {
   const known = TITLES[key];
+
   if (known) return known;
+
   const practice = /^practice(\d+)$/.exec(key);
+
   if (practice) return `Practice ${practice[1]}`;
+
   return key
     .replaceAll(/([a-z])([A-Z0-9])/g, "$1 $2")
     .split(/\s+/)

@@ -7,7 +7,9 @@ const MAX_FALLBACK_LABEL = 12;
 
 export function formatCountdown(ms: number): string {
   if (ms > 48 * HOUR) return `${Math.floor(ms / DAY)}d`;
+
   if (ms > HOUR) return `${Math.floor(ms / HOUR)}h`;
+
   return `${Math.ceil(ms / (10 * MIN)) * 10}m`;
 }
 
@@ -35,13 +37,19 @@ const CLASSES: Record<string, string> = { hypercar: "hy", lmgt3: "gt3", lmp2: "p
 /** Short session label for channel names; the pinned schedule keeps full titles. */
 export function shortLabel(sessionId: string, title: string): string {
   const known = LABELS[sessionId];
+
   if (known) return known;
+
   if (/^s?ss\d+$/.test(sessionId)) return sessionId;
+
   const classed = /^(qualifying|hyperpole)-(.+)$/.exec(sessionId);
+
   if (classed?.[1] && classed[2]) {
     const kind = classed[1] === "qualifying" ? "quali" : "hp";
+
     return `${kind}-${CLASSES[classed[2]] ?? slugify(classed[2]).slice(0, 4)}`;
   }
+
   return slugify(title).slice(0, MAX_FALLBACK_LABEL).replace(/-+$/, "");
 }
 
@@ -52,11 +60,16 @@ export function channelName(series: SeriesKey, sessions: Session[], now: Date): 
     .filter((s) => s.pingable)
     .toSorted((a, b) => a.start.getTime() - b.start.getTime());
   const live = byStart.find((s) => s.start.getTime() <= t && t < s.end.getTime());
+
   if (live) return `${series}・🔴-${shortLabel(live.sessionId, live.title)}-live`;
+
   const next = byStart.find((s) => s.start.getTime() > t);
+
   if (next) {
     const label = shortLabel(next.sessionId, next.title);
+
     return `${series}・${label}-${formatCountdown(next.start.getTime() - t)}`;
   }
+
   return `${series}・off-season`;
 }

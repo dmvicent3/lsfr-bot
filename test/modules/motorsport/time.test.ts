@@ -17,6 +17,7 @@ describe("formatCountdown", () => {
     [31 * MIN, "40m"],
     [1000, "10m"],
   ];
+
   for (const [ms, expected] of cases) {
     test(`${ms}ms → ${expected}`, () => expect(formatCountdown(ms)).toBe(expected));
   }
@@ -26,6 +27,7 @@ const NOW = new Date("2026-03-10T12:00:00Z");
 
 function session(title: string, startOffset: number, length = HOUR): Session {
   const start = new Date(NOW.getTime() + startOffset);
+
   return {
     series: "f1",
     eventId: "e",
@@ -90,6 +92,7 @@ describe("shortLabel", () => {
     ["sss12", "SSS12 Monaco", "sss12"],
     ["mystery", "Some Very Long Session Title", "some-very-lo"],
   ];
+
   for (const [sessionId, title, expected] of cases) {
     test(`${sessionId} → ${expected}`, () => expect(shortLabel(sessionId, title)).toBe(expected));
   }

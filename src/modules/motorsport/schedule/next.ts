@@ -12,15 +12,21 @@ function upcomingOf(sessions: Session[], now: number): { session: Session; live:
     .filter((s) => s.pingable)
     .toSorted((a, b) => a.start.getTime() - b.start.getTime());
   const live = pinged.find((s) => s.start.getTime() <= now && now < s.end.getTime());
+
   if (live) return { session: live, live: true };
+
   const next = pinged.find((s) => s.start.getTime() > now);
+
   return next ? { session: next, live: false } : null;
 }
 
 function line(u: Upcoming): string {
   const { title, eventName, start } = u.session;
+
   if (u.live) return `🔴 **${u.name}** · ${title} · ${eventName} · **LIVE now**`;
+
   const channel = u.channelId ? ` · <#${u.channelId}>` : "";
+
   return `🏁 **${u.name}** · ${title} · ${eventName} · ${timestamp(start, "R")} (${timestamp(start, "f")})${channel}`;
 }
 
@@ -31,15 +37,19 @@ export function renderNext(
   now: number,
 ): APIEmbed {
   const upcoming: Upcoming[] = [];
+
   for (const info of SERIES) {
     const found = upcomingOf(sessionsBySeries.get(info.key) ?? [], now);
+
     if (found)
       upcoming.push({ name: info.name, ...found, channelId: followedChannels.get(info.key) });
   }
+
   upcoming.sort(
     (a, b) =>
       Number(b.live) - Number(a.live) || a.session.start.getTime() - b.session.start.getTime(),
   );
+
   return {
     title: "Next sessions",
     color: EMBED_COLOR,

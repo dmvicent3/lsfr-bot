@@ -8,10 +8,13 @@ const REQUIRED = ["DISCORD_TOKEN", "DISCORD_GUILD_ID", "GEMINI_API_KEY", "GEMINI
 
 export function loadConfig(env: Record<string, string | undefined>): Config {
   const missing = REQUIRED.filter((name) => !env[name]?.trim());
+
   if (missing.length > 0) {
     throw new ConfigError(`Missing environment variables: ${missing.join(", ")}`);
   }
+
   const value = (name: (typeof REQUIRED)[number]): string => env[name]?.trim() ?? "";
+
   return {
     discordToken: value("DISCORD_TOKEN"),
     guildId: value("DISCORD_GUILD_ID"),

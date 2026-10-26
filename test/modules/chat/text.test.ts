@@ -82,7 +82,9 @@ describe("collectChain", () => {
 
   test("stops at the limit, keeping the newest", async () => {
     const all = new Map<number, Fake>();
+
     for (let i = 1; i <= 30; i++) all.set(i, { id: i, parent: i > 1 ? i - 1 : null });
+
     const chain = await collectChain({ id: 30, parent: 29 }, parentIn(all));
     expect(chain).toHaveLength(MAX_CHAIN);
     expect(chain.at(-1)?.id).toBe(30);

@@ -11,6 +11,7 @@ export function shouldRename(
   now: number,
 ): boolean {
   if (current === desired) return false;
+
   return renamedAt === null || now - renamedAt >= RENAME_MIN_INTERVAL_MS;
 }
 
@@ -26,17 +27,21 @@ export function sessionsToPing(
 ): Session[] {
   return sessions.filter((s) => {
     const start = s.start.getTime();
+
     return s.pingable && start - leadMs <= now && now < start && !sent.has(sessionKey(s));
   });
 }
 
 export function groupEvents(sessions: Session[]): EventSchedule[] {
   const events = new Map<string, EventSchedule>();
+
   for (const s of sessions.toSorted((a, b) => a.start.getTime() - b.start.getTime())) {
     const event = events.get(s.eventId);
+
     if (event) event.sessions.push(s);
     else events.set(s.eventId, { eventId: s.eventId, eventName: s.eventName, sessions: [s] });
   }
+
   return [...events.values()];
 }
 

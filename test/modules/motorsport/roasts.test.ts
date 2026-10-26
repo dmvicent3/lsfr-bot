@@ -15,5 +15,6 @@ test("picks by the random value and fills in the mention", () => {
 
 test("every roast mentions the user or stands on its own", () => {
   for (const roast of ROASTS) expect(roast.length).toBeGreaterThan(0);
+
   expect(ROASTS.filter((r) => r.includes("{user}")).length).toBeGreaterThan(ROASTS.length / 2);
 });

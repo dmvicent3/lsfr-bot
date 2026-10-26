@@ -20,17 +20,22 @@ export async function collectChain<M>(
 ): Promise<M[]> {
   const chain = [start];
   let current = start;
+
   while (chain.length < MAX_CHAIN) {
     let parent: M | null;
+
     try {
       parent = await parentOf(current);
     } catch {
       break;
     }
+
     if (parent === null) break;
+
     chain.unshift(parent);
     current = parent;
   }
+
   return chain;
 }
 
@@ -42,10 +47,13 @@ export async function collectChain<M>(
  */
 export function buildConversation(chain: ChainMessage[]): Turn[] {
   const turns: Turn[] = [];
+
   for (const turn of chain.map(toTurn)) {
     if (turn) append(turns, turn);
   }
+
   if (turns[0]?.role === "model") turns.unshift({ role: "user", text: "(earlier conversation)" });
+
   return turns;
 }
 
@@ -53,7 +61,9 @@ export function buildConversation(chain: ChainMessage[]): Turn[] {
 function toTurn(m: ChainMessage): Turn | null {
   const images = m.images ?? [];
   const text = stripMentions(m.text) || (images.length > 0 ? "(sent an image)" : "");
+
   if (!text) return null;
+
   return {
     role: m.fromBot ? "model" : "user",
     text: m.fromBot ? text : `${m.author}: ${text}`,
@@ -64,11 +74,15 @@ function toTurn(m: ChainMessage): Turn | null {
 /** Adds a turn, merging it into the last one when both are from the same side. */
 function append(turns: Turn[], turn: Turn): void {
   const last = turns.at(-1);
+
   if (last?.role !== turn.role) {
     turns.push(turn);
+
     return;
   }
+
   last.text += `\n${turn.text}`;
+
   if (turn.images) last.images = [...(last.images ?? []), ...turn.images];
 }
 
@@ -76,12 +90,15 @@ function append(turns: Turn[], turn: Turn): void {
 export function splitMessage(text: string, max = 2000): string[] {
   const chunks: string[] = [];
   let rest = text;
+
   while (rest.length > max) {
     const newline = rest.lastIndexOf("\n", max);
     const cut = newline > 0 ? newline : max;
     chunks.push(rest.slice(0, cut));
     rest = rest.slice(newline > 0 ? cut + 1 : cut);
   }
+
   if (rest) chunks.push(rest);
+
   return chunks;
 }

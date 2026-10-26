@@ -19,6 +19,7 @@ describe("fetchFeed", () => {
     let init: RequestInit | undefined;
     const text = await fetchFeed("https://93.184.216.34/rss", async (_url, i) => {
       init = i;
+
       return new Response("<rss/>");
     });
     expect(text).toBe("<rss/>");
@@ -82,6 +83,7 @@ describe("fetchFeed host safety", () => {
     ]) {
       expect(await failure(fetchFeed(url, ok, publicDns))).toBeInstanceOf(FeedError);
     }
+
     expect(await failure(fetchFeed("https://sneaky.example/rss", ok, lanDns))).toBeInstanceOf(
       FeedError,
     );

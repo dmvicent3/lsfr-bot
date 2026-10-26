@@ -65,5 +65,6 @@ export async function startBot(
   });
   onModuleEvents(client, modules, ctx);
   await client.login(config.discordToken);
+
   return client;
 }

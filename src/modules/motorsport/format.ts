@@ -7,13 +7,16 @@ const MAX_CONTENT = 2000;
  */
 export function formatTable(rows: string[][], right: ReadonlySet<number> = new Set()): string[] {
   const widths: number[] = [];
+
   for (const row of rows) {
     for (const [i, cell] of row.entries()) widths[i] = Math.max(widths[i] ?? 0, cell.length);
   }
+
   return rows.map((row) => {
     const cells = row.map((cell, i) =>
       right.has(i) ? cell.padStart(widths[i] ?? 0) : cell.padEnd(widths[i] ?? 0),
     );
+
     return `\`${cells.join(" ").trimEnd()}\``;
   });
 }
@@ -26,7 +29,9 @@ export function tableMessage(heading: string, lines: string[], spoiler = false):
   const wrap = spoiler ? "||" : "";
   const render = (shown: string[]): string => `${heading}\n${wrap}${shown.join("\n")}${wrap}`;
   let shown = lines;
+
   while (render(shown).length > MAX_CONTENT && shown.length > 0) shown = shown.slice(0, -1);
+
   return render(shown);
 }
 

@@ -22,6 +22,7 @@ async function fetchF1(
   fetchFn: FetchFn,
 ): Promise<Standings | null> {
   const path = champ === "drivers" ? "driverStandings" : "constructorStandings";
+
   return parseJolpicaStandings(champ, await getJson(`${JOLPICA}/${path}.json?limit=100`, fetchFn));
 }
 
@@ -32,19 +33,26 @@ async function fetchMotogp(
   fetchFn: FetchFn,
 ): Promise<Standings | null> {
   if (champ !== "drivers") return null;
+
   const api = `${MOTOGP_RESULTS}/v1/results`;
   const seasonId = motogpSeasonId(await getJson(`${api}/seasons`, fetchFn), now.getUTCFullYear());
+
   if (seasonId === null) return null;
+
   // Categories hang off an event; any finished race weekend of the season will do.
   const events = records(await getJson(`${api}/events?seasonUuid=${seasonId}`, fetchFn))
     .filter((e) => e["test"] !== true && isString(e["date_end"]) && e["date_end"] <= day(now))
     .toSorted((a, b) => asText(b["date_end"]).localeCompare(asText(a["date_end"])));
   const eventId = events[0]?.["id"];
+
   if (!isString(eventId)) return null;
+
   const categoryId = motogpCategoryId(
     await getJson(`${api}/categories?eventUuid=${eventId}`, fetchFn),
   );
+
   if (categoryId === null) return null;
+
   return parseMotogpStandings(
     await getJson(`${api}/standings?seasonUuid=${seasonId}&categoryUuid=${categoryId}`, fetchFn),
   );
@@ -66,5 +74,6 @@ export async function fetchStandings(
   fetchFn: FetchFn = fetch,
 ): Promise<Standings | null> {
   const fetcher = FETCHERS[series];
+
   return fetcher ? fetcher(champ, now, fetchFn) : null;
 }

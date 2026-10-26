@@ -10,7 +10,9 @@ export function find(
   sessionId: string,
 ): ParsedSession {
   const match = sessions.find((s) => s.eventId === eventId && s.sessionId === sessionId);
+
   if (!match) throw new Error(`no session ${eventId}/${sessionId}`);
+
   return match;
 }
 

@@ -15,6 +15,7 @@ const parentOf = async (m: Message): Promise<Message | null> =>
 /** A message's attachments; only people's: Gork's own messages carry none worth re-reading. */
 function refsOf(m: Message, botId: string): ImageRef[] {
   if (m.author.id === botId) return [];
+
   return [...m.attachments.values()].map((a) => ({
     url: a.url,
     size: a.size,
@@ -37,25 +38,33 @@ function promptOf(chain: Message[], botId: string, byUrl: Map<string, InlineImag
 /** Downloads the chosen images, asks Gemini, and replies in Discord-sized chunks. */
 async function answer(ctx: Ctx, { message, chain, botId }: Mention, { chosen, skipped }: Picked) {
   if ("sendTyping" in message.channel) await message.channel.sendTyping();
+
   const downloaded = await downloadImages(chosen, fetch);
   const byUrl = new Map(chosen.map((ref, i) => [ref.url, downloaded[i] ?? null]));
   const prompt = promptOf(chain, botId, byUrl);
+
   if (prompt.length === 0) return;
+
   const text = await generate(prompt, {
     apiKey: ctx.config.geminiApiKey,
     model: ctx.config.geminiModel,
     system: PERSONALITY,
   });
   const failed = downloaded.filter((image) => image === null).length;
+
   for (const chunk of splitMessage(text + imageNotes(skipped, failed))) await message.reply(chunk);
 }
 
 async function onMessage(ctx: Ctx, message: Message): Promise<void> {
   const me = ctx.client.user;
+
   if (message.author.bot || !me || !message.mentions.users.has(me.id)) return;
+
   const chain = await collectChain(message, parentOf);
   const picked = selectImages(chain.map((m) => refsOf(m, me.id)));
+
   if (picked.chosen.length === 0 && !chain.some((m) => stripMentions(m.content))) return;
+
   try {
     await answer(ctx, { message, chain, botId: me.id }, picked);
   } catch (err) {
@@ -74,6 +83,7 @@ export const chatModule: BotModule = {
       event: Events.MessageCreate,
       async handle(ctx, ...args) {
         const [message] = args;
+
         if (message instanceof Message) await onMessage(ctx, message);
       },
     },

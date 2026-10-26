@@ -11,6 +11,7 @@ export async function reply(i: ChatInputCommandInteraction, content: string): Pr
 /** Where news goes, for replies: "in #news" or how to set a channel. */
 export function channelHint({ repo, guildId }: CommandCtx): string {
   const channel = repo.servers.channel(guildId);
+
   return channel ? `in <#${channel}>` : "once a channel is set with `/rss channel`";
 }
 
@@ -20,6 +21,7 @@ export function autocompleteChoices(
   typed: string,
 ): { name: string; value: string }[] {
   const t = typed.toLowerCase();
+
   return items
     .filter((c) => c.name.toLowerCase().includes(t))
     .slice(0, 25)

@@ -87,11 +87,14 @@ describe("renderStandings", () => {
 /** Serves fixtures for the URL substrings given; everything else is a 404. */
 async function routes(map: Record<string, string>): Promise<FetchFn> {
   const bodies = new Map<string, string>();
+
   for (const [part, name] of Object.entries(map)) {
     bodies.set(part, JSON.stringify(await fixture(name)));
   }
+
   return async (url) => {
     for (const [part, body] of bodies) if (url.includes(part)) return new Response(body);
+
     return new Response("{}", { status: 404 });
   };
 }

@@ -10,9 +10,12 @@ const reason = (err: unknown): string => (err instanceof Error ? err.message : S
 /** Stores a feed's new items as pending; ones dated over a day ago are seen but never posted. */
 async function storeItems(server: Server, feed: Feed, d: CycleDeps): Promise<void> {
   const cutoff = expiryCutoff(d.now());
+
   for (const item of parseFeed(await d.fetchFeed(feed.url)).items) {
     const key = itemKey(item);
+
     if (!key) continue;
+
     const stale = item.publishedAt !== null && item.publishedAt < cutoff;
     const state = stale ? "expired" : "pending";
     d.repo.items.insert({
@@ -29,9 +32,11 @@ async function storeItems(server: Server, feed: Feed, d: CycleDeps): Promise<voi
 /** Records the fetch outcome; the 10th failure in a row is told to the channel. */
 async function record(server: Server, feed: Feed, failure: string | null, d: CycleDeps) {
   const next = feedResult(feed, failure === null);
+
   if (next.failures !== feed.failures || next.warned !== feed.warned) {
     d.repo.feeds.recordResult(feed.id, next.failures, next.warned);
   }
+
   if (next.warn)
     await d.say(server.channelId, `⚠️ Feed **${feed.name}** keeps failing: ${failure}`);
 }

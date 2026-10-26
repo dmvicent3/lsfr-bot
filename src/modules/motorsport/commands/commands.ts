@@ -16,7 +16,9 @@ const HANDLERS: Record<string, Handler> = {
 async function execute(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
   const name = i.options.getSubcommand();
   const handler = HANDLERS[name];
+
   if (!handler) throw new Error(`Unknown subcommand ${name}`);
+
   await handler({ i, ctx, repo: new MotorsportRepo(ctx.db) });
 }
 

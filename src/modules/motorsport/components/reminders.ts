@@ -25,6 +25,7 @@ const pings: ComponentHandler = {
 
 function eventOf(repo: MotorsportRepo, series: SeriesKey, eventId: string): EventSchedule | null {
   const event = groupEvents(repo.sessions.list(series)).find((e) => e.eventId === eventId);
+
   return event ? withoutPinged(event, repo.pings.sentKeys(series)) : null;
 }
 
@@ -35,13 +36,16 @@ const remindMenu: ComponentHandler = {
     const series = toSeriesKey(args[0] ?? "");
     const repo = new MotorsportRepo(ctx.db);
     const event = eventOf(repo, series, args[1] ?? "");
+
     if (!repo.followed.get(series) || !event) {
       await i.reply({
         content: "That event isn't on the schedule any more.",
         flags: MessageFlags.Ephemeral,
       });
+
       return;
     }
+
     const selected = new Set(repo.reminders.ofUser(i.user.id, series, event.eventId));
     const picker = renderReminderPicker(seriesInfo(series), event, selected, Date.now());
     await i.reply({ ...picker, flags: MessageFlags.Ephemeral });
@@ -53,6 +57,7 @@ const reminders: ComponentHandler = {
   id: "motorsport:reminders",
   async handle(i, args, ctx) {
     if (!i.isStringSelectMenu()) return;
+
     const series = toSeriesKey(args[0] ?? "");
     const eventId = args[1] ?? "";
     const repo = new MotorsportRepo(ctx.db);

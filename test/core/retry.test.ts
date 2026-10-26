@@ -6,7 +6,9 @@ test("retries until success", async () => {
   const result = await retry(
     async () => {
       calls++;
+
       if (calls < 3) throw new Error("flaky");
+
       return "ok";
     },
     { attempts: 3, delayMs: 0 },

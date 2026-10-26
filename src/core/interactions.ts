@@ -20,13 +20,18 @@ async function replyStale(
 async function dispatch(interaction: Interaction, router: Router, ctx: Ctx): Promise<void> {
   if (interaction.isChatInputCommand()) {
     const command = router.command(interaction.commandName);
+
     return command ? command.execute(interaction, ctx) : replyStale(interaction, "command");
   }
+
   if (interaction.isAutocomplete()) {
     return router.command(interaction.commandName)?.autocomplete?.(interaction, ctx);
   }
+
   if (!interaction.isMessageComponent()) return;
+
   const route = router.component(interaction.customId);
+
   return route
     ? route.handler.handle(interaction, route.args, ctx)
     : replyStale(interaction, "button");
@@ -35,7 +40,9 @@ async function dispatch(interaction: Interaction, router: Router, ctx: Ctx): Pro
 /** Tells the user a handler failed, as a reply or, once one was sent, a follow-up. */
 async function reportFailure(interaction: Interaction, err: unknown): Promise<void> {
   log.error("core:interaction", "handler failed", err);
+
   if (!interaction.isRepliable()) return;
+
   const message = err instanceof Error ? err.message : String(err);
   const reply = {
     content: `Something went wrong: ${message}`,

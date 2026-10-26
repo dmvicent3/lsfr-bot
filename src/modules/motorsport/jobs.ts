@@ -29,10 +29,13 @@ const refresh: Job = {
     );
     await refreshWeather(repo, now);
     const guild = await guildOf(ctx);
+
     for (const f of repo.followed.list()) {
       await safely(`motorsport:refresh:${f.series}`, async () => {
         const channel = await fetchSeriesChannel(guild, f);
+
         if (!channel) return;
+
         await updatePinned(channel, repo, f, now.getTime());
         await ensureThreadPermissions(channel);
       });
@@ -46,9 +49,12 @@ const tick: Job = {
   async run(ctx) {
     const repo = new MotorsportRepo(ctx.db);
     const followed = repo.followed.list();
+
     if (followed.length === 0) return;
+
     const guild = await guildOf(ctx);
     const leadMs = getLeadMinutes(ctx.db) * 60_000;
+
     for (const f of followed) {
       await safely(`motorsport:tick:${f.series}`, () =>
         tickSeries({ guild, repo, followed: f, leadMs, now: Date.now() }),

@@ -35,7 +35,9 @@ describe("applyRules", () => {
     const ids = pingable(monte, "2026-wrc-rallye-monte-carlo-2026");
     expect(ids).toContain("ss1");
     expect(ids).toContain("ss4");
+
     for (const id of ["shakedown", "start", "ss2"]) expect(ids).not.toContain(id);
+
     const stageDays = new Set(
       monte
         .filter((s) => /^s?ss\d+$/.test(s.sessionId))

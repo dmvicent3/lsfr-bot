@@ -19,11 +19,14 @@ export function isSeriesKey(s: string): s is SeriesKey {
 /** A series key from storage, a command option or a button id; anything else is a bug. */
 export function toSeriesKey(value: string): SeriesKey {
   if (!isSeriesKey(value)) throw new Error(`Unknown series ${value}`);
+
   return value;
 }
 
 export function seriesInfo(key: SeriesKey): SeriesInfo {
   const info = SERIES.find((s) => s.key === key);
+
   if (!info) throw new Error(`Unknown series ${key}`);
+
   return info;
 }

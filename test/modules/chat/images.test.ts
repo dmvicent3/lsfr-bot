@@ -37,6 +37,7 @@ describe("selectImages", () => {
 const someGone: FetchFn = async (url) =>
   url === "ok" ? new Response("ABC") : new Response("", { status: 404 });
 const oversized: FetchFn = async () => new Response(new Uint8Array(MAX_IMAGE_BYTES + 1));
+
 const offline: FetchFn = async () => {
   throw new Error("reset");
 };

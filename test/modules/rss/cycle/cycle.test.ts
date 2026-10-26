@@ -19,6 +19,7 @@ function rss(...titles: string[]): string {
   const items = titles
     .map((t) => `<item><title>${t}</title><link>https://n.example/${t}</link></item>`)
     .join("");
+
   return `<rss><channel><title>Feed</title>${items}</channel></rss>`;
 }
 
@@ -35,7 +36,9 @@ let now: number;
 const jev: Jev = {
   async yesNo(state, questions) {
     jevCalls++;
+
     if (jevMode === "fail") throw new JevError("down");
+
     return new Map(questions.map((q) => [q.key, pYes(state)]));
   },
 };
@@ -46,12 +49,16 @@ function deps(): CycleDeps {
     jev,
     fetchFeed: async (url) => {
       const body = feeds.get(url);
+
       if (body instanceof Error) throw body;
+
       if (body === undefined) throw new FeedError("HTTP 404");
+
       return body;
     },
     post: async (_channel, embed: APIEmbed) => {
       if (postResult === "ok") posted.push(embed.title ?? "");
+
       return postResult;
     },
     say: async (_channel, text) => {
@@ -171,7 +178,9 @@ describe("runCycle", () => {
     repo.feeds.add("g1", "https://a/rss", "A");
     feeds.set("https://bad/rss", new FeedError("HTTP 500"));
     feeds.set("https://a/rss", rss("one"));
+
     for (let n = 0; n < 11; n++) await cycle();
+
     expect(said).toEqual(["⚠️ Feed **Bad** keeps failing: HTTP 500"]);
     expect(posted).toEqual(["one"]);
   });

@@ -7,6 +7,7 @@ export function openDatabase(path: string): Database {
   mkdirSync(dirname(path), { recursive: true });
   const db = new Database(path, { create: true, strict: true });
   db.run("PRAGMA journal_mode = WAL");
+
   return db;
 }
 
@@ -20,8 +21,10 @@ export function runMigrations(db: Database, migrations: Migration[]): void {
       .all()
       .map((row) => row.id),
   );
+
   for (const migration of migrations) {
     if (applied.has(migration.id)) continue;
+
     db.transaction(() => {
       db.run(migration.sql);
       db.run("INSERT INTO migrations (id, applied_at) VALUES (?, ?)", [migration.id, Date.now()]);

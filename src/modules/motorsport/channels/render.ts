@@ -17,6 +17,7 @@ function sessionLine(s: Session, weather: WeatherMap, predictions: PredictionCou
   ]
     .map((part) => ` · ${part}`)
     .join("");
+
   return `${s.pingable ? "🔔" : "▫️"} **${s.title}** · ${timestamp(s.start, "d")} ${timestamp(s.start, "t")} (${timestamp(s.start, "R")})${suffix}`;
 }
 
@@ -33,10 +34,13 @@ function scheduleText(
   const line = (s: Session): string => sessionLine(s, weather, predictions);
   const header = `## 🏁 ${info.name} — ${event.eventName}`;
   const full = [header, ...event.sessions.map(line)].join("\n");
+
   if (full.length <= MAX_CONTENT) return full;
+
   const pinged = event.sessions.filter((s) => s.pingable);
   const hidden = event.sessions.length - pinged.length;
   const short = [header, ...pinged.map(line), `▫️ …and ${hidden} other sessions`];
+
   return short.join("\n").slice(0, MAX_CONTENT);
 }
 
@@ -53,13 +57,17 @@ function scheduleButtons(
   event: EventSchedule | null,
 ): APIButtonComponentWithCustomId[] {
   const buttons = [button(`motorsport:pings:${info.key}`, "🔔 Season pings")];
+
   if (!event) return buttons;
+
   if (event.sessions.some((s) => s.pingable)) {
     buttons.push(button(`motorsport:remindmenu:${info.key}:${event.eventId}`, "⏰ Remind me…"));
   }
+
   if (event.sessions.some((s) => isPredictable(info.key, s.sessionId))) {
     buttons.push(button(`motorsport:predictmenu:${info.key}:${event.eventId}`, "🔮 Predict"));
   }
+
   return buttons;
 }
 
@@ -75,5 +83,6 @@ export function renderSchedule(
   const content = event
     ? scheduleText(info, event, weather, predictions)
     : `## 🏁 ${info.name}\nNo upcoming events this season.`;
+
   return { content, components };
 }

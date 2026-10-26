@@ -22,8 +22,10 @@ export class RssRepo {
   unfollow(guildId: string, feedId: number): boolean {
     return this.db.transaction(() => {
       if (!this.feeds.remove(guildId, feedId)) return false;
+
       this.items.dropWaiting(guildId, feedId);
       this.rules.dropFeed(feedId);
+
       return true;
     })();
   }

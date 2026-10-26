@@ -13,6 +13,7 @@ function cut(text: string, max: number): string {
 export function renderItem(item: FeedItem, feedName: string): APIEmbed {
   const url = httpUrl(item.link);
   const image = httpUrl(item.image);
+
   return {
     title: cut(item.title || "(untitled)", MAX_TITLE),
     ...(url ? { url } : {}),

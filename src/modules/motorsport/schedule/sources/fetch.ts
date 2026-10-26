@@ -17,9 +17,13 @@ export async function fetchSeries(
 ): Promise<ParsedSession[]> {
   const url = sourceUrl(info, year);
   const res = await fetchFn(url, { signal: AbortSignal.timeout(30_000) });
+
   if (res.status === 404) return [];
+
   if (!res.ok) throw new Error(`${url} returned ${res.status}`);
+
   const json: unknown = await res.json();
+
   return info.source === "tunous"
     ? parseTunous(info.key, year, json)
     : parseSportstimes(info.key, year, json);
@@ -32,7 +36,10 @@ export async function getJson(
   notYet: readonly number[] = [404],
 ): Promise<unknown> {
   const res = await fetchFn(url, { signal: AbortSignal.timeout(30_000) });
+
   if (notYet.includes(res.status)) return null;
+
   if (!res.ok) throw new Error(`${url} returned ${res.status}`);
+
   return res.json();
 }

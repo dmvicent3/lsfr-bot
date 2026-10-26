@@ -5,6 +5,7 @@ import { guardProcess } from "../../src/core/process.ts";
 function fakeProcess() {
   const emitter = new EventEmitter();
   const exits: number[] = [];
+
   return Object.assign(emitter, { exits, exit: (code: number) => void exits.push(code) });
 }
 

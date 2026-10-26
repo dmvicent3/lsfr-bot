@@ -18,10 +18,13 @@ export async function togglePings(
   series: SeriesKey,
 ): Promise<string> {
   const followed = repo.followed.get(series);
+
   if (!followed) return notFollowedText(series);
+
   const member = await guild.members.fetch(userId);
   const has = member.roles.cache.has(followed.roleId);
   await (has ? member.roles.remove(followed.roleId) : member.roles.add(followed.roleId));
+
   return `Season pings for ${seriesInfo(series).name}: ${has ? "off" : "on"}`;
 }
 
@@ -32,17 +35,22 @@ export function toggleReminder(
   { series, eventId, sessionId }: ReminderRef,
 ): string {
   if (!repo.followed.get(series)) return notFollowedText(series);
+
   const session = repo.sessions
     .list(series)
     .find(
       (s) =>
         s.eventId === eventId && s.sessionId === sessionId && s.pingable && s.start.getTime() > now,
     );
+
   if (!session) return `That session isn't in the next ${seriesInfo(series).name} event.`;
+
   if (repo.pings.sentKeys(series).has(`${session.eventId}/${session.sessionId}`)) {
     return `${session.eventName} ${session.title} has already been pinged.`;
   }
+
   const set = repo.reminders.toggle(userId, series, session.eventId, session.sessionId);
+
   return `Reminder ${set ? "set" : "removed"} for ${session.eventName} ${session.title}.`;
 }
 
@@ -57,6 +65,7 @@ export function setReminders(
   sessionIds: string[],
 ): string {
   if (!repo.followed.get(series)) return notFollowedText(series);
+
   const eventSessions = repo.sessions.list(series).filter((s) => s.eventId === eventId);
   const eventName = eventSessions[0]?.eventName ?? eventId;
   const wanted = new Set(sessionIds);
@@ -70,6 +79,8 @@ export function setReminders(
   );
   const ids = chosen.map((s) => s.sessionId);
   repo.reminders.set(userId, series, eventId, ids);
+
   if (chosen.length === 0) return `No reminders for ${eventName}.`;
+
   return `Reminders for ${eventName}: ${chosen.map((s) => s.title).join(", ")}.`;
 }

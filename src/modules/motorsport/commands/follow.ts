@@ -19,9 +19,13 @@ async function follow({ i, ctx, repo }: CommandCtx): Promise<void> {
   const series = seriesOption(i);
   const { name } = seriesInfo(series);
   const existing = repo.followed.get(series);
+
   if (existing) return reply(i, `${name} is already followed in <#${existing.channelId}>.`);
+
   if (following.has(series)) return reply(i, `${name} is already being set up.`);
+
   following.add(series);
+
   try {
     await i.deferReply({ flags: MessageFlags.Ephemeral });
     const channelId = await setUpSeries(repo, await guildOf(ctx), series);
@@ -41,6 +45,7 @@ async function follow({ i, ctx, repo }: CommandCtx): Promise<void> {
 async function setUpSeries(repo: MotorsportRepo, guild: Guild, series: SeriesKey): Promise<string> {
   const info = seriesInfo(series);
   const { channel, role } = await createSeriesChannel(guild, info);
+
   try {
     const event = currentEvent(repo.sessions.list(series), Date.now());
     const message = await channel.send(renderSchedule(info, event, repo.weather.bySession(series)));
@@ -54,6 +59,7 @@ async function setUpSeries(repo: MotorsportRepo, guild: Guild, series: SeriesKey
       channelName: null,
       renamedAt: null,
     });
+
     return channel.id;
   } catch (err) {
     await Promise.allSettled([channel.delete(), role.delete()]);
@@ -65,7 +71,9 @@ async function setUpSeries(repo: MotorsportRepo, guild: Guild, series: SeriesKey
 async function unfollow({ i, repo }: CommandCtx): Promise<void> {
   const series = seriesOption(i);
   const followed = repo.followed.get(series);
+
   if (!followed) return reply(i, notFollowedText(series));
+
   const { name } = seriesInfo(series);
   const button = {
     type: ComponentType.Button as const,

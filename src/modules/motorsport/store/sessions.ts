@@ -15,6 +15,7 @@ export class SessionStore {
     );
     this.db.transaction(() => {
       this.db.run("DELETE FROM motorsport_sessions WHERE series = ?", [s]);
+
       for (const x of sessions) {
         insert.run(
           s,

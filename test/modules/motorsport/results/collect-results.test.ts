@@ -33,10 +33,14 @@ async function openf1(published: boolean): Promise<FetchFn> {
   const sessions = JSON.stringify(await fixture("openf1-sessions"));
   const drivers = JSON.stringify(await fixture("openf1-drivers"));
   const result = JSON.stringify(await fixture("openf1-result-race"));
+
   return async (url) => {
     if (url.includes("/sessions?")) return new Response(sessions);
+
     if (url.includes("/drivers?")) return new Response(drivers);
+
     if (url.includes("/session_result?") && published) return new Response(result);
+
     return new Response("{}", { status: 404 });
   };
 }

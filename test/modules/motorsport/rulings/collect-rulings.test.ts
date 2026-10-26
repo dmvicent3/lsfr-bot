@@ -74,13 +74,18 @@ async function deps(overrides: Partial<RulingDeps> = {}): Promise<RulingDeps> {
       "fia-ruling-nfa.txt",
     ],
   ]);
+
   const fetchFn: FetchFn = async (url) => {
     fetched.push(url);
+
     if (url === FIA_DOCUMENTS) return new Response(page);
+
     const name = texts.get(url);
+
     // Every other ruling: a document we can't read as a ruling.
     return new Response(name ? await textFixture(name) : "Some other document");
   };
+
   return {
     fetchFn,
     pdfText: async (bytes) => new TextDecoder().decode(bytes),

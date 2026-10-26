@@ -22,8 +22,10 @@ export async function collectResults(
   post: Post,
 ): Promise<void> {
   const deps = { repo, now, fetchFn, post };
+
   for (const series of resultSeries()) {
     const sessions = repo.sessions.list(series);
+
     for (const session of resultsDue(sessions, repo.results.keys(series), now)) {
       await collectOne(deps, session, raceOf(sessions, session));
     }
@@ -43,9 +45,13 @@ async function postResult(deps: CollectDeps, session: Session, race: Session): P
   const { repo, now, fetchFn, post } = deps;
   const { series, eventId, eventName, sessionId } = session;
   const kind = resultKind(series, sessionId);
+
   if (kind === null) return;
+
   const result = await fetchResult(session, race, fetchFn);
+
   if (result === null) return;
+
   const heading = { info: seriesInfo(series), eventName, kind };
   await post(
     { series, eventId, eventName, place: "thread" },
@@ -70,7 +76,9 @@ async function postPredictions(
   result: SessionResult,
 ): Promise<void> {
   const predictions = repo.predictions.complete(series, eventId, sessionId);
+
   if (predictions.length === 0) return;
+
   await post(
     { series, eventId, eventName, place: "channel" },
     { content: renderPredictionResults(predictions, result.rows) },
@@ -101,13 +109,17 @@ export async function latestResult(
     .filter((s) => resultKind(series, s.sessionId) !== null && s.end.getTime() <= now)
     .toSorted((a, b) => b.end.getTime() - a.end.getTime())
     .slice(0, LOOKBACK);
+
   for (const session of finished) {
     if (stored?.eventId === session.eventId && stored.sessionId === session.sessionId) {
       return stored;
     }
+
     const kind = resultKind(series, session.sessionId);
     const result = kind && (await fetchResult(session, raceOf(sessions, session), fetchFn));
+
     if (kind && result) return { eventName: session.eventName, kind, rows: result.rows };
   }
+
   return stored;
 }

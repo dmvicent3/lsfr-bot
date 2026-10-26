@@ -22,6 +22,7 @@ describe("weatherEmoji", () => {
     [73, "🌨️"],
     [95, "⛈️"],
   ];
+
   for (const [code, emoji] of cases)
     test(`${code} → ${emoji}`, () => expect(weatherEmoji(code)).toBe(emoji));
 });

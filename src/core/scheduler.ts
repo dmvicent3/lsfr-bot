@@ -12,9 +12,12 @@ export async function safely(scope: string, fn: () => Promise<void>): Promise<vo
 /** Wraps fn so a call made while the previous call is still running is skipped. */
 export function nonOverlapping(fn: () => Promise<void>): () => Promise<void> {
   let running = false;
+
   return async () => {
     if (running) return;
+
     running = true;
+
     try {
       await fn();
     } finally {
@@ -28,7 +31,9 @@ export function startJobs(entries: { module: string; job: Job }[], ctx: Ctx): vo
     const scope = `${module}:${job.name}`;
     const run = nonOverlapping(() => safely(scope, () => job.run(ctx)));
     Bun.cron(job.cron, run);
+
     if (job.runOnStart) void run();
+
     log.info(scope, `scheduled (${job.cron})`);
   }
 }
@@ -39,10 +44,12 @@ export function startJobs(entries: { module: string; job: Job }[], ctx: Ctx): vo
  */
 export function keyedLock(): <T>(key: string, fn: () => Promise<T>) => Promise<T> {
   const tails = new Map<string, Promise<unknown>>();
+
   return async (key, fn) => {
     const previous = tails.get(key) ?? Promise.resolve();
     const run = previous.catch(() => undefined).then(fn);
     tails.set(key, run);
+
     try {
       return await run;
     } finally {

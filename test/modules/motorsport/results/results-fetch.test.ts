@@ -20,15 +20,21 @@ function session(series: Session["series"], sessionId: string, start: string): S
 /** Serves fixtures for the URL substrings given; everything else is a 404. */
 async function fakeFetch(routes: Record<string, string>): Promise<FetchFn & { urls: string[] }> {
   const bodies = new Map<string, string>();
+
   for (const [part, name] of Object.entries(routes)) {
     bodies.set(part, JSON.stringify(await fixture(name)));
   }
+
   const urls: string[] = [];
+
   const fn = async (url: string): Promise<Response> => {
     urls.push(url);
+
     for (const [part, body] of bodies) if (url.includes(part)) return new Response(body);
+
     return new Response('{"detail":"No results found."}', { status: 404 });
   };
+
   return Object.assign(fn, { urls });
 }
 

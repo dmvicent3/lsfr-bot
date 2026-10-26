@@ -9,6 +9,7 @@ export class WeatherStore {
   replace(s: SeriesKey, rows: WeatherRow[], fetchedAt: number): void {
     this.db.transaction(() => {
       this.db.run("DELETE FROM motorsport_weather WHERE series = ?", [s]);
+
       for (const { eventId, sessionId, forecast } of rows) {
         this.db.run(
           `INSERT OR REPLACE INTO motorsport_weather
@@ -30,6 +31,7 @@ export class WeatherStore {
         "SELECT event_id, session_id, temp_c, rain_chance, code FROM motorsport_weather WHERE series = ?",
       )
       .all(s);
+
     return new Map(
       rows.map((r) => [
         `${r.event_id}/${r.session_id}`,

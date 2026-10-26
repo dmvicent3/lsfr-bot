@@ -10,7 +10,9 @@ export function expiryCutoff(now: number): number {
 /** The notice to post, given whether jev was down at the last notice. */
 export function notice(wasDown: boolean, outcome: JevOutcome): "down" | "back" | null {
   if (outcome === "failed" && !wasDown) return "down";
+
   if (outcome === "ok" && wasDown) return "back";
+
   return null;
 }
 
@@ -20,7 +22,9 @@ export function feedResult(
   ok: boolean,
 ): { failures: number; warned: boolean; warn: boolean } {
   if (ok) return { failures: 0, warned: false, warn: false };
+
   const failures = prev.failures + 1;
   const warn = failures >= WARN_AT && !prev.warned;
+
   return { failures, warned: prev.warned || warn, warn };
 }

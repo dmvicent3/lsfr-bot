@@ -43,6 +43,7 @@ export async function ensureCategory(guild: Guild): Promise<CategoryChannel> {
   const existing = channels.find(
     (c): c is CategoryChannel => c?.type === ChannelType.GuildCategory && c.name === CATEGORY_NAME,
   );
+
   return (
     existing ?? guild.channels.create({ name: CATEGORY_NAME, type: ChannelType.GuildCategory })
   );
@@ -76,6 +77,7 @@ export async function createSeriesChannel(
       await role.delete().catch(() => undefined);
       throw err;
     });
+
   return { channel, role };
 }
 
@@ -85,6 +87,7 @@ export async function deleteSeriesChannel(guild: Guild, f: Followed): Promise<vo
   } catch (err) {
     if (!isDiscordError(err, RESTJSONErrorCodes.UnknownChannel)) throw err;
   }
+
   try {
     await guild.roles.delete(f.roleId, "Series unfollowed");
   } catch (err) {
@@ -100,6 +103,7 @@ const permissionsUpdated = new Set<string>();
  */
 export async function ensureThreadPermissions(channel: SeriesChannel): Promise<void> {
   if (permissionsUpdated.has(channel.id)) return;
+
   const me = await channel.guild.members.fetchMe();
   await channel.permissionOverwrites.edit(channel.guild.roles.everyone, {
     SendMessagesInThreads: true,

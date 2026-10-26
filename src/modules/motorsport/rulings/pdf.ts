@@ -9,6 +9,7 @@ import { join } from "node:path";
 export async function pdfText(pdf: Uint8Array): Promise<string> {
   const path = join(tmpdir(), `gork-${crypto.randomUUID()}.pdf`);
   await Bun.write(path, pdf);
+
   try {
     const proc = Bun.spawn(["pdftotext", "-enc", "UTF-8", "-layout", path, "-"], {
       stdout: "pipe",
@@ -19,7 +20,9 @@ export async function pdfText(pdf: Uint8Array): Promise<string> {
       new Response(proc.stderr).text(),
       proc.exited,
     ]);
+
     if (code !== 0) throw new Error(`pdftotext exited with ${code}: ${errors.trim()}`);
+
     return text;
   } finally {
     await rm(path, { force: true });

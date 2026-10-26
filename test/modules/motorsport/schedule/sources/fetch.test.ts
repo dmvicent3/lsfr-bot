@@ -7,6 +7,7 @@ import { fixture } from "../../testing/fixtures.ts";
 function respond(status: number, body: unknown, urls: string[] = []): FetchFn {
   return async (url) => {
     urls.push(url);
+
     return new Response(JSON.stringify(body), { status });
   };
 }
@@ -42,6 +43,7 @@ test("requests time out", async () => {
   let signal: AbortSignal | null | undefined;
   await fetchSeries(seriesInfo("f2"), 2027, async (_url, init) => {
     signal = init?.signal;
+
     return new Response("", { status: 404 });
   });
   expect(signal).toBeInstanceOf(AbortSignal);

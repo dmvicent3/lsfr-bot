@@ -9,6 +9,7 @@ import { autocompleteChoices } from "../../../../src/modules/rss/commands/kit.ts
 
 function subOptions(name: string): Record<string, unknown>[] {
   const sub = rssCommand.data.options?.find((o) => o.name === name);
+
   return sub && "options" in sub && Array.isArray(sub.options)
     ? sub.options.map((o): Record<string, unknown> => ({ ...o }))
     : [];

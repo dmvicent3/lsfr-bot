@@ -11,7 +11,9 @@ const keepSeriesChannelsClean: EventHandler = {
   async handle(ctx, ...args) {
     const [message] = args;
     const botId = ctx.client.user?.id;
+
     if (!(message instanceof Message) || !botId) return;
+
     const seriesChannelIds = new Set(
       new MotorsportRepo(ctx.db).followed.list().map((f) => f.channelId),
     );
@@ -21,10 +23,14 @@ const keepSeriesChannelsClean: EventHandler = {
       botId,
       system: message.system,
     };
+
     if (!shouldDeleteMessage(candidate, seriesChannelIds)) return;
+
     await deleteQuietly(message);
+
     // Pin notices just vanish; people get roasted.
     if (message.system || !message.channel.isSendable()) return;
+
     const roast = await message.channel.send({
       content: pickRoast(`<@${message.author.id}>`),
       allowedMentions: { users: [message.author.id] },

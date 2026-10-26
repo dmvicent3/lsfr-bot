@@ -24,6 +24,7 @@ export async function updatePinned(
   await pinnedLock(f.series, async () => {
     // Re-read: another run may have re-posted (and re-pointed) the message meanwhile.
     const current = repo.followed.get(f.series);
+
     if (current) await renderPinned(channel, repo, current, now);
   });
 }
@@ -42,14 +43,17 @@ async function renderPinned(
     event ? repo.predictions.counts(f.series, event.eventId) : new Map(),
   );
   let message: Message;
+
   try {
     message = await channel.messages.fetch(f.pinnedMessageId);
     await message.edit(payload);
   } catch (err) {
     if (!isDiscordError(err, RESTJSONErrorCodes.UnknownMessage)) throw err;
+
     message = await channel.send(payload);
     await message.pin();
   }
+
   repo.followed.update(f.series, {
     pinnedMessageId: message.id,
     pinnedEventId: event?.eventId ?? null,

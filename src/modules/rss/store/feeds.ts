@@ -21,7 +21,9 @@ export class FeedStore {
         "INSERT INTO rss_feeds (guild_id, url, name) VALUES (?, ?, ?) RETURNING *",
       )
       .get(guildId, url, name);
+
     if (!row) throw new Error("feed insert returned nothing");
+
     return toFeed(row);
   }
 

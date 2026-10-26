@@ -5,26 +5,62 @@
     "correctness": "error",
     "suspicious": "error"
   },
-  "env": { "es2024": true },
+  "env": {
+    "es2024": true
+  },
   "rules": {
-    "max-lines": ["error", { "max": 100, "skipBlankLines": true, "skipComments": true }],
+    "max-lines": [
+      "error",
+      {
+        "max": 100,
+        "skipBlankLines": true,
+        "skipComments": true
+      }
+    ],
     "max-lines-per-function": [
       "error",
-      { "max": 30, "skipBlankLines": true, "skipComments": true }
+      {
+        "max": 30,
+        "skipBlankLines": true,
+        "skipComments": true
+      }
     ],
     "max-depth": ["error", 3],
     "max-params": ["error", 4],
     "complexity": ["error", 10],
-    "no-else-return": ["error", { "allowElseIf": false }],
+    "no-else-return": [
+      "error",
+      {
+        "allowElseIf": false
+      }
+    ],
     "no-lonely-if": "error",
     "no-nested-ternary": "error",
-    "typescript/no-explicit-any": "error"
+    "typescript/no-explicit-any": "error",
+    "@stylistic/padding-line-between-statements": [
+      "error",
+      {
+        "blankLine": "always",
+        "prev": "*",
+        "next": ["block-like", "if", "for", "while", "do", "switch", "try", "return"]
+      },
+      {
+        "blankLine": "always",
+        "prev": ["block-like", "if", "for", "while", "do", "switch", "try"],
+        "next": "*"
+      }
+    ]
   },
   "overrides": [
     {
       "files": ["test/**"],
-      "rules": { "max-lines": "off", "max-lines-per-function": "off", "complexity": "off" }
+      "rules": {
+        "max-lines": "off",
+        "max-lines-per-function": "off",
+        "complexity": "off"
+      }
     }
   ],
-  "ignorePatterns": ["docs/**", ".superpowers/**"]
+  "ignorePatterns": ["docs/**", ".superpowers/**"],
+  "jsPlugins": ["@stylistic/eslint-plugin"]
 }

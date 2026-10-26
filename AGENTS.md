@@ -4,7 +4,7 @@ Private Discord bot for one server: motorsport schedules (countdown channels, ro
 
 ## Done means green
 
-`bun run check` (format, lint, typecheck, tests) passes. Run `bun run fmt` to fix formatting. Bun strips types without checking them, so `tsc` in `check` is the only type gate.
+`bun run check` (format, lint, typecheck, tests) passes. Run `bun run fmt` to fix formatting (it applies lint autofixes first, such as the blank lines around blocks). Bun strips types without checking them, so `tsc` in `check` is the only type gate.
 
 ## Modules
 

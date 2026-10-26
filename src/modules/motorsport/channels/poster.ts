@@ -9,9 +9,13 @@ import type { Post } from "../types.ts";
 export function poster(ctx: Ctx, repo: MotorsportRepo): Post {
   return async (target, message) => {
     const f = repo.followed.get(target.series);
+
     if (!f) return;
+
     const channel = await fetchSeriesChannel(await guildOf(ctx), f);
+
     if (!channel) return;
+
     const destination =
       target.place === "thread" ? await eventThread(channel, repo, target) : channel;
     await destination.send({

@@ -22,7 +22,9 @@ const down: FetchFn = async () => {
 
 function completion(pYes: number | null): unknown {
   const top = [{ token: "0", prob: 1 - (pYes ?? 0) }];
+
   if (pYes !== null) top.unshift({ token: "1", prob: pYes });
+
   return { content: "1", completion_probabilities: [{ token: "1", top_probs: top }] };
 }
 
@@ -32,6 +34,7 @@ function reply(status: number, body: unknown): FetchFn {
 
 function bodyOf(init: RequestInit | undefined): Record<string, unknown> {
   const body: unknown = typeof init?.body === "string" ? JSON.parse(init.body) : null;
+
   return isRecord(body) ? body : {};
 }
 
@@ -41,6 +44,7 @@ describe("postYesNo", () => {
     const answers = await postYesNo("http://jev:8017", "Title\n\nBody", Q, async (url, init) => {
       calls.push({ url, body: bodyOf(init) });
       expect(init?.signal).toBeInstanceOf(AbortSignal);
+
       return new Response(JSON.stringify(completion(calls.length === 1 ? 0.93 : 0.1)));
     });
     expect(calls.map((c) => c.url)).toEqual([
@@ -79,6 +83,7 @@ describe("postYesNo", () => {
     await postYesNo("http://jev", "x".repeat(2000), [Q[0]!], async (_u, init) => {
       const p = bodyOf(init)["prompt"];
       prompt = typeof p === "string" ? p : "";
+
       return new Response(JSON.stringify(completion(0.5)));
     });
     expect(prompt).toContain(`\n${"x".repeat(1500)}\n</evidence>`);
@@ -116,6 +121,7 @@ function clock() {
       c.t += ms;
     },
   };
+
   return c;
 }
 
@@ -137,6 +143,7 @@ describe("createJev", () => {
         order.push(String(bodyOf(init)["prompt"]).split("\n")[1] ?? "");
         await Bun.sleep(1);
         inFlight--;
+
         return new Response(JSON.stringify(completion(0.5)));
       },
     });
@@ -168,10 +175,12 @@ describe("createJev", () => {
       sleep: c.sleep,
       fetchFn: async () => {
         calls++;
+
         return new Response("{}", { status: 503 });
       },
     });
     const pauses = [60, 120, 240, 480, 900, 900].map((m) => m * 1000);
+
     for (const pause of pauses) {
       const before = calls;
       expect(await failure(jev.yesNo("s", ONE))).toBeInstanceOf(JevError);

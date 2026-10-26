@@ -12,12 +12,16 @@ export const MAX_CLASSIFY = 30;
 /** Checks one item against its feed's rules; true when jev was asked. */
 async function judge(item: StoredItem, serverRules: Rule[], d: CycleDeps): Promise<boolean> {
   const rules = rulesFor(serverRules, item.feedId);
+
   if (rules.length === 0) {
     d.repo.items.setState(item.id, "passed");
+
     return false;
   }
+
   const answers = await d.jev.yesNo(articleState(item), buildQuestions(rules));
   d.repo.items.setState(item.id, verdict(answers, rules).kind === "pass" ? "passed" : "blocked");
+
   return true;
 }
 
@@ -25,13 +29,16 @@ async function judge(item: StoredItem, serverRules: Rule[], d: CycleDeps): Promi
 export async function classify(server: Server, d: CycleDeps): Promise<JevOutcome> {
   const rules = d.repo.rules.list(server.guildId);
   let outcome: JevOutcome = "unused";
+
   try {
     for (const item of d.repo.items.inState(server.guildId, "pending", MAX_CLASSIFY)) {
       if (await judge(item, rules, d)) outcome = "ok";
     }
   } catch (err) {
     if (!(err instanceof JevError)) throw err;
+
     return "failed";
   }
+
   return outcome;
 }

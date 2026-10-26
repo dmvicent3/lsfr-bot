@@ -14,6 +14,7 @@ function tryAdd({ i, guildId, repo }: CommandCtx, kind: RuleKind): Rule | string
     return addRule(repo, guildId, i.options.getString("rule", true), kind);
   } catch (err) {
     if (err instanceof RuleError) return `Couldn't add that rule: ${err.message}.`;
+
     throw err;
   }
 }
@@ -23,7 +24,9 @@ const adding =
   (kind: RuleKind): Handler =>
   async (c) => {
     const rule = tryAdd(c, kind);
+
     if (typeof rule === "string") return reply(c.i, rule);
+
     const msg = ruleMessage(rule, c.repo.feeds.list(c.guildId));
     await c.i.reply({ ...msg, content: `New rule. ${msg.content}`, flags: MessageFlags.Ephemeral });
   };
@@ -36,12 +39,14 @@ const removeRule: Handler = async ({ i, guildId, repo }) => {
 
 const rules: Handler = async ({ i, guildId, repo }) => {
   const list = repo.rules.list(guildId);
+
   if (list.length === 0) {
     return reply(
       i,
       "No rules: every new article is posted. Add one with `/rss block` or `/rss only`.",
     );
   }
+
   const feeds = repo.feeds.list(guildId);
   const lines = list.map((r) => `- ${describeRule(r, feeds)}`).join("\n");
   const picker = feeds.length > 0 ? rulePicker(list, feeds) : null;

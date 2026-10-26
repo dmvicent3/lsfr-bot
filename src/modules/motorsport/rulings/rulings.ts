@@ -27,9 +27,12 @@ export function rulingsEvent(sessions: Session[], now: number): EventSchedule | 
     const ends = event.sessions
       .filter((s) => resultKind(s.series, s.sessionId) !== null)
       .map((s) => s.end.getTime());
+
     if (ends.length === 0) continue;
+
     if (Math.min(...ends) <= now && now < Math.max(...ends) + RULINGS_WINDOW_MS) return event;
   }
+
   return null;
 }
 
@@ -55,6 +58,7 @@ export function isPostSession(
 ): boolean {
   const sessionId = FIA_SESSION[fiaSession.trim().toLowerCase()];
   const session = eventSessions.find((s) => s.sessionId === sessionId);
+
   return session !== undefined && publishedAt.getTime() > session.end.getTime();
 }
 
@@ -68,7 +72,9 @@ const cut = (text: string, max: number): string =>
 export function renderRuling(r: Ruling, summary: string | null): string {
   const who = `${r.driver} · Car ${r.car} · ${r.session}`;
   const fact = cut(r.fact, MAX_FACT);
+
   if (!isPenalty(r.decision)) return `⚖️ ${who}: ${fact} → ${r.decision}`;
+
   return [
     `⚖️ **${r.driver}** · Car ${r.car} · ${r.session}`,
     `${fact} → **${r.decision}**`,

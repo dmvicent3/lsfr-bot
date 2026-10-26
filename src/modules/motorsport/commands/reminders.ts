@@ -32,11 +32,15 @@ async function remind({ i, repo }: CommandCtx): Promise<void> {
 
 async function reminderTime({ i, ctx }: CommandCtx): Promise<void> {
   const input = i.options.getString("time");
+
   if (input === null) {
     return reply(i, `Reminders go out ${formatLead(getLeadMinutes(ctx.db))} before a session.`);
   }
+
   const minutes = parseLeadTime(input);
+
   if (minutes === null) return reply(i, "Use a time like 30m, 1h or 1h30m (5m to 24h).");
+
   setSetting(ctx.db, LEAD_SETTING_KEY, String(minutes));
   await reply(i, `Reminder time set to ${formatLead(minutes)}.`);
 }
@@ -44,7 +48,9 @@ async function reminderTime({ i, ctx }: CommandCtx): Promise<void> {
 /** `remind`'s session: the current event's upcoming pinged sessions not yet pinged. */
 export async function autocomplete(i: AutocompleteInteraction, ctx: Ctx): Promise<void> {
   const series = i.options.getString("series");
+
   if (series === null || !isSeriesKey(series)) return i.respond([]);
+
   const typed = i.options.getFocused().toLowerCase();
   const now = Date.now();
   const repo = new MotorsportRepo(ctx.db);

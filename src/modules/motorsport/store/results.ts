@@ -23,6 +23,7 @@ export class ResultStore {
         "SELECT event_id || '/' || session_id AS key FROM motorsport_results WHERE series = ?",
       )
       .all(s);
+
     return new Set(rows.map((r) => r.key));
   }
 
@@ -43,7 +44,9 @@ export class ResultStore {
          FROM motorsport_results WHERE series = ? ORDER BY posted_at DESC LIMIT 1`,
       )
       .get(s);
+
     if (!row) return null;
+
     return {
       series: s,
       eventId: row.event_id,

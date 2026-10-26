@@ -13,6 +13,7 @@ export function scorePicks(picks: readonly string[], rows: ResultRow[]): Score {
   const podium = ["1", "2", "3"].map((pos) => rows.find((r) => r.pos === pos)?.id ?? null);
   let exact = 0;
   let points = 0;
+
   for (const [i, id] of picks.entries()) {
     if (podium[i] === id) {
       exact++;
@@ -21,7 +22,9 @@ export function scorePicks(picks: readonly string[], rows: ResultRow[]): Score {
       points += ON_PODIUM;
     }
   }
+
   const perfect = exact === 3;
+
   return { points: points + (perfect ? PERFECT_BONUS : 0), perfect };
 }
 
@@ -30,6 +33,7 @@ export function leaderboard(
   entries: { userId: string; picks: readonly string[]; rows: ResultRow[] }[],
 ): Standing[] {
   const byUser = new Map<string, Standing>();
+
   for (const { userId, picks, rows } of entries) {
     const standing = byUser.get(userId) ?? { userId, points: 0, perfect: 0, played: 0 };
     const score = scorePicks(picks, rows);
@@ -38,6 +42,7 @@ export function leaderboard(
     standing.played++;
     byUser.set(userId, standing);
   }
+
   return [...byUser.values()].toSorted(
     (a, b) => b.points - a.points || b.perfect - a.perfect || a.played - b.played,
   );
@@ -47,9 +52,11 @@ const plural = (n: number, word: string): string => `${n} ${word}${n === 1 ? "" 
 
 export function renderLeaderboard(info: SeriesInfo, year: number, standings: Standing[]): string {
   const heading = `## 🔮 ${info.name} predictions — ${year} season`;
+
   if (standings.length === 0) {
     return `${heading}\nNo predictions scored yet. Use 🔮 Predict on the pinned schedule.`;
   }
+
   const lines = standings.map((s, i) =>
     [
       `**${i + 1}.** <@${s.userId}>`,
@@ -58,6 +65,7 @@ export function renderLeaderboard(info: SeriesInfo, year: number, standings: Sta
       plural(s.played, "race"),
     ].join(" · "),
   );
+
   return tableMessage(heading, lines);
 }
 
@@ -68,7 +76,9 @@ export function renderPredictionResults(predictions: Prediction[], rows: ResultR
     .toSorted((a, b) => b.score.points - a.score.points);
   const lines = scored.map(({ userId, picks, score }) => {
     const names = picks.map((id) => nameIn(rows, id)).join(" · ");
+
     return `<@${userId}> ${names} → **${score.points}** pts${score.perfect ? " 🎯" : ""}`;
   });
+
   return tableMessage("### 🔮 Predictions", lines, true);
 }

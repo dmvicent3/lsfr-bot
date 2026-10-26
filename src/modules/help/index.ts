@@ -10,21 +10,28 @@ function mention(path: string, id: string | undefined): string {
 
 export function helpEmbed(modules: BotModule[], commandIds: ReadonlyMap<string, string>): APIEmbed {
   const sections: string[] = [];
+
   for (const module of modules) {
     const lines: string[] = [];
+
     for (const { data } of module.commands ?? []) {
       const id = commandIds.get(data.name);
       const subcommands = (data.options ?? []).filter(
         (o) => o.type === ApplicationCommandOptionType.Subcommand,
       );
+
       if (subcommands.length === 0) lines.push(`${mention(data.name, id)} · ${data.description}`);
+
       for (const sub of subcommands) {
         lines.push(`${mention(`${data.name} ${sub.name}`, id)} · ${sub.description}`);
       }
     }
+
     if (module.helpNote) lines.push(module.helpNote);
+
     if (lines.length > 0) sections.push(`### ${module.title ?? module.name}\n${lines.join("\n")}`);
   }
+
   return { title: "Gork commands", color: EMBED_COLOR, description: sections.join("\n\n") };
 }
 
@@ -44,5 +51,6 @@ export function helpModule(modules: BotModule[]): BotModule {
       },
     ],
   };
+
   return self;
 }

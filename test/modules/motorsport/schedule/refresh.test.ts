@@ -25,19 +25,24 @@ const FIXTURES: Record<string, string> = {
 /** Serves every 2026 fixture, 404 for anything else, with per-URL overrides. */
 async function sourceFetch(overrides: Record<string, string> = {}): Promise<FetchFn> {
   const bodies = new Map<string, string>();
+
   for (const info of SERIES) {
     const name = FIXTURES[info.key] ?? "";
     bodies.set(sourceUrl(info, 2026), JSON.stringify(await fixture(name)));
   }
+
   for (const [url, body] of Object.entries(overrides)) bodies.set(url, body);
+
   return async (url) => {
     const body = bodies.get(url);
+
     return body === undefined ? new Response("", { status: 404 }) : new Response(body);
   };
 }
 
 const f1Info = SERIES.find((s) => s.key === "f1");
 const wecInfo = SERIES.find((s) => s.key === "wec");
+
 if (!f1Info || !wecInfo) throw new Error("series list changed");
 
 let repo: MotorsportRepo;

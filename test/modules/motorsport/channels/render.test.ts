@@ -136,10 +136,12 @@ test("every fixture event's schedule fits in one Discord message", async () => {
     ...parseSportstimes("motogp", 2026, await fixture("st-motogp")),
     ...parseSportstimes("indycar", 2026, await fixture("st-indycar")),
   ];
+
   for (const ev of groupEvents(applyRules(parsed))) {
     const info = seriesInfo(ev.sessions[0]?.series ?? "f1");
     const { content } = renderSchedule(info, ev);
     expect(content.length).toBeLessThanOrEqual(2000);
+
     for (const s of ev.sessions.filter((x) => x.pingable)) {
       expect(content).toContain(`**${s.title}**`);
     }
@@ -154,7 +156,9 @@ describe("renderReminderPicker", () => {
     const { content, components } = renderReminderPicker(f1, picker, new Set(["race"]), T);
     expect(content).toContain("Chinese Grand Prix");
     const select = components[0]?.components[0];
+
     if (select?.type !== ComponentType.StringSelect) throw new Error("expected a string select");
+
     expect(select.custom_id).toBe("motorsport:reminders:f1:chinese-grand-prix");
     expect(select.min_values).toBe(0);
     expect(select.max_values).toBe(2);

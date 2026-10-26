@@ -44,6 +44,7 @@ export class FollowedStore {
     const row = this.db
       .query<FollowedRow, [string]>("SELECT * FROM motorsport_followed WHERE series = ?")
       .get(s);
+
     return row ? toFollowed(row) : null;
   }
 
@@ -66,7 +67,9 @@ export class FollowedStore {
 
   update(s: SeriesKey, patch: Partial<Omit<Followed, "series">>): void {
     const keys = Object.keys(patch).filter(isPatchKey);
+
     if (keys.length === 0) return;
+
     const set = keys.map((k) => `${FOLLOWED_COLUMNS[k]} = ?`).join(", ");
     const values = keys.map((k) => patch[k] ?? null);
     this.db.run(`UPDATE motorsport_followed SET ${set} WHERE series = ?`, [...values, s]);

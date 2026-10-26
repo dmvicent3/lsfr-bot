@@ -21,6 +21,7 @@ export async function eventThread(
 ): Promise<ThreadChannel> {
   return threadLock(`${target.series}/${target.eventId}`, async () => {
     const stored = await storedThread(channel, repo.threads.get(target.series, target.eventId));
+
     return stored ?? startThread(channel, repo, target);
   });
 }
@@ -31,12 +32,16 @@ async function storedThread(
   threadId: string | null,
 ): Promise<ThreadChannel | null> {
   if (!threadId) return null;
+
   try {
     const thread = await channel.threads.fetch(threadId);
+
     if (thread?.archived) await thread.setArchived(false);
+
     return thread;
   } catch (err) {
     if (isDiscordError(err, RESTJSONErrorCodes.UnknownChannel)) return null;
+
     throw err;
   }
 }
@@ -56,5 +61,6 @@ async function startThread(
     autoArchiveDuration: ThreadAutoArchiveDuration.OneWeek,
   });
   repo.threads.set(target.series, target.eventId, thread.id);
+
   return thread;
 }

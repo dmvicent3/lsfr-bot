@@ -12,16 +12,22 @@ const HANDLERS: Record<string, Handler> = { ...feedHandlers, ...ruleHandlers };
 
 async function execute(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
   const guildId = i.guildId;
+
   if (!guildId) return reply(i, "Use this in a server.");
+
   const handler = HANDLERS[i.options.getSubcommand()];
+
   if (!handler) return reply(i, "Unknown subcommand.");
+
   await handler({ i, guildId, repo: new RssRepo(ctx.db) });
 }
 
 /** unfollow offers the server's feeds; remove-rule its rules, described. */
 async function autocomplete(i: AutocompleteInteraction, ctx: Ctx): Promise<void> {
   const guildId = i.guildId;
+
   if (!guildId) return i.respond([]);
+
   const repo = new RssRepo(ctx.db);
   const feeds = repo.feeds.list(guildId);
   const items =

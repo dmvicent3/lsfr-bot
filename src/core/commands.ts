@@ -17,6 +17,7 @@ export function splitCommands(commands: SlashCommand[]): {
 
 function commandIdPairs(registered: unknown): [string, string][] {
   if (!Array.isArray(registered)) return [];
+
   return registered.flatMap((command: unknown): [string, string][] =>
     isRecord(command) && isString(command["name"]) && isString(command["id"])
       ? [[command["name"], command["id"]]]
@@ -42,6 +43,7 @@ export async function registerCommands(
   const rest = new REST().setToken(ctx.config.discordToken);
   const { guild, global } = splitCommands(commands);
   const guildRoute = Routes.applicationGuildCommands(appId, ctx.config.guildId);
+
   try {
     const registered = await retry(
       async () => [
@@ -50,7 +52,9 @@ export async function registerCommands(
       ],
       { attempts: 5, delayMs: 5_000 },
     );
+
     for (const [name, id] of registered) ctx.commandIds.set(name, id);
+
     log.info("core", `registered ${guild.length} guild and ${global.length} global commands`);
   } catch (err) {
     log.error("core", "command registration failed, exiting", err);

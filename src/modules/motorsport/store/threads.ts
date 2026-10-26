@@ -12,6 +12,7 @@ export class ThreadStore {
         "SELECT thread_id FROM motorsport_threads WHERE series = ? AND event_id = ?",
       )
       .get(s, eventId);
+
     return row?.thread_id ?? null;
   }
 

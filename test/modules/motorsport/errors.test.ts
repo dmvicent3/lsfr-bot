@@ -33,6 +33,7 @@ test("a ping that can't be deleted, ever, is given up on", () => {
   ]) {
     expect(pingDeleteIsHopeless(apiError(code))).toBe(true);
   }
+
   expect(pingDeleteIsHopeless(apiError(RESTJSONErrorCodes.InvalidFormBodyOrContentType))).toBe(
     false,
   );

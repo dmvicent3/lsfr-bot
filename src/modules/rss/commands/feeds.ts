@@ -14,22 +14,27 @@ const channel: Handler = async ({ i, guildId, repo }) => {
 
 async function followOrExplain(c: CommandCtx, url: string): Promise<string> {
   const name = c.i.options.getString("name");
+
   try {
     const feed = await followFeed(
       c.repo,
       { guildId: c.guildId, url, name },
       { fetchFeed: (u) => fetchFeed(u), now: Date.now() },
     );
+
     return `Following **${feed.name}**. New articles will appear ${channelHint(c)}.`;
   } catch (err) {
     if (err instanceof FeedError) return `Couldn't follow that feed: ${err.message}`;
+
     throw err;
   }
 }
 
 const follow: Handler = async (c) => {
   const url = c.i.options.getString("url", true).trim();
+
   if (!httpUrl(url)) return reply(c.i, "That isn't an http(s) URL.");
+
   await c.i.deferReply({ flags: MessageFlags.Ephemeral });
   await reply(c.i, await followOrExplain(c, url));
 };
@@ -44,7 +49,9 @@ const failing = (n: number): string => (n > 0 ? ` ⚠️ failing (${n} in a row)
 
 const feeds: Handler = async (c) => {
   const list = c.repo.feeds.list(c.guildId);
+
   if (list.length === 0) return reply(c.i, "No feeds yet. Add one with `/rss follow`.");
+
   const lines = list.map((f) => `- **${f.name}** <${f.url}>${failing(f.failures)}`);
   await reply(c.i, `Posting ${channelHint(c)}:\n${lines.join("\n")}`.slice(0, 2000));
 };

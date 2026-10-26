@@ -24,10 +24,13 @@ async function results({ i, repo }: CommandCtx): Promise<void> {
   const info = seriesInfo(series);
   await i.deferReply({ flags: MessageFlags.Ephemeral });
   const latest = await latestResult(repo, series, Date.now(), fetch);
+
   if (!latest) {
     await i.editReply(`No ${info.name} results yet.`);
+
     return;
   }
+
   const heading = { info, eventName: latest.eventName, kind: latest.kind };
   await i.editReply(renderResults(heading, { rows: latest.rows }, { spoiler: false }));
 }
@@ -37,6 +40,7 @@ async function standings({ i }: CommandCtx): Promise<void> {
   const info = seriesInfo(series);
   const champ = i.options.getString("championship") === "constructors" ? "constructors" : "drivers";
   await i.deferReply({ flags: MessageFlags.Ephemeral });
+
   try {
     const table = await fetchStandings(series, champ, new Date());
     const missing =

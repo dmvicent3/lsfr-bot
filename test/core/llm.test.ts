@@ -8,8 +8,10 @@ function fakeFetch(status: number, body: unknown, seen?: { url?: string; key?: s
       seen.url = url;
       seen.key = new Headers(init?.headers).get("x-goog-api-key");
     }
+
     return new Response(JSON.stringify(body), { status });
   };
+
   return fn;
 }
 
@@ -40,6 +42,7 @@ describe("generate", () => {
         model: "m",
         fetchFn: async (_url, init) => {
           sent = typeof init?.body === "string" ? JSON.parse(init.body) : null;
+
           return new Response(
             JSON.stringify({ candidates: [{ content: { parts: [{ text: "A" }] } }] }),
           );
@@ -81,6 +84,7 @@ test("LLM requests time out", async () => {
     model: "m",
     fetchFn: async (_url, init) => {
       signal = init?.signal;
+
       return new Response(
         JSON.stringify({ candidates: [{ content: { parts: [{ text: "a" }] } }] }),
       );
@@ -99,6 +103,7 @@ test("sends the system instruction and inline images", async () => {
       system: "You are Gork.",
       fetchFn: async (_url, init) => {
         sent = typeof init?.body === "string" ? JSON.parse(init.body) : null;
+
         return new Response(
           JSON.stringify({ candidates: [{ content: { parts: [{ text: "a" }] } }] }),
         );

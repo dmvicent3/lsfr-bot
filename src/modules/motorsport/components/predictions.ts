@@ -36,8 +36,11 @@ const predictMenu: ComponentHandler = {
 async function refreshPinned(ctx: Ctx, repo: MotorsportRepo, series: SeriesKey): Promise<void> {
   try {
     const f = repo.followed.get(series);
+
     if (!f) return;
+
     const channel = await fetchSeriesChannel(await guildOf(ctx), f);
+
     if (channel) await updatePinned(channel, repo, f, Date.now());
   } catch (err) {
     log.error("motorsport:predict", `${series} pinned refresh failed`, err);
@@ -49,6 +52,7 @@ const predict: ComponentHandler = {
   id: "motorsport:predict",
   async handle(i, args, ctx) {
     if (!i.isStringSelectMenu()) return;
+
     const series = toSeriesKey(args[0] ?? "");
     const [, eventId = "", sessionId = "", index = ""] = args;
     const repo = new MotorsportRepo(ctx.db);
@@ -59,14 +63,18 @@ const predict: ComponentHandler = {
       { series, eventId, sessionId },
       { index: Number(index), driverId: i.values[0] ?? "" },
     );
+
     if (!outcome.ok) {
       await i.update({ content: outcome.text, components: [] });
+
       return;
     }
+
     await i.deferUpdate();
     await i.editReply(
       asReply(await predictPicker(repo, viewer, { series, eventId, sessionId }, fetch)),
     );
+
     if (outcome.completed) await refreshPinned(ctx, repo, series);
   },
 };

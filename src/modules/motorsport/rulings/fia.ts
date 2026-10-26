@@ -33,6 +33,7 @@ function parisOffsetMs(utc: number): number {
   const parts = paris.formatToParts(new Date(utc));
   const get = (type: string): number => Number(parts.find((p) => p.type === type)?.value);
   const wall = Date.UTC(get("year"), get("month") - 1, get("day"), get("hour"), get("minute"));
+
   return wall - Math.floor(utc / 60_000) * 60_000;
 }
 
@@ -42,10 +43,13 @@ function parisOffsetMs(utc: number): number {
  */
 export function parisTime(text: string): Date | null {
   const m = /^(\d\d)\.(\d\d)\.(\d\d) (\d\d):(\d\d)$/.exec(text.trim());
+
   if (!m) return null;
+
   const [, dd, mm, yy, hh, min] = m.map(Number);
   const wall = Date.UTC(2000 + (yy ?? 0), (mm ?? 1) - 1, dd, hh, min);
   const guess = wall - parisOffsetMs(wall);
+
   return new Date(wall - parisOffsetMs(guess));
 }
 
@@ -55,15 +59,19 @@ const ROW =
 export function parseFiaDocuments(html: string): FiaPage {
   const event = /<div class="event-title active">([^<]+)</.exec(html)?.[1];
   const documents: FiaDocument[] = [];
+
   for (const [, href = "", rawTitle = "", published = ""] of html.matchAll(ROW)) {
     const publishedAt = parisTime(published);
+
     if (!publishedAt) continue;
+
     documents.push({
       url: href.startsWith("/") ? FIA_ORIGIN + href : href,
       title: squash(decode(rawTitle)).replace(/^Doc \d+ - /, ""),
       publishedAt,
     });
   }
+
   return { event: event ? squash(decode(event)) : null, documents };
 }
 

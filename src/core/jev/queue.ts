@@ -29,16 +29,20 @@ export class JevQueue implements Jev {
   yesNo(state: string, questions: JevQuestion[]): Promise<Map<string, number>> {
     const result = this.tail.catch(() => undefined).then(() => this.run(state, questions));
     this.tail = result;
+
     return result;
   }
 
   private async run(state: string, questions: JevQuestion[]): Promise<Map<string, number>> {
     if (this.now() < this.pausedUntil) throw new JevError("jev is paused after a failure");
+
     await this.spaceOut();
+
     try {
       const answers = await postYesNo(this.opts.url, state, questions, this.fetchFn);
       this.failures = 0;
       this.pausedUntil = 0;
+
       return answers;
     } catch (err) {
       this.failures++;
@@ -51,7 +55,9 @@ export class JevQueue implements Jev {
   /** Keeps calls at least MIN_GAP_MS apart. */
   private async spaceOut(): Promise<void> {
     const wait = this.lastStart + MIN_GAP_MS - this.now();
+
     if (wait > 0) await this.sleep(wait);
+
     this.lastStart = this.now();
   }
 }

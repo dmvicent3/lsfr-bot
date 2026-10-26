@@ -21,6 +21,7 @@ const parser = new XMLParser({
 function mediaImage(m: unknown, key: string): string {
   const medium = attr(m, "medium");
   const image = key === "media:thumbnail" || !medium || medium === "image";
+
   return image ? attr(m, "url") : "";
 }
 
@@ -29,9 +30,12 @@ function rssImage(item: Record<string, unknown>): string | null {
     const url = list(item[key])
       .map((m) => mediaImage(m, key))
       .find(Boolean);
+
     if (url) return url;
   }
+
   const enclosure = list(item["enclosure"]).find((e) => attr(e, "type").startsWith("image/"));
+
   return orNull(attr(enclosure, "url"));
 }
 
@@ -53,6 +57,7 @@ function rssItem(item: Record<string, unknown>): FeedItem {
 function atomLink(links: unknown[]): string | null {
   const alternate =
     links.find((l) => attr(l, "rel") === "alternate") ?? links.find((l) => !attr(l, "rel"));
+
   return orNull(attr(alternate, "href"));
 }
 
@@ -69,12 +74,15 @@ function atomEntry(entry: Record<string, unknown>): FeedItem {
 
 function parseXml(xml: string): Record<string, unknown> {
   let doc: unknown;
+
   try {
     doc = parser.parse(xml.trimStart());
   } catch (err) {
     throw new FeedError(`not valid XML: ${err instanceof Error ? err.message : String(err)}`);
   }
+
   if (!isRecord(doc)) throw new FeedError("not an RSS or Atom feed");
+
   return doc;
 }
 
@@ -84,6 +92,7 @@ function feedOf(
   toItem: (r: Record<string, unknown>) => FeedItem,
 ): ParsedFeed | null {
   if (!isRecord(root)) return null;
+
   return {
     title: plain(text(root["title"])),
     items: list(root[itemsKey]).filter(isRecord).slice(0, MAX_ITEMS).map(toItem),
@@ -97,6 +106,8 @@ export function parseFeed(xml: string): ParsedFeed {
   const feed =
     feedOf(isRecord(rss) ? rss["channel"] : undefined, "item", rssItem) ??
     feedOf(doc["feed"], "entry", atomEntry);
+
   if (!feed) throw new FeedError("not an RSS or Atom feed");
+
   return feed;
 }

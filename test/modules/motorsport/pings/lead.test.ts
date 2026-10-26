@@ -18,6 +18,7 @@ describe("parseLeadTime", () => {
     ["25h", null],
     ["abc", null],
   ];
+
   for (const [input, expected] of cases) {
     test(JSON.stringify(input), () => expect(parseLeadTime(input)).toBe(expected));
   }

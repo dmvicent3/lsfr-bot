@@ -26,6 +26,7 @@ export class ItemStore {
     const { title, link, guid, image, publishedAt } = item;
     const description = item.description.slice(0, MAX_DESCRIPTION);
     const values = [guildId, key, feedId, title, link, guid, description, image, publishedAt];
+
     return (
       this.db.run(
         `INSERT OR IGNORE INTO rss_items

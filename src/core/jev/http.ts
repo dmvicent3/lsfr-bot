@@ -25,6 +25,7 @@ const message = (err: unknown): string => (err instanceof Error ? err.message : 
 
 async function complete(url: string, prompt: string, fetchFn: FetchFn): Promise<unknown> {
   let res: Response;
+
   try {
     res = await fetchFn(`${url}/completion`, {
       method: "POST",
@@ -35,7 +36,9 @@ async function complete(url: string, prompt: string, fetchFn: FetchFn): Promise<
   } catch (err) {
     throw new JevError(`jev unreachable: ${message(err)}`);
   }
+
   if (!res.ok) throw new JevError(`jev returned ${res.status}`);
+
   return res.json().catch(() => {
     throw new JevError("jev returned invalid JSON");
   });
@@ -46,10 +49,14 @@ function yesProbability(body: unknown): number {
   const steps = isRecord(body) ? body["completion_probabilities"] : undefined;
   const first: unknown = Array.isArray(steps) ? steps[0] : undefined;
   const top = isRecord(first) ? first["top_probs"] : undefined;
+
   if (!Array.isArray(top)) throw new JevError("jev returned no probabilities");
+
   const yes: unknown = top.find((t: unknown) => isRecord(t) && t["token"] === "1");
   const p = isRecord(yes) ? yes["prob"] : 0;
+
   if (typeof p !== "number" || p < 0 || p > 1) throw new JevError("jev returned a bad probability");
+
   return p;
 }
 
@@ -66,9 +73,11 @@ export async function postYesNo(
 ): Promise<Map<string, number>> {
   const evidence = `<evidence>\n${state.slice(0, MAX_STATE)}\n</evidence>`;
   const out = new Map<string, number>();
+
   for (const { key, instructions } of questions) {
     const prompt = `${evidence}\n\nQuestion: ${instructions}\nAnswer:`;
     out.set(key, yesProbability(await complete(url, prompt, fetchFn)));
   }
+
   return out;
 }

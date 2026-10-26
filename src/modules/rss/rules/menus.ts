@@ -11,7 +11,9 @@ const cut = (s: string): string => (s.length > 100 ? `${s.slice(0, 99)}…` : s)
 /** The feeds a rule applies to, as a multi-select; nothing ticked means every feed. */
 export function feedMenu(rule: Rule, feeds: FeedRef[]): SelectRow | null {
   const shown = feeds.slice(0, MAX_OPTIONS);
+
   if (shown.length === 0) return null;
+
   return {
     type: ComponentType.ActionRow,
     components: [
@@ -34,6 +36,7 @@ export function feedMenu(rule: Rule, feeds: FeedRef[]): SelectRow | null {
 /** Picks a rule to change (from /rss rules). */
 export function rulePicker(rules: Rule[], feeds: FeedRef[]): SelectRow | null {
   if (rules.length === 0) return null;
+
   return {
     type: ComponentType.ActionRow,
     components: [
@@ -64,6 +67,7 @@ export function ruleMessage(
   const menu = feedMenu(rule, feeds);
   const hint = menu && rule.feedIds.length === 0 ? " Pick feeds below to limit it." : "";
   const where = `Applies to: ${scopeOf(rule, feeds)}.${hint}`;
+
   return {
     content: `${EFFECT[rule.kind](question(rule.text))}\n${where}`,
     components: menu ? [menu] : [],

@@ -19,6 +19,7 @@ export class PredictionStore {
          WHERE series = ? AND event_id = ? AND session_id = ? AND user_id = ?`,
       )
       .get(s, eventId, sessionId, userId);
+
     return row ? picksOf(row) : [null, null, null];
   }
 
@@ -51,6 +52,7 @@ export class PredictionStore {
          WHERE series = ? AND event_id = ? AND ${COMPLETE} GROUP BY session_id`,
       )
       .all(s, eventId);
+
     return new Map(rows.map((r) => [r.session_id, r.n]));
   }
 

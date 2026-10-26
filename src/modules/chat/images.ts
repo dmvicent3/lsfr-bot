@@ -19,13 +19,16 @@ const mimeOf = (r: ImageRef): string => r.contentType?.split(";")[0]?.trim() ?? 
 export function selectImages(chain: ImageRef[][]): { chosen: ImageRef[]; skipped: number } {
   const chosen: ImageRef[] = [];
   let skipped = 0;
+
   for (const refs of chain.toReversed()) {
     for (const ref of refs.filter(isImage)) {
       const fits = SUPPORTED.has(mimeOf(ref)) && ref.size <= MAX_IMAGE_BYTES;
+
       if (fits && chosen.length < MAX_IMAGES) chosen.push(ref);
       else skipped++;
     }
   }
+
   return { chosen, skipped };
 }
 
@@ -38,9 +41,13 @@ export async function downloadImages(
     refs.map(async (ref) => {
       try {
         const res = await fetchFn(ref.url, { signal: AbortSignal.timeout(20_000) });
+
         if (!res.ok) return null;
+
         const bytes = await res.arrayBuffer();
+
         if (bytes.byteLength > MAX_IMAGE_BYTES) return null;
+
         return { mimeType: mimeOf(ref), data: Buffer.from(bytes).toString("base64") };
       } catch {
         return null;
@@ -59,5 +66,6 @@ export function imageNotes(skipped: number, failed: number): string {
       : []),
     ...(failed > 0 ? [`Couldn't load ${images(failed)}, answered without it.`] : []),
   ];
+
   return notes.map((n) => `\n-# ${n}`).join("");
 }

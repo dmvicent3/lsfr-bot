@@ -29,12 +29,17 @@ export function outgoing(message: Message): Message & { allowedMentions: { parse
 async function send(ctx: Ctx, channelId: string, message: Message): Promise<PostResult> {
   try {
     const channel = await ctx.client.channels.fetch(channelId);
+
     if (!channel?.isSendable()) return "lost-channel";
+
     await channel.send(outgoing(message));
+
     return "ok";
   } catch (err) {
     const result = sendFailure(err);
+
     if (result === "failed") log.error("rss:post", `send to ${channelId} failed`, err);
+
     return result;
   }
 }
@@ -46,6 +51,7 @@ export function rssJobs(jev: Jev): Job[] {
       cron: "*/15 * * * *",
       async run(ctx) {
         const repo = new RssRepo(ctx.db);
+
         for (const server of repo.servers.list()) {
           await safely(`rss:${server.guildId}`, () =>
             runCycle(server, {

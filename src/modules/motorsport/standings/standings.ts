@@ -20,7 +20,9 @@ export function renderStandings(
 ): string {
   const after = standings.round === null ? "" : ` (after round ${standings.round})`;
   const heading = `## 🏆 ${info.name} — ${TITLE[info.key][champ]} standings${after}`;
+
   if (standings.rows.length === 0) return `${heading}\nNo standings yet.`;
+
   const lines =
     champ === "drivers"
       ? formatTable(
@@ -37,5 +39,6 @@ export function renderStandings(
           standings.rows.map((r) => [posLabel(r.pos), fitName(r.name), r.points, `${r.wins}W`]),
           new Set([2, 3]),
         );
+
   return tableMessage(heading, lines);
 }

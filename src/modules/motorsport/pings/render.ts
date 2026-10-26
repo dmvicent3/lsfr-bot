@@ -19,9 +19,11 @@ export function renderReminderPicker(
   const upcoming = event.sessions
     .filter((s) => s.pingable && s.start.getTime() > now)
     .slice(0, MAX_SELECT_OPTIONS);
+
   if (upcoming.length === 0) {
     return { content: "No upcoming sessions to remind about.", components: [] };
   }
+
   return {
     content: `Pick the ${info.name} ${event.eventName} sessions to ping you about (this weekend only):`,
     components: [
@@ -57,9 +59,12 @@ function reminderSelect(
 export function renderPing(p: PingInput): PingPayload | null {
   const users = p.oneOffUserIds.filter((id) => !p.roleMemberIds.has(id));
   const roles = p.roleHasMembers ? [p.roleId] : [];
+
   if (roles.length === 0 && users.length === 0) return null;
+
   const mentions = [...roles.map((id) => `<@&${id}>`), ...users.map((id) => `<@${id}>`)];
   const { eventName, title, start } = p.session;
+
   return {
     content: `${mentions.join(" ")} 🏁 ${eventName} ${title} starts ${timestamp(start, "R")}`,
     allowedMentions: { roles, users },

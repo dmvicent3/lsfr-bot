@@ -20,7 +20,9 @@ const USER_AGENT = { "user-agent": "Mozilla/5.0 (compatible; Gork Discord bot)" 
 
 async function download(url: string, fetchFn: FetchFn): Promise<Response> {
   const res = await fetchFn(url, { headers: USER_AGENT, signal: AbortSignal.timeout(30_000) });
+
   if (!res.ok) throw new Error(`${url} returned ${res.status}`);
+
   return res;
 }
 
@@ -29,6 +31,7 @@ async function summaryOf(prompt: string, deps: RulingDeps): Promise<string | nul
     return await deps.summarize(prompt);
   } catch (err) {
     log.error("motorsport:rulings", "summary failed, posting without one", err);
+
     return null;
   }
 }
@@ -44,11 +47,17 @@ export async function collectRulings(
   deps: RulingDeps,
 ): Promise<void> {
   if (!repo.followed.get("f1")) return;
+
   const event = rulingsEvent(repo.sessions.list("f1"), now);
+
   if (!event) return;
+
   const page = parseFiaDocuments(await (await download(FIA_DOCUMENTS, deps.fetchFn)).text());
+
   if (!matchesEvent(page.event, event.eventName)) return;
+
   const run = { repo, now, deps, event };
+
   for (const doc of freshRulings(page, event, repo.rulings.handled("f1"))) {
     try {
       await handleRuling(run, doc);
@@ -65,6 +74,7 @@ function freshRulings(page: FiaPage, event: EventSchedule, handled: Set<string>)
       .filter((s) => resultKind(s.series, s.sessionId) !== null)
       .map((s) => s.end.getTime()),
   );
+
   return page.documents
     .filter((d) => isRuling(d.title) && !handled.has(d.url) && d.publishedAt.getTime() > opens)
     .toSorted((a, b) => a.publishedAt.getTime() - b.publishedAt.getTime());
@@ -79,10 +89,13 @@ async function handleRuling(
   const text = await deps.pdfText(pdf);
   const ruling = parseRuling(text);
   const mark = { eventId: event.eventId, url: doc.url, now };
+
   if (!ruling || !isPostSession(ruling.session, doc.publishedAt, event.sessions)) {
     repo.rulings.mark("f1", { ...mark, posted: false });
+
     return;
   }
+
   const penalty = isPenalty(ruling.decision);
   const summary = penalty ? await summaryOf(summaryPrompt(ruling), deps) : null;
   const target = {

@@ -12,11 +12,14 @@ export class ReminderStore {
       "DELETE FROM motorsport_one_off WHERE user_id = ? AND series = ? AND event_id = ? AND session_id = ?",
       params,
     );
+
     if (removed.changes > 0) return false;
+
     this.db.run(
       "INSERT INTO motorsport_one_off (user_id, series, event_id, session_id) VALUES (?, ?, ?, ?)",
       params,
     );
+
     return true;
   }
 
@@ -45,6 +48,7 @@ export class ReminderStore {
         "DELETE FROM motorsport_one_off WHERE user_id = ? AND series = ? AND event_id = ?",
         [userId, s, eventId],
       );
+
       for (const sessionId of sessionIds) {
         this.db.run(
           "INSERT INTO motorsport_one_off (user_id, series, event_id, session_id) VALUES (?, ?, ?, ?)",

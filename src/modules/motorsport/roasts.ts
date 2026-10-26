@@ -23,5 +23,6 @@ export const ROASTS: readonly string[] = [
 /** Picks a roast; `random` returns a value in [0, 1). */
 export function pickRoast(userMention: string, random: () => number = Math.random): string {
   const index = Math.min(Math.floor(random() * ROASTS.length), ROASTS.length - 1);
+
   return (ROASTS[index] ?? "stfu bitch").replaceAll("{user}", userMention);
 }

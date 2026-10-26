@@ -22,26 +22,33 @@ const MATCH_WINDOW_MS = 12 * 3_600_000;
 /** The OpenF1 session of this kind starting near `start` (our schedule's start time). */
 export function openf1SessionKey(sessions: unknown, kind: ResultKind, start: Date): number | null {
   if (!Array.isArray(sessions)) return null;
+
   for (const s of sessions as unknown[]) {
     if (!isRecord(s) || s["session_name"] !== SESSION_NAME[kind]) continue;
+
     const key = s["session_key"];
     const begins = Date.parse(String(s["date_start"]));
+
     if (typeof key === "number" && Math.abs(begins - start.getTime()) < MATCH_WINDOW_MS) return key;
   }
+
   return null;
 }
 
 /** Driver number → surname and (short) team name. */
 function driversByNumber(drivers: unknown): Map<number, { name: string; team: string }> {
   const byNumber = new Map<number, { name: string; team: string }>();
+
   for (const d of Array.isArray(drivers) ? (drivers as unknown[]) : []) {
     if (!isRecord(d) || typeof d["driver_number"] !== "number") continue;
+
     const team = asText(d["team_name"]);
     byNumber.set(d["driver_number"], {
       name: asText(d["last_name"]) || asText(d["driver_number"]),
       team: TEAM_ALIAS[team] ?? team,
     });
   }
+
   return byNumber;
 }
 
@@ -55,6 +62,7 @@ export function parseOpenF1(
   drivers: unknown,
 ): SessionResult | null {
   if (!Array.isArray(results) || results.length === 0) return null;
+
   const byNumber = driversByNumber(drivers);
   const classified = (results as unknown[]).filter(isRecord).toSorted(byPosition);
   const racing = kind === "race" || kind === "sprint";
@@ -64,6 +72,7 @@ export function parseOpenF1(
     const position = num(r["position"]);
     const first = i === 0 && position === 1;
     const driver = byNumber.get(num(r["driver_number"]) ?? -1);
+
     return {
       pos: position === null ? "–" : String(position),
       id: asText(r["driver_number"]),
@@ -72,5 +81,6 @@ export function parseOpenF1(
       time: racing ? raceTime(r, first) : qualifyingTime(r, first, segment, prefix),
     };
   });
+
   return { rows };
 }

@@ -20,9 +20,12 @@ export async function sendPings(run: TickRun, channel: SeriesChannel, role: Role
     leadMs,
     now,
   );
+
   if (due.length === 0) return;
+
   await ensureMembers(guild);
   const target = { channel, role, roleMemberIds: new Set(role.members.keys()) };
+
   for (const session of due) await pingSession(run, target, session);
 }
 

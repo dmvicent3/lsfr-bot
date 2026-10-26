@@ -12,10 +12,13 @@ export const unfollow: ComponentHandler = {
     const series = toSeriesKey(args[0] ?? "");
     const repo = new MotorsportRepo(ctx.db);
     const followed = repo.followed.get(series);
+
     if (!followed) {
       await i.update({ content: notFollowedText(series), components: [] });
+
       return;
     }
+
     await i.deferUpdate();
     const guild = await guildOf(ctx);
     await deleteSeriesChannel(guild, followed);

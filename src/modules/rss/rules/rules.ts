@@ -9,6 +9,7 @@ export const MATCH_AT = 0.5;
 /** A rule ending in "?" is asked as written; anything else is a topic. */
 export function question(text: string): string {
   const t = text.trim();
+
   return t.endsWith("?") ? t : `Is this article about ${t}?`;
 }
 
@@ -26,13 +27,19 @@ export function rulesFor(rules: Rule[], feedId: number): Rule[] {
 export function verdict(answers: Map<string, number>, rules: Rule[]): Verdict {
   const matches = (rule: Rule): boolean => {
     const p = answers.get(key(rule));
+
     if (p === undefined) throw new JevError(`no answer for rule ${rule.id}`);
+
     return p >= MATCH_AT;
   };
+
   const matched = rules.filter(matches);
   const blocking = matched.find((r) => r.kind === "block");
+
   if (blocking) return { kind: "block", rule: blocking };
+
   const onTopic = !rules.some((r) => r.kind === "only") || matched.some((r) => r.kind === "only");
+
   return onTopic ? { kind: "pass" } : { kind: "off-topic" };
 }
 
@@ -41,6 +48,7 @@ const MARK: Record<RuleKind, string> = { block: "🚫", only: "✅ only:" };
 /** "all feeds" or the names of the feeds a rule is limited to. */
 export function scopeOf(rule: Rule, feeds: { id: number; name: string }[]): string {
   if (rule.feedIds.length === 0) return "all feeds";
+
   return feeds
     .filter((f) => rule.feedIds.includes(f.id))
     .map((f) => f.name)

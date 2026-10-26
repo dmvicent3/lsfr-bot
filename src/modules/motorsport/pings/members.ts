@@ -8,13 +8,16 @@ import type { MemberSource } from "./types.ts";
  */
 export function memberLoader(): (guild: MemberSource) => Promise<void> {
   const loads = new Map<string, Promise<void>>();
+
   return (guild) => {
     let load = loads.get(guild.id);
+
     if (!load) {
       load = guild.members.fetch().then(() => undefined);
       loads.set(guild.id, load);
       load.catch(() => loads.delete(guild.id));
     }
+
     return load;
   };
 }

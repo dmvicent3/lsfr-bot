@@ -30,9 +30,11 @@ export function isDiscordError(err: unknown, code: RESTJSONErrorCodes): boolean 
 export async function fetchSeriesChannel(guild: Guild, f: Followed): Promise<SeriesChannel | null> {
   try {
     const channel = await guild.channels.fetch(f.channelId);
+
     return isSeriesChannel(channel) ? channel : null;
   } catch (err) {
     if (isDiscordError(err, RESTJSONErrorCodes.UnknownChannel)) return null;
+
     throw err;
   }
 }
@@ -42,6 +44,7 @@ export async function fetchSeriesRole(guild: Guild, f: Followed): Promise<Role |
     return await guild.roles.fetch(f.roleId);
   } catch (err) {
     if (isDiscordError(err, RESTJSONErrorCodes.UnknownRole)) return null;
+
     throw err;
   }
 }

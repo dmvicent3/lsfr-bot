@@ -26,10 +26,14 @@ export function motogpCategoryId(categories: unknown): string | null {
 export function motogpSessionId(sessions: unknown, kind: ResultKind): string | null {
   const match = (s: Record<string, unknown>): boolean => {
     if (kind === "race") return s["type"] === "RAC";
+
     if (kind === "sprint") return s["type"] === "SPR";
+
     if (kind === "qualifying") return s["type"] === "Q" && s["number"] === 2;
+
     return false;
   };
+
   return idOf(records(sessions).find(match));
 }
 
@@ -42,12 +46,17 @@ const trimTime = (t: unknown): string => (isString(t) ? t.replace(/^0(\d:)/, "$1
 
 function timeOf(kind: ResultKind, r: Record<string, unknown>, first: boolean): string {
   const gap = isRecord(r["gap"]) ? r["gap"] : {};
+
   if (r["position"] === null) return "DNF";
+
   if (first) {
     return kind === "qualifying" ? bestLap(r) : trimTime(r["time"]);
   }
+
   const laps = Number(gap["lap"] ?? 0);
+
   if (laps > 0) return lapsDown(laps);
+
   return isString(gap["first"]) ? `+${gap["first"]}` : "";
 }
 
@@ -71,20 +80,26 @@ const bestLap = (r: Record<string, unknown>): string =>
  */
 export function parseMotogp(kind: ResultKind, json: unknown, q1?: unknown): SessionResult | null {
   const main = byPosition(json);
+
   if (main.length === 0) return null;
+
   const entries = main.map((r, i) => ({
     r,
     pos: Number.isFinite(position(r)) ? String(position(r)) : "–",
     time: timeOf(kind, r, i === 0 && r["position"] === 1),
   }));
+
   if (kind === "qualifying") {
     const inQ2 = new Set(main.map(riderId));
     const knockedOut = byPosition(q1).filter((r) => !inQ2.has(riderId(r)));
+
     for (const [k, r] of knockedOut.entries()) {
       entries.push({ r, pos: String(main.length + k + 1), time: `Q1 ${bestLap(r)}` });
     }
   }
+
   const names = riderNames(entries.map(({ r }) => r));
+
   return {
     rows: entries.map(({ r, pos, time }, i) => ({
       pos,
@@ -101,10 +116,13 @@ export function riderNames(riders: Record<string, unknown>[]): string[] {
   const names = riders.map((r) => {
     const full = isRecord(r["rider"]) ? asText(r["rider"]["full_name"]) : "";
     const [first = "", ...rest] = full.split(" ");
+
     return { first, surname: rest.join(" ") || first };
   });
   const count = new Map<string, number>();
+
   for (const n of names) count.set(n.surname, (count.get(n.surname) ?? 0) + 1);
+
   return names.map((n) =>
     (count.get(n.surname) ?? 0) > 1 ? `${n.first.slice(0, 1)}. ${n.surname}` : n.surname,
   );

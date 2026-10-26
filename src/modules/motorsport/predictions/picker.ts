@@ -21,6 +21,7 @@ const POSITIONS = ["P1", "P2", "P3"] as const;
  */
 export function renderPredictPicker(view: PickerView): SchedulePayload {
   const { info, eventName, session } = view;
+
   return {
     content: `🔮 **${info.name} ${eventName} ${session.title}** podium · locks ${timestamp(session.start, "R")}\n${pickStatus(view)}`,
     components: [...positionSelects(view), ...sessionSwitches(view)],
@@ -29,12 +30,15 @@ export function renderPredictPicker(view: PickerView): SchedulePayload {
 
 function pickStatus({ picks, grid }: PickerView): string {
   if (!isComplete(picks)) return "Pick all three to enter.";
+
   const names = picks.map((id) => nameIn(grid, id)).join(" · ");
+
   return `✅ Entered: ${names}. Change any time before the start.`;
 }
 
 function positionSelects({ info, session, grid, picks }: PickerView): Row[] {
   const drivers = grid.slice(0, MAX_SELECT_OPTIONS);
+
   return POSITIONS.map((label, index) => ({
     type: ComponentType.ActionRow,
     components: [
@@ -54,11 +58,13 @@ function positionSelects({ info, session, grid, picks }: PickerView): Row[] {
 
 function sessionSwitches({ info, others }: PickerView): Row[] {
   if (others.length === 0) return [];
+
   const buttons = others.slice(0, MAX_SWITCHES).map((s) => ({
     type: ComponentType.Button as const,
     custom_id: `motorsport:predictmenu:${info.key}:${s.eventId}:${s.sessionId}`,
     label: `Predict the ${s.title}`,
     style: ButtonStyle.Secondary as const,
   }));
+
   return [{ type: ComponentType.ActionRow, components: buttons }];
 }

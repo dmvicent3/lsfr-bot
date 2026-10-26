@@ -24,7 +24,9 @@ export class RuleStore {
         "INSERT INTO rss_rules (guild_id, text, kind) VALUES (?, ?, ?) RETURNING id",
       )
       .get(guildId, text, kind);
+
     if (!row) throw new Error("rule insert returned nothing");
+
     return { id: row.id, text, kind, feedIds: [] };
   }
 
@@ -33,7 +35,9 @@ export class RuleStore {
       const removed =
         this.db.run("DELETE FROM rss_rules WHERE guild_id = ? AND id = ?", [guildId, id]).changes >
         0;
+
       if (removed) this.db.run("DELETE FROM rss_rule_feeds WHERE rule_id = ?", [id]);
+
       return removed;
     })();
   }
@@ -49,6 +53,7 @@ export class RuleStore {
     const row = this.db
       .query<RuleRow, [string, number]>(`${SELECT} AND r.id = ? GROUP BY r.id`)
       .get(guildId, id);
+
     return row ? toRule(row) : null;
   }
 
@@ -56,7 +61,9 @@ export class RuleStore {
   setFeeds(guildId: string, ruleId: number, feedIds: number[]): boolean {
     return this.db.transaction(() => {
       if (!this.get(guildId, ruleId)) return false;
+
       this.db.run("DELETE FROM rss_rule_feeds WHERE rule_id = ?", [ruleId]);
+
       for (const feedId of feedIds) {
         this.db.run(
           `INSERT OR IGNORE INTO rss_rule_feeds (rule_id, feed_id)
@@ -64,6 +71,7 @@ export class RuleStore {
           [ruleId, guildId, feedId],
         );
       }
+
       return true;
     })();
   }
@@ -77,6 +85,7 @@ export class RuleStore {
       .query<{ rule_id: number }, [number]>("SELECT rule_id FROM rss_rule_feeds WHERE feed_id = ?")
       .all(feedId);
     this.db.run("DELETE FROM rss_rule_feeds WHERE feed_id = ?", [feedId]);
+
     for (const { rule_id: id } of scoped) {
       this.db.run(
         "DELETE FROM rss_rules WHERE id = ? AND NOT EXISTS (SELECT 1 FROM rss_rule_feeds WHERE rule_id = ?)",

@@ -8,10 +8,15 @@ export class LlmError extends Error {
 
 function responseText(body: unknown): string {
   if (!isRecord(body) || !Array.isArray(body["candidates"])) return "";
+
   const first: unknown = body["candidates"][0];
+
   if (!isRecord(first) || !isRecord(first["content"])) return "";
+
   const parts = first["content"]["parts"];
+
   if (!Array.isArray(parts)) return "";
+
   return parts
     .map((part: unknown) => (isRecord(part) && isString(part["text"]) ? part["text"] : ""))
     .join("");
@@ -41,10 +46,14 @@ export async function generate(
     }),
     signal: AbortSignal.timeout(60_000),
   });
+
   if (!res.ok) {
     throw new LlmError(`Gemini returned ${res.status}: ${await res.text()}`);
   }
+
   const text = responseText(await res.json());
+
   if (!text) throw new LlmError("Gemini returned no text");
+
   return text;
 }

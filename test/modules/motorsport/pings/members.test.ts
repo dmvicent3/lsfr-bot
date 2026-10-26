@@ -8,11 +8,14 @@ function fakeGuild(id: string, fail = false) {
     members: {
       fetch: async (): Promise<unknown> => {
         guild.calls++;
+
         if (fail) throw new Error("gateway");
+
         return null;
       },
     },
   };
+
   return guild;
 }
 

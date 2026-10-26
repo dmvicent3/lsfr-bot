@@ -16,9 +16,11 @@ let repo: MotorsportRepo;
 /** Hourly forecast with the same values for every hour of 13–31 March 2026. */
 function hourly(temp: number): unknown {
   const time: string[] = [];
+
   for (let d = 13; d <= 31; d++) {
     for (let h = 0; h < 24; h++) time.push(`2026-03-${d}T${String(h).padStart(2, "0")}:00`);
   }
+
   return {
     hourly: {
       time,
@@ -35,14 +37,18 @@ async function weatherFetch(
   failLatitude: string | null = null,
 ): Promise<FetchFn> {
   const stF1 = JSON.stringify(await fixture("st-f1"));
+
   return async (url) => {
     if (url.includes("sportstimes/f1/main/_db/f1/2026.json")) return new Response(stF1);
+
     if (url.startsWith("https://api.open-meteo.com/")) {
       if (failLatitude !== null && url.includes(`latitude=${failLatitude}`)) {
         return new Response("", { status: 503 });
       }
+
       return new Response(JSON.stringify(hourly(temp)), { status: openMeteoStatus });
     }
+
     return new Response("", { status: 404 });
   };
 }

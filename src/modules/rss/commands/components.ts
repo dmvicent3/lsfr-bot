@@ -15,7 +15,9 @@ const ruleFeeds: ComponentHandler = {
   id: "rss:feeds",
   async handle(i, args, ctx) {
     const guildId = managedGuild(i);
+
     if (!i.isStringSelectMenu() || !guildId) return;
+
     const repo = new RssRepo(ctx.db);
     const ruleId = Number(args[0]);
     const saved = repo.rules.setFeeds(guildId, ruleId, i.values.map(Number));
@@ -29,7 +31,9 @@ const pickRule: ComponentHandler = {
   id: "rss:pick",
   async handle(i, _args, ctx) {
     const guildId = managedGuild(i);
+
     if (!i.isStringSelectMenu() || !guildId) return;
+
     const repo = new RssRepo(ctx.db);
     const rule = repo.rules.get(guildId, Number(i.values[0]));
     await i.update(rule ? ruleMessage(rule, repo.feeds.list(guildId)) : GONE);
