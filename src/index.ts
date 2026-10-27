@@ -1,6 +1,7 @@
 import { startBot } from "./core/client.ts";
 import { loadConfig } from "./core/config.ts";
 import { openDatabase, runMigrations } from "./core/db.ts";
+import { createJev } from "./core/jev/queue.ts";
 import type { BotModule } from "./core/types.ts";
 import { guardProcess } from "./core/process.ts";
 import { coreMigrations } from "./core/settings.ts";
@@ -13,12 +14,14 @@ import { rssModule } from "./modules/rss/index.ts";
 
 guardProcess();
 const config = loadConfig(process.env);
+/** One queue for every jev caller, so the Pi is never asked twice at once. */
+const jev = config.jevUrl ? createJev({ url: config.jevUrl }) : null;
 const modules: BotModule[] = [
   motorsportModule,
   chatModule,
   remindersModule,
   mangaModule(),
-  ...(config.jevUrl ? [rssModule(config.jevUrl, config.embedUrl)] : []),
+  ...(jev ? [rssModule(jev, config.embedUrl)] : []),
 ];
 const db = openDatabase(config.databasePath);
 runMigrations(db, [...coreMigrations, ...modules.flatMap((m) => m.migrations ?? [])]);

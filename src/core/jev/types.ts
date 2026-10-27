@@ -5,8 +5,13 @@ export interface JevQuestion {
   instructions: string;
 }
 
+export interface YesNoOptions {
+  /** Characters of state kept; the rest is cut. Default 1,500. */
+  maxState?: number;
+}
+
 export interface Jev {
-  yesNo(state: string, questions: JevQuestion[]): Promise<Map<string, number>>;
+  yesNo(state: string, questions: JevQuestion[], opts?: YesNoOptions): Promise<Map<string, number>>;
 }
 
 export interface JevOptions {

@@ -3,6 +3,7 @@ import { isRecord } from "../../../src/core/guards.ts";
 import type { FetchFn } from "../../../src/core/types.ts";
 import { JevError, postYesNo } from "../../../src/core/jev/http.ts";
 import { createJev } from "../../../src/core/jev/queue.ts";
+import type { YesNoOptions } from "../../../src/core/jev/types.ts";
 
 const Q = [
   { key: "r1", instructions: "Is this article about sports?" },
@@ -78,18 +79,6 @@ describe("postYesNo", () => {
     expect(answers.get("r1")).toBe(0);
   });
 
-  test("cuts the state to 1,500 characters", async () => {
-    let prompt = "";
-    await postYesNo("http://jev", "x".repeat(2000), [Q[0]!], async (_u, init) => {
-      const p = bodyOf(init)["prompt"];
-      prompt = typeof p === "string" ? p : "";
-
-      return new Response(JSON.stringify(completion(0.5)));
-    });
-    expect(prompt).toContain(`\n${"x".repeat(1500)}\n</evidence>`);
-    expect(prompt).not.toContain("x".repeat(1501));
-  });
-
   test("rejects a non-OK status", async () => {
     expect(await failure(postYesNo("http://jev", "s", Q, reply(503, {})))).toBeInstanceOf(JevError);
   });
@@ -127,7 +116,42 @@ function clock() {
 
 const ONE = [{ key: "r1", instructions: "q" }];
 
+/** The prompt a queue sends for a 5,000-character state. */
+async function promptFor(opts: YesNoOptions | undefined): Promise<string> {
+  let prompt = "";
+  const c = clock();
+  const jev = createJev({
+    url: "http://jev",
+    now: c.now,
+    sleep: c.sleep,
+    fetchFn: async (_u, init) => {
+      prompt = String(bodyOf(init)["prompt"]);
+
+      return new Response(JSON.stringify(completion(0.5)));
+    },
+  });
+  await jev.yesNo("x".repeat(5000), ONE, opts);
+
+  return prompt;
+}
+
 describe("createJev", () => {
+  test("cuts the state to 1,500 characters by default", async () => {
+    const prompt = await promptFor(undefined);
+    expect(prompt).toContain(`
+${"x".repeat(1500)}
+</evidence>`);
+    expect(prompt).not.toContain("x".repeat(1501));
+  });
+
+  test("cuts the state to maxState when given", async () => {
+    const prompt = await promptFor({ maxState: 4000 });
+    expect(prompt).toContain(`
+${"x".repeat(4000)}
+</evidence>`);
+    expect(prompt).not.toContain("x".repeat(4001));
+  });
+
   test("sends one request at a time, in call order", async () => {
     const c = clock();
     let inFlight = 0;

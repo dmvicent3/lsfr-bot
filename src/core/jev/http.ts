@@ -6,7 +6,6 @@ export class JevError extends Error {
   override name = "JevError";
 }
 
-const MAX_STATE = 1_500;
 const TIMEOUT_MS = 10_000;
 /** jev's sampling: one token, forced to "0" or "1", read as P("1"). */
 const SAMPLING = {
@@ -71,7 +70,7 @@ export async function postYesNo(
   questions: JevQuestion[],
   fetchFn: FetchFn,
 ): Promise<Map<string, number>> {
-  const evidence = `<evidence>\n${state.slice(0, MAX_STATE)}\n</evidence>`;
+  const evidence = `<evidence>\n${state}\n</evidence>`;
   const out = new Map<string, number>();
 
   for (const { key, instructions } of questions) {

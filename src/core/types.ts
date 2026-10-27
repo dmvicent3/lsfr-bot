@@ -14,7 +14,7 @@ export interface Config {
   geminiApiKey: string;
   geminiModel: string;
   databasePath: string;
-  /** The jev service (RSS filtering); null leaves the rss module off. */
+  /** The jev service (RSS filtering, tic-tac-toe); null leaves those modules off. */
   jevUrl: string | null;
   /** The embed service (RSS repeat check); null posts repeats as before. */
   embedUrl: string | null;

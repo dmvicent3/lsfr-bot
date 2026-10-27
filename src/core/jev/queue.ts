@@ -1,8 +1,9 @@
-import type { Jev, JevOptions } from "./types.ts";
+import type { Jev, JevOptions, YesNoOptions } from "./types.ts";
 import type { FetchFn } from "../types.ts";
 import { JevError, postYesNo } from "./http.ts";
 import type { JevQuestion } from "./types.ts";
 
+const MAX_STATE = 1_500;
 const MIN_GAP_MS = 1_000;
 /** Pause after the 1st, 2nd, … consecutive failure; the last value repeats. */
 const BACKOFF_MS = [60_000, 120_000, 240_000, 480_000, 900_000];
@@ -26,8 +27,13 @@ export class JevQueue implements Jev {
     this.sleep = opts.sleep ?? ((ms) => Bun.sleep(ms));
   }
 
-  yesNo(state: string, questions: JevQuestion[]): Promise<Map<string, number>> {
-    const result = this.tail.catch(() => undefined).then(() => this.run(state, questions));
+  yesNo(
+    state: string,
+    questions: JevQuestion[],
+    opts?: YesNoOptions,
+  ): Promise<Map<string, number>> {
+    const cut = state.slice(0, opts?.maxState ?? MAX_STATE);
+    const result = this.tail.catch(() => undefined).then(() => this.run(cut, questions));
     this.tail = result;
 
     return result;
