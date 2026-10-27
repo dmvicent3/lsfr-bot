@@ -1,7 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { JevError } from "../../../src/core/jev/http.ts";
 import type { Jev, YesNoOptions } from "../../../src/core/jev/types.ts";
-import { askJevos } from "../../../src/modules/tictactoe/jevos.ts";
+import { askJevos, jevosTurn } from "../../../src/modules/tictactoe/jevos.ts";
+import type { Game } from "../../../src/modules/tictactoe/types.ts";
 import { board } from "./fixtures.ts";
 
 const MID_GAME = board("X-O-X----");
@@ -42,5 +43,39 @@ describe("askJevos", () => {
     };
     const err: unknown = await askJevos(jev, MID_GAME, () => 0).catch((e: unknown) => e);
     expect(err).toBeInstanceOf(TypeError);
+  });
+});
+
+const game = (cells: string): Game => ({
+  guildId: "g",
+  channelId: "c",
+  messageId: "m",
+  playerId: "u",
+  board: board(cells),
+  jevosMark: "O",
+  updatedAt: 0,
+});
+
+describe("jevosTurn", () => {
+  test("a move that wins ends the game", async () => {
+    const jev: Jev = {
+      yesNo: async (_s, qs) => new Map(qs.map((q) => [q.key, q.key === "6" ? 0.9 : 0.1])),
+    };
+    const { moved, last } = await jevosTurn(jev, game("XX-OO-X--"), () => 0, 5);
+    expect(last.square).toBe(5);
+    expect(moved.outcome).toEqual({ kind: "win", winner: "jevos", line: [3, 4, 5] });
+    expect(moved.game.updatedAt).toBe(5);
+  });
+
+  test("with jev down jevos still moves", async () => {
+    const jev: Jev = {
+      yesNo: async () => {
+        throw new JevError("jev unreachable: refused");
+      },
+    };
+    const { moved, last } = await jevosTurn(jev, game("X--------"), () => 0, 5);
+    expect(last.share).toBeNull();
+    expect(moved.game.board.filter((c) => c === "O")).toHaveLength(1);
+    expect(moved.outcome).toEqual({ kind: "playing" });
   });
 });

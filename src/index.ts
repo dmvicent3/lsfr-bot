@@ -11,6 +11,7 @@ import { mangaModule } from "./modules/manga/index.ts";
 import { motorsportModule } from "./modules/motorsport/index.ts";
 import { remindersModule } from "./modules/reminders/index.ts";
 import { rssModule } from "./modules/rss/index.ts";
+import { tictactoeModule } from "./modules/tictactoe/index.ts";
 
 guardProcess();
 const config = loadConfig(process.env);
@@ -21,7 +22,7 @@ const modules: BotModule[] = [
   chatModule,
   remindersModule,
   mangaModule(),
-  ...(jev ? [rssModule(jev, config.embedUrl)] : []),
+  ...(jev ? [rssModule(jev, config.embedUrl), tictactoeModule(jev)] : []),
 ];
 const db = openDatabase(config.databasePath);
 runMigrations(db, [...coreMigrations, ...modules.flatMap((m) => m.migrations ?? [])]);

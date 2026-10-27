@@ -1,4 +1,5 @@
 import type { APIActionRowComponent, APIButtonComponentWithCustomId, APIEmbed } from "discord.js";
+import type { Jev } from "../../core/jev/types.ts";
 
 export type Mark = "X" | "O";
 
@@ -60,4 +61,15 @@ export interface GameView {
 export interface BoardMessage {
   embeds: APIEmbed[];
   components: ButtonRow[];
+}
+
+export interface JevosTurn {
+  moved: Moved;
+  last: JevosPick;
+}
+
+/** What the command and buttons need beyond the interaction. */
+export interface PlayDeps {
+  jev: Jev;
+  random: () => number;
 }
