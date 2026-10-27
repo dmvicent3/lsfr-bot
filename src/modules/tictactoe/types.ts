@@ -10,3 +10,37 @@ export interface JevosPick {
   square: number;
   share: number | null;
 }
+
+/** The live game of a server; the table holds at most one per guild. */
+export interface Game {
+  guildId: string;
+  channelId: string;
+  /** The board message; null until it is sent. */
+  messageId: string | null;
+  playerId: string;
+  board: Board;
+  jevosMark: Mark;
+  updatedAt: number;
+}
+
+export type Outcome =
+  | { kind: "playing" }
+  | { kind: "win"; winner: "player" | "jevos"; line: number[] }
+  | { kind: "draw" }
+  | { kind: "resigned" }
+  | { kind: "abandoned" };
+
+export interface Moved {
+  game: Game;
+  outcome: Outcome;
+}
+
+export type MoveError = "taken" | "not-your-turn" | "over";
+
+export interface NewGame {
+  guildId: string;
+  channelId: string;
+  playerId: string;
+  now: number;
+  random: () => number;
+}
