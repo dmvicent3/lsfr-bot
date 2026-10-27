@@ -1,3 +1,5 @@
+import type { APIActionRowComponent, APIButtonComponentWithCustomId, APIEmbed } from "discord.js";
+
 export type Mark = "X" | "O";
 
 export type Cell = Mark | null;
@@ -43,4 +45,19 @@ export interface NewGame {
   playerId: string;
   now: number;
   random: () => number;
+}
+
+export type ButtonRow = APIActionRowComponent<APIButtonComponentWithCustomId>;
+
+/** What the board message shows: the game, how it stands, and jevos's last move. */
+export interface GameView {
+  game: Game;
+  outcome: Outcome;
+  thinking: boolean;
+  last: JevosPick | null;
+}
+
+export interface BoardMessage {
+  embeds: APIEmbed[];
+  components: ButtonRow[];
 }
