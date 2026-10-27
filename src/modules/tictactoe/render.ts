@@ -3,7 +3,9 @@ import { SQUARE_NAMES, other } from "./board.ts";
 import type { BoardMessage, ButtonRow, GameView, JevosPick, Mark, Outcome } from "./types.ts";
 
 const EMBED_COLOR = 0x5865f2;
-const EMOJI: Record<Mark, string> = { X: "❌", O: "⭕" };
+/** X blue, O red, so the two sides read apart at a glance; a win line turns green. */
+const STYLE = { X: ButtonStyle.Primary, O: ButtonStyle.Danger } as const;
+const SIDE: Record<Mark, string> = { X: "🟦 X", O: "🟥 O" };
 
 const ENDINGS: Record<Exclude<Outcome["kind"], "playing" | "win">, string> = {
   draw: "Draw",
@@ -26,16 +28,24 @@ function lastMove(p: JevosPick): string {
 }
 
 type Button = ButtonRow["components"][number];
+type SquareStyle = Button["style"];
+
+function squareStyle(v: GameView, s: number): SquareStyle {
+  const cell = v.game.board[s] ?? null;
+
+  if (v.outcome.kind === "win" && v.outcome.line.includes(s)) return ButtonStyle.Success;
+
+  return cell ? STYLE[cell] : ButtonStyle.Secondary;
+}
 
 function square(v: GameView, s: number, locked: boolean): Button {
   const cell = v.game.board[s] ?? null;
-  const onLine = v.outcome.kind === "win" && v.outcome.line.includes(s);
 
   return {
     type: ComponentType.Button,
     custom_id: `tictactoe:move:${s + 1}`,
-    label: cell ? EMOJI[cell] : String(s + 1),
-    style: onLine ? ButtonStyle.Success : ButtonStyle.Secondary,
+    label: cell ?? String(s + 1),
+    style: squareStyle(v, s),
     disabled: locked || cell !== null,
   };
 }
@@ -49,7 +59,7 @@ function rows(v: GameView): ButtonRow[] {
     type: ComponentType.Button,
     custom_id: "tictactoe:resign",
     label: "Resign",
-    style: ButtonStyle.Danger,
+    style: ButtonStyle.Secondary,
     disabled: locked,
   };
 
@@ -61,7 +71,7 @@ function rows(v: GameView): ButtonRow[] {
 /** The board message: who plays what, jevos's last move, how the game stands, the buttons. */
 export function renderGame(v: GameView): BoardMessage {
   const { game } = v;
-  const players = `<@${game.playerId}> ${EMOJI[other(game.jevosMark)]} vs jevos ${EMOJI[game.jevosMark]}`;
+  const players = `<@${game.playerId}> ${SIDE[other(game.jevosMark)]} vs jevos ${SIDE[game.jevosMark]}`;
   const lines = [players, ...(v.last ? [lastMove(v.last)] : []), status(v)];
 
   return {

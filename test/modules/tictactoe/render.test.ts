@@ -30,17 +30,32 @@ describe("renderGame", () => {
     const m = renderGame(view());
     expect(m.components).toHaveLength(4);
     const [b1, , , , b5, b6] = buttons(view());
-    expect(b1).toMatchObject({ custom_id: "tictactoe:move:1", label: "❌", disabled: true });
-    expect(b5).toMatchObject({ custom_id: "tictactoe:move:5", label: "⭕", disabled: true });
-    expect(b6).toMatchObject({ custom_id: "tictactoe:move:6", label: "6", disabled: false });
+    expect(b1).toMatchObject({
+      custom_id: "tictactoe:move:1",
+      label: "X",
+      style: ButtonStyle.Primary,
+      disabled: true,
+    });
+    expect(b5).toMatchObject({
+      custom_id: "tictactoe:move:5",
+      label: "O",
+      style: ButtonStyle.Danger,
+      disabled: true,
+    });
+    expect(b6).toMatchObject({
+      custom_id: "tictactoe:move:6",
+      label: "6",
+      style: ButtonStyle.Secondary,
+      disabled: false,
+    });
     expect(buttons(view()).at(-1)).toMatchObject({
       custom_id: "tictactoe:resign",
       label: "Resign",
-      style: ButtonStyle.Danger,
+      style: ButtonStyle.Secondary,
       disabled: false,
     });
     expect(m.embeds[0]?.title).toBe("Tic-tac-toe");
-    expect(text(view())).toContain("<@u1> ❌ vs jevos ⭕");
+    expect(text(view())).toContain("<@u1> 🟦 X vs jevos 🟥 O");
     expect(text(view())).toContain("Your turn.");
   });
 
@@ -69,7 +84,7 @@ describe("renderGame", () => {
       ButtonStyle.Success,
       ButtonStyle.Success,
     ]);
-    expect(all[1]?.style).toBe(ButtonStyle.Secondary);
+    expect(all[1]?.style).toBe(ButtonStyle.Primary);
     expect(all.every((b) => b.disabled)).toBe(true);
     expect(text(v)).toContain("jevos wins");
   });
@@ -98,7 +113,7 @@ describe("lockedCopy", () => {
     const live = renderGame(view()).components;
     const copy = lockedCopy(live);
     expect(copy.flatMap((r) => r.components).every((b) => b.disabled)).toBe(true);
-    expect(copy[0]?.components[0]).toMatchObject({ custom_id: "tictactoe:move:1", label: "❌" });
+    expect(copy[0]?.components[0]).toMatchObject({ custom_id: "tictactoe:move:1", label: "X" });
     expect(lockedCopy(won)[0]?.components[0]?.style).toBe(ButtonStyle.Success);
   });
 
