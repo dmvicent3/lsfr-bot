@@ -50,3 +50,10 @@ export const jevosMove = (game: Game, square: number, now: number): Moved =>
   moved(game, square, game.jevosMark, now);
 
 export const isAbandoned = (game: Game, now: number): boolean => now - game.updatedAt >= ABANDON_MS;
+
+/**
+ * A game nobody can go on with: idle 10 minutes, or waiting on a jevos move that no process is
+ * making (`busy` false), which only a restart mid-move leaves behind.
+ */
+export const isStale = (game: Game, now: number, busy: boolean): boolean =>
+  isAbandoned(game, now) || (jevosToMove(game) && !busy);

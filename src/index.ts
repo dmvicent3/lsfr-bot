@@ -15,7 +15,10 @@ import { tictactoeModule } from "./modules/tictactoe/index.ts";
 
 guardProcess();
 const config = loadConfig(process.env);
-/** One queue for every jev caller, so the Pi is never asked twice at once. */
+/**
+ * One queue for every jev caller, so the Pi is never asked twice at once. Its back-off is shared
+ * too: a jev failure in rss pauses tic-tac-toe (jevos guesses) and the other way round.
+ */
 const jev = config.jevUrl ? createJev({ url: config.jevUrl }) : null;
 const modules: BotModule[] = [
   motorsportModule,

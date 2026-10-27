@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   ABANDON_MS,
   isAbandoned,
+  isStale,
   jevosMove,
   jevosToMove,
   playerMove,
@@ -80,5 +81,20 @@ describe("isAbandoned", () => {
     expect(ABANDON_MS).toBe(600_000);
     expect(isAbandoned(g, NOW + 599_999)).toBe(false);
     expect(isAbandoned(g, NOW + 600_000)).toBe(true);
+  });
+});
+
+describe("isStale", () => {
+  test("a game idle for 10 minutes is stale", () => {
+    expect(isStale(game("X--------", "X"), NOW + ABANDON_MS, false)).toBe(true);
+  });
+
+  test("jevos's turn with nobody thinking means a restart lost the move", () => {
+    expect(isStale(game("X--------", "O"), NOW, false)).toBe(true);
+    expect(isStale(game("X--------", "O"), NOW, true)).toBe(false);
+  });
+
+  test("the player's turn, recently, is live", () => {
+    expect(isStale(game("X---O----", "O"), NOW, false)).toBe(false);
   });
 });

@@ -1,12 +1,12 @@
 import type { ChatInputCommandInteraction } from "discord.js";
 import { reply } from "../../../core/replies.ts";
 import type { Ctx, SlashCommand } from "../../../core/types.ts";
-import { isAbandoned, jevosToMove, outcomeOf, startGame } from "../game.ts";
+import { isStale, jevosToMove, outcomeOf, startGame } from "../game.ts";
 import { jevosTurn } from "../jevos.ts";
 import { renderGame } from "../render.ts";
 import { abandon, gameLink } from "../settle.ts";
 import { GameStore } from "../store/games.ts";
-import { startThinking, stopThinking } from "../thinking.ts";
+import { isThinking, startThinking, stopThinking } from "../thinking.ts";
 import type { GameView, PlayDeps } from "../types.ts";
 import { data } from "./data.ts";
 
@@ -44,9 +44,11 @@ export function tictactoeCommand(d: PlayDeps): SlashCommand {
     const store = new GameStore(ctx.db);
     const live = store.get(guildId);
 
-    if (live && !isAbandoned(live, Date.now())) return reply(i, `A game is on: ${gameLink(live)}`);
+    if (live && !isStale(live, Date.now(), isThinking(guildId))) {
+      return reply(i, `A game is on: ${gameLink(live)}`);
+    }
 
-    if (!startThinking(guildId)) return reply(i, "A game is already starting.");
+    if (!startThinking(guildId)) return reply(i, "jevos is busy here, try again in a moment.");
 
     try {
       if (live) await abandon(ctx.client, store, live);

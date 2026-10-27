@@ -73,3 +73,10 @@ export interface PlayDeps {
   jev: Jev;
   random: () => number;
 }
+
+export interface Click {
+  messageId: string;
+  userId: string;
+}
+
+export type ClickVerdict = "play" | "not-yours" | "over";

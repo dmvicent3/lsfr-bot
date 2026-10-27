@@ -7,21 +7,19 @@ import { liveGameFor, tell } from "./guard.ts";
 export const resignHandler: ComponentHandler = {
   id: "tictactoe:resign",
   async handle(i, _args, ctx) {
-    const guildId = i.guildId ?? "";
+    const store = new GameStore(ctx.db);
+    const game = await liveGameFor(i, store);
 
-    if (!startThinking(guildId)) return tell(i, "jevos is still thinking.");
+    if (!game) return;
+
+    if (!startThinking(game.guildId)) return tell(i, "jevos is still thinking.");
 
     try {
-      const store = new GameStore(ctx.db);
-      const game = await liveGameFor(i, store);
-
-      if (!game) return;
-
-      store.remove(guildId);
+      store.remove(game.guildId);
       const outcome = { kind: "resigned" } as const;
       await i.update(renderGame({ game, outcome, thinking: false, last: null }));
     } finally {
-      stopThinking(guildId);
+      stopThinking(game.guildId);
     }
   },
 };

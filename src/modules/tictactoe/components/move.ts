@@ -18,6 +18,8 @@ interface Turn {
 
 /** jevos answers on the board: "thinking" first, then its move. */
 async function answer({ i, store, d }: Turn, mine: Moved): Promise<void> {
+  // Stored first: after a restart mid-move, the row is on jevos's turn and /tictactoe sees it stale.
+  store.put(mine.game);
   await i.update(renderGame({ ...mine, thinking: true, last: null }));
   const { moved, last } = await jevosTurn(d.jev, mine.game, d.random, Date.now());
   settle(store, moved);
@@ -46,15 +48,17 @@ export function moveHandler(d: PlayDeps): ComponentHandler {
     id: "tictactoe:move",
     async handle(i, args, ctx) {
       const square = Number(args[0]) - 1;
-      const guildId = i.guildId ?? "";
+      const store = new GameStore(ctx.db);
+      const game = await liveGameFor(i, store);
+
+      if (!game || square < 0 || square > 8) return;
+
+      const guildId = game.guildId;
 
       if (!startThinking(guildId)) return tell(i, "jevos is still thinking.");
 
       try {
-        const store = new GameStore(ctx.db);
-        const game = await liveGameFor(i, store);
-
-        if (game && square >= 0 && square < 9) await play({ i, store, d }, game, square);
+        await play({ i, store, d }, game, square);
       } finally {
         stopThinking(guildId);
       }

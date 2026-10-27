@@ -1,4 +1,4 @@
-import { ButtonStyle, ComponentType } from "discord.js";
+import { type APIMessageTopLevelComponent, ButtonStyle, ComponentType } from "discord.js";
 import { SQUARE_NAMES, other } from "./board.ts";
 import type { BoardMessage, ButtonRow, GameView, JevosPick, Mark, Outcome } from "./types.ts";
 
@@ -69,3 +69,14 @@ export function renderGame(v: GameView): BoardMessage {
     components: rows(v),
   };
 }
+
+const isButtonRow = (c: APIMessageTopLevelComponent): c is ButtonRow =>
+  c.type === ComponentType.ActionRow &&
+  c.components.every((b) => b.type === ComponentType.Button && "custom_id" in b);
+
+/** An old board's buttons as they look (a win line stays green), every one disabled. */
+export const lockedCopy = (components: readonly APIMessageTopLevelComponent[]): ButtonRow[] =>
+  components.filter(isButtonRow).map((r) => ({
+    ...r,
+    components: r.components.map((b) => ({ ...b, disabled: true })),
+  }));

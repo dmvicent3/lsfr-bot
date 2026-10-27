@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { ButtonStyle } from "discord.js";
-import { renderGame } from "../../../src/modules/tictactoe/render.ts";
+import { ButtonStyle, ComponentType } from "discord.js";
+import { lockedCopy, renderGame } from "../../../src/modules/tictactoe/render.ts";
 import type { Game, GameView, Outcome } from "../../../src/modules/tictactoe/types.ts";
 import { board } from "./fixtures.ts";
 
@@ -84,5 +84,25 @@ describe("renderGame", () => {
     const v = view({ outcome: { kind: "abandoned" } });
     expect(renderGame(v).components).toEqual([]);
     expect(text(v)).toContain("Abandoned");
+  });
+});
+
+describe("lockedCopy", () => {
+  test("an old board keeps its look, win line included, with every button disabled", () => {
+    const won = renderGame(
+      view({
+        game: { ...GAME, board: board("OX-XO-X-O") },
+        outcome: { kind: "win", winner: "jevos", line: [0, 4, 8] },
+      }),
+    ).components;
+    const live = renderGame(view()).components;
+    const copy = lockedCopy(live);
+    expect(copy.flatMap((r) => r.components).every((b) => b.disabled)).toBe(true);
+    expect(copy[0]?.components[0]).toMatchObject({ custom_id: "tictactoe:move:1", label: "❌" });
+    expect(lockedCopy(won)[0]?.components[0]?.style).toBe(ButtonStyle.Success);
+  });
+
+  test("anything but button rows is dropped", () => {
+    expect(lockedCopy([{ type: ComponentType.TextDisplay, content: "hi" }])).toEqual([]);
   });
 });

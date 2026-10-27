@@ -13,3 +13,5 @@ export function startThinking(guildId: string): boolean {
 export function stopThinking(guildId: string): void {
   thinking.delete(guildId);
 }
+
+export const isThinking = (guildId: string): boolean => thinking.has(guildId);
