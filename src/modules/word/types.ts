@@ -59,6 +59,37 @@ export type GuessResult =
   | { kind: "open"; game: Game }
   | { kind: "finished"; game: Game; award: Award };
 
+/** One player's totals over their finished games. */
+export interface PlayerStats {
+  points: number;
+  wins: number;
+  losses: number;
+  /** wins / (wins + losses); null before any game. */
+  winRate: number | null;
+  currentStreak: number;
+  longestStreak: number;
+  totalGuesses: number;
+  avgAttempts: number | null;
+  /** Wins by attempts: index 0 = solved in 1. */
+  distribution: number[];
+}
+
+/** One player's row in a period. */
+export interface Standing {
+  userId: string;
+  points: number;
+  wins: number;
+  games: number;
+  avgAttempts: number | null;
+  lastFinishedAt: number;
+}
+
+export interface LeaderboardPage {
+  content: string;
+  page: number;
+  pages: number;
+}
+
 /** Per-server options; changes apply from the next puzzle. */
 export interface WordSettings {
   length: number;
