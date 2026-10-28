@@ -12,7 +12,10 @@ function footer(list: Standing[], viewerId: string): string {
   const rank = rankOf(list, viewerId);
   const mine = rank === null ? undefined : list[rank - 1];
 
-  return mine ? `You: #${rank} · ${mine.points} pts` : "You haven't played this period.";
+  /** Named, not "You": the message is public and follows whoever asked or paged last. */
+  const who = `<@${viewerId}>`;
+
+  return mine ? `${who}: #${rank} · ${mine.points} pts` : `${who} hasn't played this period.`;
 }
 
 /** One page of the period's standings; the page is clamped to the ones there are. */

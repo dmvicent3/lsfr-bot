@@ -27,7 +27,8 @@ test("page 2 of 23 players shows ranks 11-20 and the viewer's rank in the footer
   expect(p.content).toContain("**20.** <@u20>");
   expect(p.content).not.toContain("**10.**");
   expect(p.content).not.toContain("**21.**");
-  expect(p.content).toContain("You: #3 · 980 pts");
+  expect(p.content).toContain("<@u3>: #3 · 980 pts");
+  expect(p.content).not.toContain("You:");
 });
 
 test("rows carry mentions, points, wins and win rate", () => {
@@ -40,7 +41,7 @@ test("heading names the period", () => {
 
 test("a viewer who hasn't played is told so", () => {
   expect(renderLeaderboard({ ...V, viewerId: "nobody" }).content).toContain(
-    "You haven't played this period.",
+    "<@nobody> hasn't played this period.",
   );
 });
 
