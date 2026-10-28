@@ -20,3 +20,16 @@ export type RefusedReason = "finished" | "length" | "letters" | "unknown" | "rep
 
 /** A guess that counts, or why it doesn't (it then costs no attempt). */
 export type GuessCheck = { ok: true; word: string } | { ok: false; reason: RefusedReason };
+
+/** Points for one finished game, with the lines that explain them. */
+export interface Award {
+  points: number;
+  parts: string[];
+}
+
+/** A player's latest finished game, as streaks need it. */
+export interface LastGame {
+  date: string;
+  won: boolean;
+  streak: number;
+}
