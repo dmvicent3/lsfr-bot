@@ -58,3 +58,9 @@ export type GuessResult =
   | { kind: "refused"; reason: RefusedReason }
   | { kind: "open"; game: Game }
   | { kind: "finished"; game: Game; award: Award };
+
+/** Per-server options; changes apply from the next puzzle. */
+export interface WordSettings {
+  length: number;
+  timeZone: string;
+}
