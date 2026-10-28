@@ -1,3 +1,4 @@
+import { wallOf, wallToInstant } from "../../../core/zoned.ts";
 import type { Clock, Today, When } from "./types.ts";
 
 export const TIME_ZONE = "Europe/Lisbon";
@@ -9,34 +10,6 @@ const CLOCK = /^(\d{1,2})[:h](\d{2})$/;
 const DATE = /^(\d{4})-(\d{2})-(\d{2})(?:\s+(\S+))?$/;
 const DAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 const MORNING: Clock = { h: 9, min: 0 };
-
-/** The wall-clock fields of instant `t` in `tz`. */
-function wallOf(t: number, tz: string): Record<string, number> {
-  const fmt = new Intl.DateTimeFormat("en-US", {
-    timeZone: tz,
-    hourCycle: "h23",
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-  });
-
-  return Object.fromEntries(fmt.formatToParts(t).map((p) => [p.type, Number(p.value)]));
-}
-
-/** How far `tz`'s wall clock is ahead of UTC at instant `t`, in ms. */
-function offsetAt(t: number, tz: string): number {
-  const w = wallOf(t, tz);
-  const wall = Date.UTC(w["year"] ?? 0, (w["month"] ?? 1) - 1, w["day"], w["hour"], w["minute"]);
-
-  return wall - (t - (t % 60_000));
-}
-
-/** A wall-clock time (as if UTC) to an instant; the second pass settles the DST switch hours. */
-function wallToInstant(wall: number, tz: string): number {
-  return wall - offsetAt(wall - offsetAt(wall, tz), tz);
-}
 
 function todayIn(now: number, tz: string): Today {
   const w = wallOf(now, tz);
