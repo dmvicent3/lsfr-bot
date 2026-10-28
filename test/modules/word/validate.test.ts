@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import type { RefusedReason } from "../../../src/modules/word/types.ts";
 import { checkGuess, refusalText } from "../../../src/modules/word/validate.ts";
 
 const base = {
@@ -13,7 +14,7 @@ test("trims and lowercases", () => {
   expect(checkGuess({ ...base, text: " CRANE " })).toEqual({ ok: true, word: "crane" });
 });
 
-test.each([
+test.each<[Partial<typeof base>, RefusedReason]>([
   [{ text: "crane", finished: true }, "finished"],
   [{ text: "cr4ne" }, "letters"],
   [{ text: "cr ne" }, "letters"],

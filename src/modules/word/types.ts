@@ -33,3 +33,28 @@ export interface LastGame {
   won: boolean;
   streak: number;
 }
+
+/** A server's word for one date. */
+export interface Puzzle {
+  guildId: string;
+  date: string;
+  word: string;
+  length: number;
+}
+
+/** One player's game on one puzzle; won, points, streak and finishedAt are null while open. */
+export interface Game {
+  guildId: string;
+  date: string;
+  userId: string;
+  guesses: string[];
+  won: boolean | null;
+  points: number | null;
+  streak: number | null;
+  finishedAt: number | null;
+}
+
+export type GuessResult =
+  | { kind: "refused"; reason: RefusedReason }
+  | { kind: "open"; game: Game }
+  | { kind: "finished"; game: Game; award: Award };
