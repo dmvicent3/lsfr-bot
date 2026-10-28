@@ -8,6 +8,6 @@ export const squares = (marks: Mark[]): string => marks.map((m) => SQUARE[m]).jo
 /** Each guess as spaced capitals, then its squares. */
 export function boardLines(guesses: string[], answer: string): string {
   return guesses
-    .map((g) => `\`${[...g.toUpperCase()].join(" ")}\` ${squares(feedback(g, answer))}`)
+    .map((g) => `\`${g.toUpperCase().split("").join(" ")}\` ${squares(feedback(g, answer))}`)
     .join("\n");
 }

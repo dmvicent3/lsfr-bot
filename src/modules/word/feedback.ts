@@ -2,14 +2,14 @@ import type { Mark } from "./types.ts";
 
 /** Hits first; then each other letter is near while the answer has an unmatched copy left. */
 export function feedback(guess: string, answer: string): Mark[] {
-  const marks: Mark[] = [...guess].map((c, i) => (answer[i] === c ? "hit" : "miss"));
+  const marks: Mark[] = guess.split("").map((c, i) => (answer[i] === c ? "hit" : "miss"));
   const left = new Map<string, number>();
 
-  for (const [i, c] of [...answer].entries()) {
+  for (const [i, c] of answer.split("").entries()) {
     if (marks[i] !== "hit") left.set(c, (left.get(c) ?? 0) + 1);
   }
 
-  for (const [i, c] of [...guess].entries()) {
+  for (const [i, c] of guess.split("").entries()) {
     const n = left.get(c) ?? 0;
 
     if (marks[i] === "hit" || n === 0) continue;
