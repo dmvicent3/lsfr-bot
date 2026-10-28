@@ -15,3 +15,8 @@ export interface DateRange {
   to: string;
   label: string;
 }
+
+export type RefusedReason = "finished" | "length" | "letters" | "unknown" | "repeat";
+
+/** A guess that counts, or why it doesn't (it then costs no attempt). */
+export type GuessCheck = { ok: true; word: string } | { ok: false; reason: RefusedReason };
