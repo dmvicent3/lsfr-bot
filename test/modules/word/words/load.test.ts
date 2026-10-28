@@ -30,3 +30,8 @@ describe("wordLists", () => {
 
   test("the same lists object comes back twice", () => expect(wordLists(5)).toBe(wordLists(5)));
 });
+
+test("everyday words outside ENABLE are accepted guesses", () => {
+  for (const w of ["admin", "cyber", "blogs", "bling"])
+    expect(wordLists(5)?.accepted.has(w)).toBe(true);
+});

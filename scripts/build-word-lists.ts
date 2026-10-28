@@ -17,11 +17,8 @@ const [enablePath, frequencyPath] = process.argv.slice(2);
 if (!enablePath || !frequencyPath) throw new Error("usage: build-word-lists <enable1> <en_50k>");
 
 const enable = new Set(lines(enablePath).map((w) => w.trim()));
-const common = new Set(
-  lines(frequencyPath)
-    .slice(0, COMMON)
-    .map((l) => l.split(" ")[0] ?? ""),
-);
+const frequent = lines(frequencyPath).map((l) => l.split(" ")[0] ?? "");
+const common = new Set(frequent.slice(0, COMMON));
 /** Kept out of the answers (still fine as guesses): slurs, sex, bodily and cruel words, words mostly used as names. */
 const blocked = new Set(
   readFileSync(new URL("word-blocklist.txt", import.meta.url), "utf8")
@@ -36,10 +33,12 @@ const write = (name: string, words: string[]): void =>
 
 for (const n of LENGTHS) {
   const shape = new RegExp(`^[a-z]{${n}}$`);
-  const accepted = [...enable].filter((w) => shape.test(w));
-  write(`accepted-${n}.txt`, accepted);
+  const dictionary = [...enable].filter((w) => shape.test(w));
+  /** Guesses: the dictionary plus any frequent word (newer words ENABLE lacks, names, slang). */
+  const guesses = new Set([...dictionary, ...frequent.filter((w) => shape.test(w))]);
+  write(`accepted-${n}.txt`, [...guesses]);
   write(
     `answers-${n}.txt`,
-    accepted.filter((w) => common.has(w) && !isPlural(w) && !blocked.has(w)),
+    dictionary.filter((w) => common.has(w) && !isPlural(w) && !blocked.has(w)),
   );
 }

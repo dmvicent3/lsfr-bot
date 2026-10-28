@@ -30,7 +30,7 @@ const TEXTS: Record<
   finished: (c) => `You've finished Word #${c.number}, next puzzle in ${c.wait}.`,
   letters: () => "Letters only.",
   length: (c) => `Guesses are ${c.length} letters.`,
-  unknown: () => "That's not in the word list.",
+  unknown: () => "That's not in the word list. No attempt used.",
   repeat: () => "You already tried that.",
 };
 

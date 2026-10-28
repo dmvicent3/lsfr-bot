@@ -30,6 +30,6 @@ test("refusal texts", () => {
   expect(refusalText("finished", c)).toBe("You've finished Word #4, next puzzle in 3h 2m.");
   expect(refusalText("letters", c)).toBe("Letters only.");
   expect(refusalText("length", c)).toBe("Guesses are 5 letters.");
-  expect(refusalText("unknown", c)).toBe("That's not in the word list.");
+  expect(refusalText("unknown", c)).toBe("That's not in the word list. No attempt used.");
   expect(refusalText("repeat", c)).toBe("You already tried that.");
 });
