@@ -12,6 +12,7 @@ import { motorsportModule } from "./modules/motorsport/index.ts";
 import { remindersModule } from "./modules/reminders/index.ts";
 import { rssModule } from "./modules/rss/index.ts";
 import { tictactoeModule } from "./modules/tictactoe/index.ts";
+import { wordModule } from "./modules/word/index.ts";
 
 guardProcess();
 const config = loadConfig(process.env);
@@ -24,6 +25,7 @@ const modules: BotModule[] = [
   motorsportModule,
   chatModule,
   remindersModule,
+  wordModule(),
   mangaModule(),
   ...(jev ? [rssModule(jev, config.embedUrl), tictactoeModule(jev)] : []),
 ];
