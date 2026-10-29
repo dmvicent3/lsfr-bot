@@ -6,6 +6,11 @@ export type Preset = "beginner" | "intermediate" | "expert";
 
 export type Axis = "col" | "row";
 
+/** How the board's cursor moves: column/row menus, arrow buttons, or both. */
+export type Controls = "menus" | "arrows" | "both";
+
+export type Direction = "up" | "down" | "left" | "right";
+
 export interface Setup {
   width: number;
   height: number;
@@ -30,6 +35,7 @@ export interface Game extends Board {
   createdAt: number;
   startedAt: number | null;
   finishedAt: number | null;
+  controls: Controls;
 }
 
 export type NewGame = Omit<Game, "id">;

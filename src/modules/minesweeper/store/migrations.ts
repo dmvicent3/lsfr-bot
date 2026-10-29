@@ -26,4 +26,8 @@ export const minesweeperMigrations: Migration[] = [
         ON minesweeper_games (guild_id, player_id, finished_at);
     `,
   },
+  {
+    id: "minesweeper-002-controls",
+    sql: "ALTER TABLE minesweeper_games ADD COLUMN controls TEXT NOT NULL DEFAULT 'menus';",
+  },
 ];

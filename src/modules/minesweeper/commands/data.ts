@@ -1,4 +1,9 @@
-import { InteractionContextType, SlashCommandBuilder } from "discord.js";
+import {
+  InteractionContextType,
+  SlashCommandBuilder,
+  type SlashCommandIntegerOption,
+  type SlashCommandSubcommandBuilder,
+} from "discord.js";
 import { MAX_SIDE, MIN_SIDE } from "../setup.ts";
 
 const DIFFICULTY_CHOICES = [
@@ -7,36 +12,40 @@ const DIFFICULTY_CHOICES = [
   { name: "Expert 20×20 · 80", value: "expert" },
 ];
 
+const CONTROLS_CHOICES = [
+  { name: "Column and row menus", value: "menus" },
+  { name: "Arrow buttons", value: "arrows" },
+  { name: "Menus and arrows", value: "both" },
+];
+
+const side = (o: SlashCommandIntegerOption, name: string, description: string) =>
+  o.setName(name).setDescription(description).setMinValue(MIN_SIDE).setMaxValue(MAX_SIDE);
+
+const play = (sub: SlashCommandSubcommandBuilder) =>
+  sub
+    .setName("play")
+    .setDescription("Start a board")
+    .addStringOption((o) =>
+      o
+        .setName("difficulty")
+        .setDescription("Default: beginner")
+        .addChoices(...DIFFICULTY_CHOICES),
+    )
+    .addIntegerOption((o) => side(o, "width", "Columns, 5 to 20"))
+    .addIntegerOption((o) => side(o, "height", "Rows, 5 to 20"))
+    .addIntegerOption((o) => o.setName("mines").setDescription("Number of mines").setMinValue(1))
+    .addStringOption((o) =>
+      o
+        .setName("controls")
+        .setDescription("How to move the cursor (default: menus)")
+        .addChoices(...CONTROLS_CHOICES),
+    );
+
 export const data = new SlashCommandBuilder()
   .setName("minesweeper")
   .setDescription("Play Minesweeper")
   .setContexts(InteractionContextType.Guild)
-  .addSubcommand((sub) =>
-    sub
-      .setName("play")
-      .setDescription("Start a board")
-      .addStringOption((o) =>
-        o
-          .setName("difficulty")
-          .setDescription("Default: beginner")
-          .addChoices(...DIFFICULTY_CHOICES),
-      )
-      .addIntegerOption((o) =>
-        o
-          .setName("width")
-          .setDescription("Columns, 5 to 20")
-          .setMinValue(MIN_SIDE)
-          .setMaxValue(MAX_SIDE),
-      )
-      .addIntegerOption((o) =>
-        o
-          .setName("height")
-          .setDescription("Rows, 5 to 20")
-          .setMinValue(MIN_SIDE)
-          .setMaxValue(MAX_SIDE),
-      )
-      .addIntegerOption((o) => o.setName("mines").setDescription("Number of mines").setMinValue(1)),
-  )
+  .addSubcommand(play)
   .addSubcommand((sub) =>
     sub
       .setName("stats")

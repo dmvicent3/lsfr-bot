@@ -12,8 +12,8 @@ export class GameStore {
       .query(
         `INSERT INTO minesweeper_games
            (guild_id, channel_id, message_id, player_id, width, height, mines, field, cells,
-            cursor, hit, created_at, started_at, finished_at, result)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            cursor, hit, created_at, started_at, finished_at, result, controls)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       )
       .run(
         g.guildId,
@@ -31,6 +31,7 @@ export class GameStore {
         g.startedAt,
         g.finishedAt,
         g.result,
+        g.controls,
       );
 
     return { ...g, id: Number(lastInsertRowid) };

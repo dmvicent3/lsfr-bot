@@ -11,7 +11,14 @@ import type { Game, Setup } from "../../../src/modules/minesweeper/types.ts";
 import { game, seeded } from "./fixtures.ts";
 
 const fresh = (setup: Setup): Game => ({
-  ...startGame({ guildId: "g", channelId: "c", playerId: "u", setup, now: 500 }),
+  ...startGame({
+    guildId: "g",
+    channelId: "c",
+    playerId: "u",
+    setup,
+    controls: "arrows",
+    now: 500,
+  }),
   id: 1,
 });
 
@@ -23,6 +30,7 @@ describe("startGame", () => {
     expect(g.cells.every((c) => c === "hidden")).toBe(true);
     expect(g.field).toBeNull();
     expect(g.createdAt).toBe(500);
+    expect(g.controls).toBe("arrows");
     expect(isStarted(g)).toBe(false);
   });
 });

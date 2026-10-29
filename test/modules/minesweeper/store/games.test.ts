@@ -32,6 +32,11 @@ describe("GameStore", () => {
     expect(store.byMessage("m")).toMatchObject({ id: saved.id, field: null, startedAt: null });
   });
 
+  test("a game keeps its controls", () => {
+    store.insert(live({ controls: "both" }));
+    expect(store.byMessage("m")?.controls).toBe("both");
+  });
+
   test("an unknown message has no game", () => {
     expect(store.byMessage("nope")).toBeNull();
   });
@@ -75,5 +80,19 @@ describe("GameStore", () => {
       { width: 3, height: 3, mines: 1, result: "won", startedAt: 1_000, finishedAt: 3_000 },
       { width: 3, height: 3, mines: 1, result: "lost", startedAt: 1_000, finishedAt: 4_000 },
     ]);
+  });
+});
+
+describe("minesweeper-002-controls", () => {
+  test("games stored before it keep the menus", () => {
+    const db = new Database(":memory:", { strict: true });
+    runMigrations(db, minesweeperMigrations.slice(0, 1));
+    db.run(
+      `INSERT INTO minesweeper_games (guild_id, channel_id, message_id, player_id, width, height,
+         mines, cells, cursor, created_at) VALUES ('g', 'c', 'old', 'u', 5, 5, 3, ?, 12, 0)`,
+      ["h".repeat(25)],
+    );
+    runMigrations(db, minesweeperMigrations);
+    expect(new GameStore(db).byMessage("old")?.controls).toBe("menus");
   });
 });

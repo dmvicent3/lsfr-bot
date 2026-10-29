@@ -38,6 +38,7 @@ export function game(rows: string[], opts: Partial<Game> = {}): Game {
     createdAt: 0,
     startedAt: 1_000,
     finishedAt: null,
+    controls: "menus",
     ...opts,
   };
 }

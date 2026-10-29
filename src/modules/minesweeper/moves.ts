@@ -3,13 +3,14 @@ import { toggleFlag } from "./flag.ts";
 import { colOf, rowOf, toIndex } from "./grid.ts";
 import { isWon } from "./outcome.ts";
 import { revealAt } from "./reveal.ts";
-import type { Axis, Game, NewGame, Setup, Step } from "./types.ts";
+import type { Axis, Controls, Game, NewGame, Setup, Step } from "./types.ts";
 
 interface StartOptions {
   guildId: string;
   channelId: string;
   playerId: string;
   setup: Setup;
+  controls: Controls;
   now: number;
 }
 
@@ -30,6 +31,7 @@ export function startGame(o: StartOptions): NewGame {
     createdAt: o.now,
     startedAt: null,
     finishedAt: null,
+    controls: o.controls,
   };
 }
 

@@ -12,8 +12,12 @@ describe("minesweeperModule", () => {
       "minesweeper:reveal",
       "minesweeper:flag",
       "minesweeper:giveup",
+      "minesweeper:move",
     ]);
     expect(m.commands?.map((c) => c.data.name)).toEqual(["minesweeper"]);
-    expect(m.migrations?.map((x) => x.id)).toEqual(["minesweeper-001-init"]);
+    expect(m.migrations?.map((x) => x.id)).toEqual([
+      "minesweeper-001-init",
+      "minesweeper-002-controls",
+    ]);
   });
 });

@@ -17,6 +17,7 @@ export interface GameRow {
   started_at: number | null;
   finished_at: number | null;
   result: string | null;
+  controls: string;
 }
 
 export interface FinishedDbRow {

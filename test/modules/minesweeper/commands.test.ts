@@ -17,7 +17,18 @@ describe("/minesweeper", () => {
 
     if (play?.type !== ApplicationCommandOptionType.Subcommand) throw new Error("subcommand");
 
-    expect(play.options?.map((o) => o.name)).toEqual(["difficulty", "width", "height", "mines"]);
+    expect(play.options?.map((o) => o.name)).toEqual([
+      "difficulty",
+      "width",
+      "height",
+      "mines",
+      "controls",
+    ]);
+    const controls = play.options?.find((o) => o.name === "controls");
+
+    if (controls?.type !== ApplicationCommandOptionType.String) throw new Error("string");
+
+    expect(controls.choices?.map((c) => c.value)).toEqual(["menus", "arrows", "both"]);
     const width = play.options?.find((o) => o.name === "width");
 
     if (width?.type !== ApplicationCommandOptionType.Integer) throw new Error("integer");

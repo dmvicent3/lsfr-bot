@@ -1,4 +1,4 @@
-import type { CellState, FinishedRow, Game, Result } from "../types.ts";
+import type { CellState, Controls, FinishedRow, Game, Result } from "../types.ts";
 import type { FinishedDbRow, GameRow } from "./types.ts";
 
 const CELLS: Record<string, CellState> = { h: "hidden", o: "open", f: "flag" };
@@ -6,6 +6,8 @@ const CELLS: Record<string, CellState> = { h: "hidden", o: "open", f: "flag" };
 const CODES: Record<CellState, string> = { hidden: "h", open: "o", flag: "f" };
 
 const RESULTS: Record<string, Result> = { won: "won", lost: "lost", "gave-up": "gave-up" };
+
+const CONTROLS: Record<string, Controls> = { menus: "menus", arrows: "arrows", both: "both" };
 
 const toResult = (text: string | null): Result | null => RESULTS[text ?? ""] ?? null;
 
@@ -31,6 +33,7 @@ export const toGame = (r: GameRow): Game => ({
   createdAt: r.created_at,
   startedAt: r.started_at,
   finishedAt: r.finished_at,
+  controls: CONTROLS[r.controls] ?? "menus",
 });
 
 export const toFinished = (r: FinishedDbRow): FinishedRow => ({

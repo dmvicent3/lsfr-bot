@@ -3,7 +3,7 @@ import { closeBoard } from "../close.ts";
 import { applyGiveUp, isStarted, startGame } from "../moves.ts";
 import { renderBoard } from "../render/board.ts";
 import { resolveSetup } from "../setup.ts";
-import type { Game, NewGame, Preset, Setup, SetupOptions } from "../types.ts";
+import type { Game, NewGame, Preset, Setup, SetupOptions, Controls } from "../types.ts";
 import type { CommandCtx } from "./types.ts";
 
 const PRESET_NAMES: Record<string, Preset> = {
@@ -11,6 +11,8 @@ const PRESET_NAMES: Record<string, Preset> = {
   intermediate: "intermediate",
   expert: "expert",
 };
+
+const CONTROLS: Record<string, Controls> = { menus: "menus", arrows: "arrows", both: "both" };
 
 function options({ i }: CommandCtx): SetupOptions {
   return {
@@ -43,6 +45,7 @@ async function post(c: CommandCtx, setup: Setup): Promise<NewGame> {
     channelId: c.i.channelId,
     playerId: c.i.user.id,
     setup,
+    controls: CONTROLS[c.i.options.getString("controls") ?? ""] ?? "menus",
     now: Date.now(),
   });
   const view = renderBoard(
