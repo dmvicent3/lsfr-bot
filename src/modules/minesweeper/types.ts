@@ -48,3 +48,9 @@ export interface RevealStep {
   hit: number | null;
   hint: string | null;
 }
+
+/** A move's outcome; a hint means the game is unchanged and nothing needs saving. */
+export interface Step {
+  game: Game;
+  hint: string | null;
+}
