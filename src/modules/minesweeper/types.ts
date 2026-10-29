@@ -41,3 +41,10 @@ export interface SetupOptions {
   height: number | null;
   mines: number | null;
 }
+
+/** A reveal's outcome; a hint means nothing changed. */
+export interface RevealStep {
+  cells: CellState[];
+  hit: number | null;
+  hint: string | null;
+}
