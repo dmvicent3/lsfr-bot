@@ -39,7 +39,11 @@ describe("moveCursor", () => {
 
 describe("applyReveal", () => {
   test("the first reveal lays mines, starts the clock and opens the cursor", () => {
-    const { game: g, hint } = applyReveal(fresh({ width: 9, height: 9, mines: 10 }), 2_000, seeded(5));
+    const { game: g, hint } = applyReveal(
+      fresh({ width: 9, height: 9, mines: 10 }),
+      2_000,
+      seeded(5),
+    );
     expect(hint).toBeNull();
     expect(g.field?.filter(Boolean)).toHaveLength(10);
     expect(g.startedAt).toBe(2_000);

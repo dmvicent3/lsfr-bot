@@ -5,8 +5,7 @@ import { board, seeded } from "./fixtures.ts";
 
 const BEGINNER = { width: 9, height: 9, mines: 10 };
 
-const mineIndexes = (field: boolean[]) =>
-  field.flatMap((mine, i) => (mine ? [i] : []));
+const mineIndexes = (field: boolean[]) => field.flatMap((mine, i) => (mine ? [i] : []));
 
 describe("layMines", () => {
   for (const center of [40, 0, 4]) {
