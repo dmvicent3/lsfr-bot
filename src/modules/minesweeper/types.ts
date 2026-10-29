@@ -54,3 +54,25 @@ export interface Step {
   game: Game;
   hint: string | null;
 }
+
+/** A finished, started game as stats need it. */
+export interface FinishedRow extends Setup {
+  result: Result;
+  startedAt: number;
+  finishedAt: number;
+}
+
+export interface SetupLine {
+  label: string;
+  games: number;
+  wins: number;
+  bestSeconds: number;
+}
+
+export interface Stats {
+  games: number;
+  wins: number;
+  streak: number;
+  bestStreak: number;
+  setups: SetupLine[];
+}
