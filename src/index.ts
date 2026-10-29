@@ -8,6 +8,7 @@ import { coreMigrations } from "./core/settings.ts";
 import { chatModule } from "./modules/chat/index.ts";
 import { helpModule } from "./modules/help/index.ts";
 import { mangaModule } from "./modules/manga/index.ts";
+import { minesweeperModule } from "./modules/minesweeper/index.ts";
 import { motorsportModule } from "./modules/motorsport/index.ts";
 import { remindersModule } from "./modules/reminders/index.ts";
 import { rssModule } from "./modules/rss/index.ts";
@@ -26,6 +27,7 @@ const modules: BotModule[] = [
   chatModule,
   remindersModule,
   wordModule(),
+  minesweeperModule(),
   mangaModule(),
   ...(jev ? [rssModule(jev, config.embedUrl), tictactoeModule(jev)] : []),
 ];
