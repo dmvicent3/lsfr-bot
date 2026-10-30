@@ -1,6 +1,7 @@
 import { normalize } from "../match.ts";
 import type { Difficulty, Picture } from "../types.ts";
 import { isBanned } from "./banned.ts";
+import { cleanAliases, displayName, surname } from "./picture-names.ts";
 
 /** One Wikidata result: the item, its English label, an image, its fame and alt labels. */
 export interface PictureRow {
@@ -11,40 +12,55 @@ export interface PictureRow {
   aliases: string[];
 }
 
-const LATIN = /^[\p{Script=Latin}\p{N}\p{P}\p{Zs}]+$/u;
-const MIN_ALIAS = 3;
+/** The first row per item; items whose rows disagree on the label (two creators) are left out. */
+function onePerItem(rows: PictureRow[]): PictureRow[] {
+  const labels = new Map<string, Set<string>>();
 
-function cleanAliases(label: string, aliases: string[]): string[] {
-  const answer = normalize(label);
-  const kept = aliases.filter(
-    (a) => a.length >= MIN_ALIAS && LATIN.test(a) && normalize(a) !== answer,
-  );
+  for (const r of rows) labels.set(r.qid, (labels.get(r.qid) ?? new Set()).add(r.label));
 
-  return [...new Set(kept)];
-}
-
-function firstPerItem(rows: PictureRow[]): PictureRow[] {
   const seen = new Set<string>();
 
-  return rows.filter((r) => !seen.has(r.qid) && seen.add(r.qid));
+  return rows.filter((r) => labels.get(r.qid)?.size === 1 && !seen.has(r.qid) && seen.add(r.qid));
 }
 
 /** Items whose photo would land badly in a casual game. */
-const BLOCKED = new Set(["george floyd", "adolf hitler"]);
+const BLOCKED = new Set([
+  "george floyd",
+  "adolf hitler",
+  "benito mussolini",
+  "mao zedong",
+  "joseph stalin",
+  "pol pot",
+  "osama bin laden",
+  "saddam hussein",
+  "heinrich himmler",
+  "joseph goebbels",
+]);
 
-/** "Madame X (Virginie Gautreau)" → "Madame X". */
-const shortLabel = (label: string): string =>
-  label.replace(/\s*\([^)]*\)\s*/g, " ").trim() || label;
+/** So one painter's twenty paintings don't crowd the rest out. */
+const PER_ANSWER = 3;
+
+function capPerAnswer(rows: PictureRow[]): PictureRow[] {
+  const count = new Map<string, number>();
+
+  return rows.filter((r) => {
+    const key = normalize(displayName(r.label));
+    count.set(key, (count.get(key) ?? 0) + 1);
+
+    return (count.get(key) ?? 0) <= PER_ANSWER;
+  });
+}
 
 const THIRDS: Difficulty[] = ["easy", "medium", "hard"];
-const SUFFIX = /^(jr|sr|i{1,3}|iv)\.?$/i;
 
-/** "Martin Luther King Jr." → "King": what people call someone. */
-const surname = (label: string): string =>
-  label
-    .split(" ")
-    .filter((w) => !SUFFIX.test(w))
-    .at(-1) ?? label;
+const kept = (rows: PictureRow[]): PictureRow[] =>
+  capPerAnswer(
+    onePerItem(rows)
+      .filter((r) => !/^Q\d+$/.test(r.label))
+      .filter((r) => !BLOCKED.has(normalize(r.label)))
+      .filter((r) => !isBanned({ question: r.label, answer: r.label, wrong: r.aliases }))
+      .toSorted((a, b) => b.links - a.links),
+  );
 
 /** Pictures for one category: one per item, most famous first, ids kept from `previous`. */
 export function toPictures(p: {
@@ -56,24 +72,21 @@ export function toPictures(p: {
   /** Also accept the last word of the name (people, painters). */
   surnames?: boolean;
 }): Picture[] {
-  const rows = firstPerItem(p.rows)
-    .filter((r) => !/^Q\d+$/.test(r.label))
-    .filter((r) => !BLOCKED.has(normalize(r.label)))
-    .filter((r) => !isBanned({ question: r.label, answer: r.label, wrong: r.aliases }))
-    .toSorted((a, b) => b.links - a.links);
+  const rows = kept(p.rows);
 
-  return rows.map((r, i) => ({
-    id: p.previous.get(`${p.category}:${r.qid}`) ?? p.nextId(),
-    qid: r.qid,
-    category: p.category,
-    prompt: p.prompt,
-    image: r.image,
-    answer: shortLabel(r.label),
-    aliases: cleanAliases(shortLabel(r.label), [
-      ...r.aliases,
-      r.label,
-      ...(p.surnames ? [surname(shortLabel(r.label))] : []),
-    ]),
-    difficulty: THIRDS[Math.floor((i * 3) / rows.length)] ?? "hard",
-  }));
+  return rows.map((r, i) => {
+    const answer = displayName(r.label);
+    const extra = p.surnames ? [surname(answer)] : [];
+
+    return {
+      id: p.previous.get(`${p.category}:${r.qid}`) ?? p.nextId(),
+      qid: r.qid,
+      category: p.category,
+      prompt: p.prompt,
+      image: r.image,
+      answer,
+      aliases: cleanAliases(answer, [...r.aliases, r.label, ...extra]),
+      difficulty: THIRDS[Math.floor((i * 3) / rows.length)] ?? "hard",
+    };
+  });
 }

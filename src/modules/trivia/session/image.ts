@@ -10,8 +10,12 @@ const THUMB = "https://commons.wikimedia.org/wiki/Special:FilePath/";
 const HEADERS = { "User-Agent": "GorkTriviaBuilder/1.0 (Gork Discord bot)" };
 const TIMEOUT_MS = 10_000;
 const MAX_BYTES = 8 * 1024 * 1024;
-/** Commons serves SVGs as PNG thumbnails and photos as JPEG. */
-const NAMES: Record<string, string> = { "image/png": "picture.png", "image/jpeg": "picture.jpg" };
+/** Commons serves SVGs as PNG thumbnails, photos as JPEG, animations as GIF. */
+const NAMES: Record<string, string> = {
+  "image/png": "picture.png",
+  "image/jpeg": "picture.jpg",
+  "image/gif": "picture.gif",
+};
 
 /** A 640px Commons thumbnail, or null when it is slow, too big, not an image or missing. */
 export async function downloadPicture(file: string, fetchFn: FetchFn): Promise<PictureFile | null> {

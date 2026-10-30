@@ -7,9 +7,10 @@ const serving =
   async () =>
     new Response(new Uint8Array(size), { status, headers: { "content-type": type } });
 
-test("png and jpeg come back named by type", async () => {
+test("png, jpeg and gif come back named by type", async () => {
   expect((await downloadPicture("Flag.svg", serving("image/png")))?.name).toBe("picture.png");
   expect((await downloadPicture("Photo.jpg", serving("image/jpeg")))?.name).toBe("picture.jpg");
+  expect((await downloadPicture("Anim.gif", serving("image/gif")))?.name).toBe("picture.gif");
 });
 
 test("the request goes to the Commons thumbnail with the builder's user agent", async () => {

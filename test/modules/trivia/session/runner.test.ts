@@ -311,3 +311,10 @@ test("a round opened after a slow download starts its clock when it is posted", 
 
   expect(runner.state.round?.startedAt).toBe(T0 + 8_000);
 });
+
+test("a picture that failed to download is marked asked, so it is not drawn again next", async () => {
+  const { repo, runner } = setup({ pictures: flags, lists: [], random: scripted(0.2, 0, 0.2) });
+  await runner.tick(T0);
+
+  expect(repo.asked.lastAskedMap("g").has("question:100001")).toBe(true);
+});

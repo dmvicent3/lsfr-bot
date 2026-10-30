@@ -103,3 +103,40 @@ test("people and painters also answer to the last word of their name", () => {
   expect(people.map((p) => p.aliases)).toEqual([["Schumacher"], ["King"]]);
   expect(build([row("Q3", "Costa Rica", 1)])[0]?.aliases).toEqual([]);
 });
+
+test("an item with two different labels (two creators) is left out", () => {
+  const out = build([
+    row("Q1", "Hubert van Eyck", 9),
+    row("Q1", "Jan van Eyck", 9),
+    row("Q2", "Chad", 1),
+  ]);
+
+  expect(out.map((p) => p.answer)).toEqual(["Chad"]);
+});
+
+test("at most three pictures share an answer, the most famous kept", () => {
+  const rows = [5, 4, 3, 2, 1].map((links) => row(`Q${links}`, "Vincent van Gogh", links));
+
+  expect(build(rows).map((p) => p.qid)).toEqual(["Q5", "Q4", "Q3"]);
+});
+
+test("formal state names are answered by the short name", () => {
+  const out = build([
+    row("Q1", "Kingdom of the Netherlands", 3),
+    row("Q2", "People's Republic of China", 2),
+    row("Q3", "Democratic Republic of the Congo", 1),
+  ]);
+
+  expect(out.map((p) => p.answer)).toEqual([
+    "Netherlands",
+    "China",
+    "Democratic Republic of the Congo",
+  ]);
+  expect(out[0]?.aliases).toEqual(["Kingdom of the Netherlands"]);
+});
+
+test("dictators are left out", () => {
+  const out = build([row("Q1", "Benito Mussolini", 2), row("Q2", "Mao Zedong", 1)]);
+
+  expect(out).toEqual([]);
+});
