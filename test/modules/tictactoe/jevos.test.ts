@@ -5,9 +5,24 @@ import { askJevos, jevosTurn } from "../../../src/modules/tictactoe/jevos.ts";
 import type { Game } from "../../../src/modules/tictactoe/types.ts";
 import { board } from "./fixtures.ts";
 
-const MID_GAME = board("X-O-X----");
+/** X to move, nothing forced. */
+const MID_GAME = board("X---O----");
+
+const unasked: Jev = {
+  yesNo: async () => {
+    throw new TypeError("jev asked about a forced move");
+  },
+};
 
 describe("askJevos", () => {
+  test("takes a win without asking jev, over a block", async () => {
+    expect(await askJevos(unasked, board("OO-XX----"), () => 0)).toEqual({ square: 5, share: 1 });
+  });
+
+  test("blocks the other side's win without asking jev", async () => {
+    expect(await askJevos(unasked, board("X-O-X----"), () => 0)).toEqual({ square: 8, share: 1 });
+  });
+
   test("asks about every empty square with room for the facts, and plays the top one", async () => {
     let opts: YesNoOptions | undefined;
     let asked: string[] = [];
@@ -20,7 +35,7 @@ describe("askJevos", () => {
       },
     };
     expect((await askJevos(jev, MID_GAME, () => 0)).square).toBe(8);
-    expect(asked).toEqual(["2", "4", "6", "7", "8", "9"]);
+    expect(asked).toEqual(["2", "3", "4", "6", "7", "8", "9"]);
     expect(opts).toEqual({ maxState: 4000 });
   });
 

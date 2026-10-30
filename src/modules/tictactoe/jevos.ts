@@ -1,6 +1,7 @@
 import { JevError } from "../../core/jev/http.ts";
 import type { Jev } from "../../core/jev/types.ts";
 import { turnOf } from "./board.ts";
+import { forcedSquares } from "./forced.ts";
 import { jevosMove } from "./game.ts";
 import { guess, pick } from "./pick.ts";
 import { evidence, questions } from "./prompt.ts";
@@ -9,9 +10,15 @@ import type { Board, Game, JevosPick, JevosTurn } from "./types.ts";
 /** The facts for an empty board run ~2.7k characters; jev's default cut is 1,500. */
 const MAX_STATE = 4_000;
 
-/** jevos's move on `board` (its turn); a random empty square when jev cannot answer. */
+/**
+ * jevos's move on `board` (its turn): a forced win or block without asking, else jev's pick;
+ * a random empty square when jev cannot answer.
+ */
 export async function askJevos(jev: Jev, board: Board, random: () => number): Promise<JevosPick> {
   const me = turnOf(board);
+  const forced = forcedSquares(board, me);
+
+  if (forced.length > 0) return { square: forced[Math.floor(random() * forced.length)]!, share: 1 };
 
   try {
     const answers = await jev.yesNo(evidence(board, me), questions(board, me), {
