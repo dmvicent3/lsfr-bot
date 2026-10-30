@@ -22,6 +22,8 @@ export interface Round {
   plays: Map<string, Card[]>;
   /** The first pick of a two-blank prompt. */
   partial: Map<string, Card>;
+  /** Who completed a play, kept when a void round hands the cards back. */
+  played: string[];
   /** Authors in the shuffled order the answers are shown for voting. */
   order: string[];
   /** Voter → author voted for. */

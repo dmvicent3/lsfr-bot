@@ -54,6 +54,7 @@ export function openVoting(g: Game, now: number, random: () => number): "voting"
   for (const [userId, card] of round.partial) back(userId, [card]);
 
   round.partial.clear();
+  round.played = [...round.plays.keys()];
 
   if (round.plays.size < 2) {
     for (const [userId, cards] of round.plays) back(userId, cards);

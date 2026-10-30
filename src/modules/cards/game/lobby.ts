@@ -77,6 +77,7 @@ export function openRound(g: Game, now: number, random: () => number): void {
     prompt,
     plays: new Map(),
     partial: new Map(),
+    played: [],
     order: [],
     votes: new Map(),
     winners: [],
