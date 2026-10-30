@@ -13,6 +13,7 @@ const runner = (sessionId: number): Runner =>
       questions: [],
       lists: [],
       pictures: [],
+      fetchImage: async () => null,
       onEnd: () => undefined,
     },
   );

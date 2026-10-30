@@ -2,11 +2,21 @@ import { log } from "../../../core/log.ts";
 import type { Ctx } from "../../../core/types.ts";
 import { kaosLists, pictures, questions } from "../data/load.ts";
 import { TriviaRepo } from "../store/repo.ts";
+import { downloadPicture } from "./image.ts";
 import { discordPoster } from "./poster.ts";
 import { register, unregister } from "./registry.ts";
 import { Runner } from "./runner.ts";
+import type { Deps } from "./types.ts";
 
 const TICK_MS = 1_000;
+
+/** The bundled questions, lists and pictures, and where picture images come from. */
+const bank = (): Pick<Deps, "questions" | "lists" | "pictures" | "fetchImage"> => ({
+  questions: questions(),
+  lists: kaosLists(),
+  pictures: pictures(),
+  fetchImage: (file) => downloadPicture(file, fetch),
+});
 
 /** Starts a session in a channel and its one-second tick; "busy" when one is already live there. */
 export function startSession(
@@ -26,9 +36,7 @@ export function startSession(
       repo,
       poster: discordPoster(ctx.client, p.channelId),
       random,
-      questions: questions(),
-      lists: kaosLists(),
-      pictures: pictures(),
+      ...bank(),
       onEnd: () => {
         clearInterval(timer);
         unregister(p.channelId, runner);

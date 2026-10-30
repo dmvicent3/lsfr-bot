@@ -25,6 +25,7 @@ const initial = (s: {
   names: new Map(),
   dirty: false,
   lastPlayers: [],
+  image: null,
   active: new Set(),
   points: new Map(),
   lost: false,

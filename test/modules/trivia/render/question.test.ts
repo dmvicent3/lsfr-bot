@@ -15,6 +15,7 @@ test("a typed question shows its title, text and the masked hint", () => {
   const [embed] = typedMessage(
     typedStart(q, "r", 0, () => 0),
     null,
+    null,
   ).embeds;
 
   expect(embed?.title).toBe("#1234 · Science: Computers · easy");
@@ -28,6 +29,7 @@ test("time's up shows the answer", () => {
       45_000,
     ),
     null,
+    null,
   ).embeds;
 
   expect(embed?.description).toContain("Time's up — the answer was: **New York**");
@@ -40,13 +42,14 @@ test("a won question shows the answer", () => {
     award: { userId: "u", points: 10, ms: 5 },
   };
 
-  expect(typedMessage(r, null).embeds[0]?.description).toContain("Answer: **New York**");
+  expect(typedMessage(r, null, null).embeds[0]?.description).toContain("Answer: **New York**");
 });
 
 test("a picked topic is credited", () => {
   const [embed] = typedMessage(
     typedStart(q, "r", 0, () => 0),
     "tyh",
+    null,
   ).embeds;
 
   expect(embed?.footer?.text).toBe("Topic picked by tyh");
@@ -62,7 +65,7 @@ const choice = question(2071, {
 
 test("a button question lists lettered buttons, cut to 80 characters", () => {
   const r = buttonStart(choice, { id: "b9", now: 0, random: () => 0, expected: [] });
-  const msg = buttonMessage(r, null);
+  const msg = buttonMessage(r, null, null);
   const buttons = msg.components[0]?.components ?? [];
 
   expect(msg.embeds[0]?.title).toBe("#2071 · History · medium · 20s");
@@ -80,7 +83,7 @@ test("a closed button question greens the answer, counts picks and disables all"
   let r = buttonStart(choice, { id: "b9", now: 0, random: () => 0, expected: [] });
   r = buttonPick(r, { userId: "u", index: r.right, at: 1_000 }).round;
   r = buttonTick(r, 20_000);
-  const buttons = buttonMessage(r, null).components[0]?.components ?? [];
+  const buttons = buttonMessage(r, null, null).components[0]?.components ?? [];
 
   expect(buttons.every((b) => b.disabled)).toBe(true);
   expect(buttons[r.right]?.style).toBe(ButtonStyle.Success);

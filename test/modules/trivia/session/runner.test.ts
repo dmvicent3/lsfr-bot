@@ -3,8 +3,9 @@ import type { SendResult } from "../../../../src/core/types.ts";
 import { Runner } from "../../../../src/modules/trivia/session/runner.ts";
 import type { Outgoing, Poster } from "../../../../src/modules/trivia/session/types.ts";
 import type { TriviaRepo } from "../../../../src/modules/trivia/store/repo.ts";
-import type { KaosList, Question } from "../../../../src/modules/trivia/types.ts";
-import { freshRepo, kaos, question, scripted } from "../fixtures.ts";
+import type { PictureFile } from "../../../../src/modules/trivia/session/image.ts";
+import type { KaosList, Picture, Question } from "../../../../src/modules/trivia/types.ts";
+import { freshRepo, kaos, picture, question, scripted } from "../fixtures.ts";
 
 const T0 = Date.UTC(2026, 9, 30, 12);
 
@@ -28,7 +29,15 @@ class FakePoster implements Poster {
   }
 }
 
-function setup(p: { questions?: Question[]; lists?: KaosList[]; random?: () => number } = {}) {
+interface Setup {
+  questions?: Question[];
+  lists?: KaosList[];
+  pictures?: Picture[];
+  fetchImage?: (file: string) => Promise<PictureFile | null>;
+  random?: () => number;
+}
+
+function setup(p: Setup = {}) {
   const repo: TriviaRepo = freshRepo();
   const poster = new FakePoster();
   const sessionId =
@@ -42,7 +51,8 @@ function setup(p: { questions?: Question[]; lists?: KaosList[]; random?: () => n
       random: p.random ?? (() => 0.5),
       questions: p.questions ?? [question(1, { answer: "Paris" })],
       lists: p.lists ?? [kaos(1)],
-      pictures: [],
+      pictures: p.pictures ?? [],
+      fetchImage: p.fetchImage ?? (async () => null),
       onEnd: () => ended++,
     },
   );
@@ -250,4 +260,35 @@ test("a button round waits for everyone active last round, not just its winner",
   await runner.onPick(round.id, { userId: "a", name: "Ana", index: 0, at: T0 + 8_000 });
 
   expect(runner.state.round?.closedAt).toBeNull();
+});
+
+const flags = ["Portugal", "Spain", "France", "Italy"].map((a, i) => picture(100_001 + i, a));
+const png: PictureFile = { data: Buffer.from([1, 2]), name: "picture.png" };
+
+test("a picture whose download fails becomes a text question", async () => {
+  const { poster, runner } = setup({ pictures: flags, lists: [], random: scripted(0.2, 0, 0.2) });
+  await runner.tick(T0);
+
+  expect(poster.posts).toHaveLength(1);
+  expect(text(poster.posts[0])).toContain("Question 1?");
+  expect(poster.posts[0]?.files).toBeUndefined();
+  expect(runner.state.round?.kind !== "kaos" && runner.state.round?.question.image).toBeFalsy();
+});
+
+test("a downloaded picture is attached and stays in the embed on edits", async () => {
+  const { poster, runner } = setup({
+    pictures: flags,
+    fetchImage: async () => png,
+    random: scripted(0.2, 0, 0.2),
+  });
+  await runner.tick(T0);
+  await runner.tick(T0 + 45_000);
+
+  expect(poster.posts[0]?.files).toEqual([{ attachment: png.data, name: "picture.png" }]);
+  expect(poster.posts[0]?.embeds?.[0]).toMatchObject({
+    image: { url: "attachment://picture.png" },
+  });
+  expect(poster.edits.at(-1)?.msg.embeds?.[0]).toMatchObject({
+    image: { url: "attachment://picture.png" },
+  });
 });

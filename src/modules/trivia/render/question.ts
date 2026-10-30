@@ -20,6 +20,9 @@ const title = (q: Question, extra: string[] = []): string =>
 const footer = (topicBy: string | null): Pick<APIEmbed, "footer"> =>
   topicBy ? { footer: { text: `Topic picked by ${topicBy}` } } : {};
 
+const picture = (imageName: string | null): Pick<APIEmbed, "image"> =>
+  imageName ? { image: { url: `attachment://${imageName}` } } : {};
+
 function typedStatus(r: TypedRound): string {
   if (r.closedAt === null) return `HINT: \`${mask(r.question.answer, r.order, r.level)}\``;
 
@@ -28,10 +31,20 @@ function typedStatus(r: TypedRound): string {
   return `Time's up — the answer was: **${r.question.answer}**`;
 }
 
-export function typedMessage(r: TypedRound, topicBy: string | null): { embeds: APIEmbed[] } {
+export function typedMessage(
+  r: TypedRound,
+  topicBy: string | null,
+  imageName: string | null,
+): { embeds: APIEmbed[] } {
   const description = `${r.question.question}\n\n${typedStatus(r)}`;
+  const embed = {
+    title: title(r.question),
+    description,
+    ...footer(topicBy),
+    ...picture(imageName),
+  };
 
-  return { embeds: [{ title: title(r.question), description, ...footer(topicBy) }] };
+  return { embeds: [embed] };
 }
 
 function closedStyle(r: ButtonRound, index: number): ButtonStyle.Success | ButtonStyle.Secondary {
@@ -55,11 +68,13 @@ function button(r: ButtonRound, option: string, index: number): APIButtonCompone
 export function buttonMessage(
   r: ButtonRound,
   topicBy: string | null,
+  imageName: string | null,
 ): { embeds: APIEmbed[]; components: ButtonRow[] } {
   const embed = {
     title: title(r.question, ["20s"]),
     description: r.question.question,
     ...footer(topicBy),
+    ...picture(imageName),
   };
   const components = r.options.map((option, i) => button(r, option, i));
 

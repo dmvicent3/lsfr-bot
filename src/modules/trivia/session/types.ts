@@ -3,8 +3,9 @@ import type { SendResult } from "../../../core/types.ts";
 import type { Round } from "../rounds/types.ts";
 import type { TriviaRepo } from "../store/repo.ts";
 import type { KaosList, Picture, Question } from "../types.ts";
+import type { PictureFile } from "./image.ts";
 
-export type Outgoing = Pick<MessageCreateOptions, "content" | "embeds" | "components">;
+export type Outgoing = Pick<MessageCreateOptions, "content" | "embeds" | "components" | "files">;
 
 /** Sends to and edits in the session's channel. */
 export interface Poster {
@@ -19,6 +20,8 @@ export interface Deps {
   questions: readonly Question[];
   lists: readonly KaosList[];
   pictures: readonly Picture[];
+  /** A picture's image, or null when it cannot be had (the round is then a text question). */
+  fetchImage: (file: string) => Promise<PictureFile | null>;
   /** Called once when the session ends, to drop its timer and registry entry. */
   onEnd: () => void;
 }
@@ -40,6 +43,8 @@ export interface SessionState {
   channelId: string;
   round: Round | null;
   messageId: string | null;
+  /** The open round's attached image name, kept in the embed on every edit. */
+  image: string | null;
   /** Who chose the open round's topic. */
   topicBy: string | null;
   /** The topic the next round must come from, and who chose it. */

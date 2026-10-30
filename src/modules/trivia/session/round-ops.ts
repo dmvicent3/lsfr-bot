@@ -17,9 +17,9 @@ export function advance(r: Round, now: number): Round {
 }
 
 export function roundMessage(r: Round, s: SessionState): Outgoing {
-  if (r.kind === "typed") return typedMessage(r, s.topicBy);
+  if (r.kind === "typed") return typedMessage(r, s.topicBy, s.image);
 
-  if (r.kind === "button") return buttonMessage(r, s.topicBy);
+  if (r.kind === "button") return buttonMessage(r, s.topicBy, s.image);
 
   return kaosMessage(r, s.names);
 }
