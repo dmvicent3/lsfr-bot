@@ -61,3 +61,23 @@ test("an answer at or after 45 s is too late, even before the tick", () => {
 
   expect(r.award).toBeNull();
 });
+
+test("an alias wins like the answer", () => {
+  const q = question(8, { answer: "Lionel Messi", aliases: ["Messi"] });
+  const r = typedAnswer(
+    typedStart(q, "r", T0, () => 0),
+    { userId: "a", text: "messi", at: at(1_000) },
+  );
+
+  expect(r.award?.userId).toBe("a");
+});
+
+test("without aliases only the answer wins", () => {
+  const q = question(8, { answer: "Lionel Messi" });
+  const r = typedAnswer(
+    typedStart(q, "r", T0, () => 0),
+    { userId: "a", text: "messi", at: at(1_000) },
+  );
+
+  expect(r.award).toBeNull();
+});

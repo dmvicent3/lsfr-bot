@@ -8,6 +8,9 @@ export const HINT_2_MS = 15_000;
 export const HINT_3_MS = 30_000;
 export const TYPED_MS = 45_000;
 
+const accepts = (q: Question, text: string): boolean =>
+  [q.answer, ...(q.aliases ?? [])].some((answer) => matches(text, answer));
+
 export function typedStart(
   question: Question,
   id: string,
@@ -51,7 +54,7 @@ export function typedTick(r: TypedRound, now: number): TypedRound {
 export function typedAnswer(round: TypedRound, a: Answer): TypedRound {
   const r = typedTick(round, a.at);
 
-  if (r.closedAt !== null || !matches(a.text, r.question.answer)) return round;
+  if (r.closedAt !== null || !accepts(r.question, a.text)) return round;
 
   const award = {
     userId: a.userId,

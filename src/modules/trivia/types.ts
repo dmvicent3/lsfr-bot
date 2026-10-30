@@ -9,6 +9,10 @@ export interface Question {
   answer: string;
   wrong: string[];
   kind: "typed" | "choice";
+  /** Other accepted typed answers (a surname, a short form). */
+  aliases?: string[];
+  /** A Commons file shown with the question (picture rounds). */
+  image?: string;
 }
 
 export interface KaosItem {
