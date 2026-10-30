@@ -35,3 +35,17 @@ export type RoundChoice =
   | { kind: "kaos"; list: KaosList };
 
 export type Period = "today" | "week" | "month" | "all";
+
+/** One picture round's item, built from Wikidata; ids from 100001 never meet Open Trivia DB ids. */
+export interface Picture {
+  id: number;
+  /** The Wikidata item, so re-runs keep ids. */
+  qid: string;
+  category: string;
+  prompt: string;
+  /** Commons file name; never shown, since it usually names the answer. */
+  image: string;
+  answer: string;
+  aliases: string[];
+  difficulty: Difficulty;
+}
