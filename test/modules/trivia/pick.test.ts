@@ -105,3 +105,12 @@ test("a picture with no wrong options is always typed", () => {
 
   expect(picked.kind).toBe("typed");
 });
+
+test("paintings, places and clubs are always buttons; long names are not typed", () => {
+  const paintings = ["Mona Lisa", "The Scream", "Guernica", "The Kiss"].map((a, i) =>
+    picture(100_101 + i, a, { category: "Paintings" }),
+  );
+  const picked = pickRound({ ...base, pictures: paintings, random: scripted(0.2, 0, 0.2) });
+
+  expect(picked.kind).toBe("button");
+});

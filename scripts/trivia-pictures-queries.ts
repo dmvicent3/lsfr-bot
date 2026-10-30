@@ -46,6 +46,7 @@ export interface CategoryQuery {
   category: string;
   prompt: string;
   queries: string[];
+  surnames?: boolean;
 }
 
 export const CATEGORIES: CategoryQuery[] = [
@@ -68,6 +69,7 @@ export const CATEGORIES: CategoryQuery[] = [
   {
     category: "Painters",
     prompt: "Name the artist",
+    surnames: true,
     queries: [
       shell(PAINTER, 300, `OPTIONAL { ?creator wdt:P734 ?family. ${LABEL("?family", "?alt")} }`),
     ],
@@ -82,7 +84,7 @@ export const CATEGORIES: CategoryQuery[] = [
       ),
     ],
   },
-  { category: "People", prompt: "Who is this?", queries: PEOPLE.map(person) },
+  { category: "People", prompt: "Who is this?", queries: PEOPLE.map(person), surnames: true },
   {
     category: "Logos",
     prompt: "Name the club",

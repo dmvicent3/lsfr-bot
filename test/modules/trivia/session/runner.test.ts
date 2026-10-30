@@ -35,6 +35,7 @@ interface Setup {
   pictures?: Picture[];
   fetchImage?: (file: string) => Promise<PictureFile | null>;
   random?: () => number;
+  now?: () => number;
 }
 
 function setup(p: Setup = {}) {
@@ -53,6 +54,7 @@ function setup(p: Setup = {}) {
       lists: p.lists ?? [kaos(1)],
       pictures: p.pictures ?? [],
       fetchImage: p.fetchImage ?? (async () => null),
+      now: p.now ?? (() => T0),
       onEnd: () => ended++,
     },
   );
@@ -291,4 +293,21 @@ test("a downloaded picture is attached and stays in the embed on edits", async (
   expect(poster.edits.at(-1)?.msg.embeds?.[0]).toMatchObject({
     image: { url: "attachment://picture.png" },
   });
+});
+
+test("a round opened after a slow download starts its clock when it is posted", async () => {
+  let clock = T0;
+  const { runner } = setup({
+    pictures: flags,
+    fetchImage: async () => {
+      clock += 8_000;
+
+      return png;
+    },
+    now: () => clock,
+    random: scripted(0.2, 0, 0.7),
+  });
+  await runner.tick(T0);
+
+  expect(runner.state.round?.startedAt).toBe(T0 + 8_000);
 });

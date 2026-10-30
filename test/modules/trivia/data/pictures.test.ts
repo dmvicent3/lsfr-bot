@@ -88,3 +88,18 @@ test("a bracketed label is shortened, the full one kept as an alias", () => {
 test("blocked people are dropped", () => {
   expect(build([row("Q9", "George Floyd", 9), row("Q10", "Adolf Hitler", 9)])).toEqual([]);
 });
+
+test("people and painters also answer to the last word of their name", () => {
+  let next = 100_001;
+  const people = toPictures({
+    category: "People",
+    prompt: "Who is this?",
+    rows: [row("Q1", "Michael Schumacher", 9), row("Q2", "Martin Luther King Jr.", 8)],
+    previous: new Map(),
+    nextId: () => next++,
+    surnames: true,
+  });
+
+  expect(people.map((p) => p.aliases)).toEqual([["Schumacher"], ["King"]]);
+  expect(build([row("Q3", "Costa Rica", 1)])[0]?.aliases).toEqual([]);
+});

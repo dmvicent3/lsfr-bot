@@ -5,6 +5,8 @@ const KAOS_SHARE = 0.1;
 /** KAOS below 0.1, a picture below 0.3, else text. */
 const PICTURE_SHARE = 0.3;
 const PICTURE_TYPED = 0.5;
+/** Short names people can type; painting, place and club names are buttons only. */
+const TYPED_PICTURES = new Set(["Flags", "People", "Painters"]);
 const TYPED_SHARE = 2 / 3;
 /** A Discord select menu holds 25 options. */
 const MAX_TOPICS = 25;
@@ -34,7 +36,7 @@ function draw<T>(items: T[], random: () => number): T {
 
 const questionKey = (q: Question): string => askedKey("question", q.id);
 
-/** A least recently asked picture, typed or buttons at even odds (typed when it has no options). */
+/** A least recently asked picture, typed or buttons at even odds where its name is typeable (typed when it has no options). */
 function pickPicture(
   pictures: readonly Picture[],
   lastAsked: LastAsked,
@@ -44,7 +46,7 @@ function pickPicture(
     leastRecent(pictures, (x) => askedKey("question", x.id), lastAsked),
     random,
   );
-  const wantTyped = random() < PICTURE_TYPED;
+  const wantTyped = random() < PICTURE_TYPED && TYPED_PICTURES.has(p.category);
   const question = pictureQuestion(p, pictures, random);
 
   return { kind: wantTyped || question.kind === "typed" ? "typed" : "button", question };

@@ -52,14 +52,15 @@ function firstPost(round: Round, s: SessionState, file: PictureFile | null): Out
 /** Picks, records and posts the next round, using up a chosen topic. */
 export async function openRound(s: SessionState, d: Deps, now: number): Promise<void> {
   const { choice, file } = await choose(s, d);
-  const round = build(choice, s, d, now);
+  const at = file ? d.now() : now;
+  const round = build(choice, s, d, at);
   const item = itemOf(round);
   d.repo.asked.add({
     guildId: s.guildId,
     channelId: s.channelId,
     kind: item.kind,
     itemId: item.id,
-    at: now,
+    at,
   });
   s.topicBy = s.topic?.by ?? null;
   s.topic = null;

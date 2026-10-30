@@ -37,6 +37,14 @@ const shortLabel = (label: string): string =>
   label.replace(/\s*\([^)]*\)\s*/g, " ").trim() || label;
 
 const THIRDS: Difficulty[] = ["easy", "medium", "hard"];
+const SUFFIX = /^(jr|sr|i{1,3}|iv)\.?$/i;
+
+/** "Martin Luther King Jr." → "King": what people call someone. */
+const surname = (label: string): string =>
+  label
+    .split(" ")
+    .filter((w) => !SUFFIX.test(w))
+    .at(-1) ?? label;
 
 /** Pictures for one category: one per item, most famous first, ids kept from `previous`. */
 export function toPictures(p: {
@@ -45,6 +53,8 @@ export function toPictures(p: {
   rows: PictureRow[];
   previous: ReadonlyMap<string, number>;
   nextId: () => number;
+  /** Also accept the last word of the name (people, painters). */
+  surnames?: boolean;
 }): Picture[] {
   const rows = firstPerItem(p.rows)
     .filter((r) => !/^Q\d+$/.test(r.label))
@@ -59,7 +69,11 @@ export function toPictures(p: {
     prompt: p.prompt,
     image: r.image,
     answer: shortLabel(r.label),
-    aliases: cleanAliases(shortLabel(r.label), [...r.aliases, r.label]),
+    aliases: cleanAliases(shortLabel(r.label), [
+      ...r.aliases,
+      r.label,
+      ...(p.surnames ? [surname(shortLabel(r.label))] : []),
+    ]),
     difficulty: THIRDS[Math.floor((i * 3) / rows.length)] ?? "hard",
   }));
 }

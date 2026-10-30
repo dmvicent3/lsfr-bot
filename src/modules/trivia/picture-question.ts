@@ -4,9 +4,9 @@ import type { Picture, Question } from "./types.ts";
 
 const WRONG = 3;
 
-/** Three other answers from the picture's category, distinct from it and each other. */
+/** Three other answers from the picture's category, distinct from each other and from any name it goes by. */
 function wrongAnswers(p: Picture, pool: readonly Picture[], random: () => number): string[] {
-  const seen = new Set([normalize(p.answer)]);
+  const seen = new Set([p.answer, ...p.aliases].map(normalize));
   const others = pool.filter((o) => o.category === p.category).map((o) => o.answer);
 
   return shuffle(others, random)

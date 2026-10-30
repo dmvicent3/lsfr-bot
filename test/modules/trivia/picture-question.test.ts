@@ -37,3 +37,16 @@ test("too few other answers: typed only", () => {
 
   expect(q).toMatchObject({ kind: "typed", wrong: [] });
 });
+
+test("another item's answer that is also this picture's alias is never a wrong option", () => {
+  const forts = [
+    picture(100_011, "Agra Fort", { category: "Landmarks", aliases: ["Red Fort"] }),
+    picture(100_012, "Red Fort", { category: "Landmarks" }),
+    picture(100_013, "Taj Mahal", { category: "Landmarks" }),
+    picture(100_014, "Petra", { category: "Landmarks" }),
+    picture(100_015, "Alhambra", { category: "Landmarks" }),
+  ];
+  const q = pictureQuestion(forts[0] ?? picture(1, "x"), forts, Math.random);
+
+  expect(q.wrong.toSorted()).toEqual(["Alhambra", "Petra", "Taj Mahal"]);
+});

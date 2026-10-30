@@ -10,12 +10,13 @@ import type { Deps } from "./types.ts";
 
 const TICK_MS = 1_000;
 
-/** The bundled questions, lists and pictures, and where picture images come from. */
-const bank = (): Pick<Deps, "questions" | "lists" | "pictures" | "fetchImage"> => ({
+/** The bundled questions, lists and pictures, where picture images come from, and the clock. */
+const bank = (): Pick<Deps, "questions" | "lists" | "pictures" | "fetchImage" | "now"> => ({
   questions: questions(),
   lists: kaosLists(),
   pictures: pictures(),
   fetchImage: (file) => downloadPicture(file, fetch),
+  now: Date.now,
 });
 
 /** Starts a session in a channel and its one-second tick; "busy" when one is already live there. */

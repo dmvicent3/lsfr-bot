@@ -22,6 +22,8 @@ export interface Deps {
   pictures: readonly Picture[];
   /** A picture's image, or null when it cannot be had (the round is then a text question). */
   fetchImage: (file: string) => Promise<PictureFile | null>;
+  /** The clock, read again once a picture has downloaded so the round starts when it is posted. */
+  now: () => number;
   /** Called once when the session ends, to drop its timer and registry entry. */
   onEnd: () => void;
 }

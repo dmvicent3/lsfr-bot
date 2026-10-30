@@ -27,6 +27,16 @@
     "image": "Flag of the United States (DDD-F-416E specifications).svg",
     "answer": "United States",
     "aliases": [
+      "the States",
+      "the U.S.",
+      "the U.S. of A",
+      "the U.S. of America",
+      "the U.S.A.",
+      "the United States of America",
+      "United States of America",
+      "the USA",
+      "Murica",
+      "Merica",
       "the US",
       "the US of A",
       "the US of America",
@@ -35,17 +45,7 @@
       "U.S. of America",
       "US of A",
       "US of America",
-      "United States of America",
-      "the USA",
-      "'Murica",
-      "Murica",
-      "Merica",
-      "the States",
-      "the U.S.",
-      "the U.S. of A",
-      "the U.S. of America",
-      "the U.S.A.",
-      "the United States of America"
+      "'Murica"
     ],
     "difficulty": "easy"
   },
@@ -105,16 +105,16 @@
     "image": "Flag of India.svg",
     "answer": "India",
     "aliases": [
+      "Bharat Ganarajya",
+      "Indostan",
+      "Republic of India",
       "Hindustan",
       "Bharata",
       "Tianzhu",
       "Hindoostan",
       "Al Hind",
       "Bharatvarsh",
-      "Tenjiku",
-      "Bharat Ganarajya",
-      "Indostan",
-      "Republic of India"
+      "Tenjiku"
     ],
     "difficulty": "easy"
   },
@@ -142,12 +142,12 @@
     "image": "Flag of Mexico.svg",
     "answer": "Mexico",
     "aliases": [
-      "United States of Mexico",
-      "United Mexican States",
-      "MXN",
       "Mexican Republic",
       "Mexican United States",
-      "US of M"
+      "US of M",
+      "United Mexican States",
+      "MXN",
+      "United States of Mexico"
     ],
     "difficulty": "easy"
   },
@@ -341,7 +341,7 @@
     "prompt": "Name the country",
     "image": "Flag of Greece.svg",
     "answer": "Greece",
-    "aliases": ["Hellas, Greece", "Hellas", "Hellenic Republic", "Ellada", "Greek Republic"],
+    "aliases": ["Hellas", "Hellenic Republic", "Ellada", "Greek Republic", "Hellas, Greece"],
     "difficulty": "easy"
   },
   {
@@ -529,13 +529,13 @@
     "image": "Flag of Thailand.svg",
     "answer": "Thailand",
     "aliases": [
+      "Thai",
+      "Kingdom of Siam",
       "Kingdom of Thailand",
       "The Kingdom of Siam",
       "The Kingdom of Thailand",
       "Prathet Thai",
-      "Ratcha-anachak Thai",
-      "Thai",
-      "Kingdom of Siam"
+      "Ratcha-anachak Thai"
     ],
     "difficulty": "easy"
   },
@@ -708,10 +708,10 @@
     "image": "Flag of Bangladesh.svg",
     "answer": "Bangladesh",
     "aliases": [
-      "Bangla Desh",
       "Country of Bengal",
       "Land of Bengal",
-      "People's Republic of Bangladesh"
+      "People's Republic of Bangladesh",
+      "Bangla Desh"
     ],
     "difficulty": "easy"
   },
@@ -890,14 +890,14 @@
     "image": "Flag of Sudan.svg",
     "answer": "Sudan",
     "aliases": [
-      "al-Sudan",
-      "as-Sudan",
-      "as-Sūdān",
-      "North Sudan",
       "Republic of Sudan",
       "Republic of the Sudan",
       "Soudan",
-      "SUD"
+      "SUD",
+      "al-Sudan",
+      "as-Sudan",
+      "as-Sūdān",
+      "North Sudan"
     ],
     "difficulty": "medium"
   },
@@ -1246,10 +1246,10 @@
     "image": "Flag of Ecuador.svg",
     "answer": "Ecuador",
     "aliases": [
-      "Republic of Equator",
       "Republic of Ecuador",
       "Republic of the Equator",
-      "The Ecuadorian State"
+      "The Ecuadorian State",
+      "Republic of Equator"
     ],
     "difficulty": "medium"
   },
@@ -1329,19 +1329,19 @@
     "image": "Flag of the Republic of China.svg",
     "answer": "Taiwan",
     "aliases": [
-      "Republic of China (Taiwan)",
-      "Republic of China",
-      "Nationalist China",
-      "ROC",
-      "Chinese Taipei",
-      "TWN",
       "Free China",
       "Taiwan ROC",
       "Chunghwa Minkuo",
       "Chunghwa Minkwo",
       "The ROC",
       "China, Republic of",
-      "Chinese Republic"
+      "Chinese Republic",
+      "Republic of China (Taiwan)",
+      "Republic of China",
+      "Nationalist China",
+      "ROC",
+      "Chinese Taipei",
+      "TWN"
     ],
     "difficulty": "medium"
   },
@@ -1893,7 +1893,7 @@
     "prompt": "Name the country",
     "image": "Flag of El Salvador.svg",
     "answer": "El Salvador",
-    "aliases": ["ESA", "Republic of El Salvador", "Salvador"],
+    "aliases": ["Salvador", "ESA", "Republic of El Salvador"],
     "difficulty": "hard"
   },
   {
@@ -2127,7 +2127,7 @@
     "prompt": "Name the country",
     "image": "Flag of Nauru.svg",
     "answer": "Nauru",
-    "aliases": ["Pleasant Island", "Naoero", "Republic of Nauru", "Republic of Naoero"],
+    "aliases": ["Republic of Naoero", "Pleasant Island", "Naoero", "Republic of Nauru"],
     "difficulty": "hard"
   },
   {
@@ -2335,7 +2335,7 @@
     "prompt": "Name the country",
     "image": "Flag of the Netherlands.svg",
     "answer": "Kingdom of the Netherlands",
-    "aliases": ["Kingdom of Netherlands", "Netherlands", "the Netherlands", "Nederlanden"],
+    "aliases": ["Netherlands", "the Netherlands", "Nederlanden", "Kingdom of Netherlands"],
     "difficulty": "hard"
   },
   {
@@ -5583,7 +5583,7 @@
     "prompt": "Name the artist",
     "image": "Mona Lisa, by Leonardo da Vinci, from C2RMF retouched.jpg",
     "answer": "Leonardo da Vinci",
-    "aliases": ["da Vinci"],
+    "aliases": ["da Vinci", "Vinci"],
     "difficulty": "easy"
   },
   {
@@ -5593,7 +5593,7 @@
     "prompt": "Name the artist",
     "image": "Van Gogh - Starry Night - Google Art Project.jpg",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
+    "aliases": ["van Gogh", "Gogh"],
     "difficulty": "easy"
   },
   {
@@ -5643,7 +5643,7 @@
     "prompt": "Name the artist",
     "image": "Las Meninas, by Diego Velázquez, from Prado in Google Earth.jpg",
     "answer": "Diego Velázquez",
-    "aliases": ["Rodríguez"],
+    "aliases": ["Rodríguez", "Velázquez"],
     "difficulty": "easy"
   },
   {
@@ -5663,7 +5663,7 @@
     "prompt": "Name the artist",
     "image": "De aardappeleters - s0005V1962 - Van Gogh Museum.jpg",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
+    "aliases": ["van Gogh", "Gogh"],
     "difficulty": "easy"
   },
   {
@@ -5713,7 +5713,7 @@
     "prompt": "Name the artist",
     "image": "Leonardo da Vinci, Salvator Mundi, c.1500, oil on walnut, 45.4 × 65.6 cm.jpg",
     "answer": "Leonardo da Vinci",
-    "aliases": ["da Vinci"],
+    "aliases": ["da Vinci", "Vinci"],
     "difficulty": "easy"
   },
   {
@@ -5723,7 +5723,7 @@
     "prompt": "Name the artist",
     "image": "Lady with an Ermine - Leonardo da Vinci - Google Art Project.jpg",
     "answer": "Leonardo da Vinci",
-    "aliases": ["da Vinci"],
+    "aliases": ["da Vinci", "Vinci"],
     "difficulty": "easy"
   },
   {
@@ -5843,7 +5843,7 @@
     "prompt": "Name the artist",
     "image": "Irises-Vincent van Gogh.jpg",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
+    "aliases": ["van Gogh", "Gogh"],
     "difficulty": "easy"
   },
   {
@@ -5853,7 +5853,7 @@
     "prompt": "Name the artist",
     "image": "Korenveld met kraaien - s0149V1962 - Van Gogh Museum.jpg",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
+    "aliases": ["van Gogh", "Gogh"],
     "difficulty": "easy"
   },
   {
@@ -5873,7 +5873,7 @@
     "prompt": "Name the artist",
     "image": "Van Eyck - Arnolfini Portrait.jpg",
     "answer": "Jan van Eyck",
-    "aliases": ["van Eyck"],
+    "aliases": ["van Eyck", "Eyck"],
     "difficulty": "easy"
   },
   {
@@ -5933,7 +5933,7 @@
     "prompt": "Name the artist",
     "image": "Van Gogh - Terrace of a Café at Night (Place du Forum) 1888.jpg",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
+    "aliases": ["van Gogh", "Gogh"],
     "difficulty": "easy"
   },
   {
@@ -5943,7 +5943,7 @@
     "prompt": "Name the artist",
     "image": "Ginevra de' Benci - National Gallery of Art.jpg",
     "answer": "Leonardo da Vinci",
-    "aliases": ["da Vinci"],
+    "aliases": ["da Vinci", "Vinci"],
     "difficulty": "easy"
   },
   {
@@ -5953,7 +5953,7 @@
     "prompt": "Name the artist",
     "image": "Ghent Altarpiece by Jan van Eyck ALL.jpg",
     "answer": "Hubert van Eyck",
-    "aliases": ["Van Eyck"],
+    "aliases": ["Van Eyck", "Eyck"],
     "difficulty": "easy"
   },
   {
@@ -5963,7 +5963,7 @@
     "prompt": "Name the artist",
     "image": "Pieter Bruegel the Elder - Hunters in the Snow (Winter) - Google Art Project.jpg",
     "answer": "Pieter Brueghel the Elder",
-    "aliases": ["Brueghel"],
+    "aliases": ["Brueghel", "Elder"],
     "difficulty": "easy"
   },
   {
@@ -5983,7 +5983,7 @@
     "prompt": "Name the artist",
     "image": "Sainte Anne Leonard.jpg",
     "answer": "Leonardo da Vinci",
-    "aliases": ["da Vinci"],
+    "aliases": ["da Vinci", "Vinci"],
     "difficulty": "easy"
   },
   {
@@ -5993,7 +5993,7 @@
     "prompt": "Name the artist",
     "image": "Velazquez-The Surrender of Breda.jpg",
     "answer": "Diego Velázquez",
-    "aliases": ["Rodríguez"],
+    "aliases": ["Rodríguez", "Velázquez"],
     "difficulty": "easy"
   },
   {
@@ -6023,7 +6023,7 @@
     "prompt": "Name the artist",
     "image": "Pieter Bruegel (der Ältere) (ca. 1525 - 1569) - Die niederländischen Sprichwörter - 1720 - Gemäldegalerie.jpg",
     "answer": "Pieter Brueghel the Elder",
-    "aliases": ["Brueghel"],
+    "aliases": ["Brueghel", "Elder"],
     "difficulty": "easy"
   },
   {
@@ -6043,7 +6043,7 @@
     "prompt": "Name the artist",
     "image": "Vincent van Gogh - Starry Night - Google Art Project.jpg",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
+    "aliases": ["van Gogh", "Gogh"],
     "difficulty": "easy"
   },
   {
@@ -6053,7 +6053,7 @@
     "prompt": "Name the artist",
     "image": "Van Gogh - The Night Café (1888).jpg",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
+    "aliases": ["van Gogh", "Gogh"],
     "difficulty": "easy"
   },
   {
@@ -6063,7 +6063,7 @@
     "prompt": "Name the artist",
     "image": "Leonardo, Madonna Benois.JPG",
     "answer": "Leonardo da Vinci",
-    "aliases": ["da Vinci"],
+    "aliases": ["da Vinci", "Vinci"],
     "difficulty": "easy"
   },
   {
@@ -6073,7 +6073,7 @@
     "prompt": "Name the artist",
     "image": "Thomas Gainsborough - The Blue Boy (c. 1770).jpg",
     "answer": "Thomas Gainsborough",
-    "aliases": [],
+    "aliases": ["Gainsborough"],
     "difficulty": "easy"
   },
   {
@@ -6113,7 +6113,7 @@
     "prompt": "Name the artist",
     "image": "Vincent van Gogh - The Church in Auvers-sur-Oise, View from the Chevet - Google Art Project.jpg",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
+    "aliases": ["van Gogh", "Gogh"],
     "difficulty": "easy"
   },
   {
@@ -6123,7 +6123,7 @@
     "prompt": "Name the artist",
     "image": "Vincent van Gogh - Red Vineyard at Arles (1888).jpg",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
+    "aliases": ["van Gogh", "Gogh"],
     "difficulty": "easy"
   },
   {
@@ -6133,7 +6133,7 @@
     "prompt": "Name the artist",
     "image": "Vincent van Gogh - The yellow house ('The street').jpg",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
+    "aliases": ["van Gogh", "Gogh"],
     "difficulty": "easy"
   },
   {
@@ -6193,7 +6193,7 @@
     "prompt": "Name the artist",
     "image": "Leonardo da Vinci - Saint John the Baptist C2RMF retouched.jpg",
     "answer": "Leonardo da Vinci",
-    "aliases": ["da Vinci"],
+    "aliases": ["da Vinci", "Vinci"],
     "difficulty": "easy"
   },
   {
@@ -6203,7 +6203,7 @@
     "prompt": "Name the artist",
     "image": "La Belle Ferronière - Google Arts.jpg",
     "answer": "Leonardo da Vinci",
-    "aliases": ["da Vinci"],
+    "aliases": ["da Vinci", "Vinci"],
     "difficulty": "easy"
   },
   {
@@ -6213,7 +6213,7 @@
     "prompt": "Name the artist",
     "image": "Hans Holbein the Younger - The Ambassadors - Google Art Project.jpg",
     "answer": "Hans Holbein the Younger",
-    "aliases": ["Holbein"],
+    "aliases": ["Holbein", "Younger"],
     "difficulty": "easy"
   },
   {
@@ -6243,7 +6243,7 @@
     "prompt": "Name the artist",
     "image": "Leonardo da Vinci, Adoration, c1481, Uffizi.jpg",
     "answer": "Leonardo da Vinci",
-    "aliases": ["da Vinci"],
+    "aliases": ["da Vinci", "Vinci"],
     "difficulty": "easy"
   },
   {
@@ -6413,7 +6413,7 @@
     "prompt": "Name the artist",
     "image": "Diego Velázquez - Rokeby Venus.jpg",
     "answer": "Diego Velázquez",
-    "aliases": ["Rodríguez"],
+    "aliases": ["Rodríguez", "Velázquez"],
     "difficulty": "easy"
   },
   {
@@ -6443,7 +6443,7 @@
     "prompt": "Name the artist",
     "image": "The Triumph of Death by Pieter Bruegel the Elder.jpg",
     "answer": "Pieter Brueghel the Elder",
-    "aliases": ["Brueghel"],
+    "aliases": ["Brueghel", "Elder"],
     "difficulty": "easy"
   },
   {
@@ -6463,7 +6463,7 @@
     "prompt": "Name the artist",
     "image": "Sunset at Montmajour 1888 Van Gogh.jpg",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
+    "aliases": ["van Gogh", "Gogh"],
     "difficulty": "easy"
   },
   {
@@ -6483,7 +6483,7 @@
     "prompt": "Name the artist",
     "image": "Annunciation (Leonardo) (cropped).jpg",
     "answer": "Leonardo da Vinci",
-    "aliases": ["da Vinci"],
+    "aliases": ["da Vinci", "Vinci"],
     "difficulty": "easy"
   },
   {
@@ -6493,7 +6493,7 @@
     "prompt": "Name the artist",
     "image": "Velazquez-las hilanderas.jpg",
     "answer": "Diego Velázquez",
-    "aliases": ["Rodríguez"],
+    "aliases": ["Rodríguez", "Velázquez"],
     "difficulty": "easy"
   },
   {
@@ -6524,7 +6524,7 @@
     "image": "La Mort de Sardanapale - Eugène Delacroix - Musée du Louvre Peintures RF 2346.jpg",
     "answer": "Eugène Delacroix",
     "aliases": ["Delacroix"],
-    "difficulty": "easy"
+    "difficulty": "medium"
   },
   {
     "id": 100586,
@@ -6534,7 +6534,7 @@
     "image": "Rembrandt Harmensz van Rijn - Return of the Prodigal Son - Google Art Project.jpg",
     "answer": "Rembrandt",
     "aliases": ["Van Rijn"],
-    "difficulty": "medium"
+    "difficulty": "easy"
   },
   {
     "id": 100587,
@@ -6573,7 +6573,7 @@
     "prompt": "Name the artist",
     "image": "Bruegel, Pieter (I) - Blind leading the blind Google Art Project.jpeg",
     "answer": "Pieter Brueghel the Elder",
-    "aliases": ["Brueghel"],
+    "aliases": ["Brueghel", "Elder"],
     "difficulty": "medium"
   },
   {
@@ -6583,7 +6583,7 @@
     "prompt": "Name the artist",
     "image": "Verrocchio and Leonardo, Baptism of Christ, c1470-75, Uffizi.jpg",
     "answer": "Andrea del Verrocchio",
-    "aliases": ["Cione"],
+    "aliases": ["Cione", "Verrocchio"],
     "difficulty": "medium"
   },
   {
@@ -6602,8 +6602,8 @@
     "category": "Painters",
     "prompt": "Name the artist",
     "image": "Shishkin, Ivan - Morning in a Pine Forest.jpg",
-    "answer": "Konstantin Savitsky",
-    "aliases": ["Savitsky"],
+    "answer": "Ivan Shishkin",
+    "aliases": ["Shishkin"],
     "difficulty": "medium"
   },
   {
@@ -6623,7 +6623,7 @@
     "prompt": "Name the artist",
     "image": "Leonardo da Vinci attributed - Madonna Litta.jpg",
     "answer": "Leonardo da Vinci",
-    "aliases": ["da Vinci"],
+    "aliases": ["da Vinci", "Vinci"],
     "difficulty": "medium"
   },
   {
@@ -6633,7 +6633,7 @@
     "prompt": "Name the artist",
     "image": "LEONARDO-DA-VINCI - MADONNA-MIT-DER-NELKE-7779 917154 BSTGS.jpg",
     "answer": "Leonardo da Vinci",
-    "aliases": ["da Vinci"],
+    "aliases": ["da Vinci", "Vinci"],
     "difficulty": "medium"
   },
   {
@@ -6643,7 +6643,7 @@
     "prompt": "Name the artist",
     "image": "Wright of Derby, The Orrery.jpg",
     "answer": "Joseph Wright of Derby",
-    "aliases": ["Wright"],
+    "aliases": ["Wright", "Derby"],
     "difficulty": "medium"
   },
   {
@@ -6663,7 +6663,7 @@
     "prompt": "Name the artist",
     "image": "Pieter Bruegel the Elder - Peasant Wedding - Google Art Project.jpg",
     "answer": "Pieter Brueghel the Elder",
-    "aliases": ["Brueghel"],
+    "aliases": ["Brueghel", "Elder"],
     "difficulty": "medium"
   },
   {
@@ -6703,7 +6703,7 @@
     "prompt": "Name the artist",
     "image": "At Eternity's Gate - Vincent Van Gogh.jpg",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
+    "aliases": ["van Gogh", "Gogh"],
     "difficulty": "medium"
   },
   {
@@ -6743,7 +6743,7 @@
     "prompt": "Name the artist",
     "image": "El Greco - The Burial of the Count of Orgaz.JPG",
     "answer": "El Greco",
-    "aliases": ["Theotokópoulos"],
+    "aliases": ["Theotokópoulos", "Greco"],
     "difficulty": "medium"
   },
   {
@@ -6773,7 +6773,7 @@
     "prompt": "Name the artist",
     "image": "Die Elster auf dem Galgen.jpg",
     "answer": "Pieter Brueghel the Elder",
-    "aliases": ["Brueghel"],
+    "aliases": ["Brueghel", "Elder"],
     "difficulty": "medium"
   },
   {
@@ -6823,7 +6823,7 @@
     "prompt": "Name the artist",
     "image": "El Greco View of Toledo.jpg",
     "answer": "El Greco",
-    "aliases": ["Theotokópoulos"],
+    "aliases": ["Theotokópoulos", "Greco"],
     "difficulty": "medium"
   },
   {
@@ -6843,7 +6843,7 @@
     "prompt": "Name the artist",
     "image": "Leonardo da Vinci - Portrait of a Musician - Pinacoteca Ambrosiana.jpg",
     "answer": "Leonardo da Vinci",
-    "aliases": ["da Vinci"],
+    "aliases": ["da Vinci", "Vinci"],
     "difficulty": "medium"
   },
   {
@@ -6863,7 +6863,7 @@
     "prompt": "Name the artist",
     "image": "Kramskoy Portrait of a Woman.jpg",
     "answer": "Ivan Kramskoi",
-    "aliases": ["Kramskoy"],
+    "aliases": ["Kramskoy", "Kramskoi"],
     "difficulty": "medium"
   },
   {
@@ -7003,7 +7003,7 @@
     "prompt": "Name the artist",
     "image": "An Experiment on a Bird in an Air Pump by Joseph Wright of Derby, 1768.jpg",
     "answer": "Joseph Wright of Derby",
-    "aliases": ["Wright"],
+    "aliases": ["Wright", "Derby"],
     "difficulty": "medium"
   },
   {
@@ -7083,7 +7083,7 @@
     "prompt": "Name the artist",
     "image": "The Virgin with Chancellor Rolin by Jan van Eyck (Louvre).webp",
     "answer": "Jan van Eyck",
-    "aliases": ["van Eyck"],
+    "aliases": ["van Eyck", "Eyck"],
     "difficulty": "medium"
   },
   {
@@ -7093,7 +7093,7 @@
     "prompt": "Name the artist",
     "image": "Peter Paul Ruben's copy of the lost Battle of Anghiari.jpg",
     "answer": "Leonardo da Vinci",
-    "aliases": ["da Vinci"],
+    "aliases": ["da Vinci", "Vinci"],
     "difficulty": "medium"
   },
   {
@@ -7103,7 +7103,7 @@
     "prompt": "Name the artist",
     "image": "Joseph Wright of Derby The Alchemist.jpg",
     "answer": "Joseph Wright of Derby",
-    "aliases": ["Wright"],
+    "aliases": ["Wright", "Derby"],
     "difficulty": "medium"
   },
   {
@@ -7213,7 +7213,7 @@
     "prompt": "Name the artist",
     "image": "Kop van een skelet met brandende sigaret - s0083V1962 - Van Gogh Museum.jpg",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
+    "aliases": ["van Gogh", "Gogh"],
     "difficulty": "medium"
   },
   {
@@ -7223,7 +7223,7 @@
     "prompt": "Name the artist",
     "image": "Vincent van Gogh - Road with Cypress and Star - c. 12-15 May 1890.jpg",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
+    "aliases": ["van Gogh", "Gogh"],
     "difficulty": "medium"
   },
   {
@@ -7253,7 +7253,7 @@
     "prompt": "Name the artist",
     "image": "Petrus Christus (um 1410-20 - um 1475) - Portrait of a Young Lady - 532 - Gemäldegalerie.jpg",
     "answer": "Petrus Christus",
-    "aliases": [],
+    "aliases": ["Christus"],
     "difficulty": "medium"
   },
   {
@@ -7363,7 +7363,7 @@
     "prompt": "Name the artist",
     "image": "Pieter Bruegel the Elder- The Harvesters - Google Art Project.jpg",
     "answer": "Pieter Brueghel the Elder",
-    "aliases": ["Brueghel"],
+    "aliases": ["Brueghel", "Elder"],
     "difficulty": "medium"
   },
   {
@@ -7413,8 +7413,8 @@
     "prompt": "Name the artist",
     "image": "Van Gogh - The Parsonage Garden at Nuenen.jpg",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
-    "difficulty": "medium"
+    "aliases": ["van Gogh", "Gogh"],
+    "difficulty": "hard"
   },
   {
     "id": 100675,
@@ -7423,8 +7423,8 @@
     "prompt": "Name the artist",
     "image": "Whitehousenight.jpg",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
-    "difficulty": "medium"
+    "aliases": ["van Gogh", "Gogh"],
+    "difficulty": "hard"
   },
   {
     "id": 100676,
@@ -7433,8 +7433,8 @@
     "prompt": "Name the artist",
     "image": "Van Gogh - Portrait of Pere Tanguy 1887-8.JPG",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
-    "difficulty": "medium"
+    "aliases": ["van Gogh", "Gogh"],
+    "difficulty": "hard"
   },
   {
     "id": 100677,
@@ -7484,7 +7484,7 @@
     "image": "Gustav Klimt 010.jpg",
     "answer": "Gustav Klimt",
     "aliases": ["Klimt"],
-    "difficulty": "hard"
+    "difficulty": "medium"
   },
   {
     "id": 100682,
@@ -7504,7 +7504,7 @@
     "image": "Artemisia Gentileschi - Judith Beheading Holofernes - WGA8563.jpg",
     "answer": "Artemisia Gentileschi",
     "aliases": ["Gentileschi"],
-    "difficulty": "hard"
+    "difficulty": "medium"
   },
   {
     "id": 100684,
@@ -7534,7 +7534,7 @@
     "image": "Rogier van der Weyden - Portrait of a Lady - Google Art Project.jpg",
     "answer": "Rogier van der Weyden",
     "aliases": ["Weyden"],
-    "difficulty": "hard"
+    "difficulty": "medium"
   },
   {
     "id": 100687,
@@ -7543,7 +7543,7 @@
     "prompt": "Name the artist",
     "image": "Leonardo da Vinci — Jerome.jpg",
     "answer": "Leonardo da Vinci",
-    "aliases": ["da Vinci"],
+    "aliases": ["da Vinci", "Vinci"],
     "difficulty": "hard"
   },
   {
@@ -7563,7 +7563,7 @@
     "prompt": "Name the artist",
     "image": "Example.png",
     "answer": "Liberale da Verona",
-    "aliases": [],
+    "aliases": ["Verona"],
     "difficulty": "hard"
   },
   {
@@ -7593,7 +7593,7 @@
     "prompt": "Name the artist",
     "image": "Diego Velázquez 016.jpg",
     "answer": "Diego Velázquez",
-    "aliases": ["Rodríguez"],
+    "aliases": ["Rodríguez", "Velázquez"],
     "difficulty": "hard"
   },
   {
@@ -7603,7 +7603,7 @@
     "prompt": "Name the artist",
     "image": "Diego Velazquez - An Old Woman Cooking Eggs - Google Art Project.jpg",
     "answer": "Diego Velázquez",
-    "aliases": ["Rodríguez"],
+    "aliases": ["Rodríguez", "Velázquez"],
     "difficulty": "hard"
   },
   {
@@ -7613,7 +7613,7 @@
     "prompt": "Name the artist",
     "image": "Diego Velázquez, Portrait du pape Innocent X, 1650, huile sur toile, 140 × 120 cm, Rome, Galleria Doria Pamphilj (inv. 237).jpg",
     "answer": "Diego Velázquez",
-    "aliases": ["Rodríguez"],
+    "aliases": ["Rodríguez", "Velázquez"],
     "difficulty": "hard"
   },
   {
@@ -7703,7 +7703,7 @@
     "prompt": "Name the artist",
     "image": "John Henry Fuseli - The Nightmare.JPG",
     "answer": "Henry Fuseli",
-    "aliases": ["Füssli"],
+    "aliases": ["Füssli", "Fuseli"],
     "difficulty": "hard"
   },
   {
@@ -7853,7 +7853,7 @@
     "prompt": "Name the artist",
     "image": "Sarah Goodridge Beauty Revealed The Metropolitan Museum of Art.jpg",
     "answer": "Sarah Goodridge",
-    "aliases": ["Goodrich", "Goodridge"],
+    "aliases": ["Goodridge", "Goodrich"],
     "difficulty": "hard"
   },
   {
@@ -7943,7 +7943,7 @@
     "prompt": "Name the artist",
     "image": "Vincent van Gogh - In the café - Agostina Segatori in Le Tambourin - Google Art Project 2.jpg",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
+    "aliases": ["van Gogh", "Gogh"],
     "difficulty": "hard"
   },
   {
@@ -7993,7 +7993,7 @@
     "prompt": "Name the artist",
     "image": "Jacopo Tintoretto - The Last Supper - WGA22649.jpg",
     "answer": "Jacopo Tintoretto",
-    "aliases": ["Robusti"],
+    "aliases": ["Robusti", "Tintoretto"],
     "difficulty": "hard"
   },
   {
@@ -8013,7 +8013,7 @@
     "prompt": "Name the artist",
     "image": "Eyck, Jan van - Madonna with Canon van der Paele.jpeg",
     "answer": "Jan van Eyck",
-    "aliases": ["van Eyck"],
+    "aliases": ["van Eyck", "Eyck"],
     "difficulty": "hard"
   },
   {
@@ -8023,7 +8023,7 @@
     "prompt": "Name the artist",
     "image": "Jan van Eyck - Madonna in the Church - WGA7590.jpg",
     "answer": "Jan van Eyck",
-    "aliases": ["van Eyck"],
+    "aliases": ["van Eyck", "Eyck"],
     "difficulty": "hard"
   },
   {
@@ -8033,7 +8033,7 @@
     "prompt": "Name the artist",
     "image": "Piero della Francesca Flagellazione-gndm-full.jpg",
     "answer": "Piero della Francesca",
-    "aliases": ["Della Francesca"],
+    "aliases": ["Della Francesca", "Francesca"],
     "difficulty": "hard"
   },
   {
@@ -8053,7 +8053,7 @@
     "prompt": "Name the artist",
     "image": "Osman Hamdi Bey - The Tortoise Trainer - Google Art Project.jpg",
     "answer": "Osman Hamdi Bey",
-    "aliases": [],
+    "aliases": ["Bey"],
     "difficulty": "hard"
   },
   {
@@ -8083,7 +8083,7 @@
     "prompt": "Name the artist",
     "image": "Velázquez - La Fragua de Vulcano (Museo del Prado, 1630).jpg",
     "answer": "Diego Velázquez",
-    "aliases": ["Rodríguez"],
+    "aliases": ["Rodríguez", "Velázquez"],
     "difficulty": "hard"
   },
   {
@@ -8093,7 +8093,7 @@
     "prompt": "Name the artist",
     "image": "Velázquez - El Triunfo de Baco o Los Borrachos (Museo del Prado, 1628-29).jpg",
     "answer": "Diego Velázquez",
-    "aliases": ["Rodríguez"],
+    "aliases": ["Rodríguez", "Velázquez"],
     "difficulty": "hard"
   },
   {
@@ -8133,7 +8133,7 @@
     "prompt": "Name the artist",
     "image": "Ivan Kramskoy - Христос в пустыне - Google Art Project.jpg",
     "answer": "Ivan Kramskoi",
-    "aliases": ["Kramskoy"],
+    "aliases": ["Kramskoy", "Kramskoi"],
     "difficulty": "hard"
   },
   {
@@ -8143,7 +8143,7 @@
     "prompt": "Name the artist",
     "image": "Joseph Wright of Derby - Indian Widow - WGA25901.jpg",
     "answer": "Joseph Wright of Derby",
-    "aliases": ["Wright"],
+    "aliases": ["Wright", "Derby"],
     "difficulty": "hard"
   },
   {
@@ -8203,7 +8203,7 @@
     "prompt": "Name the artist",
     "image": "Antonio Allegri, gen. Correggio, Kunsthistorisches Museum Wien, Gemäldegalerie - Jupiter und Io - GG 274 - Kunsthistorisches Museum.jpg",
     "answer": "Antonio da Correggio",
-    "aliases": ["Allegri"],
+    "aliases": ["Allegri", "Correggio"],
     "difficulty": "hard"
   },
   {
@@ -8263,7 +8263,7 @@
     "prompt": "Name the artist",
     "image": "Pieter Bruegel the Elder - Children’s Games - Google Art Project.jpg",
     "answer": "Pieter Brueghel the Elder",
-    "aliases": ["Brueghel"],
+    "aliases": ["Brueghel", "Elder"],
     "difficulty": "hard"
   },
   {
@@ -8313,7 +8313,7 @@
     "prompt": "Name the artist",
     "image": "Vincent van Gogh - Self-Portrait - Google Art Project.jpg",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
+    "aliases": ["van Gogh", "Gogh"],
     "difficulty": "hard"
   },
   {
@@ -8323,7 +8323,7 @@
     "prompt": "Name the artist",
     "image": "Amandelbloesem - s0176V1962 - Van Gogh Museum.jpg",
     "answer": "Vincent van Gogh",
-    "aliases": ["van Gogh"],
+    "aliases": ["van Gogh", "Gogh"],
     "difficulty": "hard"
   },
   {
@@ -8393,7 +8393,7 @@
     "prompt": "Name the artist",
     "image": "El Expolio, por El Greco.jpg",
     "answer": "El Greco",
-    "aliases": ["Theotokópoulos"],
+    "aliases": ["Theotokópoulos", "Greco"],
     "difficulty": "hard"
   },
   {
@@ -8407,23 +8407,13 @@
     "difficulty": "hard"
   },
   {
-    "id": 100774,
-    "qid": "Q472799",
-    "category": "Painters",
-    "prompt": "Name the artist",
-    "image": "Mary, Untier of Knots by Schmidtner.png",
-    "answer": "Johann Georg Melchior Schmittner",
-    "aliases": ["Schmidtner"],
-    "difficulty": "hard"
-  },
-  {
     "id": 100775,
     "qid": "Q18686031",
     "category": "Painters",
     "prompt": "Name the artist",
     "image": "Hugo van der Goes - Portinari Triptych (c. 1477).jpg",
     "answer": "Hugo van der Goes",
-    "aliases": ["van der Goes"],
+    "aliases": ["van der Goes", "Goes"],
     "difficulty": "hard"
   },
   {
@@ -8582,6 +8572,10 @@
     "image": "Galápagos Islands ESA23188644.jpeg",
     "answer": "Galapagos Islands",
     "aliases": [
+      "Galapagos",
+      "Enchanted Isles",
+      "Insular Region",
+      "Las Encantadas",
       "Archipelago of Colon",
       "Archipelago of Columbus",
       "Archipelago of Ecuador",
@@ -8610,11 +8604,7 @@
       "Islands of the Equator",
       "Isles of Gallapagos",
       "the Galapagos",
-      "the Galapagoses",
-      "Galapagos",
-      "Enchanted Isles",
-      "Insular Region",
-      "Las Encantadas"
+      "the Galapagoses"
     ],
     "difficulty": "easy"
   },
@@ -8636,14 +8626,14 @@
     "image": "Birkenau múzeum - panoramio (cropped).jpg",
     "answer": "Auschwitz",
     "aliases": [
+      "Birkenau",
+      "Oświęcim",
       "Auschwitz-Birkenau",
       "Au.",
       "Auschwitz Birkenau Concentration and Extermination Camp",
       "Auschwitz concentration camp",
       "Auschwitz death camp",
-      "KZ Auschwitz",
-      "Birkenau",
-      "Oświęcim"
+      "KZ Auschwitz"
     ],
     "difficulty": "easy"
   },
@@ -8792,13 +8782,13 @@
     "image": "SF maig 2026.jpg",
     "answer": "Basilica and Expiatory Church of the Holy Family",
     "aliases": [
+      "Expiatory Temple of the Holy Family",
+      "Temple of the Holy Family",
       "Holy Family",
       "Sagrada Família",
       "La Sagrada Familia",
       "Sagrada Familia",
-      "Temple Expiatori de la Sagrada Família",
-      "Expiatory Temple of the Holy Family",
-      "Temple of the Holy Family"
+      "Temple Expiatori de la Sagrada Família"
     ],
     "difficulty": "easy"
   },
@@ -8819,7 +8809,7 @@
     "prompt": "Name the place",
     "image": "RX100VII - Amanohashidate view from Kasamatsu Park - Flickr - wkc.1.jpg",
     "answer": "Kyoto Prefecture",
-    "aliases": ["Kyouto-fu", "Kyoto", "Kyoto-fu", "Kyōto-fu"],
+    "aliases": ["Kyoto", "Kyoto-fu", "Kyōto-fu", "Kyouto-fu"],
     "difficulty": "easy"
   },
   {
@@ -9003,7 +8993,7 @@
     "prompt": "Name the place",
     "image": "Half Dome with Eastern Yosemite Valley (50MP).jpg",
     "answer": "Yosemite National Park",
-    "aliases": ["Yosemite", "YOSE", "Yosemite NP"],
+    "aliases": ["YOSE", "Yosemite NP", "Yosemite"],
     "difficulty": "easy"
   },
   {
@@ -9209,7 +9199,7 @@
       "archeological site of Teotihuacan",
       "Place of Reeds"
     ],
-    "difficulty": "easy"
+    "difficulty": "medium"
   },
   {
     "id": 100837,
@@ -9229,7 +9219,7 @@
     "image": "The Apadana, a large hypostyle room of 36 columns in the Palace of Darius, Susa, capital of Elam and of the Achaemenid Empire, Iran (46950284624).jpg",
     "answer": "Susa",
     "aliases": ["Shushan", "Mint of Susa", "Susa archaeological complex"],
-    "difficulty": "medium"
+    "difficulty": "easy"
   },
   {
     "id": 100839,
@@ -10167,13 +10157,13 @@
     "image": "KonyeUrgenchMausoleum.jpg",
     "answer": "Köneürgenç",
     "aliases": [
-      "Köneürgench",
-      "Kounya-Ourguentch",
       "Konya-Urgench",
       "Konye Urgench",
       "Konye-Urgench",
       "Old Urgench",
-      "Urganj"
+      "Urganj",
+      "Köneürgench",
+      "Kounya-Ourguentch"
     ],
     "difficulty": "hard"
   },
@@ -10640,7 +10630,7 @@
     "prompt": "Who is this?",
     "image": "Francesco Melzi - Portrait of Leonardo.png",
     "answer": "Leonardo da Vinci",
-    "aliases": ["da Vinci"],
+    "aliases": ["da Vinci", "Vinci"],
     "difficulty": "easy"
   },
   {
@@ -10730,7 +10720,7 @@
     "prompt": "Who is this?",
     "image": "Retrato de Julio César (26724093101) (cropped).jpg",
     "answer": "Julius Caesar",
-    "aliases": [],
+    "aliases": ["Caesar"],
     "difficulty": "easy"
   },
   {
@@ -10838,7 +10828,7 @@
     "qid": "Q5593",
     "category": "People",
     "prompt": "Who is this?",
-    "image": "Pablo picasso 1.jpg",
+    "image": "1973 Dokfilm Picasso de Lucien Clergue Condor Films.jpg",
     "answer": "Pablo Picasso",
     "aliases": ["Picasso"],
     "difficulty": "easy"
@@ -10870,7 +10860,7 @@
     "prompt": "Who is this?",
     "image": "Alexander the Great mosaic (cropped).jpg",
     "answer": "Alexander the Great",
-    "aliases": [],
+    "aliases": ["Great"],
     "difficulty": "easy"
   },
   {
@@ -10910,7 +10900,7 @@
     "prompt": "Who is this?",
     "image": "Vasily Perov - Портрет Ф.М.Достоевского - Google Art Project.jpg",
     "answer": "Fyodor Dostoyevsky",
-    "aliases": ["Dostoevsky"],
+    "aliases": ["Dostoevsky", "Dostoyevsky"],
     "difficulty": "easy"
   },
   {
@@ -11000,7 +10990,7 @@
     "prompt": "Who is this?",
     "image": "Cervantes Jáuregui.jpg",
     "answer": "Miguel de Cervantes",
-    "aliases": ["de Cervantes"],
+    "aliases": ["de Cervantes", "Cervantes"],
     "difficulty": "easy"
   },
   {
@@ -11030,7 +11020,7 @@
     "prompt": "Who is this?",
     "image": "Salvador Dalí 1939.jpg",
     "answer": "Salvador Dalí",
-    "aliases": ["Dali"],
+    "aliases": ["Dali", "Dalí"],
     "difficulty": "easy"
   },
   {
@@ -11120,7 +11110,7 @@
     "prompt": "Who is this?",
     "image": "Pope Francis Korea Haemi Castle 19.jpg",
     "answer": "Pope Francis",
-    "aliases": ["Bergoglio"],
+    "aliases": ["Bergoglio", "Francis"],
     "difficulty": "easy"
   },
   {
@@ -11140,7 +11130,7 @@
     "prompt": "Who is this?",
     "image": "Mao Tse Tung.jpg",
     "answer": "Mao Zedong",
-    "aliases": ["Mao"],
+    "aliases": ["Mao", "Zedong"],
     "difficulty": "easy"
   },
   {
@@ -11160,7 +11150,7 @@
     "prompt": "Who is this?",
     "image": "Saint Augustine by Philippe de Champaigne.jpg",
     "answer": "Augustine of Hippo",
-    "aliases": [],
+    "aliases": ["Hippo"],
     "difficulty": "easy"
   },
   {
@@ -11200,7 +11190,7 @@
     "prompt": "Who is this?",
     "image": "Corbin Bleu at MEGACON 2025 (cropped).jpg",
     "answer": "Corbin Bleu",
-    "aliases": ["Reivers"],
+    "aliases": ["Reivers", "Bleu"],
     "difficulty": "easy"
   },
   {
@@ -11250,7 +11240,7 @@
     "prompt": "Who is this?",
     "image": "General Charles de Gaulle in 1945.jpg",
     "answer": "Charles de Gaulle",
-    "aliases": ["de Gaulle"],
+    "aliases": ["de Gaulle", "Gaulle"],
     "difficulty": "easy"
   },
   {
@@ -11290,7 +11280,7 @@
     "prompt": "Who is this?",
     "image": "Bundesarchiv Bild 146-2005-0057, Otto von Bismarck.jpg",
     "answer": "Otto von Bismarck",
-    "aliases": ["von Bismarck"],
+    "aliases": ["von Bismarck", "Bismarck"],
     "difficulty": "easy"
   },
   {
@@ -11360,7 +11350,7 @@
     "prompt": "Who is this?",
     "image": "Cristiano Ronaldo Croatia v Portugal 2 July 2026-075 (cropped).jpg",
     "answer": "Cristiano Ronaldo",
-    "aliases": ["Aveiro"],
+    "aliases": ["Aveiro", "Ronaldo"],
     "difficulty": "easy"
   },
   {
@@ -11370,7 +11360,7 @@
     "prompt": "Who is this?",
     "image": "New Year's Eve from President of Ukraine Volodymyr Zelensky (31-12-2025) (cropped).jpg",
     "answer": "Volodymyr Zelenskyy",
-    "aliases": ["Zelenskyi"],
+    "aliases": ["Zelenskyi", "Zelenskyy"],
     "difficulty": "easy"
   },
   {
@@ -11380,7 +11370,7 @@
     "prompt": "Who is this?",
     "image": "Nikolaus Kopernikus MOT.jpg",
     "answer": "Nicolaus Copernicus",
-    "aliases": ["Kopernikus"],
+    "aliases": ["Kopernikus", "Copernicus"],
     "difficulty": "easy"
   },
   {
@@ -11410,7 +11400,7 @@
     "prompt": "Who is this?",
     "image": "Pope John Paul II smile.jpg",
     "answer": "John Paul II",
-    "aliases": ["Wojtyła"],
+    "aliases": ["Wojtyła", "Paul"],
     "difficulty": "easy"
   },
   {
@@ -11550,7 +11540,7 @@
     "prompt": "Who is this?",
     "image": "Carl Friedrich Gauss.jpg",
     "answer": "Carl Friedrich Gauss",
-    "aliases": ["Gauß"],
+    "aliases": ["Gauß", "Gauss"],
     "difficulty": "easy"
   },
   {
@@ -11568,9 +11558,9 @@
     "qid": "Q7192",
     "category": "People",
     "prompt": "Who is this?",
-    "image": "Qinshihuang.jpg",
+    "image": "Qinshihuangdi3.jpg",
     "answer": "Qin Shi Huang",
-    "aliases": ["Zhao", "Ying"],
+    "aliases": ["Zhao", "Ying", "Huang"],
     "difficulty": "easy"
   },
   {
@@ -11730,7 +11720,7 @@
     "prompt": "Who is this?",
     "image": "Louis XIV of France.jpg",
     "answer": "Louis XIV of France",
-    "aliases": [],
+    "aliases": ["France"],
     "difficulty": "easy"
   },
   {
@@ -11840,7 +11830,7 @@
     "prompt": "Who is this?",
     "image": "Michael Schumacher, September 2005.jpg",
     "answer": "Michael Schumacher",
-    "aliases": [],
+    "aliases": ["Schumacher"],
     "difficulty": "medium"
   },
   {
@@ -11870,7 +11860,7 @@
     "prompt": "Who is this?",
     "image": "Anna Netrebko - Romy 2013 a.jpg",
     "answer": "Anna Netrebko",
-    "aliases": [],
+    "aliases": ["Netrebko"],
     "difficulty": "medium"
   },
   {
@@ -11880,7 +11870,7 @@
     "prompt": "Who is this?",
     "image": "Omar Khayyam2.JPG",
     "answer": "Omar Khayyám",
-    "aliases": ["Khayyam"],
+    "aliases": ["Khayyam", "Khayyám"],
     "difficulty": "medium"
   },
   {
@@ -11940,7 +11930,7 @@
     "prompt": "Who is this?",
     "image": "LS3 4919 (cropped).jpg",
     "answer": "Tim Berners-Lee",
-    "aliases": [],
+    "aliases": ["Berners-Lee"],
     "difficulty": "medium"
   },
   {
@@ -11950,7 +11940,7 @@
     "prompt": "Who is this?",
     "image": "Jackie Chan - 2025 Locarno Film Festival.jpg",
     "answer": "Jackie Chan",
-    "aliases": ["Fang"],
+    "aliases": ["Fang", "Chan"],
     "difficulty": "medium"
   },
   {
@@ -11960,7 +11950,7 @@
     "prompt": "Who is this?",
     "image": "James-Clerk-Maxwell-1831-1879.jpg",
     "answer": "James Clerk Maxwell",
-    "aliases": ["Clerk Maxwell"],
+    "aliases": ["Clerk Maxwell", "Maxwell"],
     "difficulty": "medium"
   },
   {
@@ -12000,7 +11990,7 @@
     "prompt": "Who is this?",
     "image": "LanaDRPrimavera310524 (32 of 147) (53765476960) (cropped).jpg",
     "answer": "Lana Del Rey",
-    "aliases": ["Grant"],
+    "aliases": ["Grant", "Rey"],
     "difficulty": "medium"
   },
   {
@@ -12140,7 +12130,7 @@
     "prompt": "Who is this?",
     "image": "Hebe Camargo.jpg",
     "answer": "Hebe Camargo",
-    "aliases": ["Monteiro", "Ravagnani", "de Camargo"],
+    "aliases": ["Monteiro", "Ravagnani", "de Camargo", "Camargo"],
     "difficulty": "medium"
   },
   {
@@ -12260,7 +12250,7 @@
     "prompt": "Who is this?",
     "image": "Piaf Harcourt 1946 2.jpg",
     "answer": "Édith Piaf",
-    "aliases": ["Gassion"],
+    "aliases": ["Gassion", "Piaf"],
     "difficulty": "medium"
   },
   {
@@ -12330,7 +12320,7 @@
     "prompt": "Who is this?",
     "image": "Ariana Grande promoting Wicked (2024).jpg",
     "answer": "Ariana Grande",
-    "aliases": ["Grande-Butera"],
+    "aliases": ["Grande-Butera", "Grande"],
     "difficulty": "medium"
   },
   {
@@ -12370,7 +12360,7 @@
     "prompt": "Who is this?",
     "image": "Robert de Niro Cannes Film Festival (3x4 cropped).jpg",
     "answer": "Robert De Niro",
-    "aliases": ["De Niro"],
+    "aliases": ["De Niro", "Niro"],
     "difficulty": "medium"
   },
   {
@@ -12420,7 +12410,7 @@
     "prompt": "Who is this?",
     "image": "Swami Vivekananda-1893-09-signed.jpg",
     "answer": "Swami Vivekananda",
-    "aliases": ["Dutta"],
+    "aliases": ["Dutta", "Vivekananda"],
     "difficulty": "medium"
   },
   {
@@ -12490,7 +12480,7 @@
     "prompt": "Who is this?",
     "image": "David-Bowie Chicago 2002-08-08 photoby Adam-Bielawski-cropped.jpg",
     "answer": "David Bowie",
-    "aliases": ["Jones"],
+    "aliases": ["Jones", "Bowie"],
     "difficulty": "medium"
   },
   {
@@ -12550,7 +12540,7 @@
     "prompt": "Who is this?",
     "image": "Sophia Loren 1962.jpg",
     "answer": "Sophia Loren",
-    "aliases": ["Villani", "Scicolone"],
+    "aliases": ["Villani", "Scicolone", "Loren"],
     "difficulty": "medium"
   },
   {
@@ -12630,7 +12620,7 @@
     "prompt": "Who is this?",
     "image": "Valery Leontiev at Laima Rendez Vous Jurmala 2017 (2) (cropped).jpg",
     "answer": "Valery Leontiev",
-    "aliases": ["Leontyev"],
+    "aliases": ["Leontyev", "Leontiev"],
     "difficulty": "medium"
   },
   {
@@ -12660,7 +12650,7 @@
     "prompt": "Who is this?",
     "image": "David - Portrait of Monsieur Lavoisier (cropped).jpg",
     "answer": "Antoine Lavoisier",
-    "aliases": ["de Lavoisier"],
+    "aliases": ["de Lavoisier", "Lavoisier"],
     "difficulty": "medium"
   },
   {
@@ -12730,7 +12720,7 @@
     "prompt": "Who is this?",
     "image": "Paul Dirac, 1933.jpg",
     "answer": "Paul Dirac",
-    "aliases": [],
+    "aliases": ["Dirac"],
     "difficulty": "medium"
   },
   {
@@ -12750,7 +12740,7 @@
     "prompt": "Who is this?",
     "image": "JohnvonNeumann-LosAlamos.jpg",
     "answer": "John von Neumann",
-    "aliases": ["von Neumann"],
+    "aliases": ["von Neumann", "Neumann"],
     "difficulty": "medium"
   },
   {
@@ -12870,7 +12860,7 @@
     "prompt": "Who is this?",
     "image": "Sir CV Raman.JPG",
     "answer": "Chandrasekhara Venkata Raman",
-    "aliases": [],
+    "aliases": ["Raman"],
     "difficulty": "medium"
   },
   {
@@ -12970,7 +12960,7 @@
     "prompt": "Who is this?",
     "image": "Jean Le Rond d'Alembert, by French school.jpg",
     "answer": "Jean Le Rond d'Alembert",
-    "aliases": [],
+    "aliases": ["d'Alembert"],
     "difficulty": "medium"
   },
   {
@@ -13130,7 +13120,7 @@
     "prompt": "Who is this?",
     "image": "Andrés Iniesta Argentina v Spain 19 July 2026-034 (cropped).jpg",
     "answer": "Andrés Iniesta",
-    "aliases": ["Cocoaco"],
+    "aliases": ["Cocoaco", "Iniesta"],
     "difficulty": "hard"
   },
   {
@@ -13140,7 +13130,7 @@
     "prompt": "Who is this?",
     "image": "Mohamed Salah Argentina v Egypt 7 July 2026-163 (cropped).jpg",
     "answer": "Mohamed Salah",
-    "aliases": ["Ghaly"],
+    "aliases": ["Ghaly", "Salah"],
     "difficulty": "hard"
   },
   {
@@ -13210,7 +13200,7 @@
     "prompt": "Who is this?",
     "image": "Lamine Yamal Argentina v Spain 19 July 2026-214 (new cropped).jpg",
     "answer": "Lamine Yamal",
-    "aliases": ["Nasraoui"],
+    "aliases": ["Nasraoui", "Yamal"],
     "difficulty": "hard"
   },
   {
@@ -13290,7 +13280,7 @@
     "prompt": "Who is this?",
     "image": "Loco-Fener (10).jpg",
     "answer": "Robin van Persie",
-    "aliases": ["van Persie"],
+    "aliases": ["van Persie", "Persie"],
     "difficulty": "hard"
   },
   {
@@ -13300,7 +13290,7 @@
     "prompt": "Who is this?",
     "image": "Tennis Nederland tegen Verenigde Staten in Den Haag Navratilova in aktie, Bestanddeelnr 930-9118 (cropped).jpg",
     "answer": "Martina Navratilova",
-    "aliases": ["Navrátilová"],
+    "aliases": ["Navrátilová", "Navratilova"],
     "difficulty": "hard"
   },
   {
@@ -13320,7 +13310,7 @@
     "prompt": "Who is this?",
     "image": "Jason Statham 2018.jpg",
     "answer": "Jason Statham",
-    "aliases": [],
+    "aliases": ["Statham"],
     "difficulty": "hard"
   },
   {
@@ -13430,7 +13420,7 @@
     "prompt": "Who is this?",
     "image": "Kevin De Bruyne USMNT v Belgium Mar 28 2026-64 (cropped).jpg",
     "answer": "Kevin De Bruyne",
-    "aliases": ["De Bruyne"],
+    "aliases": ["De Bruyne", "Bruyne"],
     "difficulty": "hard"
   },
   {
@@ -13440,7 +13430,7 @@
     "prompt": "Who is this?",
     "image": "Arjen Robben 2013.jpg",
     "answer": "Arjen Robben",
-    "aliases": [],
+    "aliases": ["Robben"],
     "difficulty": "hard"
   },
   {
@@ -13590,7 +13580,7 @@
     "prompt": "Who is this?",
     "image": "Naomi Osaka 2017 Wimbledon.jpg",
     "answer": "Naomi Osaka",
-    "aliases": ["Ōsaka"],
+    "aliases": ["Ōsaka", "Osaka"],
     "difficulty": "hard"
   },
   {
@@ -13710,7 +13700,7 @@
     "prompt": "Who is this?",
     "image": "Victoria Azarenka (41705054005).jpg",
     "answer": "Victoria Azarenka",
-    "aliases": ["Azaranka"],
+    "aliases": ["Azaranka", "Azarenka"],
     "difficulty": "hard"
   },
   {
@@ -13850,7 +13840,7 @@
     "prompt": "Who is this?",
     "image": "Ana Ivanović (14948461930).jpg",
     "answer": "Ana Ivanovic",
-    "aliases": ["Ivanović"],
+    "aliases": ["Ivanović", "Ivanovic"],
     "difficulty": "hard"
   },
   {
@@ -13900,7 +13890,7 @@
     "prompt": "Who is this?",
     "image": "Gustaf V färgfoto.jpg",
     "answer": "Gustaf V of Sweden",
-    "aliases": [],
+    "aliases": ["Sweden"],
     "difficulty": "hard"
   },
   {
@@ -13920,7 +13910,7 @@
     "prompt": "Who is this?",
     "image": "Carlos Alcaraz Roland Garros 2025 (cropped).jpg",
     "answer": "Carlos Alcaraz",
-    "aliases": [],
+    "aliases": ["Alcaraz"],
     "difficulty": "hard"
   },
   {
@@ -13970,7 +13960,7 @@
     "prompt": "Who is this?",
     "image": "Monica Seles 1999.jpg",
     "answer": "Monica Seles",
-    "aliases": ["Seleš", "Szeles"],
+    "aliases": ["Szeles", "Seleš", "Seles"],
     "difficulty": "hard"
   },
   {
@@ -13980,7 +13970,7 @@
     "prompt": "Who is this?",
     "image": "Stan Wawrinka, Basel 2024.jpg",
     "answer": "Stan Wawrinka",
-    "aliases": [],
+    "aliases": ["Wawrinka"],
     "difficulty": "hard"
   },
   {
@@ -14060,7 +14050,7 @@
     "prompt": "Who is this?",
     "image": "Petra Kvitová Maud Watson trophy 2018.jpg",
     "answer": "Petra Kvitová",
-    "aliases": ["Kvita"],
+    "aliases": ["Kvita", "Kvitová"],
     "difficulty": "hard"
   },
   {
@@ -14100,7 +14090,7 @@
     "prompt": "Who is this?",
     "image": "YaoMingonoffense2.jpg",
     "answer": "Yao Ming",
-    "aliases": ["Yao"],
+    "aliases": ["Yao", "Ming"],
     "difficulty": "hard"
   },
   {
@@ -14299,14 +14289,14 @@
     "image": "Logo of AC Milan.svg",
     "answer": "AC Milan",
     "aliases": [
-      "Milan",
-      "ACM",
       "A.C. Milan",
       "A.C.M.",
       "A.C.Milan",
       "ACMilan",
       "Association Football Milan",
-      "Associazione Calcio Milan"
+      "Associazione Calcio Milan",
+      "Milan",
+      "ACM"
     ],
     "difficulty": "easy"
   },
@@ -14357,6 +14347,8 @@
     "image": "FC Internazionale Milano 2021.svg",
     "answer": "Inter Milan",
     "aliases": [
+      "Inter Club",
+      "Inter FC",
       "Inter",
       "F.C.I.M.",
       "FCIM",
@@ -14375,9 +14367,7 @@
       "Inter of Milan",
       "Inter soccer club",
       "Internazionale Milano",
-      "The Inter",
-      "Inter Club",
-      "Inter FC"
+      "The Inter"
     ],
     "difficulty": "easy"
   },
@@ -14441,6 +14431,9 @@
     "image": "S.S. Lazio logo.svg",
     "answer": "SS Lazio",
     "aliases": [
+      "SSL",
+      "S.S. Lazio",
+      "Società Sportiva Lazio",
       "Lazio Calcio",
       "Lazio Sport Society",
       "Lazio Sports Society",
@@ -14449,10 +14442,7 @@
       "Societa Sportiva Lazio",
       "Sport Society Lazio",
       "Sports Society Lazio",
-      "SSLazio",
-      "SSL",
-      "S.S. Lazio",
-      "Società Sportiva Lazio"
+      "SSLazio"
     ],
     "difficulty": "easy"
   },
@@ -14464,12 +14454,12 @@
     "image": "Borussia Dortmund logo.svg",
     "answer": "Borussia Dortmund",
     "aliases": [
-      "Dortmund",
-      "BVB",
       "Ballspielverein Borussia 09 e.V. Dortmund",
       "Die Borussen",
       "Die Schwarzgelben",
-      "The Black and Yellows"
+      "The Black and Yellows",
+      "Dortmund",
+      "BVB"
     ],
     "difficulty": "easy"
   },
@@ -14602,10 +14592,10 @@
     "image": "BesiktasJK-Logo.svg",
     "answer": "Beşiktaş J.K.",
     "aliases": [
-      "Beşiktaş J.K. (Football)",
       "Besiktas",
       "Beşiktaş",
       "B.J.K.",
+      "Beşiktaş J.K. (Football)",
       "Besiktas Jimnastik Kulubu",
       "Beşiktaş Jimnastik Kulübü",
       "Besiktas JK",
@@ -14872,13 +14862,13 @@
     "image": "TSG Logo-Standard 4c.png",
     "answer": "TSG 1899 Hoffenheim",
     "aliases": [
-      "Hoffenheim",
       "1899 Hoffenheim",
       "1899 Hoffenheim II",
       "Die Kraichgauer",
       "TSG Hoffenheim",
       "TSG Hoffenheim II",
-      "Turn- und Sportgemeinschaft 1899 Hoffenheim e.V."
+      "Turn- und Sportgemeinschaft 1899 Hoffenheim e.V.",
+      "Hoffenheim"
     ],
     "difficulty": "easy"
   },
@@ -14890,10 +14880,10 @@
     "image": "Hertha BSC Logo 2012.svg",
     "answer": "Hertha BSC",
     "aliases": [
-      "Hertha, Berliner Sport-Club e. V",
       "Hertha",
       "Hertha Berlin",
-      "Hertha Berliner Sport-Club"
+      "Hertha Berliner Sport-Club",
+      "Hertha, Berliner Sport-Club e. V"
     ],
     "difficulty": "easy"
   },
@@ -15044,7 +15034,7 @@
     "prompt": "Name the club",
     "image": "Hannover 96 Logo.svg",
     "answer": "Hannover 96",
-    "aliases": ["Hannoveraner", "H96", "Hannoverscher Sport-Verein von 1896 e.V."],
+    "aliases": ["H96", "Hannoverscher Sport-Verein von 1896 e.V.", "Hannoveraner"],
     "difficulty": "easy"
   },
   {
@@ -15704,13 +15694,13 @@
     "image": "AC-Sparta-LOGO2021.svg",
     "answer": "AC Sparta Prague",
     "aliases": [
+      "ACS",
+      "A.C. Sparta Prague",
+      "A.C.S.",
       "ACSparta",
       "Athletic Club Sparta Prague",
       "Sparta Prague",
-      "SpartaPrague",
-      "ACS",
-      "A.C. Sparta Prague",
-      "A.C.S."
+      "SpartaPrague"
     ],
     "difficulty": "medium"
   },
@@ -16707,6 +16697,16 @@
     "image": "0 Amiens - Cathédrale Notre-Dame (1).JPG",
     "answer": "Notre-Dame d'Amiens",
     "aliases": ["Amiens Cathedral"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 101522,
+    "qid": "Q107486133",
+    "category": "Painters",
+    "prompt": "Name the artist",
+    "image": "Fallen Angel (Alexandre Cabanel).jpg",
+    "answer": "Alexandre Cabanel",
+    "aliases": ["Cabanel"],
     "difficulty": "hard"
   }
 ]
