@@ -57,12 +57,16 @@ const lift = (s: State, col: number, row: number): void => {
 
 const open = (s: State, col: number): boolean => (s.heights[col] ?? ROWS) < ROWS;
 
-/** 1 when `me` (to move) wins within `depth` plies by force, -1 when it loses, else 0. */
-function negamax(s: State, me: Disc, depth: number, window: [number, number]): number {
-  if (depth <= 0) return 0;
+/** A search node: who moves, plies left, and the alpha-beta window. */
+interface Node {
+  me: Disc;
+  depth: number;
+  alpha: number;
+  beta: number;
+}
 
-  const cols = ORDER.filter((c) => open(s, c));
-  const wins = cols.some((c) => {
+const winsNow = (s: State, me: Disc, cols: number[]): boolean =>
+  cols.some((c) => {
     const row = place(s, c, me);
     const four = madeFour(s, row, c);
     lift(s, c, row);
@@ -70,23 +74,25 @@ function negamax(s: State, me: Disc, depth: number, window: [number, number]): n
     return four;
   });
 
-  if (wins) return 1;
+/** 1 when `me` (to move) wins within `depth` plies by force, -1 when it loses, else 0. */
+function negamax(s: State, n: Node): number {
+  if (n.depth <= 0) return 0;
 
-  return bestReply(s, me, depth, cols, window);
-}
+  const cols = ORDER.filter((c) => open(s, c));
 
-function bestReply(s: State, me: Disc, depth: number, cols: number[], [a, b]: [number, number]) {
+  if (winsNow(s, n.me, cols)) return 1;
+
   let best = cols.length > 0 ? -1 : 0;
-  let alpha = a;
+  let alpha = n.alpha;
 
   for (const c of cols) {
-    const row = place(s, c, me);
-    const v = -negamax(s, swap(me), depth - 1, [-b, -alpha]);
+    const row = place(s, c, n.me);
+    const v = -negamax(s, { me: swap(n.me), depth: n.depth - 1, alpha: -n.beta, beta: -alpha });
     lift(s, c, row);
     best = Math.max(best, v);
     alpha = Math.max(alpha, v);
 
-    if (alpha >= b) break;
+    if (alpha >= n.beta) break;
   }
 
   return best;
@@ -106,7 +112,7 @@ export function lostColumns(b: Board, me: Disc, depth: number): number[] {
     if (wins.includes(c)) return false;
 
     const row = place(s, c, me);
-    const v = negamax(s, swap(me), depth - 1, [-1, 1]);
+    const v = negamax(s, { me: swap(me), depth: depth - 1, alpha: -1, beta: 1 });
     lift(s, c, row);
 
     return v === 1;
