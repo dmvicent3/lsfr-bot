@@ -1,6 +1,6 @@
 import { log } from "../../../core/log.ts";
 import type { Ctx } from "../../../core/types.ts";
-import { kaosLists, questions } from "../data/load.ts";
+import { kaosLists, pictures, questions } from "../data/load.ts";
 import { TriviaRepo } from "../store/repo.ts";
 import { discordPoster } from "./poster.ts";
 import { register, unregister } from "./registry.ts";
@@ -28,6 +28,7 @@ export function startSession(
       random,
       questions: questions(),
       lists: kaosLists(),
+      pictures: pictures(),
       onEnd: () => {
         clearInterval(timer);
         unregister(p.channelId, runner);

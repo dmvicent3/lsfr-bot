@@ -12,6 +12,7 @@ const runner = (sessionId: number): Runner =>
       random: Math.random,
       questions: [],
       lists: [],
+      pictures: [],
       onEnd: () => undefined,
     },
   );

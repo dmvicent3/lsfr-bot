@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import { openTopics, pickRound } from "../../../src/modules/trivia/pick.ts";
-import { kaos, question, scripted } from "./fixtures.ts";
+import type { Picture } from "../../../src/modules/trivia/types.ts";
+import { kaos, picture, question, scripted } from "./fixtures.ts";
 
 const questions = [
   question(1),
@@ -9,7 +10,13 @@ const questions = [
   question(4, { kind: "typed", category: "Sports" }),
 ];
 const lists = [kaos(1)];
-const base = { questions, lists, lastAsked: new Map<string, number>(), topic: null };
+const base = {
+  questions,
+  lists,
+  pictures: [] as Picture[],
+  lastAsked: new Map<string, number>(),
+  topic: null,
+};
 
 test("a low first draw is a KAOS round", () => {
   expect(pickRound({ ...base, random: scripted(0.05, 0) }).kind).toBe("kaos");
@@ -69,4 +76,32 @@ test("at most 25 topics", () => {
   const many = Array.from({ length: 30 }, (_, i) => question(i, { category: `C${100 + i}` }));
 
   expect(openTopics(many, new Map())).toHaveLength(25);
+});
+
+const flags = ["Portugal", "Spain", "France", "Italy"].map((a, i) => picture(100_001 + i, a));
+
+test("a draw between 0.1 and 0.3 is a picture round", () => {
+  const typed = pickRound({ ...base, pictures: flags, random: scripted(0.2, 0, 0.2) });
+  const button = pickRound({ ...base, pictures: flags, random: scripted(0.2, 0, 0.7) });
+
+  expect(typed.kind === "typed" && typed.question.image).toBe("Flag of Portugal.svg");
+  expect(button.kind).toBe("button");
+});
+
+test("pictures stay out of chosen topics", () => {
+  const picked = pickRound({
+    ...base,
+    pictures: flags,
+    topic: "Sports",
+    random: scripted(0.2, 0.5, 0),
+  });
+
+  expect(picked.kind !== "kaos" && picked.question.category).toBe("Sports");
+});
+
+test("a picture with no wrong options is always typed", () => {
+  const lone = [picture(100_001, "Portugal")];
+  const picked = pickRound({ ...base, pictures: lone, random: scripted(0.2, 0, 0.7) });
+
+  expect(picked.kind).toBe("typed");
 });

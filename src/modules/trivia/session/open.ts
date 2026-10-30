@@ -23,6 +23,7 @@ export async function openRound(s: SessionState, d: Deps, now: number): Promise<
   const choice = pickRound({
     questions: d.questions,
     lists: d.lists,
+    pictures: d.pictures,
     lastAsked: d.repo.asked.lastAskedMap(s.guildId),
     topic: s.topic?.name ?? null,
     random: d.random,

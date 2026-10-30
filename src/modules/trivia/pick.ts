@@ -1,6 +1,10 @@
-import type { KaosList, Question, RoundChoice } from "./types.ts";
+import { pictureQuestion } from "./picture-question.ts";
+import type { KaosList, Picture, Question, RoundChoice } from "./types.ts";
 
 const KAOS_SHARE = 0.1;
+/** KAOS below 0.1, a picture below 0.3, else text. */
+const PICTURE_SHARE = 0.3;
+const PICTURE_TYPED = 0.5;
 const TYPED_SHARE = 2 / 3;
 /** A Discord select menu holds 25 options. */
 const MAX_TOPICS = 25;
@@ -30,10 +34,45 @@ function draw<T>(items: T[], random: () => number): T {
 
 const questionKey = (q: Question): string => askedKey("question", q.id);
 
-/** KAOS one in ten (never on a chosen topic), else typed two in three; least recently asked first. */
+/** A least recently asked picture, typed or buttons at even odds (typed when it has no options). */
+function pickPicture(
+  pictures: readonly Picture[],
+  lastAsked: LastAsked,
+  random: () => number,
+): RoundChoice {
+  const p = draw(
+    leastRecent(pictures, (x) => askedKey("question", x.id), lastAsked),
+    random,
+  );
+  const wantTyped = random() < PICTURE_TYPED;
+  const question = pictureQuestion(p, pictures, random);
+
+  return { kind: wantTyped || question.kind === "typed" ? "typed" : "button", question };
+}
+
+/** A text question from the topic (all of them when it has none), typed two in three. */
+function pickText(p: {
+  questions: readonly Question[];
+  lastAsked: LastAsked;
+  topic: string | null;
+  random: () => number;
+}): RoundChoice {
+  const inTopic = p.questions.filter((q) => q.category === p.topic);
+  const pool = inTopic.length > 0 ? inTopic : p.questions;
+  const typed = pool.filter((q) => q.kind === "typed");
+  const choice = pool.filter((q) => q.kind === "choice");
+  const wantTyped = p.random() < TYPED_SHARE;
+  const kind = (wantTyped && typed.length > 0) || choice.length === 0 ? "typed" : "button";
+  const candidates = leastRecent(kind === "typed" ? typed : choice, questionKey, p.lastAsked);
+
+  return { kind, question: draw(candidates, p.random) };
+}
+
+/** KAOS 1 in 10, pictures 2 in 10 (neither on a chosen topic), else text; least recently asked first. */
 export function pickRound(p: {
   questions: readonly Question[];
   lists: readonly KaosList[];
+  pictures: readonly Picture[];
   lastAsked: LastAsked;
   topic: string | null;
   random: () => number;
@@ -46,15 +85,10 @@ export function pickRound(p: {
     return { kind: "kaos", list: draw(lists, p.random) };
   }
 
-  const inTopic = p.questions.filter((q) => q.category === p.topic);
-  const pool = inTopic.length > 0 ? inTopic : p.questions;
-  const typed = pool.filter((q) => q.kind === "typed");
-  const choice = pool.filter((q) => q.kind === "choice");
-  const wantTyped = p.random() < TYPED_SHARE;
-  const kind = (wantTyped && typed.length > 0) || choice.length === 0 ? "typed" : "button";
-  const candidates = leastRecent(kind === "typed" ? typed : choice, questionKey, p.lastAsked);
+  if (kaosDraw < PICTURE_SHARE && p.topic === null && p.pictures.length > 0)
+    return pickPicture(p.pictures, p.lastAsked, p.random);
 
-  return { kind, question: draw(candidates, p.random) };
+  return pickText(p);
 }
 
 /** Categories with a never-asked question (all of them once none are left), sorted, at most 25. */

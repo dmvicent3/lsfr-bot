@@ -2,7 +2,7 @@ import { Database } from "bun:sqlite";
 import { runMigrations } from "../../../src/core/db.ts";
 import { triviaMigrations } from "../../../src/modules/trivia/store/migrations.ts";
 import { TriviaRepo } from "../../../src/modules/trivia/store/repo.ts";
-import type { KaosList, Question } from "../../../src/modules/trivia/types.ts";
+import type { KaosList, Picture, Question } from "../../../src/modules/trivia/types.ts";
 
 export const question = (id: number, over: Partial<Question> = {}): Question => ({
   id,
@@ -37,3 +37,15 @@ export function freshRepo(): TriviaRepo {
 
   return new TriviaRepo(db);
 }
+
+export const picture = (id: number, answer: string, over: Partial<Picture> = {}): Picture => ({
+  id,
+  qid: `Q${id}`,
+  category: "Flags",
+  prompt: "Name the country",
+  image: `Flag of ${answer}.svg`,
+  answer,
+  aliases: [],
+  difficulty: "easy",
+  ...over,
+});

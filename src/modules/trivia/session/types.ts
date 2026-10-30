@@ -2,7 +2,7 @@ import type { MessageCreateOptions } from "discord.js";
 import type { SendResult } from "../../../core/types.ts";
 import type { Round } from "../rounds/types.ts";
 import type { TriviaRepo } from "../store/repo.ts";
-import type { KaosList, Question } from "../types.ts";
+import type { KaosList, Picture, Question } from "../types.ts";
 
 export type Outgoing = Pick<MessageCreateOptions, "content" | "embeds" | "components">;
 
@@ -18,6 +18,7 @@ export interface Deps {
   random: () => number;
   questions: readonly Question[];
   lists: readonly KaosList[];
+  pictures: readonly Picture[];
   /** Called once when the session ends, to drop its timer and registry entry. */
   onEnd: () => void;
 }

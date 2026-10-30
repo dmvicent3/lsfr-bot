@@ -42,6 +42,7 @@ function setup(p: { questions?: Question[]; lists?: KaosList[]; random?: () => n
       random: p.random ?? (() => 0.5),
       questions: p.questions ?? [question(1, { answer: "Paris" })],
       lists: p.lists ?? [kaos(1)],
+      pictures: [],
       onEnd: () => ended++,
     },
   );
