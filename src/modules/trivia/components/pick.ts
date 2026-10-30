@@ -6,13 +6,6 @@ import { pickReply } from "./replies.ts";
 
 const LETTERS = ["A", "B", "C", "D"];
 
-/** The letter `userId` holds in the open round, for "Locked in" and "already picked". */
-function letterOf(roundPicks: { userId: string; index: number }[], userId: string): string | null {
-  const index = roundPicks.find((p) => p.userId === userId)?.index;
-
-  return index === undefined ? null : (LETTERS[index] ?? null);
-}
-
 /** `trivia:pick:<roundId>:<index>`: one locked-in pick per player. */
 export const pickHandler: ComponentHandler = {
   id: "trivia:pick",
@@ -21,9 +14,10 @@ export const pickHandler: ComponentHandler = {
     const runner = runnerIn(i.channelId);
     const [roundId = "", index = ""] = args;
     const pick = { userId: i.user.id, name: memberName(i), index: Number(index), at: Date.now() };
-    const result = runner ? await runner.onPick(roundId, pick) : "closed";
-    const round = runner?.state.round;
-    const picks = round?.kind === "button" ? round.picks : [];
-    await i.editReply(pickReply(result, letterOf(picks, i.user.id)));
+    const out = runner
+      ? await runner.onPick(roundId, pick)
+      : { result: "closed" as const, index: null };
+    const letter = out.index === null ? null : (LETTERS[out.index] ?? null);
+    await i.editReply(pickReply(out.result, letter));
   },
 };

@@ -4,7 +4,7 @@ import { Runner } from "../../../../src/modules/trivia/session/runner.ts";
 import type { Outgoing, Poster } from "../../../../src/modules/trivia/session/types.ts";
 import type { TriviaRepo } from "../../../../src/modules/trivia/store/repo.ts";
 import type { KaosList, Question } from "../../../../src/modules/trivia/types.ts";
-import { freshRepo, kaos, question } from "../fixtures.ts";
+import { freshRepo, kaos, question, scripted } from "../fixtures.ts";
 
 const T0 = Date.UTC(2026, 9, 30, 12);
 
@@ -151,9 +151,10 @@ test("picks on another round are answered as over", async () => {
   const { runner } = setup({ questions: [question(1, { kind: "choice" })] });
   await runner.tick(T0);
 
-  expect(await runner.onPick("old", { userId: "a", name: "A", index: 0, at: T0 + 1 })).toBe(
-    "closed",
-  );
+  expect(await runner.onPick("old", { userId: "a", name: "A", index: 0, at: T0 + 1 })).toEqual({
+    result: "closed",
+    index: null,
+  });
 });
 
 test("a KAOS claim is posted at once and the embed catches up on the next tick", async () => {
@@ -176,4 +177,76 @@ test("stop ends the session and posts the summary", async () => {
   expect(runner.ended).toBe(true);
   expect(ended()).toBe(1);
   expect(text(poster.posts.at(-1))).toContain("Top: 1. Ana 10");
+});
+
+test("a throw while announcing a close never awards the points twice", async () => {
+  const { repo, poster, runner } = setup();
+  await runner.tick(T0);
+  const post = poster.post.bind(poster);
+  let throws = 1;
+
+  poster.post = async (msg) => {
+    if (throws-- > 0) throw new Error("boom");
+
+    return post(msg);
+  };
+
+  await runner
+    .onMessage({ userId: "a", name: "Ana", text: "paris", at: T0 + 3_000 })
+    .catch(() => undefined);
+  await runner.tick(T0 + 4_000);
+  await runner.tick(T0 + 5_000);
+
+  expect(repo.scores.standings("g", 0, T0 + 10_000)).toEqual([{ userId: "a", points: 10 }]);
+});
+
+test("the click that closes a button round still learns its letter", async () => {
+  const { runner } = setup({ questions: [question(1, { kind: "choice" })], lists: [] });
+  await runner.tick(T0);
+  await runner.onMessage({ userId: "a", name: "Ana", text: "hm", at: T0 + 500 });
+  await runner.tick(T0 + 20_000);
+  await runner.tick(T0 + 25_000);
+  const round = runner.state.round;
+
+  if (round?.kind !== "button") throw new Error("expected a button round");
+
+  const picked = await runner.onPick(round.id, {
+    userId: "a",
+    name: "Ana",
+    index: 2,
+    at: T0 + 26_000,
+  });
+
+  expect(picked).toEqual({ result: "locked", index: 2 });
+  expect(runner.state.round).toBeNull();
+});
+
+test("wrong guesses count as playing: no idle stop", async () => {
+  const { runner } = setup();
+
+  for (let t = T0; t <= T0 + 200_000; t += 1_000) {
+    await runner.tick(t);
+    await runner.onMessage({ userId: "b", name: "Bo", text: "london", at: t + 1 });
+  }
+
+  expect(runner.ended).toBe(false);
+});
+
+test("a button round waits for everyone active last round, not just its winner", async () => {
+  const choice = question(2, { kind: "choice" });
+  const typed = question(1, { answer: "Paris" });
+  // Round 1: no KAOS, typed, first candidate, 3 hint shuffles; round 2: no KAOS, button.
+  const random = scripted(0.5, 0.5, 0, 0, 0, 0, 0.5, 0.9);
+  const { runner } = setup({ questions: [typed, choice], lists: [], random });
+  await runner.tick(T0);
+  await runner.onMessage({ userId: "b", name: "Bo", text: "london", at: T0 + 1_000 });
+  await runner.onMessage({ userId: "a", name: "Ana", text: "paris", at: T0 + 2_000 });
+  await runner.tick(T0 + 7_000);
+  const round = runner.state.round;
+
+  if (round?.kind !== "button") throw new Error("expected a button round");
+
+  await runner.onPick(round.id, { userId: "a", name: "Ana", index: 0, at: T0 + 8_000 });
+
+  expect(runner.state.round?.closedAt).toBeNull();
 });

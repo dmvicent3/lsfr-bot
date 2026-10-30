@@ -12,13 +12,21 @@ import type { Deps, SessionState } from "./types.ts";
 
 export type Named<T> = T & { name: string };
 
+export interface PickOutcome {
+  result: "locked" | "already" | "closed";
+  index: number | null;
+}
+
 /** A channel message: a typed answer, or a KAOS claim posted at once. */
 export async function answer(s: SessionState, d: Deps, m: Named<Answer>): Promise<void> {
   const r = s.round;
 
-  if (!r || r.kind === "button") return;
+  if (!r) return;
 
   s.names.set(m.userId, m.name);
+  s.active.add(m.userId);
+
+  if (r.kind === "button") return;
 
   if (r.kind === "typed") {
     s.round = typedAnswer(r, m);
@@ -41,27 +49,32 @@ export async function answer(s: SessionState, d: Deps, m: Named<Answer>): Promis
   if (round.closedAt !== null) await closeRound(s, d, m.at);
 }
 
-/** A button click; anything but the open button round is over. */
+/** A button click, with the option the player holds; anything but the open button round is over. */
 export async function pick(
   s: SessionState,
   d: Deps,
   roundId: string,
   p: Named<Pick>,
-): Promise<"locked" | "already" | "closed"> {
+): Promise<PickOutcome> {
   const r = s.round;
 
-  if (r?.kind !== "button" || r.id !== roundId) return "closed";
+  if (r?.kind !== "button" || r.id !== roundId) return { result: "closed", index: null };
 
   const { round, result } = buttonPick(r, p);
 
-  if (result !== "locked") return result;
+  if (result !== "locked") {
+    const held = r.picks.find((x) => x.userId === p.userId)?.index ?? null;
+
+    return { result, index: result === "already" ? held : null };
+  }
 
   s.names.set(p.userId, p.name);
+  s.active.add(p.userId);
   s.round = round;
 
   if (round.closedAt !== null) await closeRound(s, d, p.at);
 
-  return "locked";
+  return { result: "locked", index: p.index };
 }
 
 /** The sole survivor's choice; the next tick opens a round in that topic. */

@@ -40,5 +40,6 @@ export async function openRound(s: SessionState, d: Deps, now: number): Promise<
   s.topic = null;
   s.round = round;
   s.dirty = false;
+  s.active = new Set();
   s.messageId = await send(s, d, roundMessage(round, s));
 }

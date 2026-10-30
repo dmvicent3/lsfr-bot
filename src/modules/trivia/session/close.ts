@@ -25,20 +25,24 @@ async function announce(s: SessionState, d: Deps, r: Round, now: number): Promis
   return closeKaos(s, d, r);
 }
 
-/** Shows the closed round, stores its points, announces them and schedules the next round. */
+/**
+ * Takes the round out of the session first, so a throw further on can never close it twice;
+ * then shows it closed, stores its points and announces them.
+ */
 export async function closeRound(s: SessionState, d: Deps, now: number): Promise<void> {
   const r = s.round;
+  const messageId = s.messageId;
 
   if (!r) return;
 
-  await edit(d, s.messageId, roundMessage(r, s));
-  storeAwards(s, d, r, now);
-  await announce(s, d, r, now);
-  const players = playersOf(r);
+  const players = [...new Set([...playersOf(r), ...s.active])];
+  s.round = null;
+  s.messageId = null;
   s.idle = nextIdle(s.idle, players.length > 0);
   s.rounds++;
   s.lastPlayers = players;
-  s.round = null;
-  s.messageId = null;
   s.nextAt = now + GAP_MS;
+  storeAwards(s, d, r, now);
+  await edit(d, messageId, roundMessage(r, s));
+  await announce(s, d, r, now);
 }

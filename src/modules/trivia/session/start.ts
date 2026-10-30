@@ -30,7 +30,7 @@ export function startSession(
       lists: kaosLists(),
       onEnd: () => {
         clearInterval(timer);
-        unregister(p.channelId);
+        unregister(p.channelId, runner);
       },
     },
   );

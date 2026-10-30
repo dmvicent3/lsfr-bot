@@ -1,7 +1,7 @@
 import { IDLE_LIMIT } from "../idle.ts";
 import type { Answer, Pick } from "../rounds/types.ts";
 import { endSession } from "./end.ts";
-import { answer, chooseTopic, type Named, pick } from "./inputs.ts";
+import { answer, chooseTopic, type Named, type PickOutcome, pick } from "./inputs.ts";
 import { step } from "./step.ts";
 import type { Deps, SessionState } from "./types.ts";
 
@@ -25,6 +25,7 @@ const initial = (s: {
   names: new Map(),
   dirty: false,
   lastPlayers: [],
+  active: new Set(),
   points: new Map(),
   lost: false,
   ended: false,
@@ -54,8 +55,10 @@ export class Runner {
     await this.run(m.at, () => answer(this.state, this.deps, m));
   }
 
-  async onPick(roundId: string, p: Named<Pick>): Promise<"locked" | "already" | "closed"> {
-    return (await this.run(p.at, () => pick(this.state, this.deps, roundId, p))) ?? "closed";
+  async onPick(roundId: string, p: Named<Pick>): Promise<PickOutcome> {
+    const picked = () => pick(this.state, this.deps, roundId, p);
+
+    return (await this.run(p.at, picked)) ?? { result: "closed", index: null };
   }
 
   async onTopic(

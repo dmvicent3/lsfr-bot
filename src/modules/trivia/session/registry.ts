@@ -9,6 +9,7 @@ export function register(channelId: string, runner: Runner): void {
   runners.set(channelId, runner);
 }
 
-export function unregister(channelId: string): void {
-  runners.delete(channelId);
+/** Drops `runner` only if it is still the channel's live one; a newer session there stays. */
+export function unregister(channelId: string, runner: Runner): void {
+  if (runners.get(channelId) === runner) runners.delete(channelId);
 }

@@ -51,6 +51,8 @@ export interface SessionState {
   /** Claims since the KAOS embed was last edited. */
   dirty: boolean;
   lastPlayers: string[];
+  /** Everyone who posted or clicked during the open round, right or wrong. */
+  active: Set<string>;
   points: Map<string, number>;
   /** Set when a send fails; the runner then ends the session silently. */
   lost: boolean;
