@@ -30,6 +30,13 @@ export type SendResult =
   | { result: "ok"; messageId: string }
   | { result: "lost-channel" | "failed" };
 
+/** Dates from `from` to `to`, both YYYY-MM-DD and inclusive. */
+export interface DateRange {
+  from: string;
+  to: string;
+  label: string;
+}
+
 export type FetchFn = (url: string, init?: RequestInit) => Promise<Response>;
 
 /** Image bytes sent inline, base64-encoded. */

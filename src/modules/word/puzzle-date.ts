@@ -1,13 +1,7 @@
+import { DAY_MS, dateOfMs, dayMs } from "../../core/periods.ts";
 import { nextMidnight } from "../../core/zoned.ts";
 
 export const FIRST_PUZZLE = "2026-10-28";
-
-export const DAY_MS = 86_400_000;
-
-/** A YYYY-MM-DD date as UTC midnight. */
-export const dayMs = (date: string): number => Date.parse(`${date}T00:00:00Z`);
-
-export const dateOfMs = (ms: number): string => new Date(ms).toISOString().slice(0, 10);
 
 /** #1 on launch day, one more each day. */
 export const puzzleNumber = (date: string): number =>

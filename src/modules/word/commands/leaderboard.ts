@@ -2,7 +2,7 @@ import type { Database } from "bun:sqlite";
 import { dateIn } from "../../../core/zoned.ts";
 import { periodStandings } from "../play/standings.ts";
 import { renderLeaderboard } from "../render/leaderboard.ts";
-import { pageButtons } from "../render/page-buttons.ts";
+import { pageButtons } from "../../../core/page-buttons.ts";
 import { wordSettings } from "../settings.ts";
 import type { WordRepo } from "../store/repo.ts";
 import type { Period } from "../types.ts";
@@ -20,7 +20,7 @@ export function leaderboardView(
 
   return {
     content: page.content,
-    components: pageButtons(v.period, page.page, page.pages),
+    components: pageButtons("word:page", v.period, page.page, page.pages),
     allowedMentions: { parse: [] },
   };
 }
