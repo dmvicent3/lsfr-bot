@@ -1,0 +1,58 @@
+import type { MessageCreateOptions } from "discord.js";
+import type { SendResult } from "../../../core/types.ts";
+import type { Round } from "../rounds/types.ts";
+import type { TriviaRepo } from "../store/repo.ts";
+import type { KaosList, Question } from "../types.ts";
+
+export type Outgoing = Pick<MessageCreateOptions, "content" | "embeds" | "components">;
+
+/** Sends to and edits in the session's channel. */
+export interface Poster {
+  post(msg: Outgoing): Promise<SendResult>;
+  edit(messageId: string, msg: Outgoing): Promise<boolean>;
+}
+
+export interface Deps {
+  repo: TriviaRepo;
+  poster: Poster;
+  random: () => number;
+  questions: readonly Question[];
+  lists: readonly KaosList[];
+  /** Called once when the session ends, to drop its timer and registry entry. */
+  onEnd: () => void;
+}
+
+/** The sole survivor's pending topic choice. */
+export interface Perk {
+  userId: string;
+  until: number;
+  messageId: string;
+  topics: string[];
+}
+
+export type EndReason = "stop" | "idle" | "lost";
+
+/** Everything a live session remembers between ticks. */
+export interface SessionState {
+  sessionId: number;
+  guildId: string;
+  channelId: string;
+  round: Round | null;
+  messageId: string | null;
+  /** Who chose the open round's topic. */
+  topicBy: string | null;
+  /** The topic the next round must come from, and who chose it. */
+  topic: { name: string; by: string } | null;
+  perk: Perk | null;
+  rounds: number;
+  idle: number;
+  nextAt: number;
+  names: Map<string, string>;
+  /** Claims since the KAOS embed was last edited. */
+  dirty: boolean;
+  lastPlayers: string[];
+  points: Map<string, number>;
+  /** Set when a send fails; the runner then ends the session silently. */
+  lost: boolean;
+  ended: boolean;
+}

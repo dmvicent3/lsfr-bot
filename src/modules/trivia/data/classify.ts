@@ -1,5 +1,6 @@
 /** Wordings that only make sense with the options in view. */
-const NEEDS_OPTIONS = /which of these|which of the following|which one of|what of the following|\bnot\b/i;
+const NEEDS_OPTIONS =
+  /which of these|which of the following|which one of|what of the following|\bnot\b/i;
 
 const MAX_TYPED_ANSWER = 30;
 

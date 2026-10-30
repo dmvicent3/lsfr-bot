@@ -17,7 +17,7 @@ test("every question has an answer and 1 or 3 wrong options", () => {
 });
 
 test("typed questions pass the typed rules", () => {
-  for (const q of all.filter((q) => q.kind === "typed")) {
+  for (const q of all.filter((t) => t.kind === "typed")) {
     const type = q.wrong.length === 1 ? "boolean" : "multiple";
     expect(classify({ type, question: q.question, answer: q.answer })).toBe("typed");
   }

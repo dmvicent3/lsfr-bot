@@ -25,7 +25,9 @@ test("no two answers or aliases of one list read the same", () => {
 
 test("no Pokémon", () => {
   for (const l of lists) {
-    const text = normalize([l.prompt, ...l.items.flatMap((i) => [i.answer, ...(i.aliases ?? [])])].join(" "));
+    const text = normalize(
+      [l.prompt, ...l.items.flatMap((i) => [i.answer, ...(i.aliases ?? [])])].join(" "),
+    );
 
     expect(text).not.toContain("pokemon");
   }

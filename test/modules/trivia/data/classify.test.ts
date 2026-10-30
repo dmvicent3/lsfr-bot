@@ -20,9 +20,7 @@ test("true/false is choice", () => {
 test("questions that lean on the options are choice", () => {
   expect(classify(multiple("Which of these is a fruit?", "Apple"))).toBe("choice");
   expect(classify(multiple("Which of the following is a planet?", "Mars"))).toBe("choice");
-  expect(classify(multiple("Which one of them sang Thriller?", "Michael Jackson"))).toBe(
-    "choice",
-  );
+  expect(classify(multiple("Which one of them sang Thriller?", "Michael Jackson"))).toBe("choice");
   expect(classify(multiple("What of the following is red?", "Blood"))).toBe("choice");
   expect(classify(multiple("What is NOT a planet?", "Pluto"))).toBe("choice");
 });
