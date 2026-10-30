@@ -32,6 +32,7 @@ export function newGame(p: {
     answers: newPile(p.deck.answers, p.random),
     round: null,
     points: new Map(),
+    names: new Map([[p.starter.userId, p.starter.name]]),
     endReason: null,
   };
 }
@@ -45,6 +46,7 @@ export function join(g: Game, who: Who, random: () => number): "joined" | "alrea
   const live = g.phase !== "lobby";
   const hand = live ? drawCards(g.answers, HAND, random) : [];
   g.players.push({ ...who, hand, idle: 0, from: g.rounds + 1 });
+  g.names.set(who.userId, who.name);
 
   return "joined";
 }

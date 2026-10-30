@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import {
+  blankPrompt,
   blanksIn,
   fillPrompt,
   normalizeBlanks,
@@ -33,4 +34,9 @@ test("answers fill the blanks in bold, escaped, without their final period", () 
   expect(fillPrompt("___ beats ___.", ["Rock", "paper", "extra"])).toBe(
     "**Rock** beats **paper**.",
   );
+});
+
+test("the prompt's own markdown is escaped too, and blanks can be shown empty", () => {
+  expect(fillPrompt("*Why* ___", ["x"])).toBe("\\*Why\\* **x**");
+  expect(blankPrompt("*Why* ___?")).toBe("\\*Why\\* ▁▁▁▁?");
 });

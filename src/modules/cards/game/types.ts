@@ -48,6 +48,8 @@ export interface Game {
   answers: Pile<Card>;
   round: Round | null;
   points: Map<string, number>;
+  /** Everyone who ever joined, so a leaver still has a name in the reveal. */
+  names: Map<string, string>;
   endReason: EndReason | null;
 }
 

@@ -33,17 +33,25 @@ export function validateCard(kind: CardKind, raw: string): Validated {
   return { ok: true, text };
 }
 
-/** Each blank in turn takes the next answer, in bold, markdown-escaped, without a final period. */
+/** Each blank in turn takes the next answer, in bold, without a final period; all text escaped. */
 export function fillPrompt(prompt: string, answers: string[]): string {
   const parts = prompt.split(BLANK);
 
   return parts
     .map((part, i) => {
       const answer = i < parts.length - 1 ? answers[i] : undefined;
+      const text = escapeMarkdown(part);
 
       return answer === undefined
-        ? part
-        : `${part}**${escapeMarkdown(answer.replace(/\.$/, ""))}**`;
+        ? text
+        : `${text}**${escapeMarkdown(answer.replace(/\.$/, ""))}**`;
     })
     .join("");
 }
+
+/** The prompt as shown while playing: escaped, blanks drawn as a line. */
+export const blankPrompt = (prompt: string): string =>
+  prompt
+    .split(BLANK)
+    .map((part) => escapeMarkdown(part))
+    .join("▁▁▁▁");
