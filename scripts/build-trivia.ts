@@ -1,6 +1,6 @@
 /**
  * Builds src/modules/trivia/data/questions.json from every Open Trivia DB question (CC BY-SA 4.0).
- * Usage: bun scripts/build-trivia.ts
+ * Usage: bun scripts/build-trivia.ts, then `bun run fmt` (the committed file is oxfmt-formatted).
  * Re-runs keep the id of each question already in the file (matched by question text).
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";

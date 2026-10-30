@@ -29,3 +29,5 @@ export type RoundKind = "typed" | "button" | "kaos";
 export type RoundChoice =
   | { kind: "typed" | "button"; question: Question }
   | { kind: "kaos"; list: KaosList };
+
+export type Period = "today" | "week" | "month" | "all";
