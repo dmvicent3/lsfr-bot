@@ -32,9 +32,8 @@ async function opening({ i, guildId, d }: CommandCtx): Promise<GameView> {
   return { ...moved, thinking: false, last };
 }
 
-/** Sends the board and stores the game with its message. */
+/** Sends the board (the reply is already deferred) and stores the game with its message. */
 async function begin(c: CommandCtx): Promise<void> {
-  await c.i.deferReply();
   const view = await opening(c);
   const message = await c.i.editReply({ ...renderGame(view), allowedMentions: { parse: [] } });
   c.repo.games.put({ ...view.game, messageId: message.id });
@@ -47,6 +46,8 @@ export async function play(c: CommandCtx): Promise<void> {
   if (!startThinking(key)) return reply(c.i, "jevos is still thinking on your last game.");
 
   try {
+    // Acknowledged first: the old board's edit is a network call and Discord allows 3 s.
+    await c.i.deferReply();
     const old = c.repo.games.get(c.guildId, c.i.user.id);
 
     if (old) {

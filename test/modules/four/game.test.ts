@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import {
   ABANDON_MS,
-  isStale,
+  touch,
   jevosToMove,
   outcomeOf,
   playerDrop,
@@ -62,15 +62,12 @@ test("a full board with no four is a draw", () => {
   expect(outcomeOf(at(board([])))).toEqual({ kind: "playing" });
 });
 
-test("stale after 10 idle minutes, or waiting on a jevos move nobody is making", () => {
-  const g = at(board([]));
-  expect(isStale(g, 1 + ABANDON_MS, false)).toBe(true);
-  expect(isStale(g, 2, false)).toBe(false);
-  const jevosTurn = at(board(["R......"]));
-  expect(isStale(jevosTurn, 2, false)).toBe(true);
-  expect(isStale(jevosTurn, 2, true)).toBe(false);
-});
-
 test("the player's moves are their discs", () => {
   expect(playerMoves(at(board(["RYR.Y.."])))).toBe(2);
+});
+
+test("a touched game is idle, waiting on jevos, or the player's to play", () => {
+  expect(touch(at(board(["R......"])), 1 + ABANDON_MS)).toBe("idle");
+  expect(touch(at(board(["R......"])), 1)).toBe("jevos");
+  expect(touch(at(board(["RY....."])), 1)).toBe("play");
 });

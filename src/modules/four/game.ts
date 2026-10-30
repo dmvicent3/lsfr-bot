@@ -61,8 +61,11 @@ export const jevosDrop = (game: Game, col: number, now: number): Moved =>
 export const playerMoves = (game: Game): number => discCount(game.board, PLAYER);
 
 /**
- * A game nobody can go on with: idle 10 minutes, or waiting on a jevos move that no process is
- * making (`busy` false), which only a restart mid-move leaves behind.
+ * What a touch (a click, or the player's next /four play) finds, under the player's lock: idle
+ * 10 minutes, waiting on a jevos move nobody is making (a restart or a failed update), or theirs.
  */
-export const isStale = (game: Game, now: number, busy: boolean): boolean =>
-  now - game.updatedAt >= ABANDON_MS || (jevosToMove(game) && !busy);
+export function touch(game: Game, now: number): "idle" | "jevos" | "play" {
+  if (now - game.updatedAt >= ABANDON_MS) return "idle";
+
+  return jevosToMove(game) ? "jevos" : "play";
+}

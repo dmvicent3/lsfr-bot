@@ -2,7 +2,7 @@ import type { MessageComponentInteraction } from "discord.js";
 import { log } from "../../../core/log.ts";
 import type { ComponentHandler } from "../../../core/types.ts";
 import type { PlayDeps } from "../commands/types.ts";
-import { isStale, playerDrop } from "../game.ts";
+import { playerDrop, touch } from "../game.ts";
 import { jevosTurn } from "../jevos.ts";
 import { renderGame } from "../render/board.ts";
 import { settle } from "../settle.ts";
@@ -17,9 +17,11 @@ interface Turn {
   d: PlayDeps;
 }
 
-/** jevos answers on the board: "thinking" first, then its drop. */
+/**
+ * jevos answers on the board: "thinking" first, then its drop. Stored first: after a restart or a
+ * failed update the row waits on jevos, and the next click or /four play picks that up.
+ */
 async function answer({ i, repo, d }: Turn, mine: Moved): Promise<void> {
-  // Stored first: after a restart mid-move, the row is on jevos's turn and counts as stale.
   repo.games.put(mine.game);
   await i.update(renderGame({ ...mine, thinking: true, last: null }));
   const { moved, last } = await jevosTurn(d.jev, mine.game, d.random, Date.now());
@@ -34,8 +36,11 @@ async function answer({ i, repo, d }: Turn, mine: Moved): Promise<void> {
 
 async function play(t: Turn, game: Game, col: number): Promise<void> {
   const now = Date.now();
+  const state = touch(game, now);
 
-  if (isStale(game, now, false)) {
+  if (state === "jevos") return answer(t, { game, outcome: { kind: "playing" } });
+
+  if (state === "idle") {
     t.repo.games.finish(game, { result: "loss", how: "abandoned", endedAt: now });
     const outcome = { kind: "abandoned" } as const;
 

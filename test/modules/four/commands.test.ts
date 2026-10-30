@@ -90,10 +90,24 @@ describe("a new game replaces the old one", () => {
     expect(r.results.stats("g", "u").easy.losses).toBe(1);
   });
 
-  test("stale: a loss, abandoned, even with no drop", () => {
+  test("idle 10 minutes after a drop: a loss, abandoned", () => {
+    const r = repo();
+    r.games.put(game(["RY....."]));
+    expect(replaceOld(r, game(["RY....."]), ABANDON_MS)).toBe("abandoned");
+    expect(r.results.stats("g", "u").easy.losses).toBe(1);
+  });
+
+  test("idle with no drop: gone, nothing recorded", () => {
     const r = repo();
     r.games.put(game([]));
-    expect(replaceOld(r, game([]), ABANDON_MS)).toBe("abandoned");
-    expect(r.results.stats("g", "u").easy.losses).toBe(1);
+    expect(replaceOld(r, game([]), ABANDON_MS)).toBe("removed");
+    expect(r.results.stats("g", "u").easy.losses).toBe(0);
+  });
+
+  test("left waiting on jevos by a restart: gone, nothing recorded", () => {
+    const r = repo();
+    r.games.put(game(["RYR...."]));
+    expect(replaceOld(r, game(["RYR...."]), 1)).toBe("removed");
+    expect(r.results.stats("g", "u").easy.losses).toBe(0);
   });
 });
