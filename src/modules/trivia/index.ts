@@ -12,7 +12,7 @@ export function triviaModule(random: () => number = Math.random): BotModule {
     name: "trivia",
     title: "🧠 Trivia",
     helpNote:
-      "Start with /trivia start; type answers in the channel, or click for button questions. Stops itself when nobody's playing.",
+      "Start with /trivia start; type answers in the channel, or click for button questions. Some rounds are pictures: name the flag, painting, artist, place, person or club. Stops itself when nobody's playing.",
     commands: [triviaCommand(random)],
     components: [pickHandler, topicHandler, pageHandler],
     events: [messageEvent, readyEvent],

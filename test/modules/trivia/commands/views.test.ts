@@ -1,10 +1,11 @@
 import { expect, test } from "bun:test";
 import { reportedLabel, renderReports } from "../../../../src/modules/trivia/commands/views.ts";
-import { kaos, question } from "../fixtures.ts";
+import { kaos, picture, question } from "../fixtures.ts";
 
 const lookup = {
   questions: [question(7, { question: "Capital of France?", answer: "Paris" })],
   lists: [kaos(3)],
+  pictures: [picture(100_001, "Portugal")],
 };
 
 test("reported labels name the item", () => {
@@ -31,4 +32,13 @@ test("reports list the item, its answer and the reason, newest first as given", 
 
 test("no reports", () => {
   expect(renderReports([], lookup)).toBe("No reports.");
+});
+
+test("a reported picture shows its category and answer", () => {
+  const text = renderReports(
+    [{ guildId: "g", kind: "question", itemId: 100_001, userId: "u", reason: null, at: 1 }],
+    lookup,
+  );
+
+  expect(text).toBe("**#100001** Picture: Flags — Portugal (by <@u>)");
 });

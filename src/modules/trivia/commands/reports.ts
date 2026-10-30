@@ -1,6 +1,6 @@
 import { PermissionFlagsBits } from "discord.js";
 import { reply } from "../../../core/replies.ts";
-import { kaosLists, questions } from "../data/load.ts";
+import { kaosLists, pictures, questions } from "../data/load.ts";
 import type { CommandCtx } from "./types.ts";
 import { renderReports } from "./views.ts";
 
@@ -10,8 +10,7 @@ export async function reports({ i, guildId, repo }: CommandCtx): Promise<void> {
     return reply(i, "Only members who can manage the server can see reports.");
   }
 
-  await reply(
-    i,
-    renderReports(repo.reports.open(guildId), { questions: questions(), lists: kaosLists() }),
-  );
+  const lookup = { questions: questions(), lists: kaosLists(), pictures: pictures() };
+
+  await reply(i, renderReports(repo.reports.open(guildId), lookup));
 }
