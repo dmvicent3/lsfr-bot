@@ -12,6 +12,7 @@ import { minesweeperModule } from "./modules/minesweeper/index.ts";
 import { motorsportModule } from "./modules/motorsport/index.ts";
 import { remindersModule } from "./modules/reminders/index.ts";
 import { rssModule } from "./modules/rss/index.ts";
+import { fourModule } from "./modules/four/index.ts";
 import { tictactoeModule } from "./modules/tictactoe/index.ts";
 import { triviaModule } from "./modules/trivia/index.ts";
 import { cardsModule } from "./modules/cards/index.ts";
@@ -33,7 +34,7 @@ const modules: BotModule[] = [
   triviaModule(),
   cardsModule(),
   mangaModule(),
-  ...(jev ? [rssModule(jev, config.embedUrl), tictactoeModule(jev)] : []),
+  ...(jev ? [rssModule(jev, config.embedUrl), tictactoeModule(jev), fourModule(jev)] : []),
 ];
 const db = openDatabase(config.databasePath);
 runMigrations(db, [...coreMigrations, ...modules.flatMap((m) => m.migrations ?? [])]);
