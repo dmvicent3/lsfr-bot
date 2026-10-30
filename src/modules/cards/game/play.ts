@@ -2,14 +2,11 @@ import { shuffle } from "../../trivia/shuffle.ts";
 import { type Refusal, seat } from "./guard.ts";
 import { type Game, VOTE_MS } from "./types.ts";
 
-interface Click {
-  roundId: string;
-  userId: string;
-  index: number;
-}
-
-/** Plays the hand's card at `index`; a two-blank prompt needs a "first" pick, then the second. */
-export function playCard(g: Game, c: Click): "played" | "first" | "already" | Refusal {
+/** Plays the card by id, so a hand view from before a pick still plays what was clicked. */
+export function playCard(
+  g: Game,
+  c: { roundId: string; userId: string; cardId: string },
+): "played" | "first" | "already" | Refusal {
   const s = seat(g, { ...c, phase: "playing" });
 
   if (typeof s === "string") return s;
@@ -20,7 +17,8 @@ export function playCard(g: Game, c: Click): "played" | "first" | "already" | Re
 
   if (round.plays.has(player.userId)) return "already";
 
-  const [card] = player.hand.splice(c.index, 1);
+  const at = player.hand.findIndex((x) => x.id === c.cardId);
+  const [card] = at < 0 ? [] : player.hand.splice(at, 1);
 
   if (!card) return "stale";
 

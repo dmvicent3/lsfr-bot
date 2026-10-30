@@ -8,7 +8,7 @@ import { lobbyMessage } from "../../../../src/modules/cards/render/lobby.ts";
 import { revealMessage } from "../../../../src/modules/cards/render/reveal.ts";
 import { playingMessage, votingMessage } from "../../../../src/modules/cards/render/round.ts";
 import type { Outgoing } from "../../../../src/modules/trivia/session/types.ts";
-import { T0, game, started } from "../fixtures.ts";
+import { T0, cardAt, game, started } from "../fixtures.ts";
 
 const text = (m: Outgoing): string => `${m.content ?? ""}${JSON.stringify(m.embeds ?? [])}`;
 
@@ -18,7 +18,7 @@ const ids = (m: Outgoing): string[] =>
   );
 
 const play = (g: Game, id: string) =>
-  playCard(g, { roundId: g.round?.id ?? "", userId: id, index: 0 });
+  playCard(g, { roundId: g.round?.id ?? "", userId: id, cardId: cardAt(g, id) });
 
 test("the lobby lists players and has join, leave and start", () => {
   const m = lobbyMessage(game());
@@ -70,6 +70,6 @@ test("the hand shows the prompt and one button per card", () => {
   const hand = handMessage(g, "u1");
 
   expect(hand.content).toContain(g.round?.prompt.text.split("___")[0] ?? "?");
-  expect(ids(hand)).toEqual(Array.from({ length: 7 }, (_, i) => `cards:play:1-1:${i}`));
+  expect(ids(hand)).toEqual((g.players[0]?.hand ?? []).map((c) => `cards:play:1-1:${c.id}`));
   expect(handMessage(g, "u9").content).toBe("You're not in this game. Press Join.");
 });

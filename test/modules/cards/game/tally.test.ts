@@ -3,12 +3,13 @@ import { openVoting, playCard } from "../../../../src/modules/cards/game/play.ts
 import { closeVoting, endCheck, finishRound } from "../../../../src/modules/cards/game/tally.ts";
 import type { Game } from "../../../../src/modules/cards/game/types.ts";
 import { castVote } from "../../../../src/modules/cards/game/vote.ts";
-import { T0, started } from "../fixtures.ts";
+import { T0, cardAt, started } from "../fixtures.ts";
 
 const ids = ["u1", "u2", "u3"];
 
 function voted(g: Game, votes: [string, string][]): void {
-  for (const id of ids) playCard(g, { roundId: g.round?.id ?? "", userId: id, index: 0 });
+  for (const id of ids)
+    playCard(g, { roundId: g.round?.id ?? "", userId: id, cardId: cardAt(g, id) });
 
   openVoting(g, T0, Math.random);
 
@@ -60,7 +61,7 @@ test("a player with neither a play nor a vote for 2 rounds is dropped", () => {
 
   for (let round = 0; round < 2; round++) {
     for (const id of ["u1", "u2"])
-      playCard(g, { roundId: g.round?.id ?? "", userId: id, index: 0 });
+      playCard(g, { roundId: g.round?.id ?? "", userId: id, cardId: cardAt(g, id) });
 
     openVoting(g, T0, Math.random);
     closeVoting(g, T0);

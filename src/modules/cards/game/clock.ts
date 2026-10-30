@@ -37,7 +37,8 @@ export function advance(g: Game, now: number, random: () => number): Change | nu
 
   if (g.phase === "lobby") return now >= g.deadline ? end(g, "lobby") : null;
 
-  if (g.players.length < MIN_PLAYERS) return end(g, "players");
+  /** The reveal finishes first, so a target reached in it still counts. */
+  if (g.players.length < MIN_PLAYERS && g.phase !== "reveal") return end(g, "players");
 
   if (g.phase === "playing") return afterPlaying(g, now, random);
 

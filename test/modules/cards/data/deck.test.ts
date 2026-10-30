@@ -42,3 +42,11 @@ test("starter ids are stable and blank counts recorded", () => {
   expect(answers[0]?.id).toBe("s:a0");
   expect(prompts.some((p) => p.blanks === 2)).toBe(true);
 });
+
+/** Sexual answers land on any prompt, so nothing in the deck may be about children, school or clergy. */
+const OFF_LIMITS =
+  /\b(kids?|child(ren)?|bab(y|ies)|school|teachers?|homework|teen(age)?|toddlers?|year-old|prom|puberty|priests?|mummy)\b/i;
+
+test("no card is about children, school or clergy", () => {
+  expect([...prompts, ...answers].map((c) => c.text).filter((t) => OFF_LIMITS.test(t))).toEqual([]);
+});

@@ -23,6 +23,7 @@ export async function postPhase(l: Live, d: Deps, msg: Outgoing): Promise<void> 
 
   const sent = await d.poster.post(msg);
   l.messageId = sent.result === "ok" ? sent.messageId : null;
+  l.lost ||= sent.result === "lost-channel";
   l.dirty = false;
 }
 
@@ -52,7 +53,9 @@ export async function finish(l: Live, d: Deps, now: number): Promise<void> {
   l.ended = true;
   const top = [...g.points].toSorted((a, b) => b[1] - a[1])[0];
   d.repo.games.end(g.id, now, g.endReason === "target" && top ? top[0] : null);
-  await postPhase(l, d, overMessage(g));
+
+  if (!l.lost) await postPhase(l, d, overMessage(g));
+
   d.onEnd();
 }
 

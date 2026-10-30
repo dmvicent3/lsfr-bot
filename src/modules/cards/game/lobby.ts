@@ -1,6 +1,7 @@
 import type { Deck } from "../types.ts";
+import { openRound } from "./open.ts";
 import { discardCards, drawCards, newPile } from "./piles.ts";
-import { type Game, HAND, LOBBY_MS, MIN_PLAYERS, PLAY_MS } from "./types.ts";
+import { type Game, HAND, LOBBY_MS, MAX_PLAYERS, MIN_PLAYERS } from "./types.ts";
 
 interface Who {
   userId: string;
@@ -38,10 +39,16 @@ export function newGame(p: {
 }
 
 /** In the lobby a seat; mid-game a hand too, playing from the next round. */
-export function join(g: Game, who: Who, random: () => number): "joined" | "already" | "over" {
+export function join(
+  g: Game,
+  who: Who,
+  random: () => number,
+): "joined" | "already" | "full" | "over" {
   if (g.phase === "over") return "over";
 
   if (g.players.some((p) => p.userId === who.userId)) return "already";
+
+  if (g.players.length >= MAX_PLAYERS) return "full";
 
   const live = g.phase !== "lobby";
   const hand = live ? drawCards(g.answers, HAND, random) : [];
@@ -56,36 +63,28 @@ export function leave(g: Game, userId: string): "left" | "not-in" {
 
   if (!player) return "not-in";
 
-  discardCards(g.answers, player.hand);
+  const half = g.round?.partial.get(userId);
+  discardCards(g.answers, half ? [...player.hand, half] : player.hand);
+  g.round?.partial.delete(userId);
   g.players = g.players.filter((p) => p !== player);
+
+  if (g.phase === "lobby") handOver(g);
 
   return "left";
 }
 
-/** Draws the next prompt and opens a 60 s round; no prompt left at all ends the game. */
-export function openRound(g: Game, now: number, random: () => number): void {
-  const [prompt] = drawCards(g.prompts, 1, random);
+/** A lobby whose starter left passes Start to the next player; an empty lobby closes. */
+function handOver(g: Game): void {
+  const next = g.players[0];
 
-  if (!prompt) {
+  if (!next) {
     g.phase = "over";
-    g.endReason = "empty";
+    g.endReason = "lobby";
 
     return;
   }
 
-  g.rounds += 1;
-  g.round = {
-    id: `${g.id}-${g.rounds}`,
-    prompt,
-    plays: new Map(),
-    partial: new Map(),
-    played: [],
-    order: [],
-    votes: new Map(),
-    winners: [],
-  };
-  g.phase = "playing";
-  g.deadline = now + PLAY_MS;
+  if (!g.players.some((p) => p.userId === g.startedBy)) g.startedBy = next.userId;
 }
 
 export function startGame(

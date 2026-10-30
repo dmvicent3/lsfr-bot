@@ -14,6 +14,12 @@ export interface Click {
   index: number;
 }
 
+export interface PlayClick {
+  roundId: string;
+  userId: string;
+  cardId: string;
+}
+
 export interface RunnerInit {
   gameId: number;
   guildId: string;
@@ -38,5 +44,7 @@ export interface Live {
   messageId: string | null;
   /** A click changed what the current message shows. */
   dirty: boolean;
+  /** A post found the channel gone; the game then ends without a word. */
+  lost: boolean;
   ended: boolean;
 }

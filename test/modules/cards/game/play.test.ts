@@ -2,10 +2,10 @@ import { expect, test } from "bun:test";
 import { join } from "../../../../src/modules/cards/game/lobby.ts";
 import { allPlayed, openVoting, playCard } from "../../../../src/modules/cards/game/play.ts";
 import type { Game } from "../../../../src/modules/cards/game/types.ts";
-import { T0, deck, started } from "../fixtures.ts";
+import { T0, cardAt, deck, started } from "../fixtures.ts";
 
 const play = (g: Game, userId: string, index = 0) =>
-  playCard(g, { roundId: g.round?.id ?? "", userId, index });
+  playCard(g, { roundId: g.round?.id ?? "", userId, cardId: cardAt(g, userId, index) });
 
 test("a card is played once, from the hand", () => {
   const g = started();
@@ -39,7 +39,7 @@ test("a two-blank prompt takes two picks, in order", () => {
 test("old buttons, closed phases and outsiders are refused", () => {
   const g = started();
 
-  expect(playCard(g, { roundId: "1-0", userId: "u1", index: 0 })).toBe("stale");
+  expect(playCard(g, { roundId: "1-0", userId: "u1", cardId: cardAt(g, "u1") })).toBe("stale");
   expect(play(g, "u9")).toBe("not-in");
   expect(play(g, "u1", 7)).toBe("stale");
 
@@ -83,4 +83,19 @@ test("with two plays voting opens, unfinished picks go back to the hand", () => 
   expect(g.round?.order.toSorted()).toEqual(["u1", "u2"]);
   expect(g.players[2]?.hand).toHaveLength(7);
   expect(g.deadline).toBe(T0 + 30_000);
+});
+
+test("cards are played by id, so an out-of-date hand view still plays the card clicked", () => {
+  const g = started({ deck: deck(1, 60, 1) });
+  const [a, , c] = g.players[0]?.hand ?? [];
+  playCard(g, { roundId: g.round?.id ?? "", userId: "u1", cardId: a?.id ?? "" });
+  playCard(g, { roundId: g.round?.id ?? "", userId: "u1", cardId: c?.id ?? "" });
+
+  expect(
+    g.round?.plays
+      .get("u1")
+      ?.map((x) => x.id)
+      .join(),
+  ).toBe(`${a?.id},${c?.id}`);
+  expect(playCard(g, { roundId: g.round?.id ?? "", userId: "u2", cardId: "nope" })).toBe("stale");
 });

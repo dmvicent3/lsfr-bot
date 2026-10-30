@@ -2,13 +2,13 @@ import { expect, test } from "bun:test";
 import { openVoting, playCard } from "../../../../src/modules/cards/game/play.ts";
 import type { Game } from "../../../../src/modules/cards/game/types.ts";
 import { allVoted, castVote } from "../../../../src/modules/cards/game/vote.ts";
-import { T0, started } from "../fixtures.ts";
+import { T0, cardAt, started } from "../fixtures.ts";
 
 function voting(): Game {
   const g = started();
 
   for (const id of ["u1", "u2", "u3"])
-    playCard(g, { roundId: g.round?.id ?? "", userId: id, index: 0 });
+    playCard(g, { roundId: g.round?.id ?? "", userId: id, cardId: cardAt(g, id) });
 
   openVoting(g, T0, Math.random);
 

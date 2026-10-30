@@ -5,7 +5,7 @@ import type { Game } from "../game/types.ts";
 import { castVote } from "../game/vote.ts";
 import { type HandView, handMessage } from "../render/hand.ts";
 import { current, finish, postPhase, show } from "./flow.ts";
-import type { Click, Deps, Live, RunnerInit, Who } from "./types.ts";
+import type { Click, Deps, Live, PlayClick, RunnerInit, Who } from "./types.ts";
 
 /** One live game: ticks, clicks and stop run one at a time, in arrival order. */
 export class Runner {
@@ -17,7 +17,7 @@ export class Runner {
     private readonly deps: Deps,
   ) {
     const game = newGame({ ...init, id: init.gameId, random: deps.random });
-    this.live = { game, messageId: null, dirty: false, ended: false };
+    this.live = { game, messageId: null, dirty: false, lost: false, ended: false };
   }
 
   get state(): Game {
@@ -45,7 +45,7 @@ export class Runner {
     });
   }
 
-  onJoin(who: Who): Promise<"joined" | "already" | "over"> {
+  onJoin(who: Who): Promise<ReturnType<typeof join>> {
     return this.run(async () => {
       const g = this.live.game;
       const out = this.live.ended ? "over" : join(g, who, this.deps.random);
@@ -86,7 +86,7 @@ export class Runner {
     return this.run(async () => handMessage(this.live.game, userId));
   }
 
-  onPlay(c: Click): Promise<{ result: ReturnType<typeof playCard>; hand: HandView }> {
+  onPlay(c: PlayClick): Promise<{ result: ReturnType<typeof playCard>; hand: HandView }> {
     return this.run(async () => {
       const result = playCard(this.live.game, c);
       this.live.dirty ||= result === "played";
@@ -112,9 +112,15 @@ export class Runner {
     });
   }
 
-  /** Queues `fn` behind earlier work, so no two steps interleave. */
+  /** Queues `fn` behind earlier work, so no two steps interleave; a lost channel then ends the game. */
   private run<T>(fn: () => Promise<T>): Promise<T> {
-    const next = this.queue.then(fn);
+    const next = this.queue.then(async () => {
+      const out = await fn();
+
+      if (this.live.lost) await finish(this.live, this.deps, Date.now());
+
+      return out;
+    });
     this.queue = next.catch(() => undefined);
 
     return next;

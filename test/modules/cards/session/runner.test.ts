@@ -6,13 +6,16 @@ import { Runner } from "../../../../src/modules/cards/session/runner.ts";
 import { cardsMigrations } from "../../../../src/modules/cards/store/migrations.ts";
 import { CardsRepo } from "../../../../src/modules/cards/store/repo.ts";
 import type { Outgoing, Poster } from "../../../../src/modules/trivia/session/types.ts";
-import { T0, deck } from "../fixtures.ts";
+import { T0, cardAt, deck } from "../fixtures.ts";
 
 class FakePoster implements Poster {
   posts: Outgoing[] = [];
   edits: { id: string; msg: Outgoing }[] = [];
+  fail = false;
 
   async post(msg: Outgoing): Promise<SendResult> {
+    if (this.fail) return { result: "lost-channel" };
+
     this.posts.push(msg);
 
     return { result: "ok", messageId: `m${this.posts.length}` };
@@ -58,7 +61,7 @@ const roundId = (r: Runner): string => r.state.round?.id ?? "";
 
 async function playAll(r: Runner): Promise<void> {
   for (const userId of ["u1", "u2", "u3"])
-    await r.onPlay({ roundId: roundId(r), userId, index: 0 });
+    await r.onPlay({ roundId: roundId(r), userId, cardId: cardAt(r.state, userId) });
 }
 
 const voteFor = (r: Runner, userId: string, author: string) =>
@@ -122,11 +125,28 @@ test("stop posts the standings and ends the game", async () => {
 test("plays update the round post once per tick", async () => {
   const { poster, runner } = await setup(5);
   await runner.onStart("u1", T0);
-  await runner.onPlay({ roundId: roundId(runner), userId: "u1", index: 0 });
-  await runner.onPlay({ roundId: roundId(runner), userId: "u2", index: 0 });
+  await runner.onPlay({
+    roundId: roundId(runner),
+    userId: "u1",
+    cardId: cardAt(runner.state, "u1"),
+  });
+  await runner.onPlay({
+    roundId: roundId(runner),
+    userId: "u2",
+    cardId: cardAt(runner.state, "u2"),
+  });
   const before = poster.edits.length;
   await runner.tick(T0 + 1_000);
 
   expect(poster.edits.length - before).toBe(1);
   expect(text(poster.edits.at(-1)?.msg)).toContain("✅ Bo");
+});
+
+test("a lost channel ends the game quietly", async () => {
+  const { poster, runner, ended } = await setup(5);
+  poster.fail = true;
+  await runner.onStart("u1", T0);
+  await runner.tick(T0 + 1_000);
+
+  expect(ended()).toBe(1);
 });

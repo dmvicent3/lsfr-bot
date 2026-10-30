@@ -55,6 +55,8 @@ export interface Game {
 
 export const HAND = 7;
 export const MIN_PLAYERS = 3;
+/** Ten answers keep the voting post inside Discord's embed and button limits. */
+export const MAX_PLAYERS = 10;
 export const LOBBY_MS = 5 * 60_000;
 export const PLAY_MS = 60_000;
 export const VOTE_MS = 30_000;

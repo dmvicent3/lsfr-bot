@@ -1,5 +1,5 @@
 import type { Card } from "../types.ts";
-import { openRound } from "./lobby.ts";
+import { openRound } from "./open.ts";
 import { discardCards, drawCards } from "./piles.ts";
 import { type EndReason, type Game, HAND, MIN_PLAYERS, REVEAL_MS } from "./types.ts";
 

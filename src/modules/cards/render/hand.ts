@@ -1,4 +1,4 @@
-import { ButtonStyle } from "discord.js";
+import { ButtonStyle, escapeMarkdown } from "discord.js";
 import type { Game, Player, Round } from "../game/types.ts";
 import { blankPrompt, fillPrompt } from "../text.ts";
 import { type ButtonRow, button, rows } from "./parts.ts";
@@ -13,10 +13,10 @@ const plain = (content: string): HandView => ({ content, components: [] });
 function playable(r: Round, p: Player): HandView {
   const first = r.partial.get(p.userId);
   const ask = first
-    ? `First pick: **${first.text}**. Now pick the second card.`
+    ? `First pick: **${escapeMarkdown(first.text)}**. Now pick the second card.`
     : `Pick ${r.prompt.blanks === 2 ? "your first card" : "a card"}:`;
-  const cards = p.hand.map((c, i) =>
-    button(`cards:play:${r.id}:${i}`, c.text, ButtonStyle.Secondary),
+  const cards = p.hand.map((c) =>
+    button(`cards:play:${r.id}:${c.id}`, c.text, ButtonStyle.Secondary),
   );
 
   return { content: `## ${blankPrompt(r.prompt.text)}\n${ask}`, components: rows(cards) };

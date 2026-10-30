@@ -28,6 +28,7 @@ export const playReply = (out: keyof typeof PLAYS): string => PLAYS[out];
 export const JOINS = {
   joined: "You're in!",
   already: "You're already in.",
+  full: "This game is full (10 players).",
   over: "That game is over.",
 } as const;
 

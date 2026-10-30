@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import { join, leave, startGame } from "../../../../src/modules/cards/game/lobby.ts";
-import { T0, game, joinAll, started } from "../fixtures.ts";
+import { playCard } from "../../../../src/modules/cards/game/play.ts";
+import { T0, deck, game, joinAll, started } from "../fixtures.ts";
 
 test("a new game is a lobby with the starter in it, closing in 5 minutes", () => {
   const g = game();
@@ -50,4 +51,38 @@ test("leaving puts the hand on the discard pile", () => {
   expect(leave(g, "u3")).toBe("not-in");
   expect(g.players).toHaveLength(2);
   expect(g.answers.discard).toHaveLength(7);
+});
+
+test("a game holds at most 10 players", () => {
+  const g = game();
+  joinAll(g, ["u2", "u3", "u4", "u5", "u6", "u7", "u8", "u9", "u10"]);
+
+  expect(join(g, { userId: "u11", name: "K" }, Math.random)).toBe("full");
+  expect(g.players).toHaveLength(10);
+});
+
+test("if the starter leaves the lobby, the next player can start; an empty lobby closes", () => {
+  const g = game();
+  joinAll(g, ["u2", "u3", "u4"]);
+  leave(g, "u1");
+
+  expect(g.startedBy).toBe("u2");
+  expect(startGame(g, "u2", T0, Math.random)).toBe("started");
+
+  const lone = game();
+  leave(lone, "u1");
+  expect(lone).toMatchObject({ phase: "over", endReason: "lobby" });
+});
+
+test("leaving with half a two-blank pick puts that card on the discards too", () => {
+  const g = started({ deck: deck(1, 60, 1) });
+  playCard(g, {
+    roundId: g.round?.id ?? "",
+    userId: "u3",
+    cardId: g.players[2]?.hand[0]?.id ?? "",
+  });
+  leave(g, "u3");
+
+  expect(g.answers.discard).toHaveLength(7);
+  expect(g.round?.partial.size).toBe(0);
 });

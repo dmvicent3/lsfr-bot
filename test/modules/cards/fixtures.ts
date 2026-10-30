@@ -47,3 +47,7 @@ export function joinAll(g: Game, ids: string[]): void {
 function startOrThrow(g: Game): void {
   if (startGame(g, "u1", T0, Math.random) !== "started") throw new Error("could not start");
 }
+
+/** The id of the card at `index` in a player's hand ("" when there is none). */
+export const cardAt = (g: Game, userId: string, index = 0): string =>
+  g.players.find((p) => p.userId === userId)?.hand[index]?.id ?? "";
