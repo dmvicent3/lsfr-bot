@@ -14,6 +14,7 @@ import { remindersModule } from "./modules/reminders/index.ts";
 import { rssModule } from "./modules/rss/index.ts";
 import { tictactoeModule } from "./modules/tictactoe/index.ts";
 import { triviaModule } from "./modules/trivia/index.ts";
+import { cardsModule } from "./modules/cards/index.ts";
 import { wordModule } from "./modules/word/index.ts";
 
 guardProcess();
@@ -30,6 +31,7 @@ const modules: BotModule[] = [
   wordModule(),
   minesweeperModule(),
   triviaModule(),
+  cardsModule(),
   mangaModule(),
   ...(jev ? [rssModule(jev, config.embedUrl), tictactoeModule(jev)] : []),
 ];
