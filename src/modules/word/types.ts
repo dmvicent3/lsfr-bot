@@ -9,12 +9,7 @@ export type Mark = "hit" | "near" | "miss";
 
 export type Period = "today" | "week" | "month" | "all";
 
-/** Puzzle dates from `from` to `to`, both YYYY-MM-DD and inclusive. */
-export interface DateRange {
-  from: string;
-  to: string;
-  label: string;
-}
+export type { DateRange } from "../../core/types.ts";
 
 export type RefusedReason = "finished" | "length" | "letters" | "unknown" | "repeat";
 
