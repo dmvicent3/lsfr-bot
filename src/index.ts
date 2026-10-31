@@ -16,6 +16,7 @@ import { fourModule } from "./modules/four/index.ts";
 import { tictactoeModule } from "./modules/tictactoe/index.ts";
 import { triviaModule } from "./modules/trivia/index.ts";
 import { cardsModule } from "./modules/cards/index.ts";
+import { shedModule } from "./modules/shed/index.ts";
 import { wordModule } from "./modules/word/index.ts";
 
 guardProcess();
@@ -33,6 +34,7 @@ const modules: BotModule[] = [
   minesweeperModule(),
   triviaModule(),
   cardsModule(),
+  shedModule(),
   mangaModule(),
   ...(config.llmUrl
     ? [chatModule({ llmUrl: config.llmUrl, searchUrl: config.searchUrl, jev })]
