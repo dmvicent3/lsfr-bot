@@ -71,3 +71,17 @@ test("only the first megabyte is read", async () => {
   const body = `<p>${"a".repeat(1_100_000)}</p><p>TAIL</p>`;
   expect(await readPage("https://x/a", serving(200, body))).not.toContain("TAIL");
 });
+
+test("a match with a results table under it beats a wordier sentence without one", () => {
+  const text = [
+    "Check the latest F1 results on all races, qualification and free practices",
+    ...LINES.slice(0, 40),
+    "Full results from FP1",
+    "Pos | Driver | Best",
+    "1 | Leclerc | 1:18.128",
+    "2 | Antonelli | 1:18.787",
+  ].join("\n");
+  expect(excerpt(text, "give me the latest free practice results of f1", 300).text).toContain(
+    "1 | Leclerc",
+  );
+});

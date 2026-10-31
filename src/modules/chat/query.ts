@@ -1,5 +1,5 @@
 import type { SearchResult } from "../../core/search.ts";
-import { terms } from "../../core/terms.ts";
+import { matchWords, terms } from "../../core/terms.ts";
 
 /** Fewer words than this reads as a follow-up ("and the qualifying?") that needs its question. */
 const FOLLOW_UP_WORDS = 6;
@@ -25,12 +25,14 @@ export function webQuery(query: string, year: string): string {
 }
 
 /**
- * The results that share at least half the question's lookup words (one at least) in their title,
- * link or snippet; search engines pad thin queries with unrelated local pages.
+ * The results whose title, link or snippet match at least half the question's lookup words
+ * (rounded up, and both when it has two; other spellings count); search engines pad thin queries
+ * with unrelated pages.
  */
 export function relevantTo(results: SearchResult[], query: string): SearchResult[] {
-  const words = terms(query);
-  const needed = Math.max(1, Math.floor(words.length / 2));
+  const asked = terms(query).length;
+  const needed = Math.max(Math.min(asked, 2), Math.ceil(asked / 2));
+  const words = matchWords(query);
 
   return results.filter((r) => {
     const text = `${r.title} ${r.url} ${r.snippet}`.toLowerCase();

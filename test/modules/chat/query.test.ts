@@ -45,3 +45,22 @@ test("results sharing too few words with the question are dropped (search engine
   );
   expect(relevantTo([pm, junk], "who is the UK PM?")).toEqual([pm]);
 });
+
+test("a result must match at least half the question's words, rounded up", () => {
+  const lastOnly = result("Last minute deals", "https://shop.example/last");
+  const race = result("MotoGP race results", "https://crash.net/motogp/race", "won the race");
+  expect(relevantTo([lastOnly, race], "who won the last motogp?")).toEqual([race]);
+  const hey = result("HEY email", "https://www.hey.com/", "hey there");
+  expect(relevantTo([hey], "hey, who's the goat of f1?")).toEqual([]);
+});
+
+test("a two-word question needs both words in a result", () => {
+  const shop = result("GOAT: sneakers", "https://www.goat.com/");
+  const film = result("Goat (2026 film)", "https://en.wikipedia.org/wiki/Goat_(2026_film)");
+  const f1 = result(
+    "Who is the GOAT of F1?",
+    "https://planetf1.com/goat",
+    "Hamilton or Schumacher",
+  );
+  expect(relevantTo([shop, film, f1], "hey, who's the goat of f1?")).toEqual([f1]);
+});
