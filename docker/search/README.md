@@ -14,7 +14,7 @@ return. It runs on the Pi as the `search` service. There are no API keys and no 
 
 ```yaml
 search:
-  image: searxng/searxng:2026.10.28-c360868e5   # pinned tag
+  image: searxng/searxng:2026.10.28-c360868e5 # pinned tag
   restart: unless-stopped
   environment:
     SEARXNG_SECRET: ${SEARXNG_SECRET:-}
@@ -64,16 +64,16 @@ search:
 On 2026-10-31 I ran the engines from the Pi's own connection (a temporary SearXNG container on port
 8099, with test queries like "f1 fp1 results today" and "uk prime minister"):
 
-| Engine | Result from the Pi |
-|---|---|
-| Bing | works |
-| Yahoo | works |
-| DuckDuckGo | CAPTCHA |
-| Brave | worked at first, then "Suspended: too many requests" |
-| Qwant | access denied |
-| Google | access denied |
-| Startpage, Mojeek, Presearch | no results added |
-| Wikipedia | 0 results for these queries |
+| Engine                       | Result from the Pi                                   |
+| ---------------------------- | ---------------------------------------------------- |
+| Bing                         | works                                                |
+| Yahoo                        | works                                                |
+| DuckDuckGo                   | CAPTCHA                                              |
+| Brave                        | worked at first, then "Suspended: too many requests" |
+| Qwant                        | access denied                                        |
+| Google                       | access denied                                        |
+| Startpage, Mojeek, Presearch | no results added                                     |
+| Wikipedia                    | 0 results for these queries                          |
 
 Engines block or rate-limit scrapers, and this can change from week to week. If search goes quiet,
 re-run the check. One way, from the compose directory on the Pi:
