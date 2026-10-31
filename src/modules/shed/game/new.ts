@@ -22,6 +22,7 @@ const emptyTable = (): Pick<
   | "pending"
   | "step"
   | "drawn"
+  | "afterPaint"
   | "lastMove"
   | "nextPlace"
 > => ({
@@ -35,6 +36,7 @@ const emptyTable = (): Pick<
   pending: null,
   step: "play",
   drawn: null,
+  afterPaint: null,
   lastMove: "",
   nextPlace: 1,
 });

@@ -76,6 +76,8 @@ export interface Game {
   step: Step;
   /** The card drawn this turn, while the player decides on it. */
   drawn: Card | null;
+  /** The seat whose turn starts once the Paint colour is picked. */
+  afterPaint: number | null;
   lastMove: string;
   nextPlace: number;
 }
@@ -86,3 +88,13 @@ export const MAX_IDLE = 3;
 export const HAND_SIZE = 7;
 export const MIN_PLAYERS = 2;
 export const MAX_PLAYERS = 8;
+
+/** One click: who made it, on which turn. */
+export interface Act {
+  userId: string;
+  turnNo: number;
+  now: number;
+  random: () => number;
+}
+
+export type Refusal = "over" | "not-in" | "not-your-turn" | "stale";
