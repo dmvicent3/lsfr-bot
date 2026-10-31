@@ -1,3 +1,6 @@
+import type { SearchResult } from "../../core/search.ts";
+import { terms } from "../../core/terms.ts";
+
 /** Fewer words than this reads as a follow-up ("and the qualifying?") that needs its question. */
 const FOLLOW_UP_WORDS = 6;
 
@@ -12,4 +15,26 @@ export function searchQuery(newest: string, earlier: string[]): string {
   if (!text || !before || text.split(/\s+/).length >= FOLLOW_UP_WORDS) return text;
 
   return `${before.trim()} ${text}`;
+}
+
+/** What the search engine gets: the message's lookup words, plus the year when it names none. */
+export function webQuery(query: string, year: string): string {
+  const words = terms(query);
+
+  return (words.some((w) => /^\d{4}$/.test(w)) ? words : [...words, year]).join(" ");
+}
+
+/**
+ * The results that share at least half the question's lookup words (one at least) in their title,
+ * link or snippet; search engines pad thin queries with unrelated local pages.
+ */
+export function relevantTo(results: SearchResult[], query: string): SearchResult[] {
+  const words = terms(query);
+  const needed = Math.max(1, Math.floor(words.length / 2));
+
+  return results.filter((r) => {
+    const text = `${r.title} ${r.url} ${r.snippet}`.toLowerCase();
+
+    return words.filter((w) => text.includes(w)).length >= needed;
+  });
 }

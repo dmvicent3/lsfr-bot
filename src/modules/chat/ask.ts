@@ -1,10 +1,12 @@
 import { generate } from "../../core/llm.ts";
 import { log } from "../../core/log.ts";
-import { excerpt, readPage } from "../../core/page.ts";
+import { type Excerpt, excerpt } from "../../core/excerpt.ts";
+import { readPage } from "../../core/page.ts";
 import { type SearchResult, webSearch } from "../../core/search.ts";
 import type { Turn } from "../../core/types.ts";
 import { PERSONALITY } from "./personality.ts";
 import { needsSearch, replyFor } from "./search-step.ts";
+import { relevantTo, webQuery } from "./query.ts";
 import { endOnUser } from "./text.ts";
 import type { ChatOptions } from "./types.ts";
 
@@ -22,14 +24,14 @@ async function searchFor(url: string, query: string): Promise<SearchResult[]> {
   }
 }
 
-/** The part of a page about the query; a page that can't be read (blocked, not HTML) gives "". */
-async function readFor(url: string, query: string): Promise<string> {
+/** The part of a page about the query; a page that can't be read (blocked, not HTML) gives none. */
+async function readFor(url: string, query: string): Promise<Excerpt> {
   try {
     return excerpt(await readPage(url), query);
   } catch (err) {
     log.info("chat:page", `couldn't read ${url}: ${err instanceof Error ? err.message : "?"}`);
 
-    return "";
+    return { text: "", score: 0 };
   }
 }
 
@@ -46,7 +48,8 @@ export function askModel(o: ChatOptions, turns: Turn[], query: string): Promise<
   return replyFor(
     {
       decide: async (q) => (jev && searchUrl ? needsSearch(jev, q) : false),
-      search: async (q) => (searchUrl ? searchFor(searchUrl, q) : []),
+      search: async (q) =>
+        searchUrl ? relevantTo(await searchFor(searchUrl, webQuery(q, today.slice(0, 4))), q) : [],
       read: readFor,
       ask: async (t) => generate(t, { url: o.llmUrl, system, signal }),
       today,

@@ -10,6 +10,8 @@ const CELL_END = /<\/t[dh]>\s*(?=<t[dh]\b)/gi;
 const BREAK =
   /<\/?(br|p|div|h[1-6]|li|tr|table|section|article|nav|header|footer|ul|ol|main)\b[^>]*>/gi;
 const TAG = /<[^>]*>/g;
+/** A `"key":{` or `"key":"` left from data embedded in the page, not text anyone reads. */
+const JSON_BIT = /"\s*:\s*[{["]/;
 const NAMED: Record<string, string> = {
   amp: "&",
   lt: "<",
@@ -41,28 +43,8 @@ export function pageText(html: string): string {
   return decode(flat)
     .split("\n")
     .map((line) => line.replaceAll(/\s+/g, " ").trim())
-    .filter((line) => line !== "")
+    .filter((line) => line !== "" && !JSON_BIT.test(line))
     .join("\n");
-}
-
-/** Lines kept before the best match, for its heading. */
-const LEAD = 3;
-
-/** Up to `max` characters from the lines around the best match for the query; "" when nothing matches. */
-export function excerpt(text: string, query: string, max = 2500): string {
-  const words = query
-    .toLowerCase()
-    .split(/\W+/)
-    .filter((w) => w.length >= 3);
-  const lines = text.split("\n");
-  const hits = lines.map((l) => words.filter((w) => l.toLowerCase().includes(w)).length);
-  const top = Math.max(0, ...hits);
-
-  if (top === 0) return "";
-
-  const start = Math.max(0, hits.indexOf(top) - LEAD);
-
-  return lines.slice(start).join("\n").slice(0, max);
 }
 
 /** A web page's text; throws on a refusal or anything that isn't HTML. */

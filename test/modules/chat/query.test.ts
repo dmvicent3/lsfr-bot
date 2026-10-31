@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { searchQuery } from "../../../src/modules/chat/query.ts";
+import { relevantTo, searchQuery, webQuery } from "../../../src/modules/chat/query.ts";
 
 test("a full question is searched as it is", () => {
   expect(searchQuery("who won the last formula 1 race?", ["what is f1"])).toBe(
@@ -16,4 +16,32 @@ test("a short follow-up is searched with the question before it", () => {
 test("a short message with nothing before it, or no text at all, stays as it is", () => {
   expect(searchQuery("weather lisbon", [])).toBe("weather lisbon");
   expect(searchQuery("", ["give me fp1 results"])).toBe("");
+});
+
+test("what is sent to the search engine: the terms, with the year when none is given", () => {
+  expect(webQuery("give me fp1 results for the current session of f1", "2026")).toBe(
+    "fp1 results session f1 2026",
+  );
+  expect(webQuery("who won the 2025 title?", "2026")).toBe("won 2025 title");
+});
+
+const result = (title: string, url: string, snippet = "") => ({ title, url, snippet });
+
+test("results sharing too few words with the question are dropped (search engine junk)", () => {
+  const junk = result("Find landscapers near me", "https://checkatrade.com/landscapers");
+  const fp1 = result("F1 Results: Mexican GP 2026 – FP1", "https://planetf1.com/fp1");
+  const report = result(
+    "Leclerc leads in Mexico",
+    "https://f1.com/fp1-leclerc",
+    "first practice session",
+  );
+  expect(
+    relevantTo([junk, fp1, report], "give me fp1 results for the current session of f1"),
+  ).toEqual([fp1, report]);
+  const pm = result(
+    "Premiership of Andy Burnham",
+    "https://en.wikipedia.org/wiki/Burnham",
+    "UK prime minister",
+  );
+  expect(relevantTo([pm, junk], "who is the UK PM?")).toEqual([pm]);
 });

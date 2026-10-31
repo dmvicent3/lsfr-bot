@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
-import { excerpt, pageText, readPage } from "../../src/core/page.ts";
+import { excerpt } from "../../src/core/excerpt.ts";
+import { pageText, readPage } from "../../src/core/page.ts";
 import type { FetchFn } from "../../src/core/types.ts";
 
 const HTML = `<html><head><title>x</title><style>p{}</style></head><body>
@@ -18,15 +19,36 @@ const LINES = Array.from({ length: 200 }, (_, i) => `filler line ${i} about noth
 LINES[150] = "FP1 classification: 1 Norris 2 Piastri 3 Verstappen";
 const TEXT = LINES.join("\n");
 
+test("JSON left in a page's text is dropped", () => {
+  expect(pageText('<p>UK</p><p>"},"image_flag":{"wt":"Flag.svg"}</p>')).toBe("UK");
+});
+
 test("the excerpt is the window around the lines that match the query, capped", () => {
   const out = excerpt(TEXT, "fp1 results norris", 500);
-  expect(out).toContain("FP1 classification: 1 Norris");
-  expect(out.length).toBeLessThanOrEqual(500);
-  expect(out).not.toContain("filler line 0 ");
+  expect(out.text).toContain("FP1 classification: 1 Norris");
+  expect(out.text.length).toBeLessThanOrEqual(500);
+  expect(out.text).not.toContain("filler line 0 ");
+  expect(out.score).toBeGreaterThan(0);
 });
 
 test("a page that never mentions the query gives no excerpt", () => {
-  expect(excerpt(TEXT, "weather lisbon", 500)).toBe("");
+  expect(excerpt(TEXT, "weather lisbon", 500)).toEqual({ text: "", score: 0 });
+});
+
+test("filler words in the question don't count as matches", () => {
+  const text = ["the season for the drivers", ...LINES.slice(0, 50), "FP1 Norris"].join("\n");
+  expect(excerpt(text, "give me the fp1 for norris", 200).text).toContain("FP1 Norris");
+});
+
+test("of two equally good matches, the one with a table after it wins", () => {
+  const text = [
+    "Free practice 1 news",
+    ...LINES.slice(0, 40),
+    "Free practice 1 results",
+    "# | Driver | Time",
+    "1 | Leclerc | 1:17.2",
+  ].join("\n");
+  expect(excerpt(text, "free practice 1", 200).text).toStartWith("filler line 37");
 });
 
 const serving =

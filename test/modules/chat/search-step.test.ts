@@ -1,11 +1,12 @@
 import { expect, test } from "bun:test";
 import { JevError } from "../../../src/core/jev/http.ts";
 import type { Jev } from "../../../src/core/jev/types.ts";
+import type { Excerpt } from "../../../src/core/excerpt.ts";
+import { pickPages } from "../../../src/modules/chat/page-step.ts";
 import type { SearchResult } from "../../../src/core/search.ts";
 import type { Turn } from "../../../src/core/types.ts";
 import {
   needsSearch,
-  pickPage,
   replyFor,
   sourcesLine,
   withoutSources,
@@ -60,11 +61,11 @@ test("a page's text goes under the results, named by its link", () => {
 
 const at = (url: string): SearchResult => ({ title: "", url, snippet: "" });
 
-test("the page read is the first web result that isn't a site's front page", () => {
-  expect(
-    pickPage([at("https://www.formula1.com/"), at("ftp://x/a"), at("https://rn365.com/fp1")]),
-  ).toEqual(at("https://rn365.com/fp1"));
-  expect(pickPage([at("https://www.formula1.com"), at("not a url")])).toBeNull();
+test("the pages read are the first two web results that aren't a site's front page", () => {
+  const front = at("https://www.formula1.com/");
+  const pages = [at("https://rn365.com/fp1"), at("https://f1.com/fp1"), at("https://x.com/fp1")];
+  expect(pickPages([front, at("ftp://x/a"), ...pages])).toEqual(pages.slice(0, 2));
+  expect(pickPages([at("https://www.formula1.com"), at("not a url")])).toEqual([]);
 });
 
 test("sources are the top three links, unembedded; none without results", () => {
@@ -73,7 +74,7 @@ test("sources are the top three links, unembedded; none without results", () => 
 });
 
 /** Fake deps that record what the model was asked. */
-function deps(o: { search: boolean; results: SearchResult[]; page?: string }) {
+function deps(o: { search: boolean; results: SearchResult[]; pages?: Record<string, Excerpt> }) {
   const asked: Turn[][] = [];
   const searched: string[] = [];
   const read: string[] = [];
@@ -92,7 +93,7 @@ function deps(o: { search: boolean; results: SearchResult[]; page?: string }) {
       read: async (url: string, query: string) => {
         read.push(`${url} ${query}`);
 
-        return o.page ?? "";
+        return o.pages?.[url] ?? { text: "", score: 0 };
       },
       ask: async (turns: Turn[]) => {
         asked.push(turns);
@@ -136,11 +137,16 @@ test("an earlier Sources line is cut from Gork's own text", () => {
   expect(withoutSources("No links here.")).toBe("No links here.");
 });
 
-test("a search reads the picked page with the query; its text reaches the model", async () => {
-  const f = deps({ search: true, results: RESULTS, page: "1 | Norris" });
+test("a search reads two pages; the one that matches best reaches the model", async () => {
+  const pages = {
+    "https://x/1": { text: "FP1 news", score: 10 },
+    "https://x/2": { text: "1 | Norris", score: 22 },
+  };
+  const f = deps({ search: true, results: RESULTS, pages });
   await replyFor(f.d, TURNS, "fp1");
-  expect(f.read).toEqual(["https://x/1 fp1"]);
-  expect(f.asked[0]?.[0]?.text).toContain("Text from https://x/1:\n1 | Norris");
+  expect(f.read.toSorted()).toEqual(["https://x/1 fp1", "https://x/2 fp1"]);
+  expect(f.asked[0]?.[0]?.text).toContain("Text from https://x/2:\n1 | Norris");
+  expect(f.asked[0]?.[0]?.text).not.toContain("FP1 news");
 });
 
 test("a page with nothing useful leaves the snippets alone", async () => {
