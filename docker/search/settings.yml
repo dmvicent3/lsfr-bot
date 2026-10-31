@@ -1,0 +1,20 @@
+# SearXNG for Gork's chat web search. Only the bot reaches it (no published port), so the bot
+# limiter is off. The secret comes from SEARXNG_SECRET in .env, which overrides secret_key.
+use_default_settings:
+  engines:
+    keep_only:
+      - duckduckgo
+      - brave
+      - wikipedia
+      - bing
+
+server:
+  secret_key: "set-SEARXNG_SECRET-in-env"
+  limiter: false
+  image_proxy: false
+
+search:
+  safe_search: 1
+  formats:
+    - html
+    - json

@@ -13,6 +13,8 @@ services:
     environment:
       JEV_URL: http://jev:8017
       EMBED_URL: http://embed:8018
+      LLM_URL: http://llm:8019
+      SEARCH_URL: http://search:8080
     volumes:
       - ./data:/app/data
     # Caps take effect only where the kernel has memory cgroups (the Pi needs
@@ -47,3 +49,29 @@ services:
       timeout: 5s
       retries: 3
       start_period: 60s
+
+  # LFM3-VL-2B on llama.cpp, for chat (text + images) and ruling summaries. No published port.
+  # ~1.4 GB resident on the Pi; healthy about 10 s after start.
+  llm:
+    build: docker/llm
+    restart: unless-stopped
+    cpus: 3
+    mem_limit: 2560m
+    logging: *logging
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8019/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 120s
+
+  # SearXNG for chat's web search. No published port either.
+  search:
+    image: searxng/searxng:2026.10.28-c360868e5
+    restart: unless-stopped
+    environment:
+      SEARXNG_SECRET: ${SEARXNG_SECRET:-}
+    volumes:
+      - ./docker/search/settings.yml:/etc/searxng/settings.yml:ro
+    mem_limit: 256m
+    logging: *logging
