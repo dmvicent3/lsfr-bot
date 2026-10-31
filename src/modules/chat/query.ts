@@ -24,14 +24,17 @@ export function webQuery(query: string, year: string): string {
   return (words.some((w) => /^\d{4}$/.test(w)) ? words : [...words, year]).join(" ");
 }
 
+/** A long question often lists alternatives ("rym or aoty or pitchfork") no one result has all of. */
+const MOST_NEEDED = 3;
+
 /**
  * The results whose title, link or snippet match at least half the question's lookup words
- * (rounded up, and both when it has two; other spellings count); search engines pad thin queries
- * with unrelated pages.
+ * (rounded up, both when it has two, at most three; other spellings count); search engines pad
+ * thin queries with unrelated pages.
  */
 export function relevantTo(results: SearchResult[], query: string): SearchResult[] {
   const asked = terms(query).length;
-  const needed = Math.max(Math.min(asked, 2), Math.ceil(asked / 2));
+  const needed = Math.min(MOST_NEEDED, Math.max(Math.min(asked, 2), Math.ceil(asked / 2)));
   const words = matchWords(query);
 
   return results.filter((r) => {

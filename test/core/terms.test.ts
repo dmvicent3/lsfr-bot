@@ -24,3 +24,12 @@ test("F1 also matches Formula 1, PM also prime minister", () => {
   expect(matchWords("goat of f1")).toContain("formula 1");
   expect(matchWords("uk pm")).toContain("prime minister");
 });
+
+test("asking words (check, recommend, find…) aren't searched for", () => {
+  expect(terms("can you check rym or some other site and recommend me some new albums")).toEqual([
+    "rym",
+    "site",
+    "new",
+    "albums",
+  ]);
+});

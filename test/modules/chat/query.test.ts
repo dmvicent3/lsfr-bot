@@ -64,3 +64,14 @@ test("a two-word question needs both words in a result", () => {
   );
   expect(relevantTo([shop, film, f1], "hey, who's the goat of f1?")).toEqual([f1]);
 });
+
+test("a long question needs at most three of its words in a result", () => {
+  const q =
+    "can you check rym or albumoftheyear or pitchfork or some other music publication and recommend me some new album releases?";
+  const pitchfork = result(
+    "New Music Releases and Upcoming Albums in 2026",
+    "https://pitchfork.com/news/new-album-releases/",
+  );
+  const check = result("Check mark - Wikipedia", "https://en.wikipedia.org/wiki/Check_mark");
+  expect(relevantTo([pitchfork, check], q)).toEqual([pitchfork]);
+});
