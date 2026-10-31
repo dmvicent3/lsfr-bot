@@ -17,7 +17,10 @@ const SHIP_CELLS = rowsFleet().flatMap((s) => s.cells);
 /** Cells in rows 2, 4, 6, 8 and 10: never a `rowsFleet` ship. */
 const WATER = Array.from({ length: 100 }, (_, i) => i).filter((i) => Math.floor(i / 10) % 2 === 1);
 
-/** A game of `playerId` whose player fired `shots` times, `hits` of them on jevos's ships. */
+/**
+ * A game of `playerId` whose player fired `shots` times, `hits` of them on jevos's ships; jevos
+ * missed as often, so it is the player's turn.
+ */
 export function shotGame(
   playerId: string,
   p: { shots: number; hits: number; difficulty: Difficulty },
@@ -29,5 +32,6 @@ export function shotGame(
     messageId: `m-${playerId}`,
     difficulty: p.difficulty,
     player: { ships: rowsFleet(), shots },
+    jevos: { ships: rowsFleet(), shots: WATER.slice(0, p.shots) },
   });
 }
