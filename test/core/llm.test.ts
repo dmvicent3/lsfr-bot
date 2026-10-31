@@ -160,3 +160,16 @@ test("stripThinking keeps the visible text", () => {
   expect(stripThinking("Hi<think>cut off")).toBe("Hi");
   expect(stripThinking("  plain  ")).toBe("plain");
 });
+
+/** Never answers until its request is aborted. */
+const hangs: FetchFn = async (_url, init) =>
+  new Promise((_resolve, reject) => {
+    init?.signal?.addEventListener("abort", () => reject(new Error("aborted")));
+  });
+
+test("a reply's overall deadline aborts the request", async () => {
+  const deadline = AbortSignal.timeout(20);
+  expect(
+    chat([{ role: "user", content: "q" }], { url: "u", fetchFn: hangs, signal: deadline }),
+  ).rejects.toThrow(LlmError);
+});

@@ -7,7 +7,7 @@ import { log } from "../../core/log.ts";
 import type { BotModule, Ctx } from "../../core/types.ts";
 import { downloadImages, imageNotes, selectImages } from "./images.ts";
 import type { ImageRef } from "./types.ts";
-import { buildConversation, collectChain, splitMessage, stripMentions } from "./text.ts";
+import { buildConversation, collectChain, replyOf, splitMessage, stripMentions } from "./text.ts";
 
 const parentOf = async (m: Message): Promise<Message | null> =>
   m.reference?.messageId ? m.fetchReference() : null;
@@ -61,7 +61,8 @@ async function reply(
   const text = await askModel(o, prompt);
   const failed = downloaded.filter((image) => image === null).length;
 
-  for (const chunk of splitMessage(text + imageNotes(skipped, failed))) await message.reply(chunk);
+  for (const chunk of splitMessage(text + imageNotes(skipped, failed)))
+    await message.reply(replyOf(chunk));
 }
 
 async function onMessage(ctx: Ctx, o: ChatOptions, message: Message): Promise<void> {

@@ -26,4 +26,6 @@ export interface LlmOptions {
   tools?: ToolSpec[];
   fetchFn?: FetchFn;
   timeoutMs?: number;
+  /** An overall deadline across several calls (one chat reply); aborts this call too. */
+  signal?: AbortSignal;
 }

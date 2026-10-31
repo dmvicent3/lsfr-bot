@@ -37,7 +37,10 @@ async function post(body: unknown, opts: LlmOptions): Promise<Response> {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(body),
-      signal: AbortSignal.timeout(opts.timeoutMs ?? TIMEOUT_MS),
+      signal: AbortSignal.any([
+        AbortSignal.timeout(opts.timeoutMs ?? TIMEOUT_MS),
+        ...(opts.signal ? [opts.signal] : []),
+      ]),
     });
   } catch (err) {
     throw new LlmError(`model unreachable: ${String(err)}`);

@@ -2,7 +2,9 @@ import { describe, expect, test } from "bun:test";
 import {
   buildConversation,
   collectChain,
+  endOnUser,
   MAX_CHAIN,
+  replyOf,
   splitMessage,
   stripMentions,
 } from "../../../src/modules/chat/text.ts";
@@ -135,5 +137,28 @@ describe("buildConversation with images", () => {
     expect(turns).toEqual([
       { role: "user", text: "ana: look\n12x: and this?", images: [png, jpg] },
     ]);
+  });
+});
+
+describe("review fixes", () => {
+  test("a chain ending on Gork's turn gets a user turn after it", () => {
+    expect(
+      endOnUser([
+        { role: "user", text: "a: hi" },
+        { role: "model", text: "Hello" },
+      ]),
+    ).toEqual([
+      { role: "user", text: "a: hi" },
+      { role: "model", text: "Hello" },
+      { role: "user", text: "(go on)" },
+    ]);
+    expect(endOnUser([{ role: "user", text: "a: hi" }])).toEqual([{ role: "user", text: "a: hi" }]);
+  });
+
+  test("replies never ping, whatever the model or the web wrote", () => {
+    expect(replyOf("@everyone look")).toEqual({
+      content: "@everyone look",
+      allowedMentions: { parse: [], repliedUser: true },
+    });
   });
 });

@@ -87,6 +87,16 @@ function append(turns: Turn[], turn: Turn): void {
 }
 
 /** Splits text into Discord-sized chunks, cutting at the last newline inside the limit. */
+/** A chain that ends on Gork's own turn (a bare "@Gork" reply) gets a user turn, so it answers anew. */
+export const endOnUser = (turns: Turn[]): Turn[] =>
+  turns.at(-1)?.role === "model" ? [...turns, { role: "user", text: "(go on)" }] : turns;
+
+/** One reply chunk; nothing in it pings (the model may echo @everyone from the web). */
+export const replyOf = (content: string) => ({
+  content,
+  allowedMentions: { parse: [], repliedUser: true },
+});
+
 export function splitMessage(text: string, max = 2000): string[] {
   const chunks: string[] = [];
   let rest = text;

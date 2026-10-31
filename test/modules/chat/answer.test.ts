@@ -95,3 +95,16 @@ test("an empty final answer is an error", async () => {
     "model returned no text",
   );
 });
+
+test("at most two searches per reply, even when one round asks for more", async () => {
+  searches.length = 0;
+  const m = model([
+    { content: "", toolCalls: [call("a"), call(undefined), call("b"), call("c")] },
+    { content: "done", toolCalls: [] },
+  ]);
+  expect(await answerWithSearch(USER, { ask: m.ask, search, canSearch: true })).toBe("done");
+  expect(searches).toEqual(["a", "b"]);
+  const tools = m.asks[1]?.messages.filter((x) => x.role === "tool").map((x) => x.content);
+  expect(tools).toEqual(["results for a", "No results.", "results for b", "Search limit reached."]);
+  expect(m.asks[1]?.tools).toEqual([]);
+});
