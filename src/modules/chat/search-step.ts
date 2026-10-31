@@ -29,20 +29,35 @@ export async function needsSearch(jev: Jev, text: string): Promise<boolean> {
   }
 }
 
-/** The conversation with the results appended to its last user turn (the model reads them best there). */
-export function withResults(
-  turns: Turn[],
-  query: string,
-  results: SearchResult[],
-  today: string,
-): Turn[] {
+/** What a search found: the results and the excerpt of one page read, if any. */
+export interface Found {
+  query: string;
+  results: SearchResult[];
+  page: { url: string; text: string } | null;
+}
+
+/** The conversation with what was found appended to its last user turn (the model reads it best there). */
+export function withResults(turns: Turn[], found: Found, today: string): Turn[] {
   const last = turns.at(-1);
 
   if (!last) return turns;
 
-  const block = `Web search results for "${query}" (searched ${today}):\n${searchText(results)}\n\nAnswer from these results. Don't list links; they are added for you.`;
+  const { query, results, page } = found;
+  const read = page ? `\n\nText from ${page.url}:\n${page.text}` : "";
+  const block = `Web search results for "${query}" (searched ${today}):\n${searchText(results)}${read}\n\nAnswer from these results. Don't list links; they are added for you.`;
 
   return [...turns.slice(0, -1), { ...last, text: `${last.text}\n\n${block}` }];
+}
+
+/** The result whose page is read: the first web page that isn't a site's front page. */
+export function pickPage(results: SearchResult[]): SearchResult | null {
+  return (
+    results.find((r) => {
+      const url = URL.parse(r.url);
+
+      return url !== null && /^https?:$/.test(url.protocol) && url.pathname.length > 1;
+    }) ?? null
+  );
 }
 
 /** The top links, in angle brackets so Discord doesn't embed them. */
@@ -61,6 +76,8 @@ export interface ReplyDeps {
   decide: (query: string) => Promise<boolean>;
   /** Results for a query; [] on failure. */
   search: (query: string) => Promise<SearchResult[]>;
+  /** The part of a page about the query; "" when it can't be read or says nothing about it. */
+  read: (url: string, query: string) => Promise<string>;
   ask: (turns: Turn[]) => Promise<string>;
   today: string;
 }
@@ -72,7 +89,10 @@ export async function replyFor(d: ReplyDeps, turns: Turn[], query: string): Prom
 
   if (results.length === 0) return d.ask(turns);
 
-  const answer = await d.ask(withResults(turns, q, results, d.today));
+  const picked = pickPage(results);
+  const text = picked ? await d.read(picked.url, q) : "";
+  const page = picked && text ? { url: picked.url, text } : null;
+  const answer = await d.ask(withResults(turns, { query: q, results, page }, d.today));
 
   return answer + sourcesLine(results);
 }
