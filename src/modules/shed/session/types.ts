@@ -49,4 +49,6 @@ export interface Live {
   /** A post found the channel gone; the game then ends without a word. */
   lost: boolean;
   ended: boolean;
+  /** The turn's seconds left as last shown, so the countdown edits when its 10 s step changes. */
+  shownSeconds: number | null;
 }

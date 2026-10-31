@@ -74,3 +74,14 @@ test("lobby times out", async () => {
   expect(text(poster.edits.at(-1)?.msg)).toContain("lobby closed");
   expect(ended()).toBe(1);
 });
+
+test("the board's countdown moves: an edit when the shown 10 s step changes", async () => {
+  const { poster, runner } = await setup();
+  await runner.onStart("u1", T0);
+  const edits = poster.edits.length;
+  await runner.tick(T0 + 1_000);
+  expect(poster.edits.length).toBe(edits);
+  await runner.tick(T0 + 10_001);
+  expect(poster.edits.length).toBe(edits + 1);
+  expect(text(poster.edits.at(-1)?.msg)).toContain("50 s");
+});

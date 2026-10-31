@@ -35,10 +35,10 @@ test("dropped seats are struck through; place 1 gets 🥇", () => {
   expect(t).toContain("🥇 P3");
 });
 
-test("Catch shows only while someone is catchable", () => {
+test("Catch shows only while someone is on one uncalled card", () => {
   const g = three();
   expect(ids(boardMessage(g, 0))).toEqual(["shed:hand", "shed:quit"]);
-  g.seats[1] = { ...g.seats[1]!, catchable: true };
+  g.seats[1] = { ...g.seats[1]!, catchable: true, hand: [card("blue", "3")] };
   expect(ids(boardMessage(g, 0))).toEqual(["shed:hand", "shed:catch:1", "shed:quit"]);
 });
 

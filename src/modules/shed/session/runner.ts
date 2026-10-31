@@ -6,6 +6,7 @@ import { pickColour } from "../game/paint.ts";
 import { playCards } from "../game/play.ts";
 import { quitGame } from "../game/quit.ts";
 import type { Who } from "../game/types.ts";
+import { secondsLeft } from "../render/board.ts";
 import { type HandView, handView } from "../render/hand.ts";
 import { openMessage, refresh } from "./flow.ts";
 import { Session, type Turn } from "./session.ts";
@@ -20,7 +21,9 @@ export class Runner extends Session {
   /** The clock (lobby close, turn timeouts), then at most one board edit. */
   tick(now: number): Promise<void> {
     return this.run(now, async () => {
-      this.live.dirty ||= advance(this.live.game, now, this.deps.random) !== null;
+      const g = this.live.game;
+      this.live.dirty ||= advance(g, now, this.deps.random) !== null;
+      this.live.dirty ||= g.phase === "playing" && secondsLeft(g, now) !== this.live.shownSeconds;
 
       if (this.live.game.phase !== "over") await refresh(this.live, this.deps, now);
     });

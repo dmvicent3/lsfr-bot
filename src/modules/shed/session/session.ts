@@ -31,7 +31,14 @@ export class Session {
     protected readonly deps: Deps,
   ) {
     const game = newGame({ ...init, id: init.gameId });
-    this.live = { game, messageId: null, dirty: false, lost: false, ended: false };
+    this.live = {
+      game,
+      messageId: null,
+      dirty: false,
+      lost: false,
+      ended: false,
+      shownSeconds: null,
+    };
   }
 
   get state(): Game {

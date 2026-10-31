@@ -1,4 +1,5 @@
 import { ButtonStyle, escapeMarkdown } from "discord.js";
+import { canBeCaught } from "../game/catch.ts";
 import { active } from "../game/order.ts";
 import { points } from "../game/points.ts";
 import type { Game, Seat } from "../game/types.ts";
@@ -9,7 +10,7 @@ import { arrow, placeLabel, topLabel } from "./text.ts";
 const cards = (n: number): string => `${n} card${n === 1 ? "" : "s"}`;
 
 /** Seconds left on the turn, rounded up to 10 s. */
-const secondsLeft = (g: Game, now: number): number =>
+export const secondsLeft = (g: Game, now: number): number =>
   Math.max(0, Math.ceil((g.turnEndsAt - now) / 10_000) * 10);
 
 function seatLine(g: Game, s: Seat, i: number, now: number): string {
@@ -66,7 +67,7 @@ export function boardMessage(g: Game, now: number): Outgoing {
       components: [],
     };
 
-  const catchable = active(g).some((s) => s.catchable);
+  const catchable = active(g).some(canBeCaught);
   const buttons = [
     button("shed:hand", "My hand", ButtonStyle.Primary),
     ...(catchable ? [button(`shed:catch:${g.turnNo}`, "Catch!", ButtonStyle.Danger)] : []),

@@ -1,7 +1,7 @@
 import type { Outgoing } from "../../trivia/session/types.ts";
 import { points } from "../game/points.ts";
 import type { Game } from "../game/types.ts";
-import { boardMessage } from "../render/board.ts";
+import { boardMessage, secondsLeft } from "../render/board.ts";
 import { lobbyMessage } from "../render/lobby.ts";
 import type { Deps, Live } from "./types.ts";
 
@@ -25,6 +25,7 @@ export async function refresh(l: Live, d: Deps, now: number, force = false): Pro
   if (!l.messageId || !(l.dirty || force)) return;
 
   l.dirty = false;
+  l.shownSeconds = l.game.phase === "playing" ? secondsLeft(l.game, now) : null;
   await d.poster.edit(l.messageId, current(l.game, now));
 }
 

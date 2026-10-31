@@ -47,3 +47,14 @@ test("catchable clears when your next turn starts", () => {
   expect(g.seats[0]?.catchable).toBe(false);
   expect(press(g, "u2")).toBe("nobody");
 });
+
+test("a player made to draw is no longer on one card: nobody to catch", () => {
+  const g = table([two(), [card("red", "plus2"), ...filler()]], card("red", "7"), {
+    stacking: false,
+  });
+  playCards(g, { ...act(g, "u1"), key: "red-2", count: 1, last: false });
+  playCards(g, { ...act(g, "u2"), key: "red-plus2", count: 1, last: false });
+  expect(hand(g, "u1")).toHaveLength(3);
+  expect(press(g, "u2")).toBe("nobody");
+  expect(hand(g, "u1")).toHaveLength(3);
+});

@@ -10,6 +10,21 @@ export function mostHeld(hand: Card[]): Colour {
   return COLOURS.reduce((best, c) => (count(c) > count(best) ? c : best), COLOURS[0] ?? "red");
 }
 
+/** With `seat` gone: where a pending Paint pick sends the turn (theirs), or the skip kept (someone else's). */
+function redirectPaint(g: Game, seat: number, theirTurn: boolean): number | null {
+  const after = g.afterPaint;
+
+  if (theirTurn) {
+    g.afterPaint = null;
+
+    return after !== null && after !== seat ? after : null;
+  }
+
+  if (after === seat) g.afterPaint = nextSeat(g, seat);
+
+  return null;
+}
+
 /**
  * Takes a seat out with no place: its cards go under the draw pile, a waiting draw stays for the next
  * player, and the turn passes if it was theirs (a Paint mid-pick gets their most-held colour).
@@ -23,17 +38,16 @@ export function dropSeat(g: Game, seat: number, now: number): void {
 
   if (theirTurn && g.step === "paint") g.colour = mostHeld(s.hand);
 
-  const after = theirTurn && g.step === "paint" ? g.afterPaint : null;
   g.draw.unshift(...s.hand);
   s.hand = [];
   s.dropped = true;
   s.catchable = false;
-  g.afterPaint = null;
+  const after = redirectPaint(g, seat, theirTurn);
   settle(g);
 
   if (g.phase !== "playing" || !theirTurn) return;
 
-  beginTurn(g, after !== null && after !== seat ? after : nextSeat(g, seat), now);
+  beginTurn(g, after ?? nextSeat(g, seat), now);
 }
 
 /** The Leave button: out of the game, no place. */

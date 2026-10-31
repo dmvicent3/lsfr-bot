@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import { advance } from "../../../../src/modules/shed/game/clock.ts";
 import { newGame } from "../../../../src/modules/shed/game/new.ts";
+import { pickColour } from "../../../../src/modules/shed/game/paint.ts";
 import { playCards } from "../../../../src/modules/shed/game/play.ts";
 import { quitGame } from "../../../../src/modules/shed/game/quit.ts";
 import { TURN_MS } from "../../../../src/modules/shed/game/types.ts";
@@ -81,4 +82,18 @@ test("lobby closes after 10 minutes", () => {
   expect(advance(g, 600_000, seeded(1))).toBe("lobby-closed");
   expect(g.phase).toBe("over");
   expect(g.endReason).toBe("lobby");
+});
+
+test("a non-turn Leave during a Paint +4 pick (stacking off) keeps the skip", () => {
+  const paint4 = () => [card(null, "paint4"), ...filler()];
+  const g = table([paint4(), filler(), filler(), filler()], card("red", "7"), { stacking: false });
+  playCards(g, { ...act(g, "u1"), key: "x-paint4", count: 1, last: false });
+  quitGame(g, "u4", 0);
+  pickColour(g, { ...act(g, "u1"), colour: "blue" });
+  expect(turnOf(g)).toBe("u3");
+  const h = table([paint4(), filler(), filler(), filler()], card("red", "7"), { stacking: false });
+  playCards(h, { ...act(h, "u1"), key: "x-paint4", count: 1, last: false });
+  quitGame(h, "u3", 0);
+  pickColour(h, { ...act(h, "u1"), colour: "blue" });
+  expect(turnOf(h)).toBe("u4");
 });
