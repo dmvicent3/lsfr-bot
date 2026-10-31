@@ -6,7 +6,9 @@ import { pickPages } from "../../../src/modules/chat/page-step.ts";
 import type { SearchResult } from "../../../src/core/search.ts";
 import type { Turn } from "../../../src/core/types.ts";
 import {
+  ANSWER_RULES,
   needsSearch,
+  NOTHING_FOUND,
   replyFor,
   sourcesLine,
   withoutSources,
@@ -43,7 +45,7 @@ test("results go into the last user turn, dated", () => {
   expect(out).toEqual([
     {
       role: "user",
-      text: 'daniel: who is the UK PM?\n\nWeb search results for "who is the UK PM?" (searched 2026-10-31):\n1. T1 — https://x/1\ns1\n\nAnswer from these results. Don\'t list links; they are added for you.',
+      text: `daniel: who is the UK PM?\n\nWeb search results for "who is the UK PM?" (searched 2026-10-31):\n1. T1 — https://x/1\ns1\n\n${ANSWER_RULES}`,
     },
   ]);
 });
@@ -55,7 +57,7 @@ test("a page's text goes under the results, named by its link", () => {
     "2026-10-31",
   );
   expect(out[0]?.text).toContain(
-    "s1\n\nText from https://x/1:\n1 | Norris\n\nAnswer from these results.",
+    "s1\n\nText from https://x/1:\n1 | Norris\n\nAnswer from these results",
   );
 });
 
@@ -121,10 +123,22 @@ test("a search with results: the model reads them, the reply lists sources", asy
   expect(f.asked[0]?.[0]?.text).toContain("Web search results");
 });
 
-test("a search with nothing back, or no text to search, answers plainly", async () => {
+test("the model is told to keep results short and plain, never a table", () => {
+  expect(ANSWER_RULES).toContain("Answer from these results");
+  expect(ANSWER_RULES).toContain("no tables");
+  expect(ANSWER_RULES).toContain("top 5");
+});
+
+test("a search with nothing back: the model is told, so it doesn't guess; no sources", async () => {
   const empty = deps({ search: true, results: [] });
   expect(await replyFor(empty.d, TURNS, "q")).toBe("answer");
-  expect(empty.asked[0]).toEqual(TURNS);
+  expect(empty.asked[0]).toEqual([
+    { role: "user", text: `daniel: who is the UK PM?\n\n${NOTHING_FOUND}` },
+  ]);
+  expect(NOTHING_FOUND).toContain("say you couldn't check");
+});
+
+test("no text to search answers plainly", async () => {
   const imageOnly = deps({ search: true, results: RESULTS });
   await replyFor(imageOnly.d, TURNS, "  ");
   expect(imageOnly.searched).toEqual([]);
