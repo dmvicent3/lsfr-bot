@@ -57,3 +57,21 @@ export function targetCells(s: Sight): number[] {
 
   return [...around];
 }
+
+/** The longest run of wounded cells starting next to `c` in a straight line. */
+export function lineFrom(c: number, wounded: Set<number>): number {
+  let best = 0;
+
+  for (const axis of ["across", "down"] as const) {
+    for (const by of [1, -1] as const) {
+      let n = 0;
+      let at = step(c, axis, by);
+
+      while (at !== null && wounded.has(at)) [n, at] = [n + 1, step(at, axis, by)];
+
+      best = Math.max(best, n);
+    }
+  }
+
+  return best;
+}
