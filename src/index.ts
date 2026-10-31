@@ -13,6 +13,7 @@ import { motorsportModule } from "./modules/motorsport/index.ts";
 import { remindersModule } from "./modules/reminders/index.ts";
 import { rssModule } from "./modules/rss/index.ts";
 import { fourModule } from "./modules/four/index.ts";
+import { fleetModule } from "./modules/fleet/index.ts";
 import { tictactoeModule } from "./modules/tictactoe/index.ts";
 import { triviaModule } from "./modules/trivia/index.ts";
 import { cardsModule } from "./modules/cards/index.ts";
@@ -39,7 +40,9 @@ const modules: BotModule[] = [
   ...(config.llmUrl
     ? [chatModule({ llmUrl: config.llmUrl, searchUrl: config.searchUrl, jev })]
     : []),
-  ...(jev ? [rssModule(jev, config.embedUrl), tictactoeModule(jev), fourModule(jev)] : []),
+  ...(jev
+    ? [rssModule(jev, config.embedUrl), tictactoeModule(jev), fourModule(jev), fleetModule(jev)]
+    : []),
 ];
 const db = openDatabase(config.databasePath);
 runMigrations(db, [...coreMigrations, ...modules.flatMap((m) => m.migrations ?? [])]);
