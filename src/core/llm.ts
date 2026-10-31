@@ -1,59 +1,76 @@
-import type { Turn } from "./types.ts";
-import { isRecord, isString } from "./guards.ts";
-import type { FetchFn } from "./types.ts";
+import { readReply, wireMessage, wireTool } from "./llm-wire.ts";
+import type { ChatMessage, LlmOptions, ToolCall, Turn } from "./types.ts";
 
 export class LlmError extends Error {
   override name = "LlmError";
 }
 
-function responseText(body: unknown): string {
-  if (!isRecord(body) || !Array.isArray(body["candidates"])) return "";
+const TIMEOUT_MS = 120_000;
 
-  const first: unknown = body["candidates"][0];
+/** Visible text only: a closed `<think>` block, or an unclosed one cut off by the token cap, goes. */
+export const stripThinking = (text: string): string =>
+  text
+    .replaceAll(/<think>[\s\S]*?<\/think>/g, "")
+    .replace(/<think>[\s\S]*$/, "")
+    .trim();
 
-  if (!isRecord(first) || !isRecord(first["content"])) return "";
+function turnMessage(t: Turn): ChatMessage {
+  if (t.role === "model") return { role: "assistant", content: t.text };
 
-  const parts = first["content"]["parts"];
-
-  if (!Array.isArray(parts)) return "";
-
-  return parts
-    .map((part: unknown) => (isRecord(part) && isString(part["text"]) ? part["text"] : ""))
-    .join("");
+  return t.images?.length
+    ? { role: "user", content: t.text, images: t.images }
+    : { role: "user", content: t.text };
 }
 
-function turnParts(t: Turn): unknown[] {
-  return [
-    ...(t.text ? [{ text: t.text }] : []),
-    ...(t.images ?? []).map((i) => ({ inline_data: { mime_type: i.mimeType, data: i.data } })),
-  ];
+/** One prompt, or a conversation (oldest first, ending with the user's turn), as chat messages. */
+export function toMessages(prompt: string | Turn[], system?: string): ChatMessage[] {
+  const turns: Turn[] = typeof prompt === "string" ? [{ role: "user", text: prompt }] : prompt;
+  const head: ChatMessage[] = system ? [{ role: "system", content: system }] : [];
+
+  return [...head, ...turns.map(turnMessage)];
 }
 
-/** One prompt, or a whole conversation (oldest first, ending with the user's turn). */
+async function post(body: unknown, opts: LlmOptions): Promise<Response> {
+  try {
+    return await (opts.fetchFn ?? fetch)(`${opts.url}/v1/chat/completions`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(opts.timeoutMs ?? TIMEOUT_MS),
+    });
+  } catch (err) {
+    throw new LlmError(`model unreachable: ${String(err)}`);
+  }
+}
+
+/** One chat-completions round on the local model; thinking is off (the probe's switch). */
+export async function chat(
+  messages: ChatMessage[],
+  opts: LlmOptions,
+): Promise<{ content: string; toolCalls: ToolCall[] }> {
+  const body = {
+    messages: messages.map(wireMessage),
+    temperature: 0.3,
+    max_tokens: 1024,
+    chat_template_kwargs: { enable_thinking: false },
+    ...(opts.tools?.length ? { tools: opts.tools.map(wireTool) } : {}),
+  };
+  const res = await post(body, opts);
+
+  if (!res.ok) throw new LlmError(`model returned ${res.status}: ${await res.text()}`);
+
+  return readReply(await res.json());
+}
+
+/** A plain answer, no tools: the visible text, or LlmError when there is none. */
 export async function generate(
   prompt: string | Turn[],
-  opts: { apiKey: string; model: string; system?: string; fetchFn?: FetchFn },
+  opts: LlmOptions & { system?: string },
 ): Promise<string> {
-  const turns: Turn[] = typeof prompt === "string" ? [{ role: "user", text: prompt }] : prompt;
-  const fetchFn = opts.fetchFn ?? fetch;
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${opts.model}:generateContent`;
-  const res = await fetchFn(url, {
-    method: "POST",
-    headers: { "content-type": "application/json", "x-goog-api-key": opts.apiKey },
-    body: JSON.stringify({
-      ...(opts.system ? { system_instruction: { parts: [{ text: opts.system }] } } : {}),
-      contents: turns.map((t) => ({ role: t.role, parts: turnParts(t) })),
-    }),
-    signal: AbortSignal.timeout(60_000),
-  });
+  const { content } = await chat(toMessages(prompt, opts.system), { ...opts, tools: [] });
+  const text = stripThinking(content);
 
-  if (!res.ok) {
-    throw new LlmError(`Gemini returned ${res.status}: ${await res.text()}`);
-  }
-
-  const text = responseText(await res.json());
-
-  if (!text) throw new LlmError("Gemini returned no text");
+  if (!text) throw new LlmError("model returned no text");
 
   return text;
 }

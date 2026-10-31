@@ -1,13 +1,12 @@
 import { describe, expect, test } from "bun:test";
-import type { FetchFn } from "../../src/core/types.ts";
-import { generate, LlmError } from "../../src/core/llm.ts";
+import { chat, generate, LlmError, stripThinking, toMessages } from "../../src/core/llm.ts";
+import type { FetchFn, ToolSpec } from "../../src/core/types.ts";
 
-function fakeFetch(status: number, body: unknown, seen?: { url?: string; key?: string | null }) {
+/** Answers with `body` and records what was posted. */
+function fakeFetch(status: number, body: unknown, seen: { url?: string; body?: unknown } = {}) {
   const fn: FetchFn = async (url, init) => {
-    if (seen) {
-      seen.url = url;
-      seen.key = new Headers(init?.headers).get("x-goog-api-key");
-    }
+    seen.url = url;
+    seen.body = typeof init?.body === "string" ? JSON.parse(init.body) : null;
 
     return new Response(JSON.stringify(body), { status });
   };
@@ -15,111 +14,148 @@ function fakeFetch(status: number, body: unknown, seen?: { url?: string; key?: s
   return fn;
 }
 
-describe("generate", () => {
-  test("posts to the model endpoint and joins the text parts", async () => {
-    const seen: { url?: string; key?: string | null } = {};
-    const body = { candidates: [{ content: { parts: [{ text: "a" }, { text: "b" }] } }] };
-    const text = await generate("hi", {
-      apiKey: "k",
-      model: "m1",
-      fetchFn: fakeFetch(200, body, seen),
-    });
-    expect(text).toBe("ab");
-    expect(seen.url?.endsWith("/models/m1:generateContent")).toBe(true);
-    expect(seen.key).toBe("k");
-  });
+const reply = (message: Record<string, unknown>) => ({ choices: [{ message }] });
 
-  test("sends a conversation as Gemini contents", async () => {
-    let sent: unknown;
-    await generate(
+const answering = (content: string) => ({ url: "u", fetchFn: fakeFetch(200, reply({ content })) });
+
+const down: FetchFn = async () => {
+  throw new TypeError("connection refused");
+};
+
+const TOOL: ToolSpec = {
+  name: "web_search",
+  description: "Search.",
+  parameters: { type: "object", properties: { query: { type: "string" } } },
+};
+
+describe("generate", () => {
+  test("posts the conversation as chat messages, images as data URIs", async () => {
+    const seen: { url?: string; body?: unknown } = {};
+    const text = await generate(
       [
         { role: "user", text: "A" },
         { role: "model", text: "B" },
-        { role: "user", text: "what did I type?" },
+        { role: "user", text: "what is this?", images: [{ mimeType: "image/png", data: "QUJD" }] },
       ],
       {
-        apiKey: "k",
-        model: "m",
-        fetchFn: async (_url, init) => {
-          sent = typeof init?.body === "string" ? JSON.parse(init.body) : null;
-
-          return new Response(
-            JSON.stringify({ candidates: [{ content: { parts: [{ text: "A" }] } }] }),
-          );
-        },
+        url: "http://llm:8019",
+        system: "Be Gork.",
+        fetchFn: fakeFetch(200, reply({ content: "ok" }), seen),
       },
     );
-    expect(sent).toEqual({
-      contents: [
-        { role: "user", parts: [{ text: "A" }] },
-        { role: "model", parts: [{ text: "B" }] },
-        { role: "user", parts: [{ text: "what did I type?" }] },
+    expect(text).toBe("ok");
+    expect(seen.url).toBe("http://llm:8019/v1/chat/completions");
+    expect(seen.body).toEqual({
+      messages: [
+        { role: "system", content: "Be Gork." },
+        { role: "user", content: "A" },
+        { role: "assistant", content: "B" },
+        {
+          role: "user",
+          content: [
+            { type: "text", text: "what is this?" },
+            { type: "image_url", image_url: { url: "data:image/png;base64,QUJD" } },
+          ],
+        },
       ],
+      temperature: 0.3,
+      max_tokens: 1024,
+      chat_template_kwargs: { enable_thinking: false },
     });
   });
 
-  test("rejects on a non-OK status", async () => {
-    const err = await generate("hi", {
-      apiKey: "k",
-      model: "m",
-      fetchFn: fakeFetch(404, {}),
-    }).catch((e: unknown) => e);
-    expect(err).toBeInstanceOf(LlmError);
+  test("an image with no text sends only the image part", async () => {
+    const seen: { body?: unknown } = {};
+    const turns = [
+      { role: "user" as const, text: "", images: [{ mimeType: "image/jpeg", data: "x" }] },
+    ];
+    await generate(turns, { url: "u", fetchFn: fakeFetch(200, reply({ content: "ok" }), seen) });
+    expect(seen.body).toMatchObject({
+      messages: [
+        {
+          role: "user",
+          content: [{ type: "image_url", image_url: { url: "data:image/jpeg;base64,x" } }],
+        },
+      ],
+    });
+    expect(toMessages("hi")).toEqual([{ role: "user", content: "hi" }]);
   });
 
-  test("rejects when there is no text", async () => {
-    const err = await generate("hi", {
-      apiKey: "k",
-      model: "m",
-      fetchFn: fakeFetch(200, { candidates: [] }),
-    }).catch((e: unknown) => e);
-    expect(err).toBeInstanceOf(LlmError);
+  test("thinking is stripped, and a reply of only thinking is an error", async () => {
+    expect(await generate("hi", answering("<think>hmm</think>Hello"))).toBe("Hello");
+    expect(generate("hi", answering("<think>cut off"))).rejects.toThrow(LlmError);
+    expect(generate("hi", answering(""))).rejects.toThrow("model returned no text");
+  });
+
+  test("errors and failed requests become LlmError", async () => {
+    expect(
+      generate("hi", { url: "u", fetchFn: fakeFetch(503, { error: "loading" }) }),
+    ).rejects.toThrow("model returned 503");
+    expect(generate("hi", { url: "u", fetchFn: down })).rejects.toThrow(LlmError);
   });
 });
 
-test("LLM requests time out", async () => {
-  let signal: AbortSignal | null | undefined;
-  await generate("hi", {
-    apiKey: "k",
-    model: "m",
-    fetchFn: async (_url, init) => {
-      signal = init?.signal;
-
-      return new Response(
-        JSON.stringify({ candidates: [{ content: { parts: [{ text: "a" }] } }] }),
-      );
-    },
+describe("chat", () => {
+  test("offers tools and sends tool calls and results back in OpenAI shape", async () => {
+    const seen: { body?: unknown } = {};
+    await chat(
+      [
+        { role: "user", content: "news?" },
+        {
+          role: "assistant",
+          content: "",
+          toolCalls: [{ id: "c1", name: "web_search", arguments: { query: "x" } }],
+        },
+        { role: "tool", toolCallId: "c1", content: "No results." },
+      ],
+      { url: "u", tools: [TOOL], fetchFn: fakeFetch(200, reply({ content: "done" }), seen) },
+    );
+    expect(seen.body).toMatchObject({
+      messages: [
+        { role: "user", content: "news?" },
+        {
+          role: "assistant",
+          content: "",
+          tool_calls: [
+            {
+              id: "c1",
+              type: "function",
+              function: { name: "web_search", arguments: '{"query":"x"}' },
+            },
+          ],
+        },
+        { role: "tool", tool_call_id: "c1", content: "No results." },
+      ],
+      tools: [{ type: "function", function: TOOL }],
+    });
   });
-  expect(signal).toBeInstanceOf(AbortSignal);
+
+  test("reads tool calls; arguments that aren't JSON become {}", async () => {
+    const body = reply({
+      content: null,
+      tool_calls: [
+        {
+          id: "a",
+          type: "function",
+          function: { name: "web_search", arguments: '{"query":"f1"}' },
+        },
+        { id: "b", type: "function", function: { name: "web_search", arguments: "not json" } },
+      ],
+    });
+    expect(
+      await chat([{ role: "user", content: "q" }], { url: "u", fetchFn: fakeFetch(200, body) }),
+    ).toEqual({
+      content: "",
+      toolCalls: [
+        { id: "a", name: "web_search", arguments: { query: "f1" } },
+        { id: "b", name: "web_search", arguments: {} },
+      ],
+    });
+  });
 });
 
-test("sends the system instruction and inline images", async () => {
-  let sent: unknown;
-  await generate(
-    [{ role: "user", text: "what is this?", images: [{ mimeType: "image/png", data: "QUJD" }] }],
-    {
-      apiKey: "k",
-      model: "m",
-      system: "You are Gork.",
-      fetchFn: async (_url, init) => {
-        sent = typeof init?.body === "string" ? JSON.parse(init.body) : null;
-
-        return new Response(
-          JSON.stringify({ candidates: [{ content: { parts: [{ text: "a" }] } }] }),
-        );
-      },
-    },
-  );
-  expect(sent).toEqual({
-    system_instruction: { parts: [{ text: "You are Gork." }] },
-    contents: [
-      {
-        role: "user",
-        parts: [
-          { text: "what is this?" },
-          { inline_data: { mime_type: "image/png", data: "QUJD" } },
-        ],
-      },
-    ],
-  });
+test("stripThinking keeps the visible text", () => {
+  expect(stripThinking("<think>x</think>Hi")).toBe("Hi");
+  expect(stripThinking("Hi<think>cut off")).toBe("Hi");
+  expect(stripThinking("  plain  ")).toBe("plain");
 });
