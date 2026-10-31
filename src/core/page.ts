@@ -12,6 +12,8 @@ const BREAK =
 const TAG = /<[^>]*>/g;
 /** A `"key":{` or `"key":"` left from data embedded in the page, not text anyone reads. */
 const JSON_BIT = /"\s*:\s*[{["]/;
+/** Accents stacked on one letter: decoration ("zalgo" titles), shown as noise in Discord. */
+const STACKED_MARKS = /\p{M}{2,}/gu;
 const NAMED: Record<string, string> = {
   amp: "&",
   lt: "<",
@@ -41,6 +43,7 @@ export function pageText(html: string): string {
     .replaceAll(TAG, "");
 
   return decode(flat)
+    .replaceAll(STACKED_MARKS, "")
     .split("\n")
     .map((line) => line.replaceAll(/\s+/g, " ").trim())
     .filter((line) => line !== "" && !JSON_BIT.test(line))

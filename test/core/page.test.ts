@@ -85,3 +85,7 @@ test("a match with a results table under it beats a wordier sentence without one
     "1 | Leclerc",
   );
 });
+
+test("stacked accent noise is cut; a single accent stays", () => {
+  expect(pageText("<p>Four Tet - t̸̢̛̼ext café</p>")).toBe("Four Tet - text café");
+});
