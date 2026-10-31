@@ -23,9 +23,14 @@ export async function answer({ i, repo, d }: Turn, mine: Moved): Promise<void> {
   const moved = await jevosTurn(d.jev, mine.game, d.random, Date.now());
   settle(repo, moved, Date.now());
 
+  const board = renderGame({ ...moved, aiming: false });
+
   try {
-    await i.editReply(renderGame({ ...moved, aiming: false }));
-  } catch (err) {
-    log.error("fleet", "could not show jevos's shot; the next click shows it", err);
+    await i.editReply(board);
+  } catch {
+    // The token runs out after 15 min (a long jev queue); the message itself needs none.
+    await i.message.edit(board).catch((err: unknown) => {
+      log.error("fleet", "could not show jevos's shot; the next click shows it", err);
+    });
   }
 }

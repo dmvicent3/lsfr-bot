@@ -43,7 +43,8 @@ function playing(g: Game, aiming: boolean): BoardMessage {
 
   return {
     embeds: [{ title: TITLE, color: EMBED_COLOR, description: lines.join("\n") }],
-    components: aiming ? [] : firingControls(g),
+    // Kept while aiming: a restart or failed edit mid-turn leaves this board, and a click resumes.
+    components: firingControls(g),
   };
 }
 

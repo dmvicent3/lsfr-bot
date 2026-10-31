@@ -62,11 +62,11 @@ test("playing shows both grids, last shots and Fire", () => {
   expect(ids(view({ game: g }))).toEqual(["fleet:row", "fleet:col", "fleet:fire", "fleet:resign"]);
 });
 
-test("aiming has no controls", () => {
+test("aiming keeps the controls, so a board stuck by a restart can still be clicked", () => {
   const g = playing({ player: { ships: rowsFleet(), shots: [42] } });
   const v = view({ game: g, aiming: true });
   expect(text(v)).toContain("jevos is aiming…");
-  expect(renderGame(v).components).toEqual([]);
+  expect(ids(v)).toEqual(["fleet:row", "fleet:col", "fleet:fire", "fleet:resign"]);
 });
 
 test("a won game reveals jevos's fleet and accuracy", () => {

@@ -64,7 +64,9 @@ export async function act(
 
   const key = fleetKey(game.guildId, game.playerId);
 
-  if (!startThinking(key)) return tell(i, "jevos is still aiming.");
+  if (!startThinking(key)) {
+    return tell(i, touch(game, Date.now()) === "jevos" ? "jevos is still aiming." : "One moment…");
+  }
 
   try {
     await apply({ i, repo, d: c.d }, game, change);
