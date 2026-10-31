@@ -1,12 +1,19 @@
 # SearXNG for Gork's chat web search. Only the bot reaches it (no published port), so the bot
 # limiter is off. The secret comes from SEARXNG_SECRET in .env, which overrides secret_key.
+# Engines probed from the Pi 2026-10-31: duckduckgo (CAPTCHA), brave (rate-limited), qwant and
+# google (access denied) fail there, and startpage, mojeek and presearch add nothing; bing (off by
+# default upstream) and yahoo return results.
 use_default_settings:
   engines:
     keep_only:
-      - duckduckgo
-      - brave
-      - wikipedia
       - bing
+      - yahoo
+
+engines:
+  - name: bing
+    disabled: false
+  - name: yahoo
+    disabled: false
 
 server:
   secret_key: "set-SEARXNG_SECRET-in-env"
@@ -15,6 +22,7 @@ server:
 
 search:
   safe_search: 1
+  default_lang: en
   formats:
     - html
     - json
