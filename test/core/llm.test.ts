@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { chat, generate, LlmError, stripThinking, toMessages } from "../../src/core/llm.ts";
-import type { FetchFn, ToolSpec } from "../../src/core/types.ts";
+import type { ToolSpec } from "../../src/core/llm-types.ts";
+import type { FetchFn } from "../../src/core/types.ts";
 
 /** Answers with `body` and records what was posted. */
 function fakeFetch(status: number, body: unknown, seen: { url?: string; body?: unknown } = {}) {

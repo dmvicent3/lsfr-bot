@@ -1,4 +1,4 @@
-import { generate } from "../../core/llm.ts";
+import { LlmError, generate } from "../../core/llm.ts";
 import { log } from "../../core/log.ts";
 import type { Job } from "../../core/types.ts";
 import { safely } from "../../core/scheduler.ts";
@@ -82,6 +82,13 @@ const results: Job = {
   },
 };
 
+/** Ruling summaries from the local model; without one every summary fails and rulings post bare. */
+export function summarizer(url: string | null): (prompt: string) => Promise<string> {
+  if (!url) return async () => Promise.reject(new LlmError("no local model"));
+
+  return async (prompt) => generate(prompt, { url });
+}
+
 /** F1 stewards' rulings published after their session, into the weekend thread. */
 const rulings: Job = {
   name: "rulings",
@@ -92,8 +99,7 @@ const rulings: Job = {
     await collectRulings(repo, Date.now(), {
       fetchFn: fetch,
       pdfText,
-      summarize: (prompt) =>
-        generate(prompt, { apiKey: ctx.config.geminiApiKey, model: ctx.config.geminiModel }),
+      summarize: summarizer(ctx.config.llmUrl),
       post: poster(ctx, repo),
     });
   },

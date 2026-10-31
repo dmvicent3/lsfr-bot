@@ -1,5 +1,6 @@
 import { readReply, wireMessage, wireTool } from "./llm-wire.ts";
-import type { ChatMessage, LlmOptions, ToolCall, Turn } from "./types.ts";
+import type { ChatMessage, LlmOptions, ToolCall } from "./llm-types.ts";
+import type { Turn } from "./types.ts";
 
 export class LlmError extends Error {
   override name = "LlmError";

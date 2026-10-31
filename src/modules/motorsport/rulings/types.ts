@@ -6,7 +6,7 @@ export interface RulingDeps {
   fetchFn: FetchFn;
   /** A PDF's text, laid out (pdftotext -layout). */
   pdfText: (pdf: Uint8Array) => Promise<string>;
-  /** Gemini; may throw (down, out of quota), and then the ruling posts without it. */
+  /** The local model; may throw (down, loading, off), and then the ruling posts without it. */
   summarize: (prompt: string) => Promise<string>;
   post: Post;
 }

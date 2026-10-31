@@ -1,53 +1,42 @@
 import { describe, expect, test } from "bun:test";
 import { loadConfig } from "../../src/core/config.ts";
 
+const base = { DISCORD_TOKEN: "t", DISCORD_GUILD_ID: "g" };
+
 describe("loadConfig", () => {
   test("names every missing required variable", () => {
-    expect(() => loadConfig({})).toThrow(
-      /DISCORD_TOKEN.*DISCORD_GUILD_ID.*GEMINI_API_KEY.*GEMINI_MODEL/,
-    );
+    expect(() => loadConfig({})).toThrow(/DISCORD_TOKEN.*DISCORD_GUILD_ID/);
   });
 
-  test("defaults the database path", () => {
-    const config = loadConfig({
-      DISCORD_TOKEN: "t",
-      DISCORD_GUILD_ID: "g",
-      GEMINI_API_KEY: "k",
-      GEMINI_MODEL: "m",
-    });
-    expect(config).toEqual({
+  test("needs only the Discord token and server; the rest defaults", () => {
+    expect(loadConfig(base)).toEqual({
       discordToken: "t",
       guildId: "g",
-      geminiApiKey: "k",
-      geminiModel: "m",
       databasePath: "./data/gork.db",
       jevUrl: null,
       embedUrl: null,
+      llmUrl: null,
+      searchUrl: null,
     });
   });
 
-  test("reads an optional, trimmed JEV_URL", () => {
-    const base = {
-      DISCORD_TOKEN: "t",
-      DISCORD_GUILD_ID: "g",
-      GEMINI_API_KEY: "k",
-      GEMINI_MODEL: "m",
+  test("reads the optional service URLs, trimmed; blank is unset", () => {
+    const env = {
+      ...base,
+      JEV_URL: " http://jev:8017 ",
+      EMBED_URL: " http://embed:8018 ",
+      LLM_URL: " http://llm:8019 ",
+      SEARCH_URL: " http://search:8080 ",
     };
-    expect(loadConfig({ ...base, JEV_URL: " http://jev:8017 " }).jevUrl).toBe("http://jev:8017");
-    expect(loadConfig({ ...base, JEV_URL: "  " }).jevUrl).toBeNull();
-  });
-
-  test("reads an optional, trimmed EMBED_URL", () => {
-    const base = {
-      DISCORD_TOKEN: "t",
-      DISCORD_GUILD_ID: "g",
-      GEMINI_API_KEY: "k",
-      GEMINI_MODEL: "m",
-    };
-    expect(loadConfig({ ...base, EMBED_URL: " http://embed:8018 " }).embedUrl).toBe(
-      "http://embed:8018",
-    );
-    expect(loadConfig({ ...base, EMBED_URL: "  " }).embedUrl).toBeNull();
-    expect(loadConfig(base).embedUrl).toBeNull();
+    expect(loadConfig(env)).toMatchObject({
+      jevUrl: "http://jev:8017",
+      embedUrl: "http://embed:8018",
+      llmUrl: "http://llm:8019",
+      searchUrl: "http://search:8080",
+    });
+    expect(loadConfig({ ...base, LLM_URL: "  ", SEARCH_URL: "" })).toMatchObject({
+      llmUrl: null,
+      searchUrl: null,
+    });
   });
 });

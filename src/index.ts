@@ -27,13 +27,13 @@ const config = loadConfig(process.env);
 const jev = config.jevUrl ? createJev({ url: config.jevUrl }) : null;
 const modules: BotModule[] = [
   motorsportModule,
-  chatModule,
   remindersModule,
   wordModule(),
   minesweeperModule(),
   triviaModule(),
   cardsModule(),
   mangaModule(),
+  ...(config.llmUrl ? [chatModule({ llmUrl: config.llmUrl, searchUrl: config.searchUrl })] : []),
   ...(jev ? [rssModule(jev, config.embedUrl), tictactoeModule(jev), fourModule(jev)] : []),
 ];
 const db = openDatabase(config.databasePath);

@@ -124,7 +124,7 @@ describe("renderRuling", () => {
     );
   });
 
-  test("without a summary (Gemini down) the rest still posts", () => {
+  test("without a summary (model down) the rest still posts", () => {
     expect(renderRuling(ruling("Reprimand"), null)).not.toContain(">");
   });
 

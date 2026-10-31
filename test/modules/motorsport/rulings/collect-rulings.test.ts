@@ -126,7 +126,7 @@ test("posts each post-session ruling once, oldest first, in the weekend thread",
   expect(fetched).toEqual([FIA_DOCUMENTS]);
 });
 
-test("Gemini failing still posts the ruling, without a summary", async () => {
+test("a failing model still posts the ruling, without a summary", async () => {
   const d = await deps({
     summarize: async () => {
       throw new Error("quota");

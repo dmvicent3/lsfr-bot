@@ -1,5 +1,5 @@
 import { isRecord, isString } from "./guards.ts";
-import type { ChatMessage, ToolCall, ToolSpec } from "./types.ts";
+import type { ChatMessage, ToolCall, ToolSpec } from "./llm-types.ts";
 
 /** One message as llama-server's OpenAI-style endpoint takes it. */
 export function wireMessage(m: ChatMessage): Record<string, unknown> {

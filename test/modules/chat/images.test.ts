@@ -27,7 +27,7 @@ describe("selectImages", () => {
     expect(skipped).toBe(2);
   });
 
-  test("GIFs and unknown types aren't sent (Gemini can't read them)", () => {
+  test("GIFs and unknown types aren't sent (the model can't read them)", () => {
     const { chosen, skipped } = selectImages([[img("a.gif", 10, "image/gif"), img("x", 10, null)]]);
     expect(chosen).toEqual([]);
     expect(skipped).toBe(1);

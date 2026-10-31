@@ -4,7 +4,11 @@ export class ConfigError extends Error {
   override name = "ConfigError";
 }
 
-const REQUIRED = ["DISCORD_TOKEN", "DISCORD_GUILD_ID", "GEMINI_API_KEY", "GEMINI_MODEL"] as const;
+const REQUIRED = ["DISCORD_TOKEN", "DISCORD_GUILD_ID"] as const;
+
+/** A set, non-blank variable, trimmed; otherwise null. */
+const optional = (env: Record<string, string | undefined>, name: string): string | null =>
+  env[name]?.trim() || null;
 
 export function loadConfig(env: Record<string, string | undefined>): Config {
   const missing = REQUIRED.filter((name) => !env[name]?.trim());
@@ -18,10 +22,10 @@ export function loadConfig(env: Record<string, string | undefined>): Config {
   return {
     discordToken: value("DISCORD_TOKEN"),
     guildId: value("DISCORD_GUILD_ID"),
-    geminiApiKey: value("GEMINI_API_KEY"),
-    geminiModel: value("GEMINI_MODEL"),
-    databasePath: env["DATABASE_PATH"]?.trim() || "./data/gork.db",
-    jevUrl: env["JEV_URL"]?.trim() || null,
-    embedUrl: env["EMBED_URL"]?.trim() || null,
+    databasePath: optional(env, "DATABASE_PATH") ?? "./data/gork.db",
+    jevUrl: optional(env, "JEV_URL"),
+    embedUrl: optional(env, "EMBED_URL"),
+    llmUrl: optional(env, "LLM_URL"),
+    searchUrl: optional(env, "SEARCH_URL"),
   };
 }

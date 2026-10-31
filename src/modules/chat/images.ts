@@ -5,7 +5,7 @@ import type { InlineImage } from "../../core/types.ts";
 export const MAX_IMAGES = 4;
 export const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 
-/** What Gemini reads inline. GIFs aren't among them. */
+/** What the model reads inline. GIFs aren't among them. */
 const SUPPORTED = new Set(["image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]);
 
 const isImage = (r: ImageRef): boolean => r.contentType?.startsWith("image/") ?? false;

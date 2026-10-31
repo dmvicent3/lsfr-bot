@@ -40,8 +40,8 @@ export async function collectChain<M>(
 }
 
 /**
- * A reply chain as a Gemini conversation: Gork's messages are model turns, everyone else's
- * are user turns prefixed with their name (several people can share a chain). Gemini wants
+ * A reply chain as a conversation: Gork's messages are model turns, everyone else's
+ * are user turns prefixed with their name (several people can share a chain). Chat templates want
  * alternating turns starting with the user, so neighbours merge and a leading model turn
  * gets a placeholder before it.
  */
