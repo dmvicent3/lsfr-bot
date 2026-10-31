@@ -43,3 +43,25 @@ export interface Game {
   startedAt: number;
   updatedAt: number;
 }
+
+export type Outcome =
+  | { kind: "playing" }
+  | { kind: "win"; winner: "player" | "jevos" }
+  | { kind: "resigned" }
+  | { kind: "abandoned" };
+
+export interface Moved {
+  game: Game;
+  outcome: Outcome;
+}
+
+export interface NewGame {
+  guildId: string;
+  channelId: string;
+  playerId: string;
+  difficulty: Difficulty;
+  now: number;
+  random: () => number;
+}
+
+export type PhaseError = { error: "phase" };
