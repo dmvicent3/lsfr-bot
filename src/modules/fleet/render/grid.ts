@@ -6,7 +6,7 @@ import { FLEET, type Game, SIZE, type Side } from "../types.ts";
 
 const MARK = {
   water: "🟦",
-  ship: "⬛",
+  ship: "⬜",
   hit: "💥",
   miss: "⚪",
   sunk: "🟥",

@@ -104,3 +104,9 @@ test("stats show each level, accuracy and how games ended", () => {
   expect(s).toContain("Accuracy: 38/90 hits (42%)");
   expect(s).toContain("Resigned: 1 · Abandoned: 0");
 });
+
+test("ships are drawn in a colour that shows on Discord's dark theme", () => {
+  const row1 = ownGrid(playing(), false).split("\n")[1];
+  expect(row1).toBe(`1️⃣${"⬜".repeat(5)}${"🟦".repeat(5)}`);
+  expect(targetGrid(playing(), true)).not.toContain("⬛");
+});
