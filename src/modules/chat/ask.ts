@@ -8,6 +8,7 @@ import { PERSONALITY } from "./personality.ts";
 import { needsSearch, replyFor } from "./search-step.ts";
 import { relevantTo, webQuery } from "./query.ts";
 import { endOnUser } from "./text.ts";
+import { withoutEcho } from "./echo.ts";
 import type { ChatOptions } from "./types.ts";
 
 /** One reply's whole budget: jev, a search and the answer, queued behind other requests. */
@@ -51,7 +52,7 @@ export function askModel(o: ChatOptions, turns: Turn[], query: string): Promise<
       search: async (q) =>
         searchUrl ? relevantTo(await searchFor(searchUrl, webQuery(q, today.slice(0, 4))), q) : [],
       read: readFor,
-      ask: async (t) => generate(t, { url: o.llmUrl, system, signal }),
+      ask: async (t) => withoutEcho(await generate(t, { url: o.llmUrl, system, signal }), t),
       today,
     },
     endOnUser(turns),
