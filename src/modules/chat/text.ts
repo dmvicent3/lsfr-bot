@@ -1,5 +1,6 @@
 import type { ChainMessage } from "./types.ts";
 import type { Turn } from "../../core/types.ts";
+import { withoutSources } from "./search-step.ts";
 
 const MENTION = /<@!?\d+>/g;
 
@@ -60,7 +61,8 @@ export function buildConversation(chain: ChainMessage[]): Turn[] {
 /** One message as a turn; null when it has neither text nor an image. */
 function toTurn(m: ChainMessage): Turn | null {
   const images = m.images ?? [];
-  const text = stripMentions(m.text) || (images.length > 0 ? "(sent an image)" : "");
+  const own = m.fromBot ? withoutSources(m.text) : m.text;
+  const text = stripMentions(own) || (images.length > 0 ? "(sent an image)" : "");
 
   if (!text) return null;
 

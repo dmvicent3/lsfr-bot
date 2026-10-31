@@ -1,6 +1,7 @@
 import type { ChatOptions, Mention, Picked } from "./types.ts";
 import { Events, Message } from "discord.js";
 import { askModel } from "./ask.ts";
+import { searchQuery } from "./query.ts";
 import type { InlineImage } from "../../core/types.ts";
 import { keepTyping } from "./typing.ts";
 import { log } from "../../core/log.ts";
@@ -35,6 +36,13 @@ function promptOf(chain: Message[], botId: string, byUrl: Map<string, InlineImag
   );
 }
 
+/** What people wrote earlier in the chain, oldest first (a short follow-up is searched with it). */
+const earlierTexts = (chain: Message[], botId: string): string[] =>
+  chain
+    .slice(0, -1)
+    .filter((m) => m.author.id !== botId)
+    .map((m) => stripMentions(m.content));
+
 /** Downloads the chosen images, asks the model, and replies in Discord-sized chunks. */
 async function answer(o: ChatOptions, { message, chain, botId }: Mention, picked: Picked) {
   const { channel } = message;
@@ -58,7 +66,8 @@ async function reply(
 
   if (prompt.length === 0) return;
 
-  const text = await askModel(o, prompt, stripMentions(message.content));
+  const query = searchQuery(stripMentions(message.content), earlierTexts(chain, botId));
+  const text = await askModel(o, prompt, query);
   const failed = downloaded.filter((image) => image === null).length;
 
   for (const chunk of splitMessage(text + imageNotes(skipped, failed)))

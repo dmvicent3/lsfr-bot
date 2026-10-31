@@ -161,4 +161,18 @@ describe("review fixes", () => {
       allowedMentions: { parse: [], repliedUser: true },
     });
   });
+
+  test("Gork's earlier Sources lines stay out of the conversation", () => {
+    expect(
+      buildConversation([
+        user("fp1?"),
+        bot("Russell.\n\nSources: <https://x/1>"),
+        user("and fp2?"),
+      ]),
+    ).toEqual([
+      { role: "user", text: "12x: fp1?" },
+      { role: "model", text: "Russell." },
+      { role: "user", text: "12x: and fp2?" },
+    ]);
+  });
 });

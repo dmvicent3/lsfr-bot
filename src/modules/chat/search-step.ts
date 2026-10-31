@@ -54,6 +54,9 @@ export const sourcesLine = (results: SearchResult[]): string =>
         .map((r) => `<${r.url}>`)
         .join(" ")}`;
 
+/** Gork's earlier text without its Sources line, so the model never sees itself writing links. */
+export const withoutSources = (text: string): string => text.replace(/\n\nSources: <[^\n]*$/, "");
+
 export interface ReplyDeps {
   decide: (query: string) => Promise<boolean>;
   /** Results for a query; [] on failure. */

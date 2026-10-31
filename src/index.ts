@@ -22,7 +22,8 @@ guardProcess();
 const config = loadConfig(process.env);
 /**
  * One queue for every jev caller, so the Pi is never asked twice at once. Its back-off is shared
- * too: a jev failure in rss pauses tic-tac-toe (jevos guesses) and the other way round.
+ * too: a jev failure in rss or chat (its "needs the web?" check) pauses the jevos games, and the
+ * other way round; accepted, since jev failing for one caller means the Pi is struggling for all.
  */
 const jev = config.jevUrl ? createJev({ url: config.jevUrl }) : null;
 const modules: BotModule[] = [

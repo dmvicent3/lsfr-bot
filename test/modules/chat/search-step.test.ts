@@ -7,6 +7,7 @@ import {
   needsSearch,
   replyFor,
   sourcesLine,
+  withoutSources,
   withResults,
 } from "../../../src/modules/chat/search-step.ts";
 
@@ -94,4 +95,11 @@ test("a search with nothing back, or no text to search, answers plainly", async 
   const imageOnly = deps({ search: true, results: RESULTS });
   await replyFor(imageOnly.d, TURNS, "  ");
   expect(imageOnly.searched).toEqual([]);
+});
+
+test("an earlier Sources line is cut from Gork's own text", () => {
+  expect(withoutSources(`Russell was fastest.${sourcesLine(RESULTS)}`)).toBe(
+    "Russell was fastest.",
+  );
+  expect(withoutSources("No links here.")).toBe("No links here.");
 });
