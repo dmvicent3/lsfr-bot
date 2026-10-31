@@ -17,6 +17,7 @@ function toGame(r: GameRow | null): Game | null {
     playerId: r.player_id,
     channelId: r.channel_id,
     messageId: r.message_id,
+    fleetMessageId: r.fleet_message_id,
     difficulty: LEVELS[r.difficulty] ?? "normal",
     ...state,
     startedAt: r.started_at,
@@ -44,13 +45,15 @@ export class GameStore {
     this.db
       .query(
         `INSERT OR REPLACE INTO fleet_games (guild_id, player_id, channel_id, message_id,
-           difficulty, state, started_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+           fleet_message_id, difficulty, state, started_at, updated_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       )
       .run(
         g.guildId,
         g.playerId,
         g.channelId,
         g.messageId,
+        g.fleetMessageId,
         g.difficulty,
         encodeState(g),
         g.startedAt,

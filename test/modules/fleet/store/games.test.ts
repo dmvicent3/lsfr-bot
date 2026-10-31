@@ -7,6 +7,7 @@ const loss = { result: "loss", how: "resigned", endedAt: 9 } as const;
 test("state survives a round trip", () => {
   const { repo: r } = repo();
   const g = playing({
+    fleetMessageId: "f9",
     cursor: 57,
     dir: "down",
     first: "jevos",

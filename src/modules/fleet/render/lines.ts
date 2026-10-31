@@ -30,10 +30,11 @@ function afloat(side: Side, shots: number[]): string {
   return names.length > 0 ? names.join(", ") : "none";
 }
 
-export const afloatLines = (g: Game): string[] => [
-  `Your ships afloat: ${afloat(g.player, g.jevos.shots)}`,
-  `jevos's ships afloat: ${afloat(g.jevos, g.player.shots)}`,
-];
+export const yourAfloat = (g: Game): string =>
+  `Your ships afloat: ${afloat(g.player, g.jevos.shots)}`;
+
+export const jevosAfloat = (g: Game): string =>
+  `jevos's ships afloat: ${afloat(g.jevos, g.player.shots)}`;
 
 const accuracy = (who: string, target: Side, by: Side): string => {
   const shots = by.shots.length;

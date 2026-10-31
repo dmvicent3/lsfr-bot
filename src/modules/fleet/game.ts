@@ -10,6 +10,7 @@ export const startGame = (g: NewGame): Game => ({
   playerId: g.playerId,
   channelId: g.channelId,
   messageId: null,
+  fleetMessageId: null,
   difficulty: g.difficulty,
   phase: "placing",
   first: "player",

@@ -2,14 +2,14 @@ import { nextKind } from "../place.ts";
 import { FLEET, type Game, type Outcome } from "../types.ts";
 import { firingControls, placingControls } from "./controls.ts";
 import { ownGrid, targetGrid } from "./grid.ts";
-import { accuracyLines, afloatLines, lastShots, resultLine } from "./lines.ts";
+import { accuracyLines, jevosAfloat, lastShots, resultLine } from "./lines.ts";
 import type { BoardMessage, GameView } from "./types.ts";
 
 export const TITLE = "🚢 Hidden fleet";
 
-const EMBED_COLOR = 0x1d6fa5;
+export const EMBED_COLOR = 0x1d6fa5;
 
-const players = (g: Game): string => `<@${g.playerId}> vs jevos · ${g.difficulty}`;
+export const players = (g: Game): string => `<@${g.playerId}> vs jevos · ${g.difficulty}`;
 
 function placing(g: Game): BoardMessage {
   const kind = nextKind(g.player.ships);
@@ -25,42 +25,32 @@ function placing(g: Game): BoardMessage {
   };
 }
 
-function grids(g: Game, reveal: boolean): string[] {
-  return ["**Your fleet**", ownGrid(g, false), "", "**jevos's waters**", targetGrid(g, reveal)];
-}
+const NO_FLEET = "Your fleet couldn't be shown here (no permission to post?).";
 
+const embed = (description: string[]) => ({
+  title: TITLE,
+  color: EMBED_COLOR,
+  description: description.join("\n"),
+});
+
+/** jevos's waters only: the player's own grid is its own message (Discord stops drawing ~200 emoji). */
 function playing(g: Game, aiming: boolean): BoardMessage {
   const status = aiming ? "jevos is aiming…" : "Your shot.";
-  const lines = [
-    players(g),
-    "",
-    ...grids(g, false),
-    "",
-    ...afloatLines(g),
-    ...lastShots(g),
-    status,
-  ];
+  const note = g.fleetMessageId === null ? [NO_FLEET] : [];
+  const lines = [players(g), "", "**jevos's waters**", targetGrid(g, false), ""];
 
   return {
-    embeds: [{ title: TITLE, color: EMBED_COLOR, description: lines.join("\n") }],
+    embeds: [embed([...lines, jevosAfloat(g), ...lastShots(g), ...note, status])],
     // Kept while aiming: a restart or failed edit mid-turn leaves this board, and a click resumes.
     components: firingControls(g),
   };
 }
 
 function over(g: Game, o: Exclude<Outcome, { kind: "playing" }>): BoardMessage {
-  const lines = [
-    players(g),
-    "",
-    ...grids(g, true),
-    "",
-    ...lastShots(g),
-    resultLine(g, o),
-    ...accuracyLines(g),
-  ];
+  const lines = [players(g), "", "**jevos's waters**", targetGrid(g, true), ""];
 
   return {
-    embeds: [{ title: TITLE, color: EMBED_COLOR, description: lines.join("\n") }],
+    embeds: [embed([...lines, ...lastShots(g), resultLine(g, o), ...accuracyLines(g)])],
     components: [],
   };
 }

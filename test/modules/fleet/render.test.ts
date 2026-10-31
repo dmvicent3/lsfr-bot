@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import { renderGame } from "../../../src/modules/fleet/render/board.ts";
 import { renderStats } from "../../../src/modules/fleet/render/boards.ts";
+import { renderFleet } from "../../../src/modules/fleet/render/fleet.ts";
 import { ownGrid, targetGrid } from "../../../src/modules/fleet/render/grid.ts";
 import type { GameView } from "../../../src/modules/fleet/render/types.ts";
 import { playing, rowsFleet } from "./fixtures.ts";
@@ -48,18 +49,50 @@ test("placing shows the next ship and a preview", () => {
   expect(ids(view({ game: full }))).toContain("fleet:ready");
 });
 
-test("playing shows both grids, last shots and Fire", () => {
+test("playing: the board shows jevos's waters, the fleet message shows yours", () => {
   const g = playing({
     player: { ships: rowsFleet(), shots: [42] },
     jevos: { ships: rowsFleet(), shots: [0] },
   });
   const t = text(view({ game: g }));
-  expect(t).toContain("**Your fleet**");
   expect(t).toContain("**jevos's waters**");
+  expect(t).not.toContain("Your fleet");
   expect(t).toContain("You fired at C5: hit!");
   expect(t).toContain("jevos fired at A1: hit!");
   expect(t).toContain("Your shot.");
   expect(ids(view({ game: g }))).toEqual(["fleet:row", "fleet:col", "fleet:fire", "fleet:resign"]);
+  const fleet = renderFleet(view({ game: g }));
+  expect(fleet.embeds[0]?.title).toBe("🚢 Hidden fleet — your fleet");
+  expect(fleet.embeds[0]?.description).toContain("Your ships afloat:");
+  expect(fleet.embeds[0]?.description).toContain("1️⃣💥⬜⬜⬜⬜");
+  expect(fleet.components).toEqual([]);
+});
+
+const emoji = (s: string): number =>
+  [...segmenter.segment(s)].filter((x) =>
+    /\p{Extended_Pictographic}|\p{Regional_Indicator}|⃣/u.test(x.segment),
+  ).length;
+
+test("each message stays well under Discord's ~200 emoji", () => {
+  const over = { kind: "win", winner: "player" } as const;
+
+  for (const v of [view({}), view({ outcome: over })]) {
+    expect(emoji(text(v))).toBeLessThanOrEqual(130);
+    expect(emoji(renderFleet(v).embeds[0]?.description ?? "")).toBeLessThanOrEqual(130);
+  }
+});
+
+test("a board whose fleet message could not be posted says so", () => {
+  expect(text(view({ game: playing({ fleetMessageId: null }) }))).toContain(
+    "Your fleet couldn't be shown here",
+  );
+  expect(text(view({}))).not.toContain("couldn't be shown");
+});
+
+test("the fleet message shows how the game ended", () => {
+  expect(renderFleet(view({ outcome: { kind: "resigned" } })).embeds[0]?.description).toContain(
+    "You resigned.",
+  );
 });
 
 test("aiming keeps the controls, so a board stuck by a restart can still be clicked", () => {

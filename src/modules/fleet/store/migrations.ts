@@ -31,4 +31,8 @@ export const fleetMigrations: Migration[] = [
       CREATE INDEX fleet_results_by_player ON fleet_results (guild_id, player_id);
     `,
   },
+  {
+    id: "fleet-002-fleet-message",
+    sql: "ALTER TABLE fleet_games ADD COLUMN fleet_message_id TEXT;",
+  },
 ];

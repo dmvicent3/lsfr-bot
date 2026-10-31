@@ -5,6 +5,7 @@ export interface GameRow {
   player_id: string;
   channel_id: string;
   message_id: string | null;
+  fleet_message_id: string | null;
   difficulty: string;
   /** JSON: phase, first, both sides, cursor and direction. */
   state: string;

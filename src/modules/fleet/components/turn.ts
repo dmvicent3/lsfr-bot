@@ -6,6 +6,7 @@ import { renderGame } from "../render/board.ts";
 import { settle } from "../settle.ts";
 import type { FleetRepo } from "../store/repo.ts";
 import type { Moved } from "../types.ts";
+import { syncFleet } from "./fleet-message.ts";
 
 export interface Turn {
   i: MessageComponentInteraction;
@@ -22,6 +23,7 @@ export async function answer({ i, repo, d }: Turn, mine: Moved): Promise<void> {
   await i.update(renderGame({ ...mine, aiming: true }));
   const moved = await jevosTurn(d.jev, mine.game, d.random, Date.now());
   settle(repo, moved, Date.now());
+  await syncFleet(i.channel, { ...moved, aiming: false });
 
   const board = renderGame({ ...moved, aiming: false });
 

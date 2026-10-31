@@ -14,6 +14,8 @@ interface Seen {
   updates: { components?: unknown[]; embeds?: { description?: string }[] }[];
   edits: { embeds?: { description?: string }[] }[];
   messageEdits: { embeds?: { description?: string }[] }[];
+  posts: { embeds?: { description?: string }[] }[];
+  fleetEdits: { id: string; embeds?: { description?: string }[] }[];
   replies: string[];
   deferred: number;
 }
@@ -35,6 +37,23 @@ interface ClickOpts {
   userId?: string;
   values?: string[];
   editFails?: boolean;
+  postFails?: boolean;
+}
+
+function fakeChannel(seen: Seen, p: ClickOpts) {
+  return {
+    isSendable: () => true,
+    send: async (m: Seen["posts"][number]) => {
+      if (p.postFails) throw new Error("Missing Permissions");
+
+      seen.posts.push(m);
+
+      return { id: "f1" };
+    },
+    messages: {
+      edit: async (id: string, m: Seen["posts"][number]) => void seen.fleetEdits.push({ id, ...m }),
+    },
+  };
 }
 
 function fakeClick(seen: Seen, p: ClickOpts) {
@@ -45,6 +64,7 @@ function fakeClick(seen: Seen, p: ClickOpts) {
       components: [],
       edit: async (m: Seen["edits"][number]) => void seen.messageEdits.push(m),
     },
+    channel: fakeChannel(seen, p),
     values: p.values ?? [],
     isStringSelectMenu: () => p.values !== undefined,
     update: async (m: Seen["updates"][number]) => void seen.updates.push(m),
@@ -66,6 +86,8 @@ const newSeen = (): Seen => ({
   updates: [],
   edits: [],
   messageEdits: [],
+  posts: [],
+  fleetEdits: [],
   replies: [],
   deferred: 0,
 });
@@ -198,4 +220,35 @@ test("a click while another click is still updating says so, without blaming jev
   } finally {
     stopThinking(key);
   }
+});
+
+const placed = () =>
+  fresh({ phase: "placing", fleetMessageId: null, player: { ships: rowsFleet(), shots: [] } });
+
+test("Ready posts your fleet under the board", async () => {
+  const s = setup();
+  s.r.games.put(placed());
+  const seen = await click(s, "fleet:ready");
+  expect(seen.posts).toHaveLength(1);
+  expect(seen.posts[0]?.embeds?.[0]?.description).toContain("Your ships afloat:");
+  expect(live(s.r)?.fleetMessageId).toBe("f1");
+  expect(seen.updates[0]?.embeds?.[0]?.description).not.toContain("couldn't be shown");
+});
+
+test("if your fleet can't be posted the game goes on and the board says so", async () => {
+  const s = setup();
+  s.r.games.put(placed());
+  const seen = await click(s, "fleet:ready", { postFails: true });
+  expect(live(s.r)?.phase).toBe("playing");
+  expect(live(s.r)?.fleetMessageId).toBeNull();
+  expect(seen.updates[0]?.embeds?.[0]?.description).toContain("couldn't be shown");
+});
+
+test("jevos's shot and the end of the game edit your fleet message", async () => {
+  const s = setup();
+  s.r.games.put(fresh({ cursor: 11 }));
+  const turn = await click(s, "fleet:fire");
+  expect(turn.fleetEdits.map((e) => e.id)).toEqual(["f"]);
+  const end = await click(s, "fleet:resign");
+  expect(end.fleetEdits[0]?.embeds?.[0]?.description).toContain("You resigned.");
 });
