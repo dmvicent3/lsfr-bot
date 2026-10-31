@@ -28,6 +28,8 @@ export function drawOne(g: Game, a: Act): "can-play" | "passed" | "took" | Refus
 
   if (!s || g.step !== "play") return "wrong-step";
 
+  s.idle = 0;
+
   if (g.pending) return takeWaiting(g, s, seat, a);
 
   const [c] = takeCards(g, 1, a.random);
@@ -79,6 +81,7 @@ export function passDrawn(g: Game, a: Act): "passed" | Refusal | "wrong-step" {
 
   if (!s || g.step !== "drawn") return "wrong-step";
 
+  s.idle = 0;
   g.lastMove = `${s.name} drew a card`;
   passOn(g, seat, a.now);
 

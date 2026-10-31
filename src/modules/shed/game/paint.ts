@@ -14,6 +14,10 @@ export function pickColour(
 
   if (g.step !== "paint") return "wrong-step";
 
+  const s = g.seats[seat];
+
+  if (s) s.idle = 0;
+
   g.colour = a.colour;
   g.lastMove = `${g.lastMove} → ${colourEmoji(a.colour)}`;
   const next = g.afterPaint ?? nextSeat(g, seat);

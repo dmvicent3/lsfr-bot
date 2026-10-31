@@ -5,7 +5,8 @@ import { cardLabel } from "./label.ts";
 import { active, beginTurn, nextSeat } from "./order.ts";
 import type { Act, Card, Game, Value } from "./types.ts";
 
-type Clock = Pick<Act, "now" | "random">;
+/** The click's clock, and whether "+ Last card!" came with it. */
+type Clock = Pick<Act, "now" | "random"> & { last?: boolean };
 
 /** What went down: one value, n copies. */
 interface Played {
@@ -68,6 +69,13 @@ export function applyPlay(
   const first = cards[0];
 
   if (!first) return "played";
+
+  const s = g.seats[seat];
+
+  if (s) {
+    s.idle = 0;
+    s.catchable = s.hand.length === 1 && c.last !== true;
+  }
 
   g.discard.push(...cards);
   describe(g, seat, cards, first);
