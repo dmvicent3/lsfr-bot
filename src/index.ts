@@ -33,7 +33,9 @@ const modules: BotModule[] = [
   triviaModule(),
   cardsModule(),
   mangaModule(),
-  ...(config.llmUrl ? [chatModule({ llmUrl: config.llmUrl, searchUrl: config.searchUrl })] : []),
+  ...(config.llmUrl
+    ? [chatModule({ llmUrl: config.llmUrl, searchUrl: config.searchUrl, jev })]
+    : []),
   ...(jev ? [rssModule(jev, config.embedUrl), tictactoeModule(jev), fourModule(jev)] : []),
 ];
 const db = openDatabase(config.databasePath);

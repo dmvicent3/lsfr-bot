@@ -1,3 +1,4 @@
+import type { Jev } from "../../core/jev/types.ts";
 import type { InlineImage } from "../../core/types.ts";
 import type { selectImages } from "./images.ts";
 import type { Message } from "discord.js";
@@ -29,4 +30,6 @@ export interface ChainMessage {
 export interface ChatOptions {
   llmUrl: string;
   searchUrl: string | null;
+  /** Decides when a message needs a web search; null means never search. */
+  jev: Jev | null;
 }

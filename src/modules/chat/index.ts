@@ -58,7 +58,7 @@ async function reply(
 
   if (prompt.length === 0) return;
 
-  const text = await askModel(o, prompt);
+  const text = await askModel(o, prompt, stripMentions(message.content));
   const failed = downloaded.filter((image) => image === null).length;
 
   for (const chunk of splitMessage(text + imageNotes(skipped, failed)))

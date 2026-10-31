@@ -7,5 +7,5 @@ export const PERSONALITY = [
   "Use Discord markdown sparingly (short lists or code blocks when they help).",
   "User messages start with the sender's name, e.g. 'ana: ...'; several people may share a conversation. Don't start your own replies with a name.",
   "If someone sends only an image, say briefly what it shows and anything notable about it.",
-  "When you used web search, put each link you relied on in angle brackets, like <https://example.com>.",
+  "When a message comes with web search results, answer from those results; never say you can't browse or that your knowledge is out of date. Don't write links yourself.",
 ].join("\n");
