@@ -29,3 +29,60 @@ export interface Pending {
   kind: "plus2" | "paint4";
   total: number;
 }
+
+export interface Who {
+  userId: string;
+  name: string;
+}
+
+export interface Seat extends Who {
+  hand: Card[];
+  /** Turn timeouts in a row; MAX_IDLE drops the player. */
+  idle: number;
+  /** 1-based finishing place, set when out (or left last). */
+  place: number | null;
+  dropped: boolean;
+  /** Played down to one card without calling it: anyone may Catch until their next turn. */
+  catchable: boolean;
+}
+
+/** Where the current turn is: choosing a play, deciding on a drawn card, or picking a Paint colour. */
+export type Step = "play" | "drawn" | "paint";
+
+export type EndReason = "done" | "stop" | "lobby" | "lost";
+
+export interface Game {
+  id: number;
+  guildId: string;
+  channelId: string;
+  startedBy: string;
+  stacking: boolean;
+  phase: "lobby" | "playing" | "over";
+  endReason: EndReason | null;
+  seats: Seat[];
+  /** Index into seats. */
+  turn: number;
+  direction: 1 | -1;
+  /** Counts turns; carried in custom IDs so a click from an earlier turn is refused. */
+  turnNo: number;
+  turnEndsAt: number;
+  lobbyEndsAt: number;
+  /** The top of each pile is its last element. */
+  draw: Card[];
+  discard: Card[];
+  /** The colour to match; null only after a first-card Paint, until someone plays. */
+  colour: Colour | null;
+  pending: Pending | null;
+  step: Step;
+  /** The card drawn this turn, while the player decides on it. */
+  drawn: Card | null;
+  lastMove: string;
+  nextPlace: number;
+}
+
+export const TURN_MS = 60_000;
+export const LOBBY_MS = 600_000;
+export const MAX_IDLE = 3;
+export const HAND_SIZE = 7;
+export const MIN_PLAYERS = 2;
+export const MAX_PLAYERS = 8;
