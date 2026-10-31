@@ -24,3 +24,9 @@ export interface ChainMessage {
   text: string;
   images?: InlineImage[];
 }
+
+/** What chat needs: the local model, and SearXNG when web search is on. */
+export interface ChatOptions {
+  llmUrl: string;
+  searchUrl: string | null;
+}

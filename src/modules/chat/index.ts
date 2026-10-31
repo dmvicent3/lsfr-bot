@@ -1,13 +1,12 @@
-import type { Picked, Mention } from "./types.ts";
+import type { ChatOptions, Mention, Picked } from "./types.ts";
 import { Events, Message } from "discord.js";
-import { generate } from "../../core/llm.ts";
+import { askModel } from "./ask.ts";
 import type { InlineImage } from "../../core/types.ts";
 import { keepTyping } from "./typing.ts";
 import { log } from "../../core/log.ts";
 import type { BotModule, Ctx } from "../../core/types.ts";
 import { downloadImages, imageNotes, selectImages } from "./images.ts";
 import type { ImageRef } from "./types.ts";
-import { PERSONALITY } from "./personality.ts";
 import { buildConversation, collectChain, splitMessage, stripMentions } from "./text.ts";
 
 const parentOf = async (m: Message): Promise<Message | null> =>
@@ -36,12 +35,6 @@ function promptOf(chain: Message[], botId: string, byUrl: Map<string, InlineImag
   );
 }
 
-/** What chat needs: the local model, and SearXNG when web search is on. */
-export interface ChatOptions {
-  llmUrl: string;
-  searchUrl: string | null;
-}
-
 /** Downloads the chosen images, asks the model, and replies in Discord-sized chunks. */
 async function answer(o: ChatOptions, { message, chain, botId }: Mention, picked: Picked) {
   const { channel } = message;
@@ -65,7 +58,7 @@ async function reply(
 
   if (prompt.length === 0) return;
 
-  const text = await generate(prompt, { url: o.llmUrl, system: PERSONALITY });
+  const text = await askModel(o, prompt);
   const failed = downloaded.filter((image) => image === null).length;
 
   for (const chunk of splitMessage(text + imageNotes(skipped, failed))) await message.reply(chunk);
