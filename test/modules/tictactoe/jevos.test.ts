@@ -2,11 +2,17 @@ import { describe, expect, test } from "bun:test";
 import { JevError } from "../../../src/core/jev/http.ts";
 import type { Jev, YesNoOptions } from "../../../src/core/jev/types.ts";
 import { askJevos, jevosTurn } from "../../../src/modules/tictactoe/jevos.ts";
-import type { Game } from "../../../src/modules/tictactoe/types.ts";
+import type { Difficulty, Game } from "../../../src/modules/tictactoe/types.ts";
 import { board } from "./fixtures.ts";
 
+/** A position at a difficulty, as askJevos reads it. */
+const at = (cells: string, difficulty: Difficulty = "normal") => ({
+  board: board(cells),
+  difficulty,
+});
+
 /** X to move, nothing forced. */
-const MID_GAME = board("X---O----");
+const MID_GAME = at("X---O----");
 
 const unasked: Jev = {
   yesNo: async () => {
@@ -16,11 +22,11 @@ const unasked: Jev = {
 
 describe("askJevos", () => {
   test("takes a win without asking jev, over a block", async () => {
-    expect(await askJevos(unasked, board("OO-XX----"), () => 0)).toEqual({ square: 5, share: 1 });
+    expect(await askJevos(unasked, at("OO-XX----"), () => 0)).toEqual({ square: 5, share: 1 });
   });
 
   test("blocks the other side's win without asking jev", async () => {
-    expect(await askJevos(unasked, board("X-O-X----"), () => 0)).toEqual({ square: 8, share: 1 });
+    expect(await askJevos(unasked, at("X-O-X----"), () => 0)).toEqual({ square: 8, share: 1 });
   });
 
   test("asks about every empty square with room for the facts, and plays the top one", async () => {
@@ -39,6 +45,40 @@ describe("askJevos", () => {
     expect(opts).toEqual({ maxState: 4000 });
   });
 
+  test("on easy even a win is jev's call", async () => {
+    let asked: string[] = [];
+    const jev: Jev = {
+      async yesNo(_state, questions) {
+        asked = questions.map((q) => q.key);
+
+        return new Map(asked.map((k) => [k, k === "3" ? 0.9 : 0.1]));
+      },
+    };
+    const p = await askJevos(jev, at("OO-XX----", "easy"), () => 0);
+    expect(asked).toEqual(["3", "6", "7", "8", "9"]);
+    expect(p.square).toBe(2);
+  });
+
+  test("on hard the lone safe square is played without asking", async () => {
+    expect(await askJevos(unasked, at("X--------", "hard"), () => 0)).toEqual({
+      square: 4,
+      share: 1,
+    });
+  });
+
+  test("on hard jev only hears about the safe squares", async () => {
+    let asked: string[] = [];
+    const jev: Jev = {
+      async yesNo(_state, questions) {
+        asked = questions.map((q) => q.key);
+
+        return new Map(asked.map((k) => [k, 0.5]));
+      },
+    };
+    await askJevos(jev, at("----X----", "hard"), () => 0);
+    expect(asked).toEqual(["1", "3", "7", "9"]);
+  });
+
   test("guesses when jev fails", async () => {
     const jev: Jev = {
       yesNo: async () => {
@@ -47,7 +87,7 @@ describe("askJevos", () => {
     };
     const p = await askJevos(jev, MID_GAME, () => 0);
     expect(p.share).toBeNull();
-    expect(MID_GAME[p.square]).toBeNull();
+    expect(MID_GAME.board[p.square]).toBeNull();
   });
 
   test("other errors are not swallowed", async () => {
@@ -68,6 +108,7 @@ const game = (cells: string): Game => ({
   playerId: "u",
   board: board(cells),
   jevosMark: "O",
+  difficulty: "normal",
   updatedAt: 0,
 });
 

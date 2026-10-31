@@ -11,6 +11,7 @@ const GAME: Game = {
   playerId: "u1",
   board: board("X---O----"),
   jevosMark: "O",
+  difficulty: "normal",
   updatedAt: 0,
 };
 const PLAYING: Outcome = { kind: "playing" };
@@ -54,7 +55,7 @@ describe("renderGame", () => {
       style: ButtonStyle.Secondary,
       disabled: false,
     });
-    expect(m.embeds[0]?.title).toBe("Tic-tac-toe");
+    expect(m.embeds[0]?.title).toBe("Tic-tac-toe — normal");
     expect(text(view())).toContain("<@u1> 🟦 X vs jevos 🟥 O");
     expect(text(view())).toContain("Your turn.");
   });

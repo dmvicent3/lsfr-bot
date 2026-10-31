@@ -5,6 +5,14 @@ export type Mark = "X" | "O";
 
 export type Cell = Mark | null;
 
+export type Difficulty = "easy" | "normal" | "hard";
+
+/** The squares jevos may choose from; `forced` when code chose them (a win or a block). */
+export interface Candidates {
+  squares: number[];
+  forced: boolean;
+}
+
 /** Squares 0–8, left to right, top to bottom. */
 export type Board = readonly Cell[];
 
@@ -23,6 +31,7 @@ export interface Game {
   playerId: string;
   board: Board;
   jevosMark: Mark;
+  difficulty: Difficulty;
   updatedAt: number;
 }
 
@@ -44,6 +53,7 @@ export interface NewGame {
   guildId: string;
   channelId: string;
   playerId: string;
+  difficulty: Difficulty;
   now: number;
   random: () => number;
 }

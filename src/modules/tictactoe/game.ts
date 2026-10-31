@@ -11,6 +11,7 @@ export const startGame = (g: NewGame): Game => ({
   playerId: g.playerId,
   board: emptyBoard(),
   jevosMark: g.random() < 0.5 ? "X" : "O",
+  difficulty: g.difficulty,
   updatedAt: g.now,
 });
 

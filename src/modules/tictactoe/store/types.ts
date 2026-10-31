@@ -6,5 +6,6 @@ export interface GameRow {
   /** 9 characters of "-", "X" and "O". */
   board: string;
   jevos_mark: string;
+  difficulty: string;
   updated_at: number;
 }

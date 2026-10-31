@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
 import { guess, pick } from "../../../src/modules/tictactoe/pick.ts";
-import { board } from "./fixtures.ts";
 
 const answers = (o: Record<string, number>) => new Map(Object.entries(o));
 
@@ -23,7 +22,7 @@ describe("pick", () => {
 });
 
 describe("guess", () => {
-  test("an empty square, with no share", () => {
-    expect(guess(board("XOXOXO-XO"), () => 0.5)).toEqual({ square: 6, share: null });
+  test("one of the candidates, with no share", () => {
+    expect(guess([2, 6, 7], () => 0.5)).toEqual({ square: 6, share: null });
   });
 });

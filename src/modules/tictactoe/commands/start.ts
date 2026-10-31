@@ -3,6 +3,7 @@ import { reply } from "../../../core/replies.ts";
 import type { Ctx, SlashCommand } from "../../../core/types.ts";
 import { isStale, jevosToMove, outcomeOf, startGame } from "../game.ts";
 import { jevosTurn } from "../jevos.ts";
+import { levelOf } from "../levels.ts";
 import { renderGame } from "../render.ts";
 import { abandon, gameLink } from "../settle.ts";
 import { GameStore } from "../store/games.ts";
@@ -16,6 +17,7 @@ async function opening(i: ChatInputCommandInteraction, d: PlayDeps): Promise<Gam
     guildId: i.guildId ?? "",
     channelId: i.channelId,
     playerId: i.user.id,
+    difficulty: levelOf(i.options.getString("difficulty")),
     now: Date.now(),
     random: d.random,
   });

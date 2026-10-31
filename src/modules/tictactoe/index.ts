@@ -13,7 +13,7 @@ export function tictactoeModule(jev: Jev): BotModule {
     name: "tictactoe",
     title: "⭕ Tic-tac-toe",
     helpNote:
-      "jevos is the local yes/no model (jev): it plays by judging facts about each square, so it's beatable.",
+      "jevos is the local yes/no model (jev): it plays by judging facts about each square. Easy and normal are beatable; on hard it never loses.",
     commands: [tictactoeCommand(deps)],
     components: [moveHandler(deps), resignHandler],
     migrations: tictactoeMigrations,

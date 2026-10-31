@@ -1,5 +1,5 @@
 import type { JevQuestion } from "../../core/jev/types.ts";
-import { emptySquares, other } from "./board.ts";
+import { other } from "./board.ts";
 import { squareFacts } from "./facts.ts";
 import type { Board, Mark } from "./types.ts";
 
@@ -19,18 +19,18 @@ function boardText(board: Board, me: Mark): string {
   ].join("\n");
 }
 
-/** jevos's evidence: the board, then the facts for every empty square (probe wording, keep it). */
-export function evidence(board: Board, me: Mark): string {
-  const facts = emptySquares(board).map((s) => squareFacts(board, me, s));
+/** jevos's evidence: the board, then the facts for each candidate square (probe wording, keep it). */
+export function evidence(board: Board, me: Mark, squares: number[]): string {
+  const facts = squares.map((s) => squareFacts(board, me, s));
 
   return `${boardText(board, me)}\n\nFacts per empty square:\n${facts.join("\n")}`;
 }
 
-/** One yes/no question per empty square, keyed by the square's number. */
-export function questions(board: Board, me: Mark): JevQuestion[] {
+/** One yes/no question per candidate square, keyed by the square's number. */
+export function questions(squares: number[], me: Mark): JevQuestion[] {
   const them = other(me);
 
-  return emptySquares(board).map((s) => ({
+  return squares.map((s) => ({
     key: String(s + 1),
     instructions: `Should ${me} take square ${s + 1}? Use the facts: winning now beats everything, then stopping ${them}'s win, then making two ways to win; never leave ${them} a win.`,
   }));

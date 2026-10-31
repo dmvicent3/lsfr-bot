@@ -1,4 +1,5 @@
 import type { Database } from "bun:sqlite";
+import { levelOf } from "../levels.ts";
 import type { Board, Cell, Game, Mark } from "../types.ts";
 import type { GameRow } from "./types.ts";
 
@@ -17,6 +18,7 @@ const toGame = (r: GameRow): Game => ({
   playerId: r.player_id,
   board: toBoard(r.board),
   jevosMark: toMark(r.jevos_mark),
+  difficulty: levelOf(r.difficulty),
   updatedAt: r.updated_at,
 });
 
@@ -36,8 +38,8 @@ export class GameStore {
     this.db
       .query(
         `INSERT OR REPLACE INTO tictactoe_games
-           (guild_id, channel_id, message_id, player_id, board, jevos_mark, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+           (guild_id, channel_id, message_id, player_id, board, jevos_mark, difficulty, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       )
       .run(
         g.guildId,
@@ -46,6 +48,7 @@ export class GameStore {
         g.playerId,
         fromBoard(g.board),
         g.jevosMark,
+        g.difficulty,
         g.updatedAt,
       );
   }

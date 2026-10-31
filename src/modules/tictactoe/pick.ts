@@ -1,5 +1,4 @@
-import { emptySquares } from "./board.ts";
-import type { Board, JevosPick } from "./types.ts";
+import type { JevosPick } from "./types.ts";
 
 /** Squares scoring at least this part of the top P(yes) are equally likely, so games vary. */
 const CLOSE = 0.8;
@@ -15,9 +14,8 @@ export function pick(answers: Map<string, number>, random: () => number): JevosP
   return { square: Number(key) - 1, share: sum > 0 ? p / sum : 1 / entries.length };
 }
 
-/** A random empty square, for when jev cannot answer. */
-export function guess(board: Board, random: () => number): JevosPick {
-  const free = emptySquares(board);
-
-  return { square: free[Math.floor(random() * free.length)] ?? 0, share: null };
-}
+/** A random candidate square, for when jev cannot answer. */
+export const guess = (squares: number[], random: () => number): JevosPick => ({
+  square: squares[Math.floor(random() * squares.length)] ?? 0,
+  share: null,
+});

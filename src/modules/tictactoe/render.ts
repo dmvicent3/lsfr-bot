@@ -75,7 +75,13 @@ export function renderGame(v: GameView): BoardMessage {
   const lines = [players, ...(v.last ? [lastMove(v.last)] : []), status(v)];
 
   return {
-    embeds: [{ title: "Tic-tac-toe", color: EMBED_COLOR, description: lines.join("\n") }],
+    embeds: [
+      {
+        title: `Tic-tac-toe — ${game.difficulty}`,
+        color: EMBED_COLOR,
+        description: lines.join("\n"),
+      },
+    ],
     components: rows(v),
   };
 }

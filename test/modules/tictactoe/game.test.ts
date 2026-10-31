@@ -13,7 +13,14 @@ import { board } from "./fixtures.ts";
 
 const NOW = 1_000_000;
 const start = (r: number) =>
-  startGame({ guildId: "g", channelId: "c", playerId: "u", now: NOW, random: () => r });
+  startGame({
+    guildId: "g",
+    channelId: "c",
+    playerId: "u",
+    difficulty: "hard",
+    now: NOW,
+    random: () => r,
+  });
 const game = (cells: string, jevosMark: "X" | "O" = "O"): Game => ({
   ...start(0.7),
   board: board(cells),
@@ -26,6 +33,7 @@ describe("startGame", () => {
     expect(g.jevosMark).toBe("X");
     expect(jevosToMove(g)).toBe(true);
     expect(g.messageId).toBeNull();
+    expect(g.difficulty).toBe("hard");
   });
 
   test("a high coin makes the player X", () => {

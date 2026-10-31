@@ -7,7 +7,7 @@ const MID_GAME = board("X-O-X----");
 
 describe("evidence", () => {
   test("the board, then a facts block per empty square", () => {
-    const e = evidence(MID_GAME, "O");
+    const e = evidence(MID_GAME, "O", [1, 3, 5, 6, 7, 8]);
     expect(e).toStartWith(
       "Tic-tac-toe board (squares 1-9, left to right, top to bottom; a number means the square is empty):\n" +
         "X | 2 | O\n" +
@@ -24,15 +24,15 @@ describe("evidence", () => {
   });
 
   test("an empty board has no squares yet and fits jevos's 4,000 characters", () => {
-    const e = evidence(emptyBoard(), "X");
+    const e = evidence(emptyBoard(), "X", [0, 1, 2, 3, 4, 5, 6, 7, 8]);
     expect(e).toContain("X has squares: none. O has squares: none.");
     expect(e.length).toBeLessThan(4000);
   });
 });
 
 describe("questions", () => {
-  test("one per empty square, keyed by its number", () => {
-    const qs = questions(MID_GAME, "O");
+  test("one per candidate square, keyed by its number", () => {
+    const qs = questions([1, 3, 5, 6, 7, 8], "O");
     expect(qs.map((q) => q.key)).toEqual(["2", "4", "6", "7", "8", "9"]);
     expect(qs.at(-1)?.instructions).toBe(
       "Should O take square 9? Use the facts: winning now beats everything, then stopping X's win, then making two ways to win; never leave X a win.",

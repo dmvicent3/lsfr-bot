@@ -10,6 +10,7 @@ const GAME: Game = {
   playerId: "u1",
   board: board("---------"),
   jevosMark: "O",
+  difficulty: "normal",
   updatedAt: 0,
 };
 

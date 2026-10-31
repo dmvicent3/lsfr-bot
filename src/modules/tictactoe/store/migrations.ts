@@ -15,4 +15,8 @@ export const tictactoeMigrations: Migration[] = [
       );
     `,
   },
+  {
+    id: "tictactoe-002-difficulty",
+    sql: `ALTER TABLE tictactoe_games ADD COLUMN difficulty TEXT NOT NULL DEFAULT 'normal';`,
+  },
 ];
