@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { COLOURS } from "../../../../src/modules/shed/game/deck.ts";
-import { drawOne } from "../../../../src/modules/shed/game/draw.ts";
+import { drawCards } from "../../../../src/modules/shed/game/draw.ts";
 import { playCards } from "../../../../src/modules/shed/game/play.ts";
 import type { Value } from "../../../../src/modules/shed/game/types.ts";
 import { handView } from "../../../../src/modules/shed/render/hand.ts";
@@ -50,7 +50,7 @@ test("Take N with a waiting draw", () => {
 
 test("Play it / Pass after a draw; 4 colours after a Paint", () => {
   const g = table([[card("yellow", "1"), card("yellow", "2")], []], card("green", "7"));
-  drawOne(g, act(g, "u1"));
+  drawCards(g, act(g, "u1"));
   expect(ids(handView(g, "u1", 1))).toEqual(["shed:keep:1:0", "shed:pass:1"]);
   const p = table(
     [[card(null, "paint"), card("blue", "1"), card("red", "1")], [card("yellow", "5")]],

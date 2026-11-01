@@ -1,5 +1,5 @@
 import type { catchOut } from "../game/catch.ts";
-import type { drawOne, keepDrawn, passDrawn } from "../game/draw.ts";
+import type { drawCards, keepDrawn, passDrawn } from "../game/draw.ts";
 import type { join, leaveLobby, startGame, toggleStacking } from "../game/lobby.ts";
 import type { pickColour } from "../game/paint.ts";
 import type { PlayResult } from "../game/play.ts";
@@ -26,10 +26,10 @@ export const PLAYS: Record<PlayResult, string> = {
   "no-stacking": "Stacking is off in this game.",
 };
 
-export const DRAWS: Record<ReturnType<typeof drawOne>, string> = {
+export const DRAWS: Record<ReturnType<typeof drawCards>, string> = {
   ...REFUSALS,
-  "can-play": "You drew a card that plays.",
-  passed: "You drew a card. Your turn passed.",
+  "can-play": "You drew until a card played.",
+  passed: "No card that plays was left to draw. Your turn passed.",
   took: "You took the cards. Your turn passed.",
   "wrong-step": WRONG_STEP,
 };

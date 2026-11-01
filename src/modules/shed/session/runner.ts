@@ -1,6 +1,6 @@
 import { catchOut } from "../game/catch.ts";
 import { advance } from "../game/clock.ts";
-import { drawOne, keepDrawn, passDrawn } from "../game/draw.ts";
+import { drawCards, keepDrawn, passDrawn } from "../game/draw.ts";
 import { join, leaveLobby, startGame, toggleStacking } from "../game/lobby.ts";
 import { pickColour } from "../game/paint.ts";
 import { playCards } from "../game/play.ts";
@@ -60,8 +60,8 @@ export class Runner extends Session {
     return this.turn(c, playCards);
   }
 
-  onDraw(c: TurnClick): Turn<ReturnType<typeof drawOne>> {
-    return this.turn(c, drawOne);
+  onDraw(c: TurnClick): Turn<ReturnType<typeof drawCards>> {
+    return this.turn(c, drawCards);
   }
 
   onKeep(c: KeepClick): Turn<ReturnType<typeof keepDrawn>> {

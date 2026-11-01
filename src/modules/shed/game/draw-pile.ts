@@ -1,4 +1,5 @@
 import { shuffle } from "./deck.ts";
+import { isLegal } from "./legal.ts";
 import type { Card, Game } from "./types.ts";
 
 /** Turns the discard pile, all but its top card, into a fresh draw pile; false when there is none. */
@@ -23,6 +24,30 @@ export function takeCards(g: Game, n: number, random: () => number): Card[] {
     const c = g.draw.pop();
 
     if (c) out.push(c);
+  }
+
+  return out;
+}
+
+/** True when `c` plays on the top card. */
+export const playsOnTop = (g: Game, c: Card): boolean => {
+  const top = g.discard.at(-1);
+
+  return top !== undefined && isLegal(c, top, g.colour, null);
+};
+
+/** Cards one at a time until one plays on the top card, `max` are taken, or the piles run dry. */
+export function takeUntilPlayable(g: Game, max: number, random: () => number): Card[] {
+  const out: Card[] = [];
+
+  while (out.length < max) {
+    const [c] = takeCards(g, 1, random);
+
+    if (!c) break;
+
+    out.push(c);
+
+    if (playsOnTop(g, c)) break;
   }
 
   return out;

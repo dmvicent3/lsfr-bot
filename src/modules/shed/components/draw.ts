@@ -2,7 +2,7 @@ import type { ComponentHandler } from "../../../core/types.ts";
 import { inHand, turnClick } from "./answer.ts";
 import { DRAWS } from "./replies.ts";
 
-/** `shed:draw:<turn>`: draw one, or take the waiting draw. */
+/** `shed:draw:<turn>`: draw until a card plays, or take the waiting draw. */
 export const drawHandler: ComponentHandler = {
   id: "shed:draw",
   handle: (i, [turn]) =>

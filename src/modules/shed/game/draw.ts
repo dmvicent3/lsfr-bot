@@ -1,7 +1,6 @@
-import { takeCards } from "./draw-pile.ts";
+import { playsOnTop, takeCards, takeUntilPlayable } from "./draw-pile.ts";
 import { applyPlay } from "./effects.ts";
 import { turnSeat } from "./guard.ts";
-import { isLegal } from "./legal.ts";
 import { beginTurn, nextSeat } from "./order.ts";
 import type { Act, Game, Refusal, Seat } from "./types.ts";
 
@@ -18,8 +17,17 @@ function takeWaiting(g: Game, s: Seat, seat: number, a: Act): "took" {
   return "took";
 }
 
-/** Draw: takes a waiting draw, or draws one card that may then be played ("can-play") or passes. */
-export function drawOne(g: Game, a: Act): "can-play" | "passed" | "took" | Refusal | "wrong-step" {
+/** The board's line for a turn's draw. */
+function drewLine(name: string, n: number): string {
+  if (n === 0) return `${name} couldn't draw: no cards left`;
+
+  return n === 1 ? `${name} drew a card` : `${name} drew ${n} cards`;
+}
+
+type DrawResult = "can-play" | "passed" | "took" | Refusal | "wrong-step";
+
+/** Takes a waiting draw, or draws up to `max` cards until one plays: it may then be played ("can-play"), else the turn passes. */
+function drawTurn(g: Game, a: Act, max: number): DrawResult {
   const seat = turnSeat(g, a);
 
   if (typeof seat === "string") return seat;
@@ -32,23 +40,28 @@ export function drawOne(g: Game, a: Act): "can-play" | "passed" | "took" | Refus
 
   if (g.pending) return takeWaiting(g, s, seat, a);
 
-  const [c] = takeCards(g, 1, a.random);
-  const top = g.discard.at(-1);
+  const got = takeUntilPlayable(g, max, a.random);
+  const c = got.at(-1);
+  s.hand.push(...got);
+  g.lastMove = drewLine(s.name, got.length);
 
-  if (c) s.hand.push(c);
-
-  if (c && top && isLegal(c, top, g.colour, null)) {
+  if (c && playsOnTop(g, c)) {
     g.step = "drawn";
     g.drawn = c;
 
     return "can-play";
   }
 
-  g.lastMove = `${s.name} drew a card`;
   passOn(g, seat, a.now);
 
   return "passed";
 }
+
+/** The Draw button: takes a waiting draw, or draws until a card plays. */
+export const drawCards = (g: Game, a: Act): DrawResult => drawTurn(g, a, Number.POSITIVE_INFINITY);
+
+/** A timeout's draw: takes a waiting draw, or draws a single card. */
+export const drawOne = (g: Game, a: Act): DrawResult => drawTurn(g, a, 1);
 
 /** "Play it": the card just drawn goes down. */
 export function keepDrawn(
@@ -82,7 +95,6 @@ export function passDrawn(g: Game, a: Act): "passed" | Refusal | "wrong-step" {
   if (!s || g.step !== "drawn") return "wrong-step";
 
   s.idle = 0;
-  g.lastMove = `${s.name} drew a card`;
   passOn(g, seat, a.now);
 
   return "passed";
