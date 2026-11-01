@@ -24,6 +24,8 @@ export interface Deps {
   fetchImage: (file: string) => Promise<PictureFile | null>;
   /** The clock, read again once a picture has downloaded so the round starts when it is posted. */
   now: () => number;
+  /** Started with buttons only: no typed rounds. */
+  buttonsOnly: boolean;
   /** Called once when the session ends, to drop its timer and registry entry. */
   onEnd: () => void;
 }

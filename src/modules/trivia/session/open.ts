@@ -51,6 +51,7 @@ async function choose(
     lastAsked: d.repo.asked.lastAskedMap(s.guildId),
     topic: s.topic?.name ?? null,
     random: d.random,
+    buttonsOnly: d.buttonsOnly,
   };
   const choice = pickRound(p);
 

@@ -1,5 +1,6 @@
 import { log } from "../../../core/log.ts";
 import type { Ctx } from "../../../core/types.ts";
+import { buttonsOnlyBank } from "../buttons-only.ts";
 import { kaosLists, pictures, questions } from "../data/load.ts";
 import { TriviaRepo } from "../store/repo.ts";
 import { downloadPicture } from "./image.ts";
@@ -10,19 +11,24 @@ import type { Deps } from "./types.ts";
 
 const TICK_MS = 1_000;
 
-/** The bundled questions, lists and pictures, where picture images come from, and the clock. */
-const bank = (): Pick<Deps, "questions" | "lists" | "pictures" | "fetchImage" | "now"> => ({
-  questions: questions(),
-  lists: kaosLists(),
-  pictures: pictures(),
-  fetchImage: (file) => downloadPicture(file, fetch),
-  now: Date.now,
-});
+/** The bundled questions, lists and pictures (trimmed to button rounds), where picture images come from, and the clock. */
+function bank(
+  buttonsOnly: boolean,
+): Pick<Deps, "questions" | "lists" | "pictures" | "buttonsOnly" | "fetchImage" | "now"> {
+  const all = { questions: questions(), lists: kaosLists(), pictures: pictures() };
+
+  return {
+    ...(buttonsOnly ? buttonsOnlyBank(all) : all),
+    buttonsOnly,
+    fetchImage: (file) => downloadPicture(file, fetch),
+    now: Date.now,
+  };
+}
 
 /** Starts a session in a channel and its one-second tick; "busy" when one is already live there. */
 export function startSession(
   ctx: Ctx,
-  p: { guildId: string; channelId: string; userId: string; now: number },
+  p: { guildId: string; channelId: string; userId: string; now: number; buttonsOnly: boolean },
   random: () => number,
 ): "started" | "busy" {
   const repo = new TriviaRepo(ctx.db);
@@ -37,7 +43,7 @@ export function startSession(
       repo,
       poster: discordPoster(ctx.client, p.channelId),
       random,
-      ...bank(),
+      ...bank(p.buttonsOnly),
       onEnd: () => {
         clearInterval(timer);
         unregister(p.channelId, runner);

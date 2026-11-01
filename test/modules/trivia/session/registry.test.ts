@@ -14,6 +14,7 @@ const runner = (sessionId: number): Runner =>
       lists: [],
       pictures: [],
       fetchImage: async () => null,
+      buttonsOnly: false,
       now: () => 0,
       onEnd: () => undefined,
     },

@@ -49,3 +49,19 @@ export interface Picture {
   aliases: string[];
   difficulty: Difficulty;
 }
+
+/** What rounds are drawn from. */
+export interface Bank {
+  questions: readonly Question[];
+  lists: readonly KaosList[];
+  pictures: readonly Picture[];
+}
+
+/** One round draw: the bank, when each item was last asked, the chosen topic, randomness. */
+export interface PickParams extends Bank {
+  lastAsked: ReadonlyMap<string, number>;
+  topic: string | null;
+  random: () => number;
+  /** No typed rounds: no KAOS, text questions with options only, pictures as buttons. */
+  buttonsOnly?: boolean;
+}

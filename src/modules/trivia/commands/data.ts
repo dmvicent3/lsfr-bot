@@ -11,7 +11,16 @@ export const data = new SlashCommandBuilder()
   .setName("trivia")
   .setDescription("Channel trivia")
   .setContexts(InteractionContextType.Guild)
-  .addSubcommand((sub) => sub.setName("start").setDescription("Start trivia in this channel"))
+  .addSubcommand((sub) =>
+    sub
+      .setName("start")
+      .setDescription("Start trivia in this channel")
+      .addBooleanOption((o) =>
+        o
+          .setName("buttons")
+          .setDescription("Buttons only: no typed answers or KAOS (default: off)"),
+      ),
+  )
   .addSubcommand((sub) => sub.setName("stop").setDescription("Stop trivia in this channel"))
   .addSubcommand((sub) =>
     sub

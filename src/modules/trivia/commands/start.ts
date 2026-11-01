@@ -5,11 +5,22 @@ import type { CommandCtx } from "./types.ts";
 
 /** Public, so the channel sees who started it; the first question follows on the next tick. */
 export async function start({ i, guildId, ctx, random }: CommandCtx): Promise<void> {
-  const where = { guildId, channelId: i.channelId, userId: i.user.id, now: Date.now() };
+  const buttonsOnly = i.options.getBoolean("buttons") ?? false;
+  const where = {
+    guildId,
+    channelId: i.channelId,
+    userId: i.user.id,
+    now: Date.now(),
+    buttonsOnly,
+  };
 
   if (startSession(ctx, where, random) === "busy")
     return reply(i, "Trivia is already running here.");
 
   const name = memberName(i);
-  await i.reply({ content: `🧠 Trivia started by **${name}**`, allowedMentions: { parse: [] } });
+  const mode = buttonsOnly ? " (buttons only)" : "";
+  await i.reply({
+    content: `🧠 Trivia started by **${name}**${mode}`,
+    allowedMentions: { parse: [] },
+  });
 }

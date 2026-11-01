@@ -54,6 +54,7 @@ function setup(p: Setup = {}) {
       lists: p.lists ?? [kaos(1)],
       pictures: p.pictures ?? [],
       fetchImage: p.fetchImage ?? (async () => null),
+      buttonsOnly: false,
       now: p.now ?? (() => T0),
       onEnd: () => ended++,
     },
