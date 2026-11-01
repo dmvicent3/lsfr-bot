@@ -23,11 +23,13 @@ export function undo(g: Game, now: number): Game | PhaseError {
   return withShips(g, undoShip(g.player.ships), now);
 }
 
-/** Places every ship still to place at random. */
+/** Places every ship still to place at random; with all five placed, re-rolls the whole fleet. */
 export function randomRest(g: Game, random: () => number, now: number): Game | PhaseError {
   if (g.phase !== "placing") return { error: "phase" };
 
-  return withShips(g, fillFleet(g.player.ships, random), now);
+  const kept = nextKind(g.player.ships) === null ? [] : g.player.ships;
+
+  return withShips(g, fillFleet(kept, random), now);
 }
 
 /** Moves the cursor to row or column `value` (0–9), keeping the other. */

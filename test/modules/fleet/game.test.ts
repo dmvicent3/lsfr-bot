@@ -7,7 +7,8 @@ import {
   startGame,
   touch,
 } from "../../../src/modules/fleet/game.ts";
-import { placeShip, ready } from "../../../src/modules/fleet/placing.ts";
+import { placeShip, randomRest, ready } from "../../../src/modules/fleet/placing.ts";
+import { placingControls } from "../../../src/modules/fleet/render/controls.ts";
 import type { Game, Moved } from "../../../src/modules/fleet/types.ts";
 import { playing, rowsFleet } from "./fixtures.ts";
 
@@ -91,4 +92,27 @@ test("touch", () => {
 
 test("placement controls only while placing", () => {
   expect(placeShip(playing(), 1)).toEqual({ error: "phase" });
+});
+
+test("Random fills the rest; once all five are placed it re-rolls the whole fleet", () => {
+  const two = { ...fresh(), player: { ships: rowsFleet().slice(0, 2), shots: [] } };
+  const filled = readied(randomRest(two, Math.random, 1));
+  expect(filled.player.ships.slice(0, 2)).toEqual(rowsFleet().slice(0, 2));
+  expect(filled.player.ships).toHaveLength(5);
+  const full = { ...fresh(), player: { ships: rowsFleet(), shots: [] } };
+  const rolled = readied(randomRest(full, Math.random, 1));
+  expect(rolled.player.ships).toHaveLength(5);
+  expect(new Set(rolled.player.ships.flatMap((x) => x.cells)).size).toBe(17);
+  expect(rolled.player.ships).not.toEqual(rowsFleet());
+});
+
+const randomButton = (g: Game) =>
+  placingControls(g)
+    .flatMap((r) => r.components)
+    .find((c) => "custom_id" in c && c.custom_id === "fleet:random");
+
+test("the Random button stays on: Random while placing, Re-roll once all are placed", () => {
+  expect(randomButton(fresh())).toMatchObject({ label: "Random", disabled: false });
+  const full = { ...fresh(), player: { ships: rowsFleet(), shots: [] } };
+  expect(randomButton(full)).toMatchObject({ label: "Re-roll", disabled: false });
 });

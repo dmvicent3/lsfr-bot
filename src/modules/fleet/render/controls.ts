@@ -54,7 +54,7 @@ export function placingControls(g: Game): Row[] {
       button("fleet:dir:down", "Down", facing("down")),
       button("fleet:place", "Place", ButtonStyle.Success, done),
       button("fleet:undo", "Undo", ButtonStyle.Secondary, g.player.ships.length === 0),
-      button("fleet:random", "Random", ButtonStyle.Secondary, done),
+      button("fleet:random", done ? "Re-roll" : "Random", ButtonStyle.Secondary),
     ]),
     row([...(done ? [button("fleet:ready", "Ready", ButtonStyle.Success)] : []), RESIGN]),
   ];
