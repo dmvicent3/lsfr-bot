@@ -8,9 +8,14 @@ const MAX_FALLBACK_LABEL = 12;
 export function formatCountdown(ms: number): string {
   if (ms > 48 * HOUR) return `${Math.floor(ms / DAY)}d`;
 
-  if (ms > HOUR) return `${Math.floor(ms / HOUR)}h`;
+  if (ms > 2 * HOUR) return `${Math.floor(ms / HOUR)}h`;
 
-  return `${Math.ceil(ms / (10 * MIN)) * 10}m`;
+  const minutes = Math.ceil(ms / (10 * MIN)) * 10;
+
+  // Under 2h a floored "1h" reads as an hour away when it may be nearly two; keep 10m steps.
+  if (minutes <= 60) return `${minutes}m`;
+
+  return minutes === 120 ? "2h" : `1h${minutes - 60}m`;
 }
 
 export function slugify(s: string): string {
