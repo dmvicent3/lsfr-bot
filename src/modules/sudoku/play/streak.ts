@@ -1,4 +1,4 @@
-import { nextStreak } from "../../../core/daily.ts";
+import { dailyStreak as streakAfter } from "../../../core/daily.ts";
 import type { SudokuRepo } from "../store/repo.ts";
 import type { Game } from "../types.ts";
 
@@ -8,8 +8,5 @@ export function dailyStreak(repo: SudokuRepo, g: Game): number {
 
   if (sameDay?.streak) return sameDay.streak;
 
-  const last = repo.games.lastSolvedBefore(g.guildId, g.userId, g.date);
-  const prev = last ? { date: last.date, won: true, streak: last.streak ?? 0 } : null;
-
-  return nextStreak(prev, g.date, true);
+  return streakAfter(repo.games.lastSolvedBefore(g.guildId, g.userId, g.date), g.date);
 }

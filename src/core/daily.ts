@@ -37,6 +37,16 @@ export function nextStreak(last: LastGame | null, date: string, won: boolean): n
   return last?.won && last.date === previousDate(date) ? last.streak + 1 : 1;
 }
 
+/** The streak after a game on `date` when every finished game counts as a day. */
+export function dailyStreak(
+  last: { date: string; streak: number | null } | null,
+  date: string,
+): number {
+  const prev = last ? { date: last.date, won: true, streak: last.streak ?? 0 } : null;
+
+  return nextStreak(prev, date, true);
+}
+
 /** Alive while the latest game was today or yesterday. */
 export function currentStreak(last: LastGame | null, today: string): number {
   if (!last) return 0;
