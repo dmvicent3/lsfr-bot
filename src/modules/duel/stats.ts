@@ -1,8 +1,7 @@
+import { sum } from "../../core/sum.ts";
 import { currentStreak } from "../../core/daily.ts";
 import { QUESTIONS } from "./questions/bands.ts";
 import type { Game, PlayerStats } from "./types.ts";
-
-const sum = (ns: number[]): number => ns.reduce((a, b) => a + b, 0);
 
 /** Totals over one player's finished daily games, oldest first. */
 export function playerStats(all: Game[], today: string): PlayerStats {

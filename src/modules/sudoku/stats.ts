@@ -1,7 +1,6 @@
+import { sum } from "../../core/sum.ts";
 import { currentStreak } from "../../core/daily.ts";
 import type { Game, Level, PlayerStats } from "./types.ts";
-
-const sum = (ns: number[]): number => ns.reduce((a, b) => a + b, 0);
 
 const perLevel = <T>(f: (level: Level) => T): Record<Level, T> => ({
   easy: f("easy"),

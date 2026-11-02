@@ -1,23 +1,13 @@
 import type { Database } from "bun:sqlite";
-import { getSetting, setSetting } from "../../core/settings.ts";
-import { isTimeZone } from "../../core/zoned.ts";
+import { DEFAULT_TIME_ZONE, zoneSetting } from "../../core/zone-setting.ts";
 
-export const DEFAULT_TIME_ZONE = "Europe/Lisbon";
+export { DEFAULT_TIME_ZONE };
 
-const zoneKey = (guildId: string): string => `sudoku.timezone.${guildId}`;
+const zone = zoneSetting("sudoku");
 
 /** The server's time zone; unset or no longer valid is the default. */
-export function sudokuTimeZone(db: Database, guildId: string): string {
-  const tz = getSetting(db, zoneKey(guildId)) ?? DEFAULT_TIME_ZONE;
-
-  return isTimeZone(tz) ? tz : DEFAULT_TIME_ZONE;
-}
+export const sudokuTimeZone = (db: Database, guildId: string): string => zone.get(db, guildId);
 
 /** Returns what was wrong, or null once saved. */
-export function saveSudokuTimeZone(db: Database, guildId: string, tz: string): string | null {
-  if (!isTimeZone(tz)) return `Unknown time zone: ${tz}.`;
-
-  setSetting(db, zoneKey(guildId), tz);
-
-  return null;
-}
+export const saveSudokuTimeZone = (db: Database, guildId: string, tz: string): string | null =>
+  zone.save(db, guildId, tz);
