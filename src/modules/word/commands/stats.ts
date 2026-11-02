@@ -1,7 +1,7 @@
 import { MessageFlags } from "discord.js";
+import { rankOf } from "../../../core/daily.ts";
 import { dateIn } from "../../../core/zoned.ts";
 import { periodStandings } from "../play/standings.ts";
-import { rankOf } from "../ranking.ts";
 import { type Ranks, renderStats } from "../render/stats.ts";
 import { wordSettings } from "../settings.ts";
 import { playerStats } from "../stats.ts";

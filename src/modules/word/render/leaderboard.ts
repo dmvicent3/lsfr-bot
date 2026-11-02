@@ -1,4 +1,4 @@
-import { rankOf } from "../ranking.ts";
+import { rankOf } from "../../../core/daily.ts";
 import type { DateRange, LeaderboardPage, Period, Standing } from "../types.ts";
 
 export const PAGE_SIZE = 10;

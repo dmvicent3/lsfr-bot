@@ -7,10 +7,8 @@ export interface WordLists {
 /** One letter's feedback: right place, elsewhere in the word, or not in it. */
 export type Mark = "hit" | "near" | "miss";
 
-export type Period = "today" | "week" | "month" | "all";
-
 export type { LastGame } from "../../core/daily.ts";
-export type { DateRange } from "../../core/types.ts";
+export type { DateRange, Period } from "../../core/types.ts";
 
 export type RefusedReason = "finished" | "length" | "letters" | "unknown" | "repeat";
 

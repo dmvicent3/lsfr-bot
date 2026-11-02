@@ -4,6 +4,7 @@ import {
   nextStreak,
   previousDate,
   puzzleNumber,
+  rankOf,
   untilNext,
 } from "../../src/core/daily.ts";
 
@@ -50,4 +51,10 @@ test("untilNext shows hours and minutes", () => {
 
 test("untilNext drops zero hours", () => {
   expect(untilNext(Date.UTC(2026, 6, 1, 22, 48), "Europe/Lisbon")).toBe("12m");
+});
+
+test("rankOf is 1-based, null when absent", () => {
+  const list = [{ userId: "a" }, { userId: "b" }];
+  expect(rankOf(list, "b")).toBe(2);
+  expect(rankOf(list, "z")).toBeNull();
 });

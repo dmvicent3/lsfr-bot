@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { rankOf, standings } from "../../../src/modules/word/ranking.ts";
+import { standings } from "../../../src/modules/word/ranking.ts";
 import type { Game } from "../../../src/modules/word/types.ts";
 import { game } from "./fixtures.ts";
 
@@ -65,10 +65,4 @@ test("a standing sums the player's games", () => {
     avgAttempts: 3,
     lastFinishedAt: 9,
   });
-});
-
-test("rankOf is 1-based, null when absent", () => {
-  const list = standings([game("a", d1, { points: 200 }), game("b", d1, { points: 100 })]);
-  expect(rankOf(list, "b")).toBe(2);
-  expect(rankOf(list, "z")).toBeNull();
 });

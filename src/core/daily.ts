@@ -35,3 +35,10 @@ export function currentStreak(last: LastGame | null, today: string): number {
 
   return last.date === today || last.date === previousDate(today) ? last.streak : 0;
 }
+
+/** 1-based rank, null when the player has no entry in the list. */
+export function rankOf(list: readonly { userId: string }[], userId: string): number | null {
+  const i = list.findIndex((s) => s.userId === userId);
+
+  return i < 0 ? null : i + 1;
+}

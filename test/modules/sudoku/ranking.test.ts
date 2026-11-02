@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { rankOf, standings } from "../../../src/modules/sudoku/ranking.ts";
+import { standings } from "../../../src/modules/sudoku/ranking.ts";
 import type { Game } from "../../../src/modules/sudoku/types.ts";
 import { EASY, SOLVED } from "./fixtures.ts";
 
@@ -40,10 +40,4 @@ test("ties go to more solves, then the earlier last solve, then user ID", () => 
   ]);
   expect(list.map((s) => s.userId)).toEqual(["b", "c", "d", "a"]);
   expect(list[0]?.lastSolvedAt).toBe(2);
-});
-
-test("rankOf is 1-based and null for strangers", () => {
-  const list = standings([game("a", 100, 1), game("b", 200, 2)]);
-  expect(rankOf(list, "a")).toBe(2);
-  expect(rankOf(list, "z")).toBeNull();
 });

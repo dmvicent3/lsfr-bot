@@ -1,4 +1,4 @@
-import type { DateRange } from "./types.ts";
+import type { DateRange, Period } from "./types.ts";
 import { wallToInstant } from "./zoned.ts";
 
 export const DAY_MS = 86_400_000;
@@ -36,6 +36,21 @@ export function monthRange(today: string): DateRange {
 }
 
 export const ALL_TIME: DateRange = { from: "0000-01-01", to: "9999-12-31", label: "all time" };
+
+/** The dates a leaderboard period covers; `todayLabel` names the single-day range. */
+export function periodRange(
+  period: Period,
+  today: string,
+  todayLabel: (today: string) => string,
+): DateRange {
+  if (period === "week") return weekRange(today);
+
+  if (period === "month") return monthRange(today);
+
+  if (period === "all") return ALL_TIME;
+
+  return { from: today, to: today, label: todayLabel(today) };
+}
 
 /** The instants a date range covers in `tz`; `to` is the midnight after the last day. */
 export function rangeInstants(range: DateRange, tz: string): { from: number; to: number } {

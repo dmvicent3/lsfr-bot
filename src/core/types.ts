@@ -39,6 +39,8 @@ export interface DateRange {
   label: string;
 }
 
+export type Period = "today" | "week" | "month" | "all";
+
 export type FetchFn = (url: string, init?: RequestInit) => Promise<Response>;
 
 /** Image bytes sent inline, base64-encoded. */

@@ -1,5 +1,11 @@
 import { expect, test } from "bun:test";
-import { ALL_TIME, monthRange, rangeInstants, weekRange } from "../../src/core/periods.ts";
+import {
+  ALL_TIME,
+  monthRange,
+  periodRange,
+  rangeInstants,
+  weekRange,
+} from "../../src/core/periods.ts";
 
 test("week runs Monday to Sunday across a month end", () => {
   expect(weekRange("2026-10-28")).toEqual({
@@ -37,4 +43,17 @@ test("all time instants span everything stored", () => {
 
   expect(from).toBeLessThan(0);
   expect(to).toBeGreaterThan(Date.UTC(3000, 0, 1));
+});
+
+const label = (d: string): string => `Game ${d}`;
+
+test("periodRange picks the range and labels today with the caller's label", () => {
+  expect(periodRange("today", "2026-11-02", label)).toEqual({
+    from: "2026-11-02",
+    to: "2026-11-02",
+    label: "Game 2026-11-02",
+  });
+  expect(periodRange("week", "2026-11-02", label)).toEqual(weekRange("2026-11-02"));
+  expect(periodRange("month", "2026-11-02", label)).toEqual(monthRange("2026-11-02"));
+  expect(periodRange("all", "2026-11-02", label)).toBe(ALL_TIME);
 });

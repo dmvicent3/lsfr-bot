@@ -23,10 +23,3 @@ export const standings = (games: Game[]): Standing[] =>
       a.lastSolvedAt - b.lastSolvedAt ||
       (a.userId < b.userId ? -1 : 1),
   );
-
-/** 1-based rank, null when the player has no games in the list. */
-export function rankOf(list: Standing[], userId: string): number | null {
-  const i = list.findIndex((s) => s.userId === userId);
-
-  return i < 0 ? null : i + 1;
-}

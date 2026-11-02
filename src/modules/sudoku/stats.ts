@@ -11,10 +11,13 @@ const perLevel = <T>(f: (level: Level) => T): Record<Level, T> => ({
 
 /** Solve times in ms for one level. */
 const times = (games: Game[], level: Level): number[] =>
-  games.filter((g) => g.level === level).map((g) => (g.solvedAt ?? g.startedAt) - g.startedAt);
+  games.flatMap((g) =>
+    g.level === level && g.solvedAt !== null ? [g.solvedAt - g.startedAt] : [],
+  );
 
 /** Totals over one player's solved daily games, oldest first. */
-export function playerStats(games: Game[], today: string): PlayerStats {
+export function playerStats(all: Game[], today: string): PlayerStats {
+  const games = all.filter((g) => g.solvedAt !== null);
   const last = games.at(-1);
   const at = (level: Level): number[] => times(games, level);
 

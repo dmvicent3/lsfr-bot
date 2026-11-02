@@ -61,7 +61,7 @@ export interface GameKey {
   slot: string;
 }
 
-export type Period = "today" | "week" | "month" | "all";
+export type { Period } from "../../core/types.ts";
 
 export interface Standing {
   userId: string;

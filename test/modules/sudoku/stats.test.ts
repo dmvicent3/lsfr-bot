@@ -62,3 +62,19 @@ test("no games", () => {
     longestStreak: 0,
   });
 });
+
+test("an unsolved game does not count", () => {
+  const open: Game = {
+    ...game("2026-11-04", "easy", { ms: 0, points: 0, streak: 0 }),
+    solvedAt: null,
+    points: null,
+    streak: null,
+  };
+  const s = playerStats(
+    [game("2026-11-03", "easy", { ms: 60_000, points: 100, streak: 1 }), open],
+    "2026-11-04",
+  );
+  expect(s.solved.easy).toBe(1);
+  expect(s.bestMs.easy).toBe(60_000);
+  expect(s.avgMs.easy).toBe(60_000);
+});
