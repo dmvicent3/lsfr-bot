@@ -7,6 +7,7 @@ import { moveHandler } from "../../../../src/modules/sudoku/components/move.ts";
 import { newHandler } from "../../../../src/modules/sudoku/components/new.ts";
 import { pageArgs } from "../../../../src/modules/sudoku/components/page.ts";
 import { putHandler } from "../../../../src/modules/sudoku/components/put.ts";
+import { EASY_SOLUTION } from "../fixtures.ts";
 import { makeGame } from "../play/game.ts";
 import { freshDb } from "../store/fixtures.ts";
 import { fakeClick } from "./fake.ts";
@@ -63,10 +64,23 @@ test("new replaces the practice game at the same level", async () => {
   const { i, calls } = fakeClick("u");
   await newHandler(() => 0.5).handle(i, ["practice"], ctxOf(db));
 
-  expect(calls.update).toHaveLength(1);
+  expect(calls.order).toEqual(["deferUpdate", "editReply"]);
+  expect(calls.update).toHaveLength(0);
   const fresh = repo.games.get(practice());
   expect(fresh?.level).toBe("easy");
   expect(fresh?.startedAt).toBeGreaterThan(0);
+});
+
+test("new works on a solved practice board and replaces it", async () => {
+  const { db, repo } = freshDb();
+  repo.games.replace(practice({ level: "medium", solvedAt: 5, cells: EASY_SOLUTION }));
+  const { i, calls } = fakeClick("u");
+  await newHandler(() => 0.5).handle(i, ["practice"], ctxOf(db));
+
+  expect(calls.order).toEqual(["deferUpdate", "editReply"]);
+  const fresh = repo.games.get(practice());
+  expect(fresh?.level).toBe("medium");
+  expect(fresh?.solvedAt).toBeNull();
 });
 
 test("new on a daily board is out of date", async () => {

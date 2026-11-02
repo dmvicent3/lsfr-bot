@@ -17,7 +17,10 @@ export const newHandler = (random: () => number): ComponentHandler => ({
     if (!key || !current) return tell(i, STALE);
 
     const { guildId, userId } = key;
+
+    /** Generating can outlast Discord's 3 s for a first answer, so acknowledge the click first. */
+    await i.deferUpdate();
     const fresh = openPractice(repo, { guildId, userId, level: current.level, now, random });
-    await i.update(view(fresh, now));
+    await i.editReply(view(fresh, now));
   },
 });

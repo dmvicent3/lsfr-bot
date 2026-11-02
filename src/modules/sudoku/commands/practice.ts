@@ -6,6 +6,9 @@ import type { CommandCtx } from "./types.ts";
 
 /** Private: a fresh practice board, replacing the previous one. */
 export async function practice({ i, guildId, repo, random }: CommandCtx): Promise<void> {
+  /** Generating can outlast Discord's 3 s for a first answer, so answer first. */
+  await i.deferReply({ flags: MessageFlags.Ephemeral });
+
   const now = Date.now();
   const game = openPractice(repo, {
     guildId,
@@ -15,5 +18,5 @@ export async function practice({ i, guildId, repo, random }: CommandCtx): Promis
     random,
   });
 
-  await i.reply({ ...view(game, now), flags: MessageFlags.Ephemeral });
+  await i.editReply(view(game, now));
 }

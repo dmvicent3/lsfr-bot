@@ -8,6 +8,9 @@ import type { CommandCtx } from "./types.ts";
 
 /** Private: today's board for this level, solved or not. */
 export async function daily({ i, guildId, db, repo, random }: CommandCtx): Promise<void> {
+  /** The first open of a day generates the puzzle, which can outlast Discord's 3 s: answer first. */
+  await i.deferReply({ flags: MessageFlags.Ephemeral });
+
   const now = Date.now();
   const game = openDaily(repo, {
     guildId,
@@ -18,5 +21,5 @@ export async function daily({ i, guildId, db, repo, random }: CommandCtx): Promi
     random,
   });
 
-  await i.reply({ ...view(game, now), flags: MessageFlags.Ephemeral });
+  await i.editReply(view(game, now));
 }
