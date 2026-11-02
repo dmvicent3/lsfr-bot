@@ -10,8 +10,9 @@ const landlocked: Patch = (f) => void (f.landlocked = true);
  * Wikidata gaps and errors found when auditing the build, keyed by ISO2; applied after parsing.
  * Landlocked: AD AM AZ LI PY RW are not tagged. NL: EU and NATO statements carry an end time.
  * FR: co-prince of Andorra is not a monarchy. AO: left OPEC in 2024. Languages: Wikidata lacks
- * French for ML BF NE and Spanish for UY, and wrongly lists Spanish for the US and AG, French for
- * MR and MU, Arabic for AF.
+ * Spanish for UY, and wrongly lists Spanish for the US and AG, French for MR MU ML BF NE (no longer
+ * official in the last three), English and Arabic for ER, Arabic for AF. GB is in the Commonwealth,
+ * CY and MT are islands, GE spans Asia and Europe, Argentina drives on the right, Gibraltar speaks English.
  */
 export const PATCHES: Record<string, Patch> = {
   NL: (f) => void (f.memberships = add(add(f.memberships, "eu"), "nato")),
@@ -22,9 +23,16 @@ export const PATCHES: Record<string, Patch> = {
   UY: (f) => void (f.languages = add(f.languages, "es")),
   MR: (f) => void (f.languages = without(f.languages, "fr")),
   MU: (f) => void (f.languages = without(f.languages, "fr")),
-  ML: (f) => void (f.languages = add(f.languages, "fr")),
-  BF: (f) => void (f.languages = add(f.languages, "fr")),
-  NE: (f) => void (f.languages = add(f.languages, "fr")),
+  ML: (f) => void (f.languages = without(f.languages, "fr")),
+  BF: (f) => void (f.languages = without(f.languages, "fr")),
+  NE: (f) => void (f.languages = without(f.languages, "fr")),
+  ER: (f) => void (f.languages = without(without(f.languages, "en"), "ar")),
+  GB: (f) => void (f.memberships = add(f.memberships, "commonwealth")),
+  CY: (f) => void (f.island = true),
+  MT: (f) => void (f.island = true),
+  GE: (f) => void (f.continents = ["asia", "europe"]),
+  AR: (f) => void (f.drivesLeft = false),
+  GI: (f) => void (f.languages = add(f.languages, "en")),
   AF: (f) => void (f.languages = without(f.languages, "ar")),
   AD: landlocked,
   AM: landlocked,
@@ -34,10 +42,21 @@ export const PATCHES: Record<string, Patch> = {
   RW: landlocked,
 };
 
+/** Non-sovereign snapshot entries (every non-UN-member except Kosovo and Palestine): no monarchy or island answer. */
+export const TERRITORIES = "AS AW BM VG KY CW FO PF GI GL GU HK IM MO MF NC MP PR SX TC VI".split(
+  " ",
+);
+
 export function applyPatches(facts: Map<string, Facts>): void {
   for (const [iso2, patch] of Object.entries(PATCHES)) {
     const f = facts.get(iso2);
 
     if (f) patch(f);
+  }
+
+  for (const iso2 of TERRITORIES) {
+    const f = facts.get(iso2);
+
+    if (f) Object.assign(f, { monarchy: null, island: null });
   }
 }

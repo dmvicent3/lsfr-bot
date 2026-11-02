@@ -116,13 +116,16 @@ export function parseFacts(json: unknown, snapshot: ReadonlySet<string>): Map<st
 
 const FILE_PATH = "https://commons.wikimedia.org/wiki/Special:FilePath/";
 
-/** The first P41 flag image per ISO2 code, as an https Special:FilePath url. */
+/**
+ * One P41 flag image per ISO2 code as an https Special:FilePath url. The query's wdt: already keeps
+ * only best-rank statements (preferred over normal); ties go to the alphabetically first file.
+ */
 export function flagUrls(json: unknown): Map<string, string> {
-  const out = new Map<string, string>();
+  const files = new Map<string, string[]>();
 
   for (const { iso, p, v } of rowsOf(json)) {
-    if (p === "flag" && !out.has(iso)) out.set(iso, FILE_PATH + v.slice(v.lastIndexOf("/") + 1));
+    if (p === "flag") files.set(iso, [...(files.get(iso) ?? []), v.slice(v.lastIndexOf("/") + 1)]);
   }
 
-  return out;
+  return new Map([...files].map(([iso, names]) => [iso, FILE_PATH + (names.toSorted()[0] ?? "")]));
 }

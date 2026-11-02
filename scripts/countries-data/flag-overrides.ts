@@ -7,7 +7,7 @@ import { FEATURES } from "./flag-features.ts";
  * add colours that are not prominent (ES MX EC PT BO SV NI HR RS SM AD MD MT CY BZ DM GT HT PG ...),
  * and near-blacks or maroons read as another family. Entries are "ISO2 colour colour ...".
  */
-const COLOUR_TABLE = `AF white black; AS red blue white; AD blue yellow red; AO red black yellow; AG red black blue white yellow;
+const COLOUR_TABLE = `AF black red green; AS red blue white; AD blue yellow red; AO red black yellow; AG red black blue white yellow;
 AM red blue orange; BS blue yellow black; BE black yellow red; BZ blue red white; BM red blue white;
 BT yellow orange white; BW blue black white; VG blue red white; BN yellow white black red;
 CV blue white red yellow; KH red blue white; KY blue red white; HR red white blue; DO blue red white;

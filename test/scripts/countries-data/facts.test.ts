@@ -131,6 +131,14 @@ describe("flagUrls", () => {
   });
 });
 
+describe("flagUrls order", () => {
+  test("picks the alphabetically first file whatever the row order", () => {
+    const rows = ["Flag%20B.svg", "Flag%20A.svg"].map((f) => row("NL", "flag", `http://x/${f}`));
+
+    expect(flagUrls({ results: { bindings: rows } }).get("NL")).toEndWith("Flag%20A.svg");
+  });
+});
+
 describe("land borders", () => {
   const rows = [
     row("DO", "border", "HT"),

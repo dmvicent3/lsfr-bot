@@ -11,10 +11,12 @@ TO TT TN TR TM TC TV UG UA AE GB US VI UY UZ VU VE VN YE ZM ZW`;
 
 const STAR = `AO AW AU AZ BA BR BF BI CV CM CF CL CN KM CU CW DJ DM CD ET GH GD GW HN IL JO XK LR LY MO
 MY MH MR FM MA MZ MM NR NZ KP MP PK PA PG PH PR WS ST SN SG SB SO SS KN SR SY TJ TL TG TN TR TM TV
-US UZ VE VN ZW DZ TJ`;
-const CRESCENT = "DZ AZ BN KM LY MY MV MR PK SG TN TR TM UZ";
-const EMBLEM = `AL AS AD AO BZ BM BO VG BN KH KY HR DO EC EG SV GQ SZ FJ PF GI GU GT HT HK IR IM KE KI
-MX MD ME MZ NC NI MP OM PG PY PT SX SM RS SK SI ES LK TJ TM TC UG VI VU ZW`;
+US UZ VE VN ZW DZ TJ HK PY GQ DM`;
+const CRESCENT = "NP DZ AZ BN KM LY MY MV MR PK SG TN TR TM UZ";
+// Emblem = any figurative device, seal or coat of arms (suns, leaves, animals, wheels, crosses-as-badges); plain stars, crescents, stripes, triangles and discs are not.
+const EMBLEM = `AF AL AS AD AO AG AR BB BZ BM BT BO BR VG BN KH CA KY HR CY DM DO EC EG SV GQ ER SZ FJ
+PF GI GD GU GT HT HK IN IR IM KZ KE KI XK KG LB LS LI MO MW MT MX MD ME MN MZ NA NC NI MP MK NP OM
+PG PY PH PT RW MF SM SA RS SX SK SI ES LK TJ TM TC UG VI UY VU ZM ZW`;
 
 const set = (list: string) => new Set(list.split(/\s+/));
 const LISTS: [FlagFeature, Set<string>][] = [

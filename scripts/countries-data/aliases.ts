@@ -26,7 +26,19 @@ export const EXTRA_ALIASES: Record<string, string[]> = {
 };
 
 /** Wikidata alt labels that name a part of a country, a region or something else entirely. */
-const BLOCKED = new Set(["england", "scotland", "wales", "northern ireland"]);
+const BLOCKED = new Set([
+  "england",
+  "scotland",
+  "wales",
+  "northern ireland",
+  "central africa",
+  "garden city",
+  "heart of south america",
+]);
+/** Codes and tz names ("ISO 3166-1:AS", "Atlantic/Bermuda", "US-GU") are not names players type. */
+const isJunk = (alias: string): boolean => /[:/]|^[A-Z]{2}-[A-Z]{2}$/.test(alias);
+/** Wikidata aliases of three letters are mostly noise, except all-caps ones such as PRC. */
+const isWorthy = (alias: string): boolean => norm(alias).length > 3 || /^[A-Z]{3}$/.test(alias);
 
 const norm = (text: string): string =>
   text
@@ -62,7 +74,7 @@ export function mergeAliases(
     ...c,
     list: [
       ...(EXTRA_ALIASES[c.iso2] ?? []),
-      ...(wikidata.get(c.iso2) ?? []).filter((a) => norm(a).length > 3),
+      ...(wikidata.get(c.iso2) ?? []).filter((a) => isWorthy(a) && !isJunk(a)),
     ],
   }));
   const owners = claims([
