@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { dateIn, nextMidnight } from "../../src/core/zoned.ts";
+import { dateIn, isTimeZone, nextMidnight } from "../../src/core/zoned.ts";
 
 describe("dateIn", () => {
   test("23:59 and 00:00 Lisbon fall on different dates", () => {
@@ -30,4 +30,9 @@ describe("nextMidnight", () => {
       Date.UTC(2026, 6, 2, 23),
     );
   });
+});
+
+test("isTimeZone", () => {
+  expect(isTimeZone("Asia/Tokyo")).toBe(true);
+  expect(isTimeZone("Mars/Base")).toBe(false);
 });

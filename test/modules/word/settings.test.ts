@@ -2,7 +2,7 @@ import { Database } from "bun:sqlite";
 import { beforeEach, expect, test } from "bun:test";
 import { runMigrations } from "../../../src/core/db.ts";
 import { coreMigrations } from "../../../src/core/settings.ts";
-import { isTimeZone, saveWordSettings, wordSettings } from "../../../src/modules/word/settings.ts";
+import { saveWordSettings, wordSettings } from "../../../src/modules/word/settings.ts";
 
 let db: Database;
 
@@ -32,9 +32,4 @@ test("bad values are refused and nothing is saved", () => {
     "Unknown time zone: Mars/Base.",
   );
   expect(wordSettings(db, "g").length).toBe(5);
-});
-
-test("isTimeZone", () => {
-  expect(isTimeZone("Asia/Tokyo")).toBe(true);
-  expect(isTimeZone("Mars/Base")).toBe(false);
 });

@@ -1,5 +1,6 @@
 import type { Database } from "bun:sqlite";
 import { getSetting, setSetting } from "../../core/settings.ts";
+import { isTimeZone } from "../../core/zoned.ts";
 import type { WordSettings } from "./types.ts";
 import { SUPPORTED_LENGTHS } from "./words/load.ts";
 
@@ -7,14 +8,6 @@ export const DEFAULT_SETTINGS: WordSettings = { length: 5, timeZone: "Europe/Lis
 
 const lengthKey = (guildId: string): string => `word.length.${guildId}`;
 const zoneKey = (guildId: string): string => `word.timezone.${guildId}`;
-
-export function isTimeZone(tz: string): boolean {
-  try {
-    return new Intl.DateTimeFormat("en", { timeZone: tz }).resolvedOptions().timeZone !== "";
-  } catch {
-    return false;
-  }
-}
 
 /** The server's settings; anything unset or no longer valid is the default. */
 export function wordSettings(db: Database, guildId: string): WordSettings {

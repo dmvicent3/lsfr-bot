@@ -60,3 +60,21 @@ export interface GameKey {
   date: string;
   slot: string;
 }
+
+export type Period = "today" | "week" | "month" | "all";
+
+export interface Standing {
+  userId: string;
+  points: number;
+  solved: number;
+  lastSolvedAt: number;
+}
+
+export interface PlayerStats {
+  points: number;
+  solved: Record<Level, number>;
+  bestMs: Record<Level, number | null>;
+  avgMs: Record<Level, number | null>;
+  currentStreak: number;
+  longestStreak: number;
+}

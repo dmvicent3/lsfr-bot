@@ -41,3 +41,12 @@ export function nextMidnight(t: number, tz: string): number {
 
   return wallToInstant(Date.UTC(w["year"] ?? 0, (w["month"] ?? 1) - 1, (w["day"] ?? 1) + 1), tz);
 }
+
+/** Whether `tz` names a time zone the runtime knows. */
+export function isTimeZone(tz: string): boolean {
+  try {
+    return new Intl.DateTimeFormat("en", { timeZone: tz }).resolvedOptions().timeZone !== "";
+  } catch {
+    return false;
+  }
+}
