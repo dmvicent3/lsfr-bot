@@ -10,3 +10,8 @@ export interface Generated {
   solution: string;
   level: Level;
 }
+
+export interface Award {
+  points: number;
+  parts: string[];
+}
