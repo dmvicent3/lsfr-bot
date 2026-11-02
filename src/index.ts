@@ -20,6 +20,7 @@ import { cardsModule } from "./modules/cards/index.ts";
 import { shedModule } from "./modules/shed/index.ts";
 import { sudokuModule } from "./modules/sudoku/index.ts";
 import { duelModule } from "./modules/duel/index.ts";
+import { gridModule } from "./modules/grid/index.ts";
 import { wordModule } from "./modules/word/index.ts";
 
 guardProcess();
@@ -36,6 +37,7 @@ const modules: BotModule[] = [
   wordModule(),
   sudokuModule(),
   duelModule(),
+  gridModule(),
   minesweeperModule(),
   triviaModule(),
   cardsModule(),
