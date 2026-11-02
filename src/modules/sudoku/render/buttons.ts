@@ -40,7 +40,7 @@ const digits = (from: number, to: number, s: string): APIButtonComponentWithCust
     button(`sudoku:put:${from + i}:${s}`, `${from + i}`),
   );
 
-/** Move and clear, the digits, and check (plus new for practice); none once solved. */
+/** Move and clear, the digits, and check (plus new in its own row for practice); none once solved. */
 export function buttons(g: Game): Row[] {
   if (g.solvedAt !== null) return [];
 
@@ -48,7 +48,15 @@ export function buttons(g: Game): Row[] {
   const moves = MOVES.map(([d, label]) => button(`sudoku:move:${d}:${s}`, label));
   const last = [...digits(6, 9, s), button(`sudoku:check:${s}`, "Check", ButtonStyle.Primary)];
 
-  if (g.kind === "practice") last.push(button(`sudoku:new:${s}`, "New", ButtonStyle.Success));
+  const rows = [
+    row([...moves, button(`sudoku:clear:${s}`, "Clear")]),
+    row(digits(1, 5, s)),
+    row(last),
+  ];
 
-  return [row([...moves, button(`sudoku:clear:${s}`, "Clear")]), row(digits(1, 5, s)), row(last)];
+  /** Discord caps an action row at five components, so New gets a row of its own. */
+  if (g.kind === "practice")
+    rows.push(row([button(`sudoku:new:${s}`, "New", ButtonStyle.Success)]));
+
+  return rows;
 }

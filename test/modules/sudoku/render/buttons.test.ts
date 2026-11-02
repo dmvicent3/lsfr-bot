@@ -15,6 +15,14 @@ test("daily layout is three rows", () => {
   ]);
 });
 
+test("no action row holds more than five components", () => {
+  expect(labels(GAME).map((r) => r.length)).toEqual([5, 5, 5]);
+
+  for (const g of [GAME, { ...GAME, kind: "practice" as const }]) {
+    for (const r of buttons(g)) expect(r.components.length).toBeLessThanOrEqual(5);
+  }
+});
+
 test("daily IDs carry date and level", () => {
   expect(ids(GAME)).toEqual([
     "sudoku:move:left:daily:2026-11-05:easy",
@@ -27,9 +35,11 @@ test("daily IDs carry date and level", () => {
   ]);
 });
 
-test("practice adds New in the last row and uses the practice suffix", () => {
+test("practice adds New alone in a fourth row and uses the practice suffix", () => {
   const g = { ...GAME, kind: "practice" as const };
-  expect(labels(g)[2]).toEqual(["6", "7", "8", "9", "Check", "New"]);
+  expect(labels(g).map((r) => r.length)).toEqual([5, 5, 5, 1]);
+  expect(labels(g)[3]).toEqual(["New"]);
+  expect(labels(g)[2]).toEqual(["6", "7", "8", "9", "Check"]);
   expect(ids(g)).toContain("sudoku:new:practice");
   expect(ids(g)).toContain("sudoku:put:7:practice");
 });

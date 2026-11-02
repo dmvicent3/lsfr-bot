@@ -71,11 +71,7 @@ export interface Standing {
   lastFinishedAt: number;
 }
 
-export interface LeaderboardPage {
-  content: string;
-  page: number;
-  pages: number;
-}
+export type { LeaderboardPage } from "../../core/leaderboard-page.ts";
 
 /** Per-server options; changes apply from the next puzzle. */
 export interface WordSettings {
