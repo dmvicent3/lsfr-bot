@@ -74,6 +74,13 @@ export class GameStore {
       .map(toGame);
   }
 
+  solvedOn(guildId: string, userId: string, date: string): Game[] {
+    return this.db
+      .query<GameRow, [string, string, string]>(`${SOLVED} AND user_id = ? AND date = ?`)
+      .all(guildId, userId, date)
+      .map(toGame);
+  }
+
   lastSolvedBefore(guildId: string, userId: string, date: string): Game | null {
     const row = this.db
       .query<GameRow, [string, string, string]>(

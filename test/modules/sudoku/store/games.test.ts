@@ -68,3 +68,11 @@ test("lastSolvedBefore ignores the given date", () => {
   expect(repo.games.lastSolvedBefore("g", "u", "2026-11-04")?.date).toBe("2026-11-03");
   expect(repo.games.lastSolvedBefore("g", "u", "2026-11-03")).toBeNull();
 });
+
+test("solvedOn lists a player's solved dailies on one date", () => {
+  repo.games.start(solved({ slot: "easy" }));
+  repo.games.start(game({ slot: "hard", level: "hard" }));
+  repo.games.start(solved({ slot: "medium", level: "medium", userId: "v" }));
+  repo.games.start(solved({ date: "2026-11-04" }));
+  expect(repo.games.solvedOn("g", "u", "2026-11-03").map((g) => g.slot)).toEqual(["easy"]);
+});
