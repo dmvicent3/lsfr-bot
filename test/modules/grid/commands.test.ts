@@ -1,5 +1,6 @@
 import { describe, expect, spyOn, test } from "bun:test";
 import { InteractionContextType, MessageFlags } from "discord.js";
+import type { ChatInputCommandInteraction } from "discord.js";
 import type { Snapshot } from "../../../src/core/countries/types.ts";
 import { runMigrations } from "../../../src/core/db.ts";
 import { log } from "../../../src/core/log.ts";
@@ -40,6 +41,12 @@ describe("/grid data", () => {
   test("leaderboard has the four periods", () => {
     const o = optionsOf("leaderboard").find((x) => x.name === "period");
     expect(o?.choices?.map((c) => c.value)).toEqual(["today", "week", "month", "all"]);
+  });
+
+  test("stats takes an optional user", () => {
+    const o = optionsOf("stats");
+    expect(o.map((x) => x.name)).toEqual(["user"]);
+    expect(o[0]?.required).toBeFalsy();
   });
 
   test("settings takes a required timezone of at most 64 characters", () => {
@@ -174,8 +181,18 @@ describe("/grid practice", () => {
     const { i, sent } = playFake();
     const error = spyOn(log, "error").mockImplementation(() => {});
     await practice(ctx(i, null));
+    expect(error).toHaveBeenCalledTimes(1);
     error.mockRestore();
     expect(sent.edited).toBe("Country grid is unavailable — country data is missing.");
+  });
+
+  test("says so when no practice grid can be built", async () => {
+    const { i, sent } = playFake();
+    const error = spyOn(log, "error").mockImplementation(() => {});
+    await practice(ctx(i, { builtAt: "", countries: [] }));
+    expect(error).toHaveBeenCalledTimes(1);
+    error.mockRestore();
+    expect(sent.edited).toBe("Couldn't build a practice grid. Try again.");
   });
 });
 
@@ -188,7 +205,12 @@ describe("/grid routing and the page commands", () => {
       reply: async (r: { content?: string }) => void replies.push(r),
     };
     // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- stand-ins for the calls execute makes
-    await gridCommand(() => null).execute(i as never, { db: db().db } as never);
+    const stand = i as unknown as ChatInputCommandInteraction;
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- execute only reads the db
+    const rt = { db: db().db } as unknown as Parameters<
+      ReturnType<typeof gridCommand>["execute"]
+    >[1];
+    await gridCommand(() => null).execute(stand, rt);
     expect(replies[0]?.content).toBe("Country grid works in a server.");
   });
 
@@ -208,7 +230,9 @@ describe("/grid routing and the page commands", () => {
     const replies: { content?: string; flags?: unknown }[] = [];
     const i = {
       user: { id: "u", displayName: "Una" },
-      options: { getUser: () => null },
+      options: {
+        getUser: (name: string) => (name === "user" ? null : { id: "x", displayName: "X" }),
+      },
       reply: async (r: { content?: string }) => void replies.push(r),
     };
     await stats(ctx(i, null));

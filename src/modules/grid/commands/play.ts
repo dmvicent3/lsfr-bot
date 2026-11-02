@@ -10,22 +10,19 @@ import { isGame } from "../play/round.ts";
 import { boardView } from "../render/board-view.ts";
 import { gridView } from "../render/view.ts";
 import { gridTimeZone } from "../settings.ts";
-import { UNAVAILABLE } from "./unavailable.ts";
+import { snapshotOrReply } from "./unavailable.ts";
 import type { CommandCtx } from "./types.ts";
 
 /** Private: today's grid, or the result once finished. */
-export async function play({ i, guildId, db, repo, snapshotSource }: CommandCtx): Promise<void> {
+export async function play(c: CommandCtx): Promise<void> {
+  const { i, guildId, db, repo } = c;
+
   /** The first open of a day generates the puzzle, so answer first. */
   await i.deferReply({ flags: MessageFlags.Ephemeral });
 
-  const snapshot = snapshotSource();
+  const snapshot = await snapshotOrReply(c);
 
-  if (!snapshot) {
-    log.error("grid", "country data missing, country grid unavailable");
-    await i.editReply(UNAVAILABLE);
-
-    return;
-  }
+  if (!snapshot) return;
 
   const now = Date.now();
   const tz = gridTimeZone(db, guildId);

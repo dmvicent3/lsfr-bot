@@ -1,11 +1,5 @@
 import { InteractionContextType, SlashCommandBuilder } from "discord.js";
-
-export const PERIOD_CHOICES = [
-  { name: "Today", value: "today" },
-  { name: "This week", value: "week" },
-  { name: "This month", value: "month" },
-  { name: "All time", value: "all" },
-];
+import { PERIOD_CHOICES } from "../../../core/periods.ts";
 
 export const data = new SlashCommandBuilder()
   .setName("grid")
@@ -21,7 +15,7 @@ export const data = new SlashCommandBuilder()
     sub
       .setName("stats")
       .setDescription("Points, days played and streaks")
-      .addUserOption((o) => o.setName("member").setDescription("Whose stats (default: yours)")),
+      .addUserOption((o) => o.setName("user").setDescription("Whose stats (default: yours)")),
   )
   .addSubcommand((sub) =>
     sub

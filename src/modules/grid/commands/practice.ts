@@ -5,7 +5,7 @@ import { openPractice } from "../play/practice.ts";
 import { boardView } from "../render/board-view.ts";
 import { gridView } from "../render/view.ts";
 import type { CommandCtx } from "./types.ts";
-import { UNAVAILABLE } from "./unavailable.ts";
+import { snapshotOrReply } from "./unavailable.ts";
 
 /** Private: the kept practice grid, or a new one. */
 export async function practice(c: CommandCtx): Promise<void> {
@@ -13,14 +13,9 @@ export async function practice(c: CommandCtx): Promise<void> {
 
   await i.deferReply({ flags: MessageFlags.Ephemeral });
 
-  const snapshot = c.snapshotSource();
+  const snapshot = await snapshotOrReply(c);
 
-  if (!snapshot) {
-    log.error("grid", "country data missing, country grid unavailable");
-    await i.editReply(UNAVAILABLE);
-
-    return;
-  }
+  if (!snapshot) return;
 
   const open = { guildId, userId: i.user.id, now: Date.now(), snapshot };
   const round = openPractice(repo, open, random);
