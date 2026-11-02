@@ -52,6 +52,12 @@ test("Check is primary, New is success, the rest secondary", () => {
   expect(style("5")).toBe(ButtonStyle.Secondary);
 });
 
-test("a solved game has no buttons", () => {
+test("a solved daily has no buttons", () => {
   expect(buttons({ ...GAME, solvedAt: 5 })).toEqual([]);
+});
+
+test("a solved practice board keeps only New", () => {
+  const g = { ...GAME, kind: "practice" as const, solvedAt: 5 };
+  expect(labels(g)).toEqual([["New"]]);
+  expect(ids(g)).toEqual(["sudoku:new:practice"]);
 });
