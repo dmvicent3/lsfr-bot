@@ -54,15 +54,19 @@ const DEFAULT_PATH = new URL("countries.json", import.meta.url);
 /** Once-per-process cache: the snapshot never changes while the bot runs. */
 let cache: Snapshot | null | undefined;
 
-export function readSnapshot(path: string | URL = DEFAULT_PATH): Snapshot | null {
-  if (cache !== undefined) return cache;
-
+/** Reads and validates a snapshot file without caching; null when unreadable. */
+export function loadSnapshotFile(path: string | URL): Snapshot | null {
   try {
-    cache = loadSnapshot(JSON.parse(readFileSync(path, "utf8")));
+    return loadSnapshot(JSON.parse(readFileSync(path, "utf8")));
   } catch (err) {
     log.error("countries", "country data unreadable", err);
-    cache = null;
+
+    return null;
   }
+}
+
+export function readSnapshot(path: string | URL = DEFAULT_PATH): Snapshot | null {
+  if (cache === undefined) cache = loadSnapshotFile(path);
 
   return cache;
 }

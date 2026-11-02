@@ -1,4 +1,5 @@
 import type { Continent, Country } from "../../../core/countries/types.ts";
+import { normaliseName } from "../../../core/countries/normalise.ts";
 import type { RuleDef } from "../types.ts";
 
 const CONTINENTS = [
@@ -12,14 +13,9 @@ const CONTINENTS = [
 
 const LETTERS = ["a", "b", "s", "m", "c"] as const;
 
-/** First letter of the display name, accents stripped, a leading "The" ignored. */
+/** Lowercase first letter of the normalised display name (accents, punctuation and a leading "The" ignored). */
 export function nameLetter(c: Country): string {
-  const plain = c.name
-    .normalize("NFD")
-    .replace(/\p{M}/gu, "")
-    .replace(/^the\s+/i, "");
-
-  return (plain[0] ?? "").toLowerCase();
+  return normaliseName(c.name)[0] ?? "";
 }
 
 const continents = CONTINENTS.map(([id, label, where]) => ({
@@ -65,7 +61,7 @@ const other: (RuleDef & { id: "landlocked" | "island" | "borders_4" | "borders_0
     id: "borders_0_1",
     kind: "geo",
     label: "Borders 0–1",
-    why: "borders 2+ countries",
+    why: "has 2+ neighbours",
     test: (c) => c.facts.borders.length <= 1,
   },
 ];

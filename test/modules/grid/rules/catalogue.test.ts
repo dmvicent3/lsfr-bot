@@ -1,21 +1,14 @@
 import { describe, expect, test } from "bun:test";
-import { readFileSync } from "node:fs";
-import { loadSnapshot } from "../../../../src/core/countries/load.ts";
-import type { RuleId } from "../../../../src/modules/grid/types.ts";
+import { loadSnapshotFile } from "../../../../src/core/countries/load.ts";
+import { RULE_ID_LIST, type RuleId } from "../../../../src/modules/grid/types.ts";
 import { RULES, RULE_IDS } from "../../../../src/modules/grid/rules/catalogue.ts";
+import { nameLetter } from "../../../../src/modules/grid/rules/geo.ts";
 import { failures } from "../../../../src/modules/grid/rules/explain.ts";
 import { country, reading } from "./fixtures.ts";
 
 // readSnapshot() caches per process and other tests seed it with fixtures, so load the real file directly.
 const real = () =>
-  loadSnapshot(
-    JSON.parse(
-      readFileSync(
-        new URL("../../../../src/core/countries/countries.json", import.meta.url),
-        "utf8",
-      ),
-    ),
-  )!;
+  loadSnapshotFile(new URL("../../../../src/core/countries/countries.json", import.meta.url))!;
 const t = (id: RuleId, c = country()) => RULES[id].test(c);
 const n = (k: number) =>
   country({ facts: { borders: Array.from({ length: k }, (_, i) => `B${i}`) } });
@@ -56,15 +49,27 @@ describe("geo", () => {
     expect(t("letter_c", country({ name: "Côte d'Ivoire" }))).toBe(true);
   });
 
+  test("real snapshot names land on the expected letter", () => {
+    const names = new Map(real().countries.map((c) => [c.name, c]));
+
+    for (const [name, letter] of [
+      ["St. Lucia", "s"],
+      ["DR Congo", "d"],
+      ["Côte d'Ivoire", "c"],
+      ["Bahamas", "b"],
+    ] as const) {
+      const c = names.get(name);
+
+      expect(c).toBeDefined();
+      expect(nameLetter(c!)).toBe(letter);
+    }
+  });
+
   test("letter rules only exist for letters with 12+ countries", () => {
     const counts: Record<string, number> = {};
 
     for (const c of real().countries) {
-      const plain = c.name
-        .normalize("NFD")
-        .replace(/\p{M}/gu, "")
-        .replace(/^the\s+/i, "");
-      const l = plain[0]!.toLowerCase();
+      const l = nameLetter(c);
 
       counts[l] = (counts[l] ?? 0) + 1;
     }
@@ -175,6 +180,19 @@ describe("catalogue", () => {
       expect(RULES[id].label.length).toBeGreaterThan(0);
       expect(RULES[id].why.length).toBeGreaterThan(0);
     }
+  });
+
+  test("RULE_IDS is exactly the RuleId list, without duplicates", () => {
+    expect(RULE_IDS.toSorted()).toEqual(RULE_ID_LIST.toSorted());
+    expect(new Set(RULE_IDS).size).toBe(RULE_IDS.length);
+  });
+
+  test("every kind has rules and each why phrase is unique", () => {
+    const kinds = new Set(RULE_IDS.map((id) => RULES[id].kind));
+    const whys = RULE_IDS.map((id) => RULES[id].why);
+
+    expect([...kinds].toSorted()).toEqual(["flag", "geo", "politics", "stat"]);
+    expect(new Set(whys).size).toBe(whys.length);
   });
 
   test("failures lists the why of each failing rule", () => {

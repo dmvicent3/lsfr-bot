@@ -1,3 +1,5 @@
+import { normaliseName as norm } from "../../src/core/countries/normalise.ts";
+
 /** Common short forms players type, keyed by ISO2 (England, Scotland and Wales are deliberately absent). */
 export const EXTRA_ALIASES: Record<string, string[]> = {
   US: ["USA", "US", "America", "United States of America"],
@@ -39,17 +41,6 @@ const BLOCKED = new Set([
 const isJunk = (alias: string): boolean => /[:/]|^[A-Z]{2}-[A-Z]{2}$/.test(alias);
 /** Wikidata aliases of three letters are mostly noise, except all-caps ones such as PRC. */
 const isWorthy = (alias: string): boolean => norm(alias).length > 3 || /^[A-Z]{3}$/.test(alias);
-
-const norm = (text: string): string =>
-  text
-    .normalize("NFD")
-    .replace(/\p{M}/gu, "")
-    .toLowerCase()
-    .replace(/&/g, "and")
-    .replace(/[^a-z0-9 ]/g, " ")
-    .replace(/^the /, "")
-    .replace(/\s+/g, " ")
-    .trim();
 
 function claims(list: { iso2: string; names: string[] }[]): Map<string, Set<string>> {
   const owners = new Map<string, Set<string>>();

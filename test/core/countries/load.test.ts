@@ -2,7 +2,7 @@ import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, spyOn, test } from "bun:test";
-import { loadSnapshot, readSnapshot } from "../../../src/core/countries/load.ts";
+import { loadSnapshot, loadSnapshotFile, readSnapshot } from "../../../src/core/countries/load.ts";
 
 const spies: { mockRestore(): void }[] = [];
 
@@ -117,5 +117,23 @@ describe("facts", () => {
     expect(facts?.flagColours).toEqual(["red"]);
     expect(facts?.flagFeatures).toEqual(["star"]);
     expect(facts?.aliases).toEqual(["Holland"]);
+  });
+});
+
+describe("loadSnapshotFile", () => {
+  test("reads uncached and returns null for a missing file", () => {
+    const dir = mkdtempSync(join(tmpdir(), "snap-"));
+    const path = join(dir, "s.json");
+
+    writeFileSync(path, JSON.stringify(raw({})));
+    const a = loadSnapshotFile(path);
+
+    expect(a?.countries[0]?.iso2).toBe("NL");
+    expect(loadSnapshotFile(path)).not.toBe(a);
+
+    const spy = spyOn(console, "error").mockImplementation(() => {});
+
+    spies.push(spy);
+    expect(loadSnapshotFile(join(dir, "nope.json"))).toBeNull();
   });
 });
