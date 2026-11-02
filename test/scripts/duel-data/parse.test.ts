@@ -30,6 +30,13 @@ describe("parseWbIndicator", () => {
     expect(map.has("DJ")).toBe(false);
   });
 
+  test("maxYear picks the latest reading at or before it", () => {
+    const capped = parseWbIndicator(indicator, 2019);
+
+    expect(capped.get("NL")).toEqual({ value: 20129000, year: 2019 });
+    expect(capped.get("PT")?.year).toBe(2019);
+  });
+
   test("bad input gives an empty map", () => {
     expect(parseWbIndicator(null).size).toBe(0);
   });

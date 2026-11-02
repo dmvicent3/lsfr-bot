@@ -8,7 +8,7 @@ function wb(id: StatId, label: string, unit: Unit, code: string): StatDef {
 
 export const STAT_BY_ID: Record<StatId, StatDef> = {
   population: wb("population", "population", "int", "SP.POP.TOTL"),
-  area: wb("area", "land area", "km2", "AG.SRF.TOTL.K2"),
+  area: wb("area", "total area", "km2", "AG.SRF.TOTL.K2"),
   density: {
     ...wb("density", "population density", "per_km2", "EN.POP.DNST"),
     exclude: CITY_STATES,
@@ -21,7 +21,10 @@ export const STAT_BY_ID: Record<StatId, StatDef> = {
   co2_pc: wb("co2_pc", "CO₂ emissions per person", "t", "EN.GHG.CO2.PC.CE.AR5"),
   internet: wb("internet", "share of people using the internet", "pct", "IT.NET.USER.ZS"),
   fertility: wb("fertility", "births per woman", "dp2", "SP.DYN.TFRT.IN"),
-  tourists: wb("tourists", "yearly tourist arrivals", "int", "ST.INT.ARVL"),
+  tourists: {
+    ...wb("tourists", "yearly tourist arrivals", "int", "ST.INT.ARVL"),
+    maxYear: 2019,
+  },
   aged_65: wb("aged_65", "share of people aged 65+", "pct", "SP.POP.65UP.TO.ZS"),
   peak: {
     id: "peak",
@@ -29,6 +32,7 @@ export const STAT_BY_ID: Record<StatId, StatDef> = {
     unit: "m",
     source: { wikidata: "peak" },
     exclude: [],
+    timeless: true,
   },
 };
 

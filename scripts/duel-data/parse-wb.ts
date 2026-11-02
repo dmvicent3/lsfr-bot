@@ -15,21 +15,23 @@ export function parseWbCountries(json: unknown): { iso2: string; name: string }[
     .filter((c) => c.iso2 !== "" && c.name !== "");
 }
 
-function toReading(row: Record<string, unknown>): Reading | null {
+function toReading(row: Record<string, unknown>, maxYear: number): Reading | null {
   const year = Number(asText(row.date));
 
-  if (typeof row.value !== "number" || !Number.isInteger(year) || year < MIN_YEAR) return null;
+  if (typeof row.value !== "number" || !Number.isInteger(year)) return null;
+
+  if (year < MIN_YEAR || year > maxYear) return null;
 
   return { value: row.value, year };
 }
 
-/** Latest non-null reading per ISO2 code, 2015 or later. */
-export function parseWbIndicator(json: unknown): Map<string, Reading> {
+/** Latest non-null reading per ISO2 code, from 2015 to `maxYear` (default: no cap). */
+export function parseWbIndicator(json: unknown, maxYear = Infinity): Map<string, Reading> {
   const out = new Map<string, Reading>();
 
   for (const row of rows(json)) {
     const iso2 = isRecord(row.country) ? asText(row.country.id) : "";
-    const r = toReading(row);
+    const r = toReading(row, maxYear);
 
     if (iso2 !== "" && r && r.year > (out.get(iso2)?.year ?? 0)) out.set(iso2, r);
   }

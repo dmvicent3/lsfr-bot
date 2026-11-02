@@ -18,6 +18,11 @@ describe("stats", () => {
     expect(STAT_BY_ID.area.exclude).toEqual([]);
   });
 
+  test("tourists stop at 2019, area is the total area", () => {
+    expect(STAT_BY_ID.tourists.maxYear).toBe(2019);
+    expect(STAT_BY_ID.area.label).toBe("total area");
+  });
+
   test("peak comes from wikidata", () => {
     expect(STAT_BY_ID.peak.source).toEqual({ wikidata: "peak" });
     expect(STAT_BY_ID.co2_pc.source).toEqual({ wb: "EN.GHG.CO2.PC.CE.AR5" });

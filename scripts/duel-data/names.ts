@@ -3,7 +3,7 @@ export const NAME_OVERRIDES: Record<string, string> = {
   BS: "Bahamas",
   BN: "Brunei",
   CD: "DR Congo",
-  CG: "Congo",
+  CG: "Republic of the Congo",
   CI: "Côte d'Ivoire",
   CW: "Curaçao",
   EG: "Egypt",

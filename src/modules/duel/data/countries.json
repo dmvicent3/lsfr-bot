@@ -35,7 +35,7 @@
         "co2_pc": { "value": 1.7852214941728, "year": 2024 },
         "internet": { "value": 85.86389923, "year": 2024 },
         "fertility": { "value": 1.341, "year": 2024 },
-        "tourists": { "value": 2658000, "year": 2020 },
+        "tourists": { "value": 6406000, "year": 2019 },
         "aged_65": { "value": 17.6221063807332, "year": 2025 },
         "peak": { "value": 2764, "year": 2026 }
       }
@@ -55,7 +55,7 @@
         "co2_pc": { "value": 3.98080005796518, "year": 2024 },
         "internet": { "value": 77.4178009, "year": 2024 },
         "fertility": { "value": 2.723, "year": 2024 },
-        "tourists": { "value": 591000, "year": 2020 },
+        "tourists": { "value": 2371000, "year": 2019 },
         "aged_65": { "value": 6.80593085174533, "year": 2025 },
         "peak": { "value": 2918, "year": 2026 }
       }
@@ -74,7 +74,7 @@
         "arable": { "value": 8.44221105527638, "year": 2024 },
         "co2_pc": { "value": 0.0021383513311237, "year": 2024 },
         "fertility": { "value": 2.267, "year": 2024 },
-        "tourists": { "value": 899.999976158142, "year": 2020 },
+        "tourists": { "value": 19200.0007629395, "year": 2019 },
         "aged_65": { "value": 8.53818829638159, "year": 2025 },
         "peak": { "value": 963, "year": 2026 }
       }
@@ -93,7 +93,7 @@
         "arable": { "value": 0.308333333333333, "year": 2024 },
         "internet": { "value": 94.39759827, "year": 2024 },
         "fertility": { "value": 1.087, "year": 2024 },
-        "tourists": { "value": 5207000, "year": 2020 },
+        "tourists": { "value": 8235000, "year": 2019 },
         "aged_65": { "value": 16.5624302661496, "year": 2025 },
         "peak": { "value": 2942, "year": 2026 }
       }
@@ -133,7 +133,7 @@
         "co2_pc": { "value": 3.79857526767052, "year": 2024 },
         "internet": { "value": 72.73040009, "year": 2024 },
         "fertility": { "value": 1.582, "year": 2024 },
-        "tourists": { "value": 384500, "year": 2020 },
+        "tourists": { "value": 1035000, "year": 2019 },
         "aged_65": { "value": 12.3369971923977, "year": 2025 },
         "peak": { "value": 402, "year": 2026 }
       }
@@ -173,7 +173,7 @@
         "co2_pc": { "value": 2.47028185264546, "year": 2024 },
         "internet": { "value": 81.33930206, "year": 2024 },
         "fertility": { "value": 1.7, "year": 2024 },
-        "tourists": { "value": 375000, "year": 2020 },
+        "tourists": { "value": 1894000, "year": 2019 },
         "aged_65": { "value": 14.4428643549941, "year": 2025 },
         "peak": { "value": 4090, "year": 2026 }
       }
@@ -213,7 +213,7 @@
         "co2_pc": { "value": 14.0986639619808, "year": 2024 },
         "internet": { "value": 96.13140106, "year": 2024 },
         "fertility": { "value": 1.481, "year": 2024 },
-        "tourists": { "value": 1828000, "year": 2020 },
+        "tourists": { "value": 9466000, "year": 2019 },
         "aged_65": { "value": 18.0930147394386, "year": 2025 },
         "peak": { "value": 2745, "year": 2026 }
       }
@@ -233,7 +233,7 @@
         "co2_pc": { "value": 6.32278424603578, "year": 2024 },
         "internet": { "value": 91.92573373, "year": 2025 },
         "fertility": { "value": 1.31, "year": 2024 },
-        "tourists": { "value": 15091000, "year": 2020 },
+        "tourists": { "value": 31884000, "year": 2019 },
         "aged_65": { "value": 21.094709934873, "year": 2025 },
         "peak": { "value": 3798, "year": 2026 }
       }
@@ -253,7 +253,7 @@
         "co2_pc": { "value": 3.81144251153847, "year": 2024 },
         "internet": { "value": 90.80000181, "year": 2025 },
         "fertility": { "value": 1.43, "year": 2024 },
-        "tourists": { "value": 796000, "year": 2020 },
+        "tourists": { "value": 3170000, "year": 2019 },
         "aged_65": { "value": 9.16837192948103, "year": 2025 },
         "peak": { "value": 4466, "year": 2026 }
       }
@@ -273,7 +273,7 @@
         "co2_pc": { "value": 3.63633645083395, "year": 2024 },
         "internet": { "value": 92.47270203, "year": 2024 },
         "fertility": { "value": 1.374, "year": 2024 },
-        "tourists": { "value": 1794500, "year": 2020 },
+        "tourists": { "value": 7250000, "year": 2019 },
         "aged_65": { "value": 12.094434071694, "year": 2025 },
         "peak": { "value": 63, "year": 2026 }
       }
@@ -293,7 +293,7 @@
         "co2_pc": { "value": 23.8999918170545, "year": 2024 },
         "internet": { "value": 100, "year": 2024 },
         "fertility": { "value": 1.805, "year": 2024 },
-        "tourists": { "value": 1909000, "year": 2020 },
+        "tourists": { "value": 11061000, "year": 2019 },
         "aged_65": { "value": 4.01595782713348, "year": 2025 },
         "peak": { "value": 134, "year": 2026 }
       }
@@ -353,7 +353,7 @@
         "co2_pc": { "value": 5.93649429972465, "year": 2024 },
         "internet": { "value": 94.26182128, "year": 2024 },
         "fertility": { "value": 1.217, "year": 2024 },
-        "tourists": { "value": 3598000, "year": 2020 },
+        "tourists": { "value": 11832000, "year": 2019 },
         "aged_65": { "value": 18.2845697904208, "year": 2025 },
         "peak": { "value": 345, "year": 2026 }
       }
@@ -373,7 +373,7 @@
         "co2_pc": { "value": 7.30661519351762, "year": 2024 },
         "internet": { "value": 95.77579144, "year": 2024 },
         "fertility": { "value": 1.44, "year": 2024 },
-        "tourists": { "value": 2584000, "year": 2020 },
+        "tourists": { "value": 9343000, "year": 2019 },
         "aged_65": { "value": 20.9608828531757, "year": 2025 },
         "peak": { "value": 694.24, "year": 2026 }
       }
@@ -393,7 +393,7 @@
         "co2_pc": { "value": 0.932452909809338, "year": 2024 },
         "internet": { "value": 80.00582262, "year": 2024 },
         "fertility": { "value": 2.021, "year": 2024 },
-        "tourists": { "value": 487000, "year": 2020 },
+        "tourists": { "value": 1674000, "year": 2019 },
         "aged_65": { "value": 5.22800786902611, "year": 2025 },
         "peak": { "value": 1124, "year": 2026 }
       }
@@ -433,7 +433,7 @@
         "co2_pc": { "value": 4.1354663036079, "year": 2024 },
         "internet": { "value": 98.37, "year": 2017 },
         "fertility": { "value": 1.405, "year": 2024 },
-        "tourists": { "value": 51400.0015258789, "year": 2020 },
+        "tourists": { "value": 805000, "year": 2019 },
         "aged_65": { "value": 22.6095779535121, "year": 2025 }
       }
     },
@@ -452,7 +452,7 @@
         "co2_pc": { "value": 2.01118348906666, "year": 2024 },
         "internet": { "value": 91.27739716, "year": 2024 },
         "fertility": { "value": 1.449, "year": 2024 },
-        "tourists": { "value": 29799.9992370605, "year": 2020 },
+        "tourists": { "value": 316000, "year": 2019 },
         "aged_65": { "value": 6.62730338284496, "year": 2025 },
         "peak": { "value": 7570, "year": 2026 }
       }
@@ -472,7 +472,7 @@
         "co2_pc": { "value": 2.29073378062186, "year": 2024 },
         "internet": { "value": 79.70469666, "year": 2024 },
         "fertility": { "value": 2.523, "year": 2024 },
-        "tourists": { "value": 323299.987792969, "year": 2020 },
+        "tourists": { "value": 1239000, "year": 2019 },
         "aged_65": { "value": 5.74004562527309, "year": 2025 },
         "peak": { "value": 6542, "year": 2026 }
       }
@@ -492,7 +492,7 @@
         "co2_pc": { "value": 6.44935787372249, "year": 2024 },
         "internet": { "value": 86.10091103, "year": 2024 },
         "fertility": { "value": 1.492, "year": 2024 },
-        "tourists": { "value": 197000, "year": 2020 },
+        "tourists": { "value": 1198000, "year": 2019 },
         "aged_65": { "value": 22.8598779877873, "year": 2025 },
         "peak": { "value": 2386, "year": 2026 }
       }
@@ -551,7 +551,7 @@
         "co2_pc": { "value": 2.32575815155431, "year": 2024 },
         "internet": { "value": 77.7042682926829, "year": 2017 },
         "fertility": { "value": 1.048, "year": 2024 },
-        "tourists": { "value": 83000, "year": 2020 },
+        "tourists": { "value": 302399.993896484, "year": 2019 },
         "aged_65": { "value": 10.1077217356287, "year": 2025 }
       }
     },
@@ -570,7 +570,7 @@
         "co2_pc": { "value": 20.2426516194424, "year": 2024 },
         "internet": { "value": 96.29828801, "year": 2024 },
         "fertility": { "value": 1.731, "year": 2024 },
-        "tourists": { "value": 1071000, "year": 2020 },
+        "tourists": { "value": 4449000, "year": 2019 },
         "aged_65": { "value": 7.23853575950962, "year": 2025 },
         "peak": { "value": 1850, "year": 2026 }
       }
@@ -590,7 +590,7 @@
         "co2_pc": { "value": 5.30760215797104, "year": 2024 },
         "internet": { "value": 82.438955, "year": 2024 },
         "fertility": { "value": 1.72, "year": 2024 },
-        "tourists": { "value": 4973000, "year": 2020 },
+        "tourists": { "value": 12552000, "year": 2019 },
         "aged_65": { "value": 22.2355986271326, "year": 2025 },
         "peak": { "value": 2925.4, "year": 2026 }
       }
@@ -610,7 +610,7 @@
         "co2_pc": { "value": 0.274990879570369, "year": 2024 },
         "internet": { "value": 28.25270081, "year": 2024 },
         "fertility": { "value": 4.11, "year": 2024 },
-        "tourists": { "value": 67000, "year": 2020 },
+        "tourists": { "value": 143000, "year": 2019 },
         "aged_65": { "value": 2.68420882108847, "year": 2025 },
         "peak": { "value": 749, "year": 2026 }
       }
@@ -650,7 +650,7 @@
         "co2_pc": { "value": 1.28830183071462, "year": 2024 },
         "internet": { "value": 74.73519897, "year": 2024 },
         "fertility": { "value": 1.511, "year": 2024 },
-        "tourists": { "value": 180000, "year": 2020 },
+        "tourists": { "value": 758000, "year": 2019 },
         "aged_65": { "value": 7.15393054195179, "year": 2025 },
         "peak": { "value": 2829, "year": 2026 }
       }
@@ -670,7 +670,7 @@
         "co2_pc": { "value": 1.10207037315065, "year": 2024 },
         "internet": { "value": 68.47530365, "year": 2024 },
         "fertility": { "value": 2.548, "year": 2024 },
-        "tourists": { "value": 1306000, "year": 2020 },
+        "tourists": { "value": 6611000, "year": 2019 },
         "aged_65": { "value": 6.37709648006975, "year": 2025 },
         "peak": { "value": 1813, "year": 2026 }
       }
@@ -730,7 +730,7 @@
         "co2_pc": { "value": 4.99617228736049, "year": 2024 },
         "internet": { "value": 81.0676932508161, "year": 2017 },
         "fertility": { "value": 1.525, "year": 2024 },
-        "tourists": { "value": 660000, "year": 2020 },
+        "tourists": { "value": 2334000, "year": 2019 },
         "aged_65": { "value": 9.51366959594428, "year": 2025 }
       }
     },
@@ -769,7 +769,7 @@
         "co2_pc": { "value": 0.142508619707364, "year": 2024 },
         "internet": { "value": 12.62689972, "year": 2024 },
         "fertility": { "value": 6.028, "year": 2024 },
-        "tourists": { "value": 10399.9996185303, "year": 2020 },
+        "tourists": { "value": 81000, "year": 2019 },
         "aged_65": { "value": 2.11894758567596, "year": 2025 },
         "peak": { "value": 3445, "year": 2026 }
       }
@@ -809,7 +809,7 @@
         "co2_pc": { "value": 9.31508933799393, "year": 2024 },
         "internet": { "value": 91.6, "year": 2025 },
         "fertility": { "value": 1.013, "year": 2024 },
-        "tourists": { "value": 30402000, "year": 2020 },
+        "tourists": { "value": 162538000, "year": 2019 },
         "aged_65": { "value": 14.9114314271952, "year": 2025 },
         "peak": { "value": 8848.86, "year": 2026 }
       }
@@ -829,7 +829,7 @@
         "co2_pc": { "value": 1.79780371737796, "year": 2024 },
         "internet": { "value": 79.34543299, "year": 2024 },
         "fertility": { "value": 1.634, "year": 2024 },
-        "tourists": { "value": 1396000, "year": 2020 },
+        "tourists": { "value": 4531000, "year": 2019 },
         "aged_65": { "value": 10.2001032818786, "year": 2025 },
         "peak": { "value": 5775, "year": 2026 }
       }
@@ -849,29 +849,9 @@
         "co2_pc": { "value": 0.514984514693732, "year": 2024 },
         "internet": { "value": 32.51750183, "year": 2024 },
         "fertility": { "value": 3.822, "year": 2024 },
-        "tourists": { "value": 7000, "year": 2020 },
+        "tourists": { "value": 45099.9984741211, "year": 2019 },
         "aged_65": { "value": 4.45428004270273, "year": 2025 },
         "peak": { "value": 2361, "year": 2026 }
-      }
-    },
-    {
-      "iso2": "CG",
-      "name": "Congo",
-      "values": {
-        "population": { "value": 6484437, "year": 2025 },
-        "area": { "value": 342000, "year": 2024 },
-        "density": { "value": 18.544541727672, "year": 2024 },
-        "gdp_pc": { "value": 2514.73393584747, "year": 2025 },
-        "life_exp": { "value": 66.001, "year": 2024 },
-        "urban": { "value": 64.1236534817412, "year": 2025 },
-        "forest": { "value": 63.9525622254758, "year": 2024 },
-        "arable": { "value": 1.61054172767204, "year": 2024 },
-        "co2_pc": { "value": 1.33536271579755, "year": 2024 },
-        "internet": { "value": 47.25159836, "year": 2024 },
-        "fertility": { "value": 4.109, "year": 2024 },
-        "tourists": { "value": 158000, "year": 2018 },
-        "aged_65": { "value": 3.06138374079353, "year": 2025 },
-        "peak": { "value": 1020, "year": 2026 }
       }
     },
     {
@@ -889,7 +869,7 @@
         "co2_pc": { "value": 1.63283566378358, "year": 2024 },
         "internet": { "value": 87.17019653, "year": 2024 },
         "fertility": { "value": 1.318, "year": 2024 },
-        "tourists": { "value": 1146500, "year": 2020 },
+        "tourists": { "value": 3366000, "year": 2019 },
         "aged_65": { "value": 12.7519673196907, "year": 2025 },
         "peak": { "value": 3820, "year": 2026 }
       }
@@ -909,7 +889,7 @@
         "co2_pc": { "value": 0.589054440955677, "year": 2024 },
         "internet": { "value": 41.43219902, "year": 2024 },
         "fertility": { "value": 4.23, "year": 2024 },
-        "tourists": { "value": 668000, "year": 2020 },
+        "tourists": { "value": 2070000, "year": 2019 },
         "aged_65": { "value": 2.65345754900338, "year": 2025 },
         "peak": { "value": 1752, "year": 2026 }
       }
@@ -929,7 +909,7 @@
         "co2_pc": { "value": 4.83151414825927, "year": 2024 },
         "internet": { "value": 83.63240029, "year": 2024 },
         "fertility": { "value": 1.46, "year": 2024 },
-        "tourists": { "value": 21608000, "year": 2020 },
+        "tourists": { "value": 60021000, "year": 2019 },
         "aged_65": { "value": 23.6095692486799, "year": 2025 },
         "peak": { "value": 1831, "year": 2026 }
       }
@@ -949,7 +929,7 @@
         "co2_pc": { "value": 1.9129886264601, "year": 2024 },
         "internet": { "value": 70.47699738, "year": 2024 },
         "fertility": { "value": 1.445, "year": 2024 },
-        "tourists": { "value": 1086000, "year": 2020 },
+        "tourists": { "value": 4276000, "year": 2019 },
         "aged_65": { "value": 17.0350080804476, "year": 2025 },
         "peak": { "value": 1974, "year": 2026 }
       }
@@ -1026,7 +1006,7 @@
         "co2_pc": { "value": 4.2782054919933, "year": 2024 },
         "internet": { "value": 99.76915157, "year": 2024 },
         "fertility": { "value": 1.47, "year": 2024 },
-        "tourists": { "value": 15595000, "year": 2020 },
+        "tourists": { "value": 33093000, "year": 2019 },
         "aged_65": { "value": 21.1189674580971, "year": 2025 },
         "peak": { "value": 170.86, "year": 2026 }
       }
@@ -1065,7 +1045,7 @@
         "co2_pc": { "value": 1.27331772524734, "year": 2024 },
         "internet": { "value": 82.04689789, "year": 2024 },
         "fertility": { "value": 1.48, "year": 2024 },
-        "tourists": { "value": 140000, "year": 2020 },
+        "tourists": { "value": 322000, "year": 2019 },
         "aged_65": { "value": 13.1984242047016, "year": 2025 },
         "peak": { "value": 1447, "year": 2026 }
       }
@@ -1085,7 +1065,7 @@
         "co2_pc": { "value": 2.99473457012728, "year": 2024 },
         "internet": { "value": 91.0022446, "year": 2024 },
         "fertility": { "value": 2.222, "year": 2024 },
-        "tourists": { "value": 2748000, "year": 2020 },
+        "tourists": { "value": 7550000, "year": 2019 },
         "aged_65": { "value": 8.1878526489375, "year": 2025 },
         "peak": { "value": 3101, "year": 2026 }
       }
@@ -1165,7 +1145,7 @@
         "co2_pc": { "value": 1.50569728627702, "year": 2024 },
         "internet": { "value": 66.47769928, "year": 2024 },
         "fertility": { "value": 1.768, "year": 2024 },
-        "tourists": { "value": 707000, "year": 2020 },
+        "tourists": { "value": 2639000, "year": 2019 },
         "aged_65": { "value": 8.30913126582456, "year": 2025 },
         "peak": { "value": 2730, "year": 2026 }
       }
@@ -1223,7 +1203,7 @@
         "co2_pc": { "value": 7.75936884491537, "year": 2024 },
         "internet": { "value": 92.23796204, "year": 2024 },
         "fertility": { "value": 1.18, "year": 2024 },
-        "tourists": { "value": 1695000, "year": 2020 },
+        "tourists": { "value": 6103000, "year": 2019 },
         "aged_65": { "value": 21.8016309684638, "year": 2025 },
         "peak": { "value": 317.4, "year": 2026 }
       }
@@ -1243,7 +1223,7 @@
         "co2_pc": { "value": 0.880335237065324, "year": 2024 },
         "internet": { "value": 63.40309906, "year": 2024 },
         "fertility": { "value": 2.718, "year": 2024 },
-        "tourists": { "value": 345299.987792969, "year": 2020 },
+        "tourists": { "value": 1226000, "year": 2019 },
         "aged_65": { "value": 4.34585495321508, "year": 2025 },
         "peak": { "value": 1862, "year": 2026 }
       }
@@ -1263,7 +1243,7 @@
         "co2_pc": { "value": 0.146636636122491, "year": 2024 },
         "internet": { "value": 21.94129944, "year": 2024 },
         "fertility": { "value": 3.909, "year": 2024 },
-        "tourists": { "value": 518000, "year": 2020 },
+        "tourists": { "value": 812000, "year": 2019 },
         "aged_65": { "value": 3.2957318380591, "year": 2025 },
         "peak": { "value": 4533, "year": 2026 }
       }
@@ -1302,7 +1282,7 @@
         "co2_pc": { "value": 1.62222863442953, "year": 2024 },
         "internet": { "value": 74.7052002, "year": 2024 },
         "fertility": { "value": 2.27, "year": 2024 },
-        "tourists": { "value": 168000, "year": 2020 },
+        "tourists": { "value": 969000, "year": 2019 },
         "aged_65": { "value": 6.63486057239182, "year": 2025 },
         "peak": { "value": 1324, "year": 2026 }
       }
@@ -1322,7 +1302,7 @@
         "co2_pc": { "value": 5.53521221243539, "year": 2024 },
         "internet": { "value": 93.72405196, "year": 2024 },
         "fertility": { "value": 1.25, "year": 2024 },
-        "tourists": { "value": 896000, "year": 2020 },
+        "tourists": { "value": 3290000, "year": 2019 },
         "aged_65": { "value": 24.2018896456272, "year": 2025 },
         "peak": { "value": 1361.4, "year": 2026 }
       }
@@ -1342,7 +1322,7 @@
         "co2_pc": { "value": 4.00355772602595, "year": 2024 },
         "internet": { "value": 88.65381638, "year": 2024 },
         "fertility": { "value": 1.61, "year": 2024 },
-        "tourists": { "value": 117109000, "year": 2020 },
+        "tourists": { "value": 217877000, "year": 2019 },
         "aged_65": { "value": 22.5418906984086, "year": 2025 },
         "peak": { "value": 4805.59, "year": 2026 }
       }
@@ -1362,7 +1342,7 @@
         "co2_pc": { "value": 3.45591131519089, "year": 2024 },
         "internet": { "value": 72.7038953132942, "year": 2017 },
         "fertility": { "value": 1.491, "year": 2024 },
-        "tourists": { "value": 89400.0015258789, "year": 2020 },
+        "tourists": { "value": 300000, "year": 2019 },
         "aged_65": { "value": 11.9487370116652, "year": 2025 },
         "peak": { "value": 2241, "year": 2026 }
       }
@@ -1401,7 +1381,7 @@
         "co2_pc": { "value": 0.178370340740612, "year": 2024 },
         "internet": { "value": 49.49430084, "year": 2024 },
         "fertility": { "value": 3.907, "year": 2024 },
-        "tourists": { "value": 246000, "year": 2020 },
+        "tourists": { "value": 620000, "year": 2019 },
         "aged_65": { "value": 3.18495882311462, "year": 2025 }
       }
     },
@@ -1420,7 +1400,7 @@
         "co2_pc": { "value": 3.53241610924853, "year": 2024 },
         "internet": { "value": 83.79855689, "year": 2024 },
         "fertility": { "value": 1.802, "year": 2024 },
-        "tourists": { "value": 1513000, "year": 2020 },
+        "tourists": { "value": 7726000, "year": 2019 },
         "aged_65": { "value": 15.9913346858712, "year": 2025 },
         "peak": { "value": 5193.2, "year": 2026 }
       }
@@ -1440,7 +1420,7 @@
         "co2_pc": { "value": 6.94395663386317, "year": 2024 },
         "internet": { "value": 93.49999579, "year": 2024 },
         "fertility": { "value": 1.36, "year": 2024 },
-        "tourists": { "value": 12449000, "year": 2020 },
+        "tourists": { "value": 39563000, "year": 2019 },
         "aged_65": { "value": 23.7031981458429, "year": 2025 },
         "peak": { "value": 2962.06, "year": 2026 }
       }
@@ -1495,7 +1475,7 @@
         "co2_pc": { "value": 5.04642227577271, "year": 2024 },
         "internet": { "value": 86.26968886, "year": 2024 },
         "fertility": { "value": 1.24, "year": 2024 },
-        "tourists": { "value": 7406000, "year": 2020 },
+        "tourists": { "value": 34005000, "year": 2019 },
         "aged_65": { "value": 24.3998585549859, "year": 2025 },
         "peak": { "value": 2917.727, "year": 2026 }
       }
@@ -1533,7 +1513,7 @@
         "co2_pc": { "value": 1.50076360626925, "year": 2024 },
         "internet": { "value": 70.16159821, "year": 2024 },
         "fertility": { "value": 1.472, "year": 2024 },
-        "tourists": { "value": 217000, "year": 2020 },
+        "tourists": { "value": 526000, "year": 2019 },
         "aged_65": { "value": 12.6253692345071, "year": 2025 },
         "peak": { "value": 840, "year": 2026 }
       }
@@ -1553,7 +1533,7 @@
         "co2_pc": { "value": 0.00178808775934723, "year": 2024 },
         "internet": { "value": 80.5054655600831, "year": 2017 },
         "fertility": { "value": 2.748, "year": 2024 },
-        "tourists": { "value": 328000, "year": 2020 },
+        "tourists": { "value": 1667000, "year": 2019 },
         "aged_65": { "value": 13.0950866427809, "year": 2025 },
         "peak": { "value": 1332, "year": 2026 }
       }
@@ -1573,7 +1553,7 @@
         "co2_pc": { "value": 1.1066501528086, "year": 2024 },
         "internet": { "value": 60.22140121, "year": 2024 },
         "fertility": { "value": 2.287, "year": 2024 },
-        "tourists": { "value": 594000, "year": 2020 },
+        "tourists": { "value": 2560000, "year": 2019 },
         "aged_65": { "value": 4.9632752647752, "year": 2025 },
         "peak": { "value": 4203, "year": 2026 }
       }
@@ -1633,7 +1613,7 @@
         "co2_pc": { "value": 4.55860818422139, "year": 2024 },
         "internet": { "value": 83.00080109, "year": 2024 },
         "fertility": { "value": 2.395, "year": 2024 },
-        "tourists": { "value": 86400.0015258789, "year": 2020 },
+        "tourists": { "value": 315000, "year": 2019 },
         "aged_65": { "value": 6.98073891189565, "year": 2025 },
         "peak": { "value": 2810, "year": 2026 }
       }
@@ -1673,7 +1653,7 @@
         "co2_pc": { "value": 1.13551979026212, "year": 2024 },
         "internet": { "value": 58.62269974, "year": 2024 },
         "fertility": { "value": 2.476, "year": 2024 },
-        "tourists": { "value": 669000, "year": 2020 },
+        "tourists": { "value": 2315000, "year": 2019 },
         "aged_65": { "value": 4.54210281541647, "year": 2025 },
         "peak": { "value": 2849, "year": 2026 }
       }
@@ -1692,7 +1672,7 @@
         "co2_pc": { "value": 4.60070971943488, "year": 2024 },
         "internet": { "value": 95.75536971, "year": 2024 },
         "fertility": { "value": 0.841, "year": 2024 },
-        "tourists": { "value": 3569000, "year": 2020 },
+        "tourists": { "value": 55913000, "year": 2019 },
         "aged_65": { "value": 23.667320346627, "year": 2025 },
         "peak": { "value": 957, "year": 2026 }
       }
@@ -1712,7 +1692,7 @@
         "co2_pc": { "value": 4.45791782423566, "year": 2024 },
         "internet": { "value": 93.77898628, "year": 2024 },
         "fertility": { "value": 1.41, "year": 2024 },
-        "tourists": { "value": 31641000, "year": 2020 },
+        "tourists": { "value": 61397000, "year": 2019 },
         "aged_65": { "value": 21.1574623970403, "year": 2025 },
         "peak": { "value": 1014, "year": 2026 }
       }
@@ -1732,7 +1712,7 @@
         "co2_pc": { "value": 8.5199194837855, "year": 2024 },
         "internet": { "value": 98.209198, "year": 2024 },
         "fertility": { "value": 1.56, "year": 2024 },
-        "tourists": { "value": 488000, "year": 2020 },
+        "tourists": { "value": 2202000, "year": 2019 },
         "aged_65": { "value": 15.9770103398231, "year": 2025 },
         "peak": { "value": 2110, "year": 2026 }
       }
@@ -1772,7 +1752,7 @@
         "co2_pc": { "value": 2.86503978188758, "year": 2024 },
         "internet": { "value": 72.78075544, "year": 2024 },
         "fertility": { "value": 2.115, "year": 2024 },
-        "tourists": { "value": 4053000, "year": 2020 },
+        "tourists": { "value": 16107000, "year": 2019 },
         "aged_65": { "value": 7.542769252795, "year": 2025 },
         "peak": { "value": 4884, "year": 2026 }
       }
@@ -1792,7 +1772,7 @@
         "co2_pc": { "value": 9.05329342087712, "year": 2024 },
         "internet": { "value": 85.3404007, "year": 2024 },
         "fertility": { "value": 1.684, "year": 2024 },
-        "tourists": { "value": 1550000, "year": 2020 },
+        "tourists": { "value": 9107000, "year": 2019 },
         "aged_65": { "value": 8.58114314727287, "year": 2025 },
         "peak": { "value": 5628, "year": 2026 }
       }
@@ -1888,7 +1868,7 @@
         "co2_pc": { "value": 5.07573834102673, "year": 2024 },
         "internet": { "value": 89.2207202, "year": 2024 },
         "fertility": { "value": 1.18, "year": 2024 },
-        "tourists": { "value": 38419000, "year": 2020 },
+        "tourists": { "value": 95399000, "year": 2019 },
         "aged_65": { "value": 25.0981380733118, "year": 2025 },
         "peak": { "value": 4805.59, "year": 2026 }
       }
@@ -1908,7 +1888,7 @@
         "co2_pc": { "value": 2.84378384565939, "year": 2024 },
         "internet": { "value": 90.10870361, "year": 2024 },
         "fertility": { "value": 1.351, "year": 2024 },
-        "tourists": { "value": 1329699.95117188, "year": 2020 },
+        "tourists": { "value": 4233000, "year": 2019 },
         "aged_65": { "value": 8.57907476972342, "year": 2025 },
         "peak": { "value": 2256, "year": 2026 }
       }
@@ -1928,7 +1908,7 @@
         "co2_pc": { "value": 7.84242057238933, "year": 2024 },
         "internet": { "value": 85.54153081, "year": 2024 },
         "fertility": { "value": 1.15, "year": 2024 },
-        "tourists": { "value": 4115799.8046875, "year": 2020 },
+        "tourists": { "value": 31881000, "year": 2019 },
         "aged_65": { "value": 29.9940966737423, "year": 2025 },
         "peak": { "value": 3777.24, "year": 2026 }
       }
@@ -1948,7 +1928,7 @@
         "co2_pc": { "value": 2.0898692239058, "year": 2024 },
         "internet": { "value": 95.62244985, "year": 2024 },
         "fertility": { "value": 2.604, "year": 2024 },
-        "tourists": { "value": 1240000, "year": 2020 },
+        "tourists": { "value": 5361000, "year": 2019 },
         "aged_65": { "value": 4.75359341712725, "year": 2025 },
         "peak": { "value": 1854, "year": 2026 }
       }
@@ -1968,7 +1948,7 @@
         "co2_pc": { "value": 12.5678187536661, "year": 2024 },
         "internet": { "value": 93.39167254, "year": 2024 },
         "fertility": { "value": 2.984, "year": 2024 },
-        "tourists": { "value": 2035000, "year": 2020 },
+        "tourists": { "value": 8515000, "year": 2019 },
         "aged_65": { "value": 9.00270150466414, "year": 2025 },
         "peak": { "value": 7010, "year": 2026 }
       }
@@ -2042,7 +2022,7 @@
         "co2_pc": { "value": 23.6726718577295, "year": 2024 },
         "internet": { "value": 100, "year": 2025 },
         "fertility": { "value": 1.56, "year": 2024 },
-        "tourists": { "value": 2161000, "year": 2020 },
+        "tourists": { "value": 8565000, "year": 2019 },
         "aged_65": { "value": 3.17490130225807, "year": 2025 },
         "peak": { "value": 140, "year": 2026 }
       }
@@ -2082,7 +2062,7 @@
         "co2_pc": { "value": 3.35435098295083, "year": 2024 },
         "internet": { "value": 65.59269714, "year": 2024 },
         "fertility": { "value": 2.397, "year": 2024 },
-        "tourists": { "value": 886400.024414063, "year": 2020 },
+        "tourists": { "value": 4791000, "year": 2019 },
         "aged_65": { "value": 4.80805045518916, "year": 2025 },
         "peak": { "value": 2819, "year": 2026 }
       }
@@ -2102,7 +2082,7 @@
         "co2_pc": { "value": 3.647774745944, "year": 2024 },
         "internet": { "value": 92.70757011, "year": 2024 },
         "fertility": { "value": 1.24, "year": 2024 },
-        "tourists": { "value": 3204000, "year": 2020 },
+        "tourists": { "value": 8342000, "year": 2019 },
         "aged_65": { "value": 22.1950582635891, "year": 2025 },
         "peak": { "value": 311.94, "year": 2026 }
       }
@@ -2199,7 +2179,7 @@
         "arable": { "value": 10.8125, "year": 2024 },
         "internet": { "value": 98.2641983, "year": 2024 },
         "fertility": { "value": 1.37, "year": 2024 },
-        "tourists": { "value": 58400.0015258789, "year": 2020 },
+        "tourists": { "value": 98099.9984741211, "year": 2019 },
         "aged_65": { "value": 21.3753488835726, "year": 2025 },
         "peak": { "value": 2599, "year": 2026 }
       }
@@ -2219,7 +2199,7 @@
         "co2_pc": { "value": 4.49056496639174, "year": 2024 },
         "internet": { "value": 89.16116293, "year": 2024 },
         "fertility": { "value": 1.11, "year": 2024 },
-        "tourists": { "value": 2284000, "year": 2020 },
+        "tourists": { "value": 6150000, "year": 2019 },
         "aged_65": { "value": 20.7219454695688, "year": 2025 },
         "peak": { "value": 293.84, "year": 2026 }
       }
@@ -2239,7 +2219,7 @@
         "co2_pc": { "value": 10.5572722492364, "year": 2024 },
         "internet": { "value": 99.12902211, "year": 2025 },
         "fertility": { "value": 1.25, "year": 2024 },
-        "tourists": { "value": 525000, "year": 2020 },
+        "tourists": { "value": 1041000, "year": 2019 },
         "aged_65": { "value": 15.8123957037476, "year": 2025 },
         "peak": { "value": 560, "year": 2026 }
       }
@@ -2257,7 +2237,7 @@
         "co2_pc": { "value": 2.52532751091703, "year": 2024 },
         "internet": { "value": 89.82640076, "year": 2024 },
         "fertility": { "value": 0.582, "year": 2024 },
-        "tourists": { "value": 5897000, "year": 2020 },
+        "tourists": { "value": 39406000, "year": 2019 },
         "aged_65": { "value": 15.0947982498785, "year": 2025 },
         "peak": { "value": 1706, "year": 2026 }
       }
@@ -2277,7 +2257,7 @@
         "co2_pc": { "value": 0.146494805123461, "year": 2024 },
         "internet": { "value": 18.67790031, "year": 2024 },
         "fertility": { "value": 3.912, "year": 2024 },
-        "tourists": { "value": 87099.9984741211, "year": 2020 },
+        "tourists": { "value": 486000, "year": 2019 },
         "aged_65": { "value": 3.47289998087395, "year": 2025 },
         "peak": { "value": 2876, "year": 2026 }
       }
@@ -2317,7 +2297,7 @@
         "co2_pc": { "value": 8.32321620146515, "year": 2024 },
         "internet": { "value": 98.0206059, "year": 2024 },
         "fertility": { "value": 1.543, "year": 2024 },
-        "tourists": { "value": 4333000, "year": 2020 },
+        "tourists": { "value": 26101000, "year": 2019 },
         "aged_65": { "value": 8.03318142685505, "year": 2025 },
         "peak": { "value": 4095, "year": 2026 }
       }
@@ -2337,7 +2317,7 @@
         "co2_pc": { "value": 3.56650922036609, "year": 2024 },
         "internet": { "value": 85.23999786, "year": 2024 },
         "fertility": { "value": 1.56, "year": 2024 },
-        "tourists": { "value": 555000, "year": 2020 },
+        "tourists": { "value": 1703000, "year": 2019 },
         "aged_65": { "value": 4.95821974187994, "year": 2025 },
         "peak": { "value": 5.1, "year": 2026 }
       }
@@ -2377,7 +2357,7 @@
         "co2_pc": { "value": 3.17888641409729, "year": 2024 },
         "internet": { "value": 93.86029816, "year": 2024 },
         "fertility": { "value": 1.01, "year": 2024 },
-        "tourists": { "value": 718000, "year": 2020 },
+        "tourists": { "value": 3519000, "year": 2019 },
         "aged_65": { "value": 20.5407907884966, "year": 2025 },
         "peak": { "value": 253, "year": 2026 }
       }
@@ -2436,7 +2416,7 @@
         "co2_pc": { "value": 3.53634151803811, "year": 2024 },
         "internet": { "value": 73.30793533, "year": 2024 },
         "fertility": { "value": 1.44, "year": 2024 },
-        "tourists": { "value": 316000, "year": 2020 },
+        "tourists": { "value": 1418000, "year": 2019 },
         "aged_65": { "value": 14.1145544022434, "year": 2025 },
         "peak": { "value": 828, "year": 2026 }
       }
@@ -2456,7 +2436,7 @@
         "co2_pc": { "value": 3.63738680384754, "year": 2024 },
         "internet": { "value": 83.12233799, "year": 2024 },
         "fertility": { "value": 1.892, "year": 2024 },
-        "tourists": { "value": 51128000, "year": 2020 },
+        "tourists": { "value": 97406000, "year": 2019 },
         "aged_65": { "value": 8.52143438004228, "year": 2025 },
         "peak": { "value": 5636, "year": 2026 }
       }
@@ -2496,7 +2476,7 @@
         "co2_pc": { "value": 3.41675873098598, "year": 2024 },
         "internet": { "value": 77.3687973, "year": 2024 },
         "fertility": { "value": 1.726, "year": 2024 },
-        "tourists": { "value": 29000, "year": 2020 },
+        "tourists": { "value": 174000, "year": 2019 },
         "aged_65": { "value": 16.8576673952236, "year": 2025 },
         "peak": { "value": 430, "year": 2026 }
       }
@@ -2513,7 +2493,7 @@
         "urban": { "value": 100, "year": 2025 },
         "internet": { "value": 99.04489899, "year": 2024 },
         "fertility": { "value": 2.102, "year": 2024 },
-        "tourists": { "value": 159000, "year": 2020 },
+        "tourists": { "value": 363000, "year": 2019 },
         "aged_65": { "value": 36.0110586578337, "year": 2025 },
         "peak": { "value": 162, "year": 2026 }
       }
@@ -2533,7 +2513,7 @@
         "co2_pc": { "value": 7.84665630954259, "year": 2024 },
         "internet": { "value": 85.12349701, "year": 2024 },
         "fertility": { "value": 2.5, "year": 2024 },
-        "tourists": { "value": 66900.0015258789, "year": 2020 },
+        "tourists": { "value": 637000, "year": 2019 },
         "aged_65": { "value": 5.43106536635296, "year": 2025 },
         "peak": { "value": 4374, "year": 2026 }
       }
@@ -2552,7 +2532,7 @@
         "arable": { "value": 0.720565055762082, "year": 2024 },
         "internet": { "value": 88.88258428, "year": 2024 },
         "fertility": { "value": 1.8, "year": 2024 },
-        "tourists": { "value": 351000, "year": 2020 },
+        "tourists": { "value": 2510000, "year": 2019 },
         "aged_65": { "value": 18.2940089675043, "year": 2025 },
         "peak": { "value": 2534, "year": 2026 }
       }
@@ -2572,7 +2552,7 @@
         "co2_pc": { "value": 1.83925269318779, "year": 2024 },
         "internet": { "value": 91.2, "year": 2024 },
         "fertility": { "value": 2.208, "year": 2024 },
-        "tourists": { "value": 2802000, "year": 2020 },
+        "tourists": { "value": 13109000, "year": 2019 },
         "aged_65": { "value": 8.45030687649506, "year": 2025 },
         "peak": { "value": 4167, "year": 2026 }
       }
@@ -2612,7 +2592,7 @@
         "co2_pc": { "value": 0.575463259318228, "year": 2024 },
         "internet": { "value": 45.4477005, "year": 2020 },
         "fertility": { "value": 2.098, "year": 2024 },
-        "tourists": { "value": 903000, "year": 2020 },
+        "tourists": { "value": 4364000, "year": 2019 },
         "aged_65": { "value": 7.52222015681565, "year": 2025 },
         "peak": { "value": 5881, "year": 2026 }
       }
@@ -2632,7 +2612,7 @@
         "co2_pc": { "value": 1.20450237960009, "year": 2024 },
         "internet": { "value": 64.87460327, "year": 2024 },
         "fertility": { "value": 3.211, "year": 2024 },
-        "tourists": { "value": 187100.006103516, "year": 2020 },
+        "tourists": { "value": 1651000, "year": 2019 },
         "aged_65": { "value": 3.79304753450455, "year": 2025 },
         "peak": { "value": 2573, "year": 2026 }
       }
@@ -2668,7 +2648,7 @@
         "co2_pc": { "value": 0.535964084109792, "year": 2024 },
         "internet": { "value": 46.32189941, "year": 2024 },
         "fertility": { "value": 1.961, "year": 2024 },
-        "tourists": { "value": 230000, "year": 2020 },
+        "tourists": { "value": 1197000, "year": 2019 },
         "aged_65": { "value": 6.62418872502616, "year": 2025 },
         "peak": { "value": 8848.86, "year": 2026 }
       }
@@ -2688,7 +2668,7 @@
         "co2_pc": { "value": 6.60188395966651, "year": 2024 },
         "internet": { "value": 97.00679779, "year": 2024 },
         "fertility": { "value": 1.43, "year": 2024 },
-        "tourists": { "value": 7265000, "year": 2020 },
+        "tourists": { "value": 20129000, "year": 2019 },
         "aged_65": { "value": 20.8687702211484, "year": 2025 },
         "peak": { "value": 870, "year": 2026 }
       }
@@ -2708,7 +2688,7 @@
         "co2_pc": { "value": 17.0800884366062, "year": 2024 },
         "internet": { "value": 82.0058408035186, "year": 2017 },
         "fertility": { "value": 1.964, "year": 2024 },
-        "tourists": { "value": 31000, "year": 2020 },
+        "tourists": { "value": 130000, "year": 2019 },
         "aged_65": { "value": 11.7777220967518, "year": 2025 }
       }
     },
@@ -2727,7 +2707,7 @@
         "co2_pc": { "value": 6.01410207939509, "year": 2024 },
         "internet": { "value": 93.51930237, "year": 2024 },
         "fertility": { "value": 1.57, "year": 2024 },
-        "tourists": { "value": 996000, "year": 2020 },
+        "tourists": { "value": 3888000, "year": 2019 },
         "aged_65": { "value": 17.6093066526984, "year": 2025 },
         "peak": { "value": 3724, "year": 2026 }
       }
@@ -2747,7 +2727,7 @@
         "co2_pc": { "value": 0.829841501184187, "year": 2024 },
         "internet": { "value": 61.39550018, "year": 2024 },
         "fertility": { "value": 2.206, "year": 2024 },
-        "tourists": { "value": 474000, "year": 2020 },
+        "tourists": { "value": 1455000, "year": 2019 },
         "aged_65": { "value": 5.69755099606108, "year": 2025 },
         "peak": { "value": 2107, "year": 2026 }
       }
@@ -2767,7 +2747,7 @@
         "co2_pc": { "value": 0.118901709547783, "year": 2024 },
         "internet": { "value": 15.55760002, "year": 2024 },
         "fertility": { "value": 5.935, "year": 2024 },
-        "tourists": { "value": 85000, "year": 2020 },
+        "tourists": { "value": 192000, "year": 2019 },
         "aged_65": { "value": 2.61799886961133, "year": 2025 },
         "peak": { "value": 2022, "year": 2026 }
       }
@@ -2824,7 +2804,7 @@
         "co2_pc": { "value": 3.99992545326879, "year": 2024 },
         "internet": { "value": 93.1, "year": 2025 },
         "fertility": { "value": 1.4, "year": 2024 },
-        "tourists": { "value": 118000, "year": 2020 },
+        "tourists": { "value": 758000, "year": 2019 },
         "aged_65": { "value": 18.5237163487965, "year": 2025 },
         "peak": { "value": 2764, "year": 2026 }
       }
@@ -2862,7 +2842,7 @@
         "co2_pc": { "value": 7.17830173255862, "year": 2024 },
         "internet": { "value": 99, "year": 2024 },
         "fertility": { "value": 1.45, "year": 2024 },
-        "tourists": { "value": 1397000, "year": 2020 },
+        "tourists": { "value": 5879000, "year": 2019 },
         "aged_65": { "value": 19.080223244558, "year": 2025 },
         "peak": { "value": 2468.854, "year": 2026 }
       }
@@ -2882,7 +2862,7 @@
         "co2_pc": { "value": 18.6519911434889, "year": 2024 },
         "internet": { "value": 95.25174678, "year": 2024 },
         "fertility": { "value": 2.508, "year": 2024 },
-        "tourists": { "value": 869000, "year": 2020 },
+        "tourists": { "value": 3506000, "year": 2019 },
         "aged_65": { "value": 2.6870391801832, "year": 2025 },
         "peak": { "value": 3018, "year": 2026 }
       }
@@ -2921,7 +2901,7 @@
         "co2_pc": { "value": 82.8426109070359, "year": 2024 },
         "internet": { "value": 83.92549896, "year": 2024 },
         "fertility": { "value": 1.883, "year": 2024 },
-        "tourists": { "value": 18399.9996185303, "year": 2020 },
+        "tourists": { "value": 94000, "year": 2019 },
         "aged_65": { "value": 11.8329794762916, "year": 2025 },
         "peak": { "value": 242, "year": 2026 }
       }
@@ -2940,7 +2920,7 @@
         "arable": { "value": 6.95435684647303, "year": 2024 },
         "internet": { "value": 86.63765334, "year": 2023 },
         "fertility": { "value": 3.25, "year": 2024 },
-        "tourists": { "value": 93000, "year": 2020 },
+        "tourists": { "value": 688000, "year": 2019 },
         "aged_65": { "value": 3.85167300191802, "year": 2025 },
         "peak": { "value": 1026, "year": 2026 }
       }
@@ -2960,7 +2940,7 @@
         "co2_pc": { "value": 2.73829900364892, "year": 2024 },
         "internet": { "value": 72.77149963, "year": 2024 },
         "fertility": { "value": 2.106, "year": 2024 },
-        "tourists": { "value": 647000, "year": 2020 },
+        "tourists": { "value": 2494000, "year": 2019 },
         "aged_65": { "value": 9.65704983976816, "year": 2025 },
         "peak": { "value": 3475, "year": 2026 }
       }
@@ -2980,7 +2960,7 @@
         "co2_pc": { "value": 0.516966762734976, "year": 2024 },
         "internet": { "value": 18.81159973, "year": 2024 },
         "fertility": { "value": 3.072, "year": 2024 },
-        "tourists": { "value": 39000, "year": 2020 },
+        "tourists": { "value": 211000, "year": 2019 },
         "aged_65": { "value": 3.58807085542753, "year": 2025 },
         "peak": { "value": 4509, "year": 2026 }
       }
@@ -3000,7 +2980,7 @@
         "co2_pc": { "value": 1.1581935050359, "year": 2024 },
         "internet": { "value": 81.57806793, "year": 2024 },
         "fertility": { "value": 2.416, "year": 2024 },
-        "tourists": { "value": 1077000, "year": 2020 },
+        "tourists": { "value": 4368000, "year": 2019 },
         "aged_65": { "value": 6.71858395975233, "year": 2025 },
         "peak": { "value": 842, "year": 2026 }
       }
@@ -3020,7 +3000,7 @@
         "co2_pc": { "value": 2.02424185179617, "year": 2024 },
         "internet": { "value": 81.95705992, "year": 2024 },
         "fertility": { "value": 1.965, "year": 2024 },
-        "tourists": { "value": 1119000, "year": 2020 },
+        "tourists": { "value": 5275000, "year": 2019 },
         "aged_65": { "value": 9.46656075708863, "year": 2025 },
         "peak": { "value": 6768, "year": 2026 }
       }
@@ -3040,7 +3020,7 @@
         "co2_pc": { "value": 1.5030109111702, "year": 2024 },
         "internet": { "value": 67.26300914, "year": 2024 },
         "fertility": { "value": 1.894, "year": 2024 },
-        "tourists": { "value": 1483000, "year": 2020 },
+        "tourists": { "value": 8261000, "year": 2019 },
         "aged_65": { "value": 5.72400622201301, "year": 2025 },
         "peak": { "value": 2954, "year": 2026 }
       }
@@ -3080,7 +3060,7 @@
         "co2_pc": { "value": 3.32476489948602, "year": 2024 },
         "internet": { "value": 88.48704454, "year": 2024 },
         "fertility": { "value": 1.41, "year": 2024 },
-        "tourists": { "value": 4208000, "year": 2020 },
+        "tourists": { "value": 17283000, "year": 2019 },
         "aged_65": { "value": 24.9426193763087, "year": 2025 },
         "peak": { "value": 2351, "year": 2026 }
       }
@@ -3100,7 +3080,7 @@
         "co2_pc": { "value": 4.81811048233563, "year": 2024 },
         "internet": { "value": 87.29178106, "year": 2022 },
         "fertility": { "value": 0.92, "year": 2024 },
-        "tourists": { "value": 3882000, "year": 2020 },
+        "tourists": { "value": 4931000, "year": 2019 },
         "aged_65": { "value": 25.2728697076413, "year": 2025 },
         "peak": { "value": 1338, "year": 2026 }
       }
@@ -3120,9 +3100,29 @@
         "co2_pc": { "value": 47.3321641445828, "year": 2024 },
         "internet": { "value": 98.08540344, "year": 2024 },
         "fertility": { "value": 1.717, "year": 2024 },
-        "tourists": { "value": 582000, "year": 2020 },
+        "tourists": { "value": 2136500, "year": 2019 },
         "aged_65": { "value": 1.70081503237359, "year": 2025 },
         "peak": { "value": 103, "year": 2026 }
+      }
+    },
+    {
+      "iso2": "CG",
+      "name": "Republic of the Congo",
+      "values": {
+        "population": { "value": 6484437, "year": 2025 },
+        "area": { "value": 342000, "year": 2024 },
+        "density": { "value": 18.544541727672, "year": 2024 },
+        "gdp_pc": { "value": 2514.73393584747, "year": 2025 },
+        "life_exp": { "value": 66.001, "year": 2024 },
+        "urban": { "value": 64.1236534817412, "year": 2025 },
+        "forest": { "value": 63.9525622254758, "year": 2024 },
+        "arable": { "value": 1.61054172767204, "year": 2024 },
+        "co2_pc": { "value": 1.33536271579755, "year": 2024 },
+        "internet": { "value": 47.25159836, "year": 2024 },
+        "fertility": { "value": 4.109, "year": 2024 },
+        "tourists": { "value": 158000, "year": 2018 },
+        "aged_65": { "value": 3.06138374079353, "year": 2025 },
+        "peak": { "value": 1020, "year": 2026 }
       }
     },
     {
@@ -3140,7 +3140,7 @@
         "co2_pc": { "value": 3.72055055783694, "year": 2024 },
         "internet": { "value": 91.29048551, "year": 2024 },
         "fertility": { "value": 1.39, "year": 2024 },
-        "tourists": { "value": 5023000, "year": 2020 },
+        "tourists": { "value": 12815000, "year": 2019 },
         "aged_65": { "value": 20.1384043774039, "year": 2025 },
         "peak": { "value": 2544, "year": 2026 }
       }
@@ -3160,7 +3160,7 @@
         "co2_pc": { "value": 13.9845411189425, "year": 2024 },
         "internet": { "value": 94.36495368, "year": 2024 },
         "fertility": { "value": 1.418, "year": 2024 },
-        "tourists": { "value": 6359000, "year": 2020 },
+        "tourists": { "value": 24419000, "year": 2019 },
         "aged_65": { "value": 17.7917873832619, "year": 2025 },
         "peak": { "value": 5642, "year": 2026 }
       }
@@ -3215,7 +3215,7 @@
         "arable": { "value": 4.06115107913669, "year": 2024 },
         "co2_pc": { "value": 1.60444731881166, "year": 2024 },
         "fertility": { "value": 3.801, "year": 2024 },
-        "tourists": { "value": 23899.9996185303, "year": 2020 },
+        "tourists": { "value": 181000, "year": 2019 },
         "aged_65": { "value": 6.06890356646976, "year": 2025 },
         "peak": { "value": 1858, "year": 2026 }
       }
@@ -3313,7 +3313,7 @@
         "arable": { "value": 29.0078868621181, "year": 2024 },
         "internet": { "value": 87.69071294, "year": 2024 },
         "fertility": { "value": 1.64, "year": 2024 },
-        "tourists": { "value": 446000, "year": 2020 },
+        "tourists": { "value": 1847000, "year": 2019 },
         "aged_65": { "value": 23.050411277315, "year": 2025 },
         "peak": { "value": 2658, "year": 2026 }
       }
@@ -3333,7 +3333,7 @@
         "co2_pc": { "value": 7.23667946668425, "year": 2024 },
         "internet": { "value": 87.81800079, "year": 2024 },
         "fertility": { "value": 1.85, "year": 2024 },
-        "tourists": { "value": 124500, "year": 2020 },
+        "tourists": { "value": 428000, "year": 2019 },
         "aged_65": { "value": 8.74539176146741, "year": 2025 },
         "peak": { "value": 905, "year": 2026 }
       }
@@ -3373,7 +3373,7 @@
         "co2_pc": { "value": 9.75144363129176, "year": 2024 },
         "internet": { "value": 94.37757178, "year": 2024 },
         "fertility": { "value": 0.97, "year": 2024 },
-        "tourists": { "value": 2742000, "year": 2020 },
+        "tourists": { "value": 19116000, "year": 2019 },
         "aged_65": { "value": 14.2110377720053, "year": 2025 },
         "peak": { "value": 163.63, "year": 2026 }
       }
@@ -3429,7 +3429,7 @@
         "co2_pc": { "value": 6.26652251574692, "year": 2024 },
         "internet": { "value": 90.76355487, "year": 2024 },
         "fertility": { "value": 1.52, "year": 2024 },
-        "tourists": { "value": 1216000, "year": 2020 },
+        "tourists": { "value": 4702000, "year": 2019 },
         "aged_65": { "value": 22.2111482273631, "year": 2025 },
         "peak": { "value": 2864, "year": 2026 }
       }
@@ -3449,7 +3449,7 @@
         "co2_pc": { "value": 0.383912070097827, "year": 2024 },
         "internet": { "value": 29.04070091, "year": 2024 },
         "fertility": { "value": 3.513, "year": 2024 },
-        "tourists": { "value": 4400.00009536743, "year": 2020 },
+        "tourists": { "value": 28899.9996185303, "year": 2019 },
         "aged_65": { "value": 3.66871341943646, "year": 2025 },
         "peak": { "value": 2335, "year": 2026 }
       }
@@ -3488,7 +3488,7 @@
         "co2_pc": { "value": 6.87684962627712, "year": 2024 },
         "internet": { "value": 78.35759735, "year": 2024 },
         "fertility": { "value": 2.205, "year": 2024 },
-        "tourists": { "value": 3886600.09765625, "year": 2020 },
+        "tourists": { "value": 14797000, "year": 2019 },
         "aged_65": { "value": 6.88503097027824, "year": 2025 },
         "peak": { "value": 3450, "year": 2026 }
       }
@@ -3508,7 +3508,7 @@
         "co2_pc": { "value": 11.3622569893006, "year": 2024 },
         "internet": { "value": 97.89563777, "year": 2024 },
         "fertility": { "value": 0.748, "year": 2024 },
-        "tourists": { "value": 2519000, "year": 2020 },
+        "tourists": { "value": 17503000, "year": 2019 },
         "aged_65": { "value": 20.3304188408974, "year": 2025 },
         "peak": { "value": 1947.06, "year": 2026 }
       }
@@ -3546,7 +3546,7 @@
         "co2_pc": { "value": 4.50540688376633, "year": 2024 },
         "internet": { "value": 95.7574516, "year": 2024 },
         "fertility": { "value": 1.1, "year": 2024 },
-        "tourists": { "value": 36410000, "year": 2020 },
+        "tourists": { "value": 126170000, "year": 2019 },
         "aged_65": { "value": 21.64208099744, "year": 2025 },
         "peak": { "value": 3715, "year": 2026 }
       }
@@ -3566,7 +3566,7 @@
         "co2_pc": { "value": 1.06473352801606, "year": 2024 },
         "internet": { "value": 54.59, "year": 2024 },
         "fertility": { "value": 1.952, "year": 2024 },
-        "tourists": { "value": 540000, "year": 2020 },
+        "tourists": { "value": 2027000, "year": 2019 },
         "aged_65": { "value": 12.4747139630238, "year": 2025 },
         "peak": { "value": 2524, "year": 2026 }
       }
@@ -3586,7 +3586,7 @@
         "co2_pc": { "value": 2.88410221377794, "year": 2024 },
         "internet": { "value": 76.88400269, "year": 2024 },
         "fertility": { "value": 1.526, "year": 2024 },
-        "tourists": { "value": 301399.993896484, "year": 2020 },
+        "tourists": { "value": 1107000, "year": 2019 },
         "aged_65": { "value": 11.720639791993, "year": 2025 },
         "peak": { "value": 1156, "year": 2026 }
       }
@@ -3606,7 +3606,7 @@
         "co2_pc": { "value": 1.71076642335766, "year": 2024 },
         "internet": { "value": 68.20500183, "year": 2024 },
         "fertility": { "value": 1.385, "year": 2024 },
-        "tourists": { "value": 432500, "year": 2020 },
+        "tourists": { "value": 1220000, "year": 2019 },
         "aged_65": { "value": 9.963696717717, "year": 2025 },
         "peak": { "value": 952.4, "year": 2026 }
       }
@@ -3686,7 +3686,7 @@
         "co2_pc": { "value": 3.57381645984766, "year": 2024 },
         "internet": { "value": 95.76629783, "year": 2025 },
         "fertility": { "value": 1.43, "year": 2024 },
-        "tourists": { "value": 1957000, "year": 2020 },
+        "tourists": { "value": 7616000, "year": 2019 },
         "aged_65": { "value": 20.9127967529707, "year": 2025 },
         "peak": { "value": 2096.8, "year": 2026 }
       }
@@ -3826,7 +3826,7 @@
         "co2_pc": { "value": 0.312565499458875, "year": 2024 },
         "internet": { "value": 39.48320007, "year": 2024 },
         "fertility": { "value": 4.121673, "year": 2024 },
-        "tourists": { "value": 482000, "year": 2020 },
+        "tourists": { "value": 876000, "year": 2019 },
         "aged_65": { "value": 3.4768505984781, "year": 2025 },
         "peak": { "value": 986, "year": 2026 }
       }
@@ -3866,7 +3866,7 @@
         "co2_pc": { "value": 19.5810522730943, "year": 2024 },
         "internet": { "value": 82.15989685, "year": 2024 },
         "fertility": { "value": 1.536, "year": 2024 },
-        "tourists": { "value": 141000, "year": 2020 },
+        "tourists": { "value": 480000, "year": 2019 },
         "aged_65": { "value": 12.9254775320864, "year": 2025 },
         "peak": { "value": 940, "year": 2026 }
       }
@@ -3886,7 +3886,7 @@
         "co2_pc": { "value": 2.62113010481539, "year": 2024 },
         "internet": { "value": 76.5, "year": 2024 },
         "fertility": { "value": 1.818, "year": 2024 },
-        "tourists": { "value": 2012000, "year": 2020 },
+        "tourists": { "value": 9429000, "year": 2019 },
         "aged_65": { "value": 9.9376502855836, "year": 2025 },
         "peak": { "value": 1544, "year": 2026 }
       }
@@ -3906,7 +3906,7 @@
         "co2_pc": { "value": 5.37926453268486, "year": 2024 },
         "internet": { "value": 89.77024003, "year": 2025 },
         "fertility": { "value": 1.48, "year": 2024 },
-        "tourists": { "value": 15971000, "year": 2020 },
+        "tourists": { "value": 51747000, "year": 2019 },
         "aged_65": { "value": 10.5709408311479, "year": 2025 },
         "peak": { "value": 5137, "year": 2026 }
       }
@@ -3944,7 +3944,7 @@
         "arable": { "value": 1.05459645866509, "year": 2024 },
         "co2_pc": { "value": 4.92317610400774, "year": 2024 },
         "fertility": { "value": 1.452, "year": 2024 },
-        "tourists": { "value": 370399.993896484, "year": 2020 },
+        "tourists": { "value": 1599000, "year": 2019 },
         "aged_65": { "value": 11.6787074880748, "year": 2025 },
         "peak": { "value": 49, "year": 2026 }
       }
@@ -3982,7 +3982,7 @@
         "co2_pc": { "value": 0.165048181856788, "year": 2024 },
         "internet": { "value": 8.949831061, "year": 2024 },
         "fertility": { "value": 4.165, "year": 2024 },
-        "tourists": { "value": 473000, "year": 2020 },
+        "tourists": { "value": 1543000, "year": 2019 },
         "aged_65": { "value": 2.22850221312123, "year": 2025 },
         "peak": { "value": 5109, "year": 2026 }
       }
@@ -4002,7 +4002,7 @@
         "co2_pc": { "value": 3.12934781865114, "year": 2024 },
         "internet": { "value": 82.47489929, "year": 2024 },
         "fertility": { "value": 0.988, "year": 2024 },
-        "tourists": { "value": 3382000, "year": 2020 },
+        "tourists": { "value": 13710000, "year": 2019 },
         "aged_65": { "value": 18.9717382539904, "year": 2025 },
         "peak": { "value": 2061, "year": 2026 }
       }
@@ -4022,7 +4022,7 @@
         "co2_pc": { "value": 18.2552064370494, "year": 2024 },
         "internet": { "value": 100, "year": 2024 },
         "fertility": { "value": 1.213, "year": 2024 },
-        "tourists": { "value": 8084000, "year": 2020 },
+        "tourists": { "value": 25282000, "year": 2019 },
         "aged_65": { "value": 1.79231447206064, "year": 2025 },
         "peak": { "value": 1911, "year": 2026 }
       }
@@ -4042,7 +4042,7 @@
         "co2_pc": { "value": 4.22077337220883, "year": 2024 },
         "internet": { "value": 95.4720993, "year": 2024 },
         "fertility": { "value": 1.551, "year": 2024 },
-        "tourists": { "value": 11101000, "year": 2020 },
+        "tourists": { "value": 40857000, "year": 2019 },
         "aged_65": { "value": 19.7026932546935, "year": 2025 },
         "peak": { "value": 1344.527, "year": 2026 }
       }
@@ -4062,7 +4062,7 @@
         "co2_pc": { "value": 13.6238622652793, "year": 2024 },
         "internet": { "value": 94.69380188, "year": 2024 },
         "fertility": { "value": 1.6265, "year": 2024 },
-        "tourists": { "value": 45037000, "year": 2020 },
+        "tourists": { "value": 165478000, "year": 2019 },
         "aged_65": { "value": 18.387224828496, "year": 2025 },
         "peak": { "value": 6190, "year": 2026 }
       }
@@ -4102,7 +4102,7 @@
         "co2_pc": { "value": 0.00191613094838901, "year": 2024 },
         "internet": { "value": 64.3774942980087, "year": 2017 },
         "fertility": { "value": 1.97, "year": 2024 },
-        "tourists": { "value": 8612000, "year": 2020 },
+        "tourists": { "value": 2074000, "year": 2019 },
         "aged_65": { "value": 23.1237780564189, "year": 2025 },
         "peak": { "value": 473, "year": 2026 }
       }
@@ -4142,7 +4142,7 @@
         "co2_pc": { "value": 0.869798674098549, "year": 2024 },
         "internet": { "value": 22.35140038, "year": 2015 },
         "fertility": { "value": 3.569, "year": 2024 },
-        "tourists": { "value": 82400.0015258789, "year": 2020 },
+        "tourists": { "value": 256000, "year": 2019 },
         "aged_65": { "value": 4.3788357515164, "year": 2025 },
         "peak": { "value": 1879, "year": 2026 }
       }
@@ -4182,7 +4182,7 @@
         "co2_pc": { "value": 4.26605675468195, "year": 2024 },
         "internet": { "value": 84.15, "year": 2024 },
         "fertility": { "value": 1.895, "year": 2024 },
-        "tourists": { "value": 3837000, "year": 2020 },
+        "tourists": { "value": 18009000, "year": 2019 },
         "aged_65": { "value": 9.49453578200007, "year": 2025 },
         "peak": { "value": 3147.3, "year": 2026 }
       }
@@ -4222,7 +4222,7 @@
         "co2_pc": { "value": 0.542961477377669, "year": 2024 },
         "internet": { "value": 17.10099983, "year": 2024 },
         "fertility": { "value": 4.036, "year": 2024 },
-        "tourists": { "value": 502000, "year": 2020 },
+        "tourists": { "value": 1266000, "year": 2019 },
         "aged_65": { "value": 2.00005028777659, "year": 2025 },
         "peak": { "value": 2339, "year": 2026 }
       }
@@ -4242,7 +4242,7 @@
         "co2_pc": { "value": 0.772821434267465, "year": 2024 },
         "internet": { "value": 41.64279938, "year": 2024 },
         "fertility": { "value": 3.674, "year": 2024 },
-        "tourists": { "value": 639000, "year": 2020 },
+        "tourists": { "value": 2294000, "year": 2019 },
         "aged_65": { "value": 3.56147602516578, "year": 2025 },
         "peak": { "value": 2592, "year": 2026 }
       }

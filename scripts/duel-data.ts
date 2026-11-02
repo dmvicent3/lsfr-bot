@@ -16,7 +16,7 @@ async function read(stat: StatDef, today: Date): Promise<Map<string, Reading>> {
   const year = today.getUTCFullYear();
 
   if ("wb" in stat.source) {
-    return parseWbIndicator(await fetchWbIndicator(fetch, stat.source.wb, year - 1));
+    return parseWbIndicator(await fetchWbIndicator(fetch, stat.source.wb, year - 1), stat.maxYear);
   }
 
   return parseWikidataPeaks(await fetchWikidata(fetch), year);

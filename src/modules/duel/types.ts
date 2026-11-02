@@ -22,6 +22,10 @@ export interface StatDef {
   unit: Unit;
   source: { wb: string } | { wikidata: "peak" };
   exclude: readonly string[];
+  /** Ignore readings after this year (COVID-hit 2020 tourism, for one). */
+  maxYear?: number;
+  /** The value does not date; the reveal shows no year. */
+  timeless?: boolean;
 }
 
 export interface Reading {
