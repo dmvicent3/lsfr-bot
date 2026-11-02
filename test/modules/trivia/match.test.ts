@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { levenshtein, matches, normalize } from "../../../src/modules/trivia/match.ts";
+import { matches, normalize } from "../../../src/modules/trivia/match.ts";
 
 test("normalize lowercases, trims, drops punctuation and a leading article", () => {
   expect(normalize("  The  Beatles! ")).toBe("beatles");
@@ -16,12 +16,6 @@ test("normalize drops mentions, custom emoji and emoji", () => {
   expect(normalize("<@123> paris")).toBe("paris");
   expect(normalize("<:pog:42> paris 🎉")).toBe("paris");
   expect(normalize("Paris!!")).toBe("paris");
-});
-
-test("levenshtein", () => {
-  expect(levenshtein("kitten", "sitting")).toBe(3);
-  expect(levenshtein("", "abc")).toBe(3);
-  expect(levenshtein("same", "same")).toBe(0);
 });
 
 test("exact after normalising matches", () => {

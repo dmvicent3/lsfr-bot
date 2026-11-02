@@ -4,10 +4,12 @@ import { normaliseName as norm } from "../../src/core/countries/normalise.ts";
 export const EXTRA_ALIASES: Record<string, string[]> = {
   US: ["USA", "US", "America", "United States of America"],
   GB: ["UK", "Britain", "Great Britain", "United Kingdom of Great Britain and Northern Ireland"],
-  CZ: ["Czech Republic"],
+  CZ: ["Czech Republic", "Czech"],
   CI: ["Ivory Coast", "Cote d'Ivoire"],
   CD: ["DRC", "Congo-Kinshasa", "Democratic Republic of the Congo", "Congo DRC"],
-  CG: ["Congo-Brazzaville"],
+  CG: ["Congo-Brazzaville", "Brazzaville"],
+  PG: ["PNG"],
+  CF: ["CAR"],
   MM: ["Burma"],
   SZ: ["Swaziland"],
   TL: ["East Timor", "Timor Leste"],
@@ -23,7 +25,7 @@ export const EXTRA_ALIASES: Record<string, string[]> = {
   KN: ["Saint Kitts and Nevis"],
   LC: ["Saint Lucia"],
   VC: ["Saint Vincent and the Grenadines"],
-  PS: ["State of Palestine"],
+  PS: ["State of Palestine", "Palestinian Territories"],
   RU: ["Russian Federation"],
 };
 
@@ -36,11 +38,12 @@ const BLOCKED = new Set([
   "central africa",
   "garden city",
   "heart of south america",
+  "congo",
 ]);
 /** Codes and tz names ("ISO 3166-1:AS", "Atlantic/Bermuda", "US-GU") are not names players type. */
 const isJunk = (alias: string): boolean => /[:/]|^[A-Z]{2}-[A-Z]{2}$/.test(alias);
-/** Wikidata aliases of three letters are mostly noise, except all-caps ones such as PRC. */
-const isWorthy = (alias: string): boolean => norm(alias).length > 3 || /^[A-Z]{3}$/.test(alias);
+/** Wikidata aliases of three letters are noise (DOM, TAN, GUI); the curated list keeps the real ones. */
+const isWorthy = (alias: string): boolean => norm(alias).length > 3;
 
 function claims(list: { iso2: string; names: string[] }[]): Map<string, Set<string>> {
   const owners = new Map<string, Set<string>>();

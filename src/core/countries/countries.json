@@ -247,7 +247,7 @@
         "drivesLeft": true,
         "flagColours": ["red", "blue", "yellow", "white", "black"],
         "flagFeatures": ["emblem"],
-        "aliases": ["Antigua-Barbuda"]
+        "aliases": ["Antigua–Barbuda"]
       }
     },
     {
@@ -455,7 +455,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "blue", "green", "white"],
         "flagFeatures": ["star", "crescent"],
-        "aliases": ["AZE", "Republic of Azerbaijan"]
+        "aliases": ["Republic of Azerbaijan"]
       }
     },
     {
@@ -597,7 +597,7 @@
         "drivesLeft": true,
         "flagColours": ["blue", "yellow", "black"],
         "flagFeatures": ["emblem"],
-        "aliases": ["BAR", "Barbadoes"]
+        "aliases": ["Barbadoes"]
       }
     },
     {
@@ -668,7 +668,7 @@
         "borders": ["DE", "FR", "LU", "NL"],
         "landlocked": false,
         "island": false,
-        "memberships": ["eu", "nato"],
+        "memberships": ["nato", "eu"],
         "languages": ["fr"],
         "monarchy": true,
         "drivesLeft": false,
@@ -823,7 +823,7 @@
         "drivesLeft": true,
         "flagColours": ["yellow", "white", "orange"],
         "flagFeatures": ["emblem"],
-        "aliases": ["BHU", "Kingdom of Bhutan"]
+        "aliases": ["Kingdom of Bhutan"]
       }
     },
     {
@@ -991,7 +991,6 @@
         "flagColours": ["red", "blue", "white"],
         "flagFeatures": ["emblem"],
         "aliases": [
-          "IVB",
           "B.V.I.",
           "Virgin Islands of the United Kingdom",
           "Virgin Islands, United Kingdom"
@@ -1055,7 +1054,7 @@
         "borders": ["GR", "MK", "RO", "RS", "TR"],
         "landlocked": false,
         "island": false,
-        "memberships": ["eu", "nato"],
+        "memberships": ["nato", "eu"],
         "languages": [],
         "monarchy": false,
         "drivesLeft": false,
@@ -1271,7 +1270,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "white"],
         "flagFeatures": ["emblem"],
-        "aliases": ["CAN"]
+        "aliases": []
       }
     },
     {
@@ -1303,7 +1302,7 @@
         "drivesLeft": true,
         "flagColours": ["red", "blue", "white"],
         "flagFeatures": ["emblem"],
-        "aliases": ["Caymans", "CAY"]
+        "aliases": ["Caymans"]
       }
     },
     {
@@ -1336,7 +1335,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "blue", "green", "yellow", "white"],
         "flagFeatures": ["star"],
-        "aliases": []
+        "aliases": ["CAR"]
       }
     },
     {
@@ -1369,7 +1368,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "blue", "yellow"],
         "flagFeatures": [],
-        "aliases": ["CHA", "Republic of Chad"]
+        "aliases": ["Republic of Chad"]
       }
     },
     {
@@ -1402,7 +1401,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "blue", "white"],
         "flagFeatures": ["star"],
-        "aliases": ["CHI", "Republic of Chile"]
+        "aliases": ["Republic of Chile"]
       }
     },
     {
@@ -1640,7 +1639,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "blue", "white"],
         "flagFeatures": ["emblem"],
-        "aliases": ["CRO", "HRV", "Republic of Croatia"]
+        "aliases": ["Republic of Croatia"]
       }
     },
     {
@@ -1778,13 +1777,13 @@
         "borders": ["AT", "DE", "PL", "SK"],
         "landlocked": true,
         "island": false,
-        "memberships": ["eu", "nato"],
+        "memberships": ["nato", "eu"],
         "languages": [],
         "monarchy": false,
         "drivesLeft": false,
         "flagColours": ["red", "blue", "white"],
         "flagFeatures": [],
-        "aliases": ["Czech Republic"]
+        "aliases": ["Czech Republic", "Czech"]
       }
     },
     {
@@ -1817,7 +1816,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "white"],
         "flagFeatures": [],
-        "aliases": ["Denmark proper", "metropolitan Denmark", "Danmark", "Dania", "TAN", "Danemark"]
+        "aliases": ["Denmark proper", "metropolitan Denmark", "Danmark", "Dania", "Danemark"]
       }
     },
     {
@@ -1882,7 +1881,7 @@
         "drivesLeft": true,
         "flagColours": ["red", "green", "yellow", "white", "black"],
         "flagFeatures": ["star", "emblem"],
-        "aliases": ["DOM", "The Commonwealth of Dominica", "Island of Dominica", "Wai‘tu kubuli"]
+        "aliases": ["The Commonwealth of Dominica", "Island of Dominica", "Wai‘tu kubuli"]
       }
     },
     {
@@ -1954,7 +1953,6 @@
           "Democratic Republic of the Congo",
           "Congo DRC",
           "D.R.C.",
-          "COD",
           "Dem. Rep. Congo",
           "Dem. Republic of Congo",
           "Dem. Republic of the Congo",
@@ -1993,10 +1991,10 @@
         "flagColours": ["red", "blue", "yellow"],
         "flagFeatures": ["emblem"],
         "aliases": [
+          "Republic of Equator",
           "Republic of Ecuador",
           "Republic of the Equator",
-          "The Ecuadorian State",
-          "Republic of Equator"
+          "The Ecuadorian State"
         ]
       }
     },
@@ -2069,7 +2067,7 @@
         "drivesLeft": false,
         "flagColours": ["blue", "white"],
         "flagFeatures": ["emblem"],
-        "aliases": ["Salvador", "ESA", "Republic of El Salvador"]
+        "aliases": ["Salvador", "Republic of El Salvador"]
       }
     },
     {
@@ -2101,7 +2099,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "blue", "green", "white"],
         "flagFeatures": ["star", "emblem"],
-        "aliases": ["GEQ", "Republic of Equatorial Guinea"]
+        "aliases": ["Republic of Equatorial Guinea"]
       }
     },
     {
@@ -2160,7 +2158,7 @@
         "borders": ["LV", "RU"],
         "landlocked": false,
         "island": false,
-        "memberships": ["nato", "eu"],
+        "memberships": ["eu", "nato"],
         "languages": [],
         "monarchy": false,
         "drivesLeft": false,
@@ -2468,13 +2466,13 @@
         "borders": ["CG", "CM", "GQ"],
         "landlocked": false,
         "island": false,
-        "memberships": ["commonwealth", "opec"],
+        "memberships": ["opec", "commonwealth"],
         "languages": ["fr"],
         "monarchy": false,
         "drivesLeft": false,
         "flagColours": ["blue", "green", "yellow"],
         "flagFeatures": [],
-        "aliases": ["GAB", "Gabonese Republic", "République Gabonaise"]
+        "aliases": ["Gabonese Republic", "République Gabonaise"]
       }
     },
     {
@@ -2540,10 +2538,10 @@
         "flagColours": ["red", "white"],
         "flagFeatures": [],
         "aliases": [
+          "Georgia (Sakartvelo)",
           "Georgia (country)",
           "Sakartvelo",
-          "Republic of Georgia",
-          "Georgia (Sakartvelo)"
+          "Republic of Georgia"
         ]
       }
     },
@@ -2571,13 +2569,13 @@
         "borders": ["AT", "BE", "CH", "CZ", "DK", "FR", "LU", "NL", "PL"],
         "landlocked": false,
         "island": false,
-        "memberships": ["nato", "eu"],
+        "memberships": ["eu", "nato"],
         "languages": [],
         "monarchy": false,
         "drivesLeft": false,
         "flagColours": ["red", "yellow", "black"],
         "flagFeatures": [],
-        "aliases": ["Federal Republic of Germany", "FRG", "BRD", "DEU"]
+        "aliases": ["Federal Republic of Germany"]
       }
     },
     {
@@ -2702,7 +2700,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "white"],
         "flagFeatures": [],
-        "aliases": ["GRL", "Groenland", "Kalaallit Nunaat", "Greenlandia"]
+        "aliases": ["Kalaallit Nunaat", "Greenlandia", "Groenland"]
       }
     },
     {
@@ -2735,7 +2733,7 @@
         "drivesLeft": true,
         "flagColours": ["red", "green", "yellow"],
         "flagFeatures": ["star", "emblem"],
-        "aliases": ["GRN"]
+        "aliases": []
       }
     },
     {
@@ -2801,7 +2799,7 @@
         "drivesLeft": false,
         "flagColours": ["blue", "white"],
         "flagFeatures": ["emblem"],
-        "aliases": ["GTM", "Republic of Guatemala"]
+        "aliases": ["Republic of Guatemala"]
       }
     },
     {
@@ -2834,7 +2832,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "green", "yellow"],
         "flagFeatures": [],
-        "aliases": ["GUI", "Guinea-Conakry", "Republic of Guinea"]
+        "aliases": ["Guinea-Conakry", "Republic of Guinea"]
       }
     },
     {
@@ -2867,7 +2865,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "green", "yellow", "black"],
         "flagFeatures": ["star"],
-        "aliases": ["GBS", "Republic of Guinea-Bissau"]
+        "aliases": ["Republic of Guinea-Bissau"]
       }
     },
     {
@@ -2933,7 +2931,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "blue", "white"],
         "flagFeatures": ["emblem"],
-        "aliases": ["Hayti", "HAI", "Ayiti", "Haitian Republic", "Republic of Haiti"]
+        "aliases": ["Hayti", "Ayiti", "Haitian Republic", "Republic of Haiti"]
       }
     },
     {
@@ -2966,7 +2964,7 @@
         "drivesLeft": false,
         "flagColours": ["blue", "white"],
         "flagFeatures": ["star"],
-        "aliases": ["HON", "Honduran Republic", "Republic of Honduras"]
+        "aliases": ["Honduran Republic", "Republic of Honduras"]
       }
     },
     {
@@ -3032,7 +3030,7 @@
         "borders": ["AT", "HR", "RO", "RS", "SI", "SK", "UA"],
         "landlocked": true,
         "island": false,
-        "memberships": ["eu", "nato"],
+        "memberships": ["nato", "eu"],
         "languages": [],
         "monarchy": false,
         "drivesLeft": false,
@@ -3181,7 +3179,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "green", "white"],
         "flagFeatures": ["emblem"],
-        "aliases": ["IRI", "Islamic Rep. Iran", "Islamic Republic of Iran"]
+        "aliases": ["Islamic Rep. Iran", "Islamic Republic of Iran"]
       }
     },
     {
@@ -3309,7 +3307,7 @@
         "drivesLeft": false,
         "flagColours": ["blue", "white"],
         "flagFeatures": ["star"],
-        "aliases": ["State of Israel", "ISR", "Yisrael"]
+        "aliases": ["State of Israel", "Yisrael"]
       }
     },
     {
@@ -3409,13 +3407,13 @@
         "flagColours": ["red", "white"],
         "flagFeatures": [],
         "aliases": [
+          "Land of the Rising Sun",
           "Iapan",
           "Iapon",
           "Land of Rising Sun",
           "Nihon-koku",
           "Nippon-koku",
-          "State of Japan",
-          "Land of the Rising Sun"
+          "State of Japan"
         ]
       }
     },
@@ -3450,7 +3448,6 @@
         "flagColours": ["red", "green", "white", "black"],
         "flagFeatures": ["star"],
         "aliases": [
-          "HKJ",
           "Yarden",
           "Giordania",
           "Hashemite Kingdom of Jordan",
@@ -3582,7 +3579,7 @@
         "drivesLeft": false,
         "flagColours": ["blue", "yellow", "white"],
         "flagFeatures": ["star", "emblem"],
-        "aliases": ["KOS", "Kosova", "Republic of Kosovo", "RKS", "XKX"]
+        "aliases": ["Kosova", "Republic of Kosovo"]
       }
     },
     {
@@ -3708,7 +3705,7 @@
         "borders": ["BY", "EE", "LT", "RU"],
         "landlocked": false,
         "island": false,
-        "memberships": ["nato", "eu"],
+        "memberships": ["eu", "nato"],
         "languages": [],
         "monarchy": false,
         "drivesLeft": false,
@@ -3789,7 +3786,7 @@
         "drivesLeft": true,
         "flagColours": ["blue", "green", "white", "black"],
         "flagFeatures": ["emblem"],
-        "aliases": ["Kingdom of Lesotho", "LES", "The Mountain Kingdom"]
+        "aliases": ["Kingdom of Lesotho", "The Mountain Kingdom"]
       }
     },
     {
@@ -3821,7 +3818,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "blue", "white"],
         "flagFeatures": ["star"],
-        "aliases": ["Liber", "Republic of Liberia"]
+        "aliases": ["Republic of Liberia", "Liber"]
       }
     },
     {
@@ -3853,7 +3850,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "green", "white", "black"],
         "flagFeatures": ["star", "crescent"],
-        "aliases": ["LBA", "State of Libya"]
+        "aliases": ["State of Libya"]
       }
     },
     {
@@ -3945,7 +3942,7 @@
         "borders": ["BE", "DE", "FR"],
         "landlocked": true,
         "island": false,
-        "memberships": ["nato", "eu"],
+        "memberships": ["eu", "nato"],
         "languages": ["fr"],
         "monarchy": true,
         "drivesLeft": false,
@@ -4058,7 +4055,7 @@
         "drivesLeft": true,
         "flagColours": ["red", "green", "black"],
         "flagFeatures": ["emblem"],
-        "aliases": ["MAW", "Republic of Malawi"]
+        "aliases": ["Republic of Malawi"]
       }
     },
     {
@@ -4124,7 +4121,7 @@
         "drivesLeft": true,
         "flagColours": ["red", "green", "white"],
         "flagFeatures": ["crescent"],
-        "aliases": ["MDV", "Republic of Maldives"]
+        "aliases": ["Republic of Maldives"]
       }
     },
     {
@@ -4296,7 +4293,7 @@
         "drivesLeft": true,
         "flagColours": ["red", "blue", "green", "yellow"],
         "flagFeatures": [],
-        "aliases": ["MRI", "Moris", "Republic of Mauritius", "Maurice"]
+        "aliases": ["Maurice", "Moris", "Republic of Mauritius"]
       }
     },
     {
@@ -4330,11 +4327,10 @@
         "flagColours": ["red", "green", "white"],
         "flagFeatures": ["emblem"],
         "aliases": [
-          "United Mexican States",
-          "MXN",
           "Mexican Republic",
           "Mexican United States",
           "US of M",
+          "United Mexican States",
           "United States of Mexico"
         ]
       }
@@ -4370,7 +4366,6 @@
         "flagColours": ["blue", "white"],
         "flagFeatures": ["star"],
         "aliases": [
-          "FSM",
           "Fed. Sts. Micronesia",
           "Fed. Sts. of Micronesia",
           "Federated States of Micronesia, FSM",
@@ -4610,7 +4605,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "green", "yellow", "white"],
         "flagFeatures": ["star"],
-        "aliases": ["Burma", "Republic of the Union of Myanmar", "Union of Burma"]
+        "aliases": ["Burma", "Union of Burma", "Republic of the Union of Myanmar"]
       }
     },
     {
@@ -4871,7 +4866,7 @@
         "drivesLeft": false,
         "flagColours": ["blue", "white"],
         "flagFeatures": ["emblem"],
-        "aliases": ["NCA", "NIC", "Republic of Nicaragua"]
+        "aliases": ["Republic of Nicaragua"]
       }
     },
     {
@@ -4931,7 +4926,7 @@
         "borders": ["BJ", "CM", "NE", "TD"],
         "landlocked": false,
         "island": false,
-        "memberships": ["opec", "commonwealth"],
+        "memberships": ["commonwealth", "opec"],
         "languages": ["en"],
         "monarchy": false,
         "drivesLeft": false,
@@ -5009,7 +5004,6 @@
         "aliases": [
           "Macedonia",
           "Makedonia",
-          "MKD",
           "Former Yugoslav Republic of Macedonia",
           "FYR Macedonia",
           "Republic of Macedonia",
@@ -5045,7 +5039,7 @@
         "drivesLeft": false,
         "flagColours": ["blue", "white"],
         "flagFeatures": ["star", "emblem"],
-        "aliases": ["NMI", "CNMI", "Northern Marianas"]
+        "aliases": ["CNMI", "Northern Marianas"]
       }
     },
     {
@@ -5216,7 +5210,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "green", "white", "black"],
         "flagFeatures": [],
-        "aliases": ["State of Palestine", "PSE"]
+        "aliases": ["State of Palestine", "Palestinian Territories"]
       }
     },
     {
@@ -5282,7 +5276,7 @@
         "drivesLeft": true,
         "flagColours": ["red", "yellow", "white", "black"],
         "flagFeatures": ["star", "emblem"],
-        "aliases": ["Independent State of Papua New Guinea"]
+        "aliases": ["PNG", "Independent State of Papua New Guinea"]
       }
     },
     {
@@ -5408,7 +5402,7 @@
         "borders": ["BY", "CZ", "DE", "LT", "RU", "SK", "UA"],
         "landlocked": false,
         "island": false,
-        "memberships": ["eu", "nato"],
+        "memberships": ["nato", "eu"],
         "languages": [],
         "monarchy": false,
         "drivesLeft": false,
@@ -5441,13 +5435,13 @@
         "borders": ["ES"],
         "landlocked": false,
         "island": false,
-        "memberships": ["eu", "nato"],
+        "memberships": ["nato", "eu"],
         "languages": ["pt"],
         "monarchy": false,
         "drivesLeft": false,
         "flagColours": ["red", "green", "yellow"],
         "flagFeatures": ["emblem"],
-        "aliases": ["POR", "Portuguese Republic"]
+        "aliases": ["Portuguese Republic"]
       }
     },
     {
@@ -5559,8 +5553,7 @@
         "flagFeatures": [],
         "aliases": [
           "Congo-Brazzaville",
-          "Congo",
-          "CGO",
+          "Brazzaville",
           "Congo Republic",
           "Rep. Congo",
           "Republic of Congo",
@@ -5709,10 +5702,10 @@
         "flagColours": ["red", "blue", "white"],
         "flagFeatures": ["emblem"],
         "aliases": [
-          "Saint Martin (French part)",
           "Collectivity of Saint Martin",
           "Saint Martin (France)",
-          "St. Martin (French part)"
+          "St. Martin (French part)",
+          "Saint Martin (French part)"
         ]
       }
     },
@@ -5745,7 +5738,7 @@
         "drivesLeft": true,
         "flagColours": ["red", "blue", "white"],
         "flagFeatures": ["star"],
-        "aliases": ["SAM", "Western Samoa", "Independent State of Samoa"]
+        "aliases": ["Western Samoa", "Independent State of Samoa"]
       }
     },
     {
@@ -5941,7 +5934,7 @@
         "drivesLeft": true,
         "flagColours": ["red", "blue", "green", "yellow", "white"],
         "flagFeatures": [],
-        "aliases": ["Republic of Seychelles", "SEY"]
+        "aliases": ["Republic of Seychelles"]
       }
     },
     {
@@ -5974,7 +5967,7 @@
         "drivesLeft": false,
         "flagColours": ["blue", "green", "white"],
         "flagFeatures": [],
-        "aliases": ["Republic of Sierra Leone", "SLE"]
+        "aliases": ["Republic of Sierra Leone"]
       }
     },
     {
@@ -6074,7 +6067,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "blue", "white"],
         "flagFeatures": ["emblem"],
-        "aliases": ["Slovak Republic", "SVK"]
+        "aliases": ["Slovak Republic"]
       }
     },
     {
@@ -6140,7 +6133,7 @@
         "drivesLeft": true,
         "flagColours": ["blue", "green", "yellow", "white"],
         "flagFeatures": ["star"],
-        "aliases": ["SOL"]
+        "aliases": []
       }
     },
     {
@@ -6205,7 +6198,7 @@
         "drivesLeft": true,
         "flagColours": ["red", "blue", "green", "yellow", "white", "black"],
         "flagFeatures": [],
-        "aliases": ["R.S.A.", "Republic of South Africa", "RSA"]
+        "aliases": ["R.S.A.", "Republic of South Africa"]
       }
     },
     {
@@ -6281,7 +6274,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "blue", "green", "yellow", "white", "black"],
         "flagFeatures": ["star"],
-        "aliases": ["SSD", "Southern Sudan", "Republic of South Sudan"]
+        "aliases": ["Southern Sudan", "Republic of South Sudan"]
       }
     },
     {
@@ -6347,7 +6340,7 @@
         "drivesLeft": true,
         "flagColours": ["red", "green", "yellow", "orange"],
         "flagFeatures": ["emblem"],
-        "aliases": ["SRI", "Ceylan", "Serendib", "Taprobane", "Srilanka", "Lanka, Sri"]
+        "aliases": ["Ceylan", "Serendib", "Taprobane", "Srilanka", "Lanka, Sri"]
       }
     },
     {
@@ -6490,8 +6483,7 @@
           "North Sudan",
           "Republic of Sudan",
           "Republic of the Sudan",
-          "Soudan",
-          "SUD"
+          "Soudan"
         ]
       }
     },
@@ -6564,7 +6556,7 @@
         "drivesLeft": false,
         "flagColours": ["blue", "yellow"],
         "flagFeatures": [],
-        "aliases": ["Kingdom of Sweden", "Swedish Kingdom"]
+        "aliases": ["Swedish Kingdom", "Kingdom of Sweden"]
       }
     },
     {
@@ -6730,11 +6722,11 @@
         "flagColours": ["red", "blue", "white"],
         "flagFeatures": [],
         "aliases": [
+          "Thai",
+          "The Kingdom of Siam",
           "The Kingdom of Thailand",
-          "Kingdom of Siam",
           "Prathet Thai",
-          "Ratcha-anachak Thai",
-          "Thai"
+          "Ratcha-anachak Thai"
         ]
       }
     },
@@ -6834,7 +6826,7 @@
         "drivesLeft": true,
         "flagColours": ["red", "white"],
         "flagFeatures": [],
-        "aliases": ["TGA", "Kingdom of Tonga", "Tonga Islands", "Friendly Islands"]
+        "aliases": ["Kingdom of Tonga", "Tonga Islands", "Friendly Islands"]
       }
     },
     {
@@ -6965,7 +6957,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "green", "white"],
         "flagFeatures": ["star", "crescent", "emblem"],
-        "aliases": ["TKM", "Turkmenia"]
+        "aliases": ["Turkmenia"]
       }
     },
     {
@@ -6997,7 +6989,7 @@
         "drivesLeft": true,
         "flagColours": ["red", "blue", "white"],
         "flagFeatures": ["emblem"],
-        "aliases": ["TCI", "Turks and Caicos"]
+        "aliases": ["Turks and Caicos"]
       }
     },
     {
@@ -7028,7 +7020,7 @@
         "drivesLeft": true,
         "flagColours": ["red", "blue", "yellow", "white"],
         "flagFeatures": ["star"],
-        "aliases": ["TUV", "Ellice Islands"]
+        "aliases": ["Ellice Islands"]
       }
     },
     {
@@ -7203,15 +7195,15 @@
           "USA",
           "US",
           "America",
-          "United States of America",
+          "the United States of America",
+          "'Murica",
+          "Merica",
           "the States",
           "the U.S. of A",
           "U.S. of America",
           "U. S. A.",
           "US of A",
-          "US of America",
-          "'Murica",
-          "Merica"
+          "US of America"
         ]
       }
     },
@@ -7245,7 +7237,7 @@
         "drivesLeft": false,
         "flagColours": ["blue", "yellow", "white"],
         "flagFeatures": ["emblem"],
-        "aliases": ["URU", "Eastern Republic of Uruguay", "Oriental Republic of Uruguay"]
+        "aliases": ["Eastern Republic of Uruguay", "Oriental Republic of Uruguay"]
       }
     },
     {
@@ -7348,7 +7340,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "green", "yellow", "black"],
         "flagFeatures": ["emblem"],
-        "aliases": ["VAN", "Republic of Vanuatu"]
+        "aliases": ["Republic of Vanuatu"]
       }
     },
     {
@@ -7414,14 +7406,7 @@
         "drivesLeft": false,
         "flagColours": ["red", "yellow"],
         "flagFeatures": ["star"],
-        "aliases": [
-          "Socialist Republic of Viet Nam",
-          "Socialist Republic of Vietnam",
-          "Viet Nam",
-          "VNM",
-          "SRV",
-          "VIE"
-        ]
+        "aliases": ["Việt Nam", "Socialist Republic of Viet Nam", "Socialist Republic of Vietnam"]
       }
     },
     {

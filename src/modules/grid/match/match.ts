@@ -24,7 +24,11 @@ function fuzzy(text: string, entries: Entry[]): string | null {
 
   if (max === 0) return null;
 
-  const near = new Set(entries.filter((e) => levenshtein(text, e.key) <= max).map((e) => e.iso2));
+  const near = new Set(
+    entries
+      .filter((e) => Math.abs(e.key.length - text.length) <= max && levenshtein(text, e.key) <= max)
+      .map((e) => e.iso2),
+  );
 
   if (near.size !== 1) return null;
 

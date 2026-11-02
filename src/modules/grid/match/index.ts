@@ -8,13 +8,14 @@ export interface Entry {
 
 export interface Index {
   exact: Map<string, string>;
+  /** Fuzzy candidates: display names and pre-"and" short names only, never aliases. */
   entries: Entry[];
   byIso: Map<string, Country>;
 }
 
 const memo = new WeakMap<Snapshot, Index>();
 
-/** Normalised name, alias and pre-"and" short-name keys per country, built once per snapshot. */
+/** Normalised name, alias (exact only) and pre-"and" short-name keys per country, built once per snapshot. */
 export function indexOf(snapshot: Snapshot): Index {
   const hit = memo.get(snapshot);
 
@@ -27,15 +28,14 @@ export function indexOf(snapshot: Snapshot): Index {
 
     const short = normaliseName(country.name).split(" and ")[0] ?? "";
 
-    for (const key of [
-      normaliseName(country.name),
-      ...country.facts.aliases.map(normaliseName),
-      short,
-    ]) {
+    const names = [normaliseName(country.name), short];
+
+    for (const key of [...names, ...country.facts.aliases.map(normaliseName)]) {
       if (key === "" || index.exact.has(key)) continue;
 
       index.exact.set(key, country.iso2);
-      index.entries.push({ key, iso2: country.iso2 });
+
+      if (names.includes(key)) index.entries.push({ key, iso2: country.iso2 });
     }
   }
 

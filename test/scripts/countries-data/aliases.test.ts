@@ -3,10 +3,12 @@ import { mergeAliases } from "../../../scripts/countries-data/aliases.ts";
 
 const merge = (wikidata: Record<string, string[]>) =>
   mergeAliases(
-    ["US", "GB", "CN", "AS", "BM", "SG", "AA", "BB"].map((iso2) => ({
-      iso2,
-      name: `Name ${iso2}`,
-    })),
+    ["US", "GB", "CN", "AS", "BM", "SG", "AA", "BB", "PG", "CF", "CG", "CD", "PS", "CZ"].map(
+      (iso2) => ({
+        iso2,
+        name: `Name ${iso2}`,
+      }),
+    ),
     new Map(Object.entries(wikidata)),
   );
 
@@ -29,8 +31,26 @@ describe("mergeAliases", () => {
     expect(merge({}).get("US")).toEqual(expect.arrayContaining(["USA", "US"]));
   });
 
-  test("three-letter all-caps Wikidata aliases are kept", () => {
-    expect(merge({ CN: ["PRC"] }).get("CN")).toContain("PRC");
+  test("three-letter all-caps Wikidata aliases are dropped, curated ones kept", () => {
+    expect(merge({ CN: ["PRC", "Mainland"] }).get("CN")).toEqual(["Mainland"]);
+    expect(merge({}).get("PG")).toContain("PNG");
+    expect(merge({}).get("CF")).toContain("CAR");
+  });
+
+  test("Congo alone is not an alias of either Congo", () => {
+    const out = merge({ CG: ["Congo"], CD: ["Congo"] });
+
+    expect(out.get("CG")).not.toContain("Congo");
+    expect(out.get("CD")).not.toContain("Congo");
+    expect(merge({ CG: ["Congo"] }).get("CG")).not.toContain("Congo");
+  });
+
+  test("curated Brazzaville, Palestinian Territories and Czech aliases", () => {
+    const out = merge({});
+
+    expect(out.get("CG")).toEqual(expect.arrayContaining(["Brazzaville", "Congo-Brazzaville"]));
+    expect(out.get("PS")).toContain("Palestinian Territories");
+    expect(out.get("CZ")).toContain("Czech");
   });
 
   test("junk is filtered: codes, time zones, generic phrases", () => {

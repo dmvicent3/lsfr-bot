@@ -73,3 +73,19 @@ describe("confusable pairs", () => {
     }
   });
 });
+
+describe("aliases are exact-only", () => {
+  test("Palua never becomes Nepal", () => {
+    expect(["Palau", null]).toContain(nameOf("Palua"));
+  });
+
+  test("a typo of an alias-only form returns null", () => {
+    expect(iso("Hollnd")).toBeNull();
+    expect(iso("Ivory Coat")).toBeNull();
+    expect(iso("Holland")).toBe("NL");
+  });
+
+  test("two countries equally near is ambiguous", () => {
+    expect(iso("Aigeria")).toBeNull();
+  });
+});
