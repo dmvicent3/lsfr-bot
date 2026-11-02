@@ -43,3 +43,20 @@ export interface Step {
   note: string | null;
   solved: boolean;
 }
+
+/** The day's board for one server and level. */
+export interface Puzzle {
+  guildId: string;
+  date: string;
+  level: Level;
+  givens: string;
+  solution: string;
+}
+
+export interface GameKey {
+  guildId: string;
+  userId: string;
+  kind: Kind;
+  date: string;
+  slot: string;
+}
