@@ -1,4 +1,4 @@
-import { expect, spyOn, test } from "bun:test";
+import { expect, setSystemTime, spyOn, test } from "bun:test";
 import { Database } from "bun:sqlite";
 import { runMigrations } from "../../../../src/core/db.ts";
 import { coreMigrations } from "../../../../src/core/settings.ts";
@@ -128,6 +128,7 @@ test("a miss costs a guess and shows the reason", async () => {
 
   expect(stored(repo)?.guesses).toBe(1);
   expect(stored(repo)?.cells[0]).toBe("");
+  expect(stored(repo)?.lastMiss).toBe("Japan: isn't in Europe");
   expect(calls.update[0]?.content).toContain("❌ Japan: isn't in Europe");
   expect(calls.send).toHaveLength(0);
 });
@@ -255,7 +256,7 @@ test("the date comes from the custom ID", async () => {
   expect(repo.games.get("g", "2026-11-04", "u")).toBeNull();
 });
 
-test("another user's submit acts on their own game", async () => {
+test("a user without a game is out of date and writes nothing", async () => {
   const { repo, ctx } = setup();
   const { i, calls } = fakeModal("other", "Spain");
   await answer.handle(i, [DATE, "0"], ctx);
@@ -265,12 +266,134 @@ test("another user's submit acts on their own game", async () => {
   expect(stored(repo, "other")).toBeNull();
 });
 
-test("page re-renders the leaderboard", async () => {
-  const { ctx } = setup();
-  const { i, calls } = fakeClick("u");
-  await pageHandler.handle(i, ["week", "1"], ctx);
+test("another user's submit updates their own game and leaves the first user's alone", async () => {
+  const { repo, ctx } = setup();
+  repo.games.start(game({ userId: "other" }));
+  const { i, calls } = fakeModal("other", "Spain");
+  await answer.handle(i, [DATE, "0"], ctx);
 
+  expect(stored(repo, "other")?.cells[0]).toBe("ES");
+  expect(stored(repo, "other")?.guesses).toBe(1);
+  expect(stored(repo)).toMatchObject({ guesses: 0, points: null, lastMiss: null });
+  expect(stored(repo)?.cells.every((c) => c === "")).toBe(true);
   expect(calls.update).toHaveLength(1);
+});
+
+const OVER = { cells: cells({ 0: "ES", 1: "PT" }), guesses: 9, points: 30 };
+
+test("a click on an over but unfinished game finishes it and announces once", async () => {
+  const { repo, ctx } = setup(OVER);
+  const a = fakeClick("u");
+  await cell.handle(a.i, [DATE, "4"], ctx);
+  const b = fakeClick("u");
+  await cell.handle(b.i, [DATE, "4"], ctx);
+
+  expect(stored(repo)?.finishedAt).not.toBeNull();
+  expect(stored(repo)?.filled).toBe(2);
+  expect(a.calls.modal).toHaveLength(0);
+  expect(a.calls.update[0]?.components).toEqual([]);
+  expect(a.calls.send).toHaveLength(1);
+  expect(b.calls.send).toHaveLength(0);
+});
+
+test("a submit on an over but unfinished game finishes it and announces once", async () => {
+  const { repo, ctx } = setup(OVER);
+  const a = fakeModal("u", "Japan");
+  await answer.handle(a.i, [DATE, "4"], ctx);
+  const b = fakeModal("u", "Japan");
+  await answer.handle(b.i, [DATE, "4"], ctx);
+
+  expect(stored(repo)?.finishedAt).not.toBeNull();
+  expect(stored(repo)?.guesses).toBe(9);
+  expect(a.calls.send).toHaveLength(1);
+  expect(b.calls.send).toHaveLength(0);
+});
+
+test("a practice round that is over heals on the next click, without an announcement", async () => {
+  const { repo, ctx } = setup(null, { ...OVER, points: 0 });
+  const { i, calls } = fakeClick("u");
+  await cell.handle(i, ["practice", "4"], ctx);
+
+  expect(repo.practice.get("g", "u")?.finishedAt).not.toBeNull();
+  expect(calls.send).toHaveLength(0);
+  expect(calls.modal).toHaveLength(0);
+});
+
+test("a submit that is not from a message still answers, ephemerally with the board", async () => {
+  const { repo, ctx } = setup();
+  const { i, calls } = fakeModal("u", "Spain", { notFromMessage: true });
+  await answer.handle(i, [DATE, "0"], ctx);
+
+  expect(stored(repo)?.cells[0]).toBe("ES");
+  expect(calls.update).toHaveLength(0);
+  expect(calls.reply).toHaveLength(1);
+  expect(calls.reply[0]?.content).toContain("Country grid #1");
+});
+
+test("New leaves the daily game untouched", async () => {
+  const { repo, ctx } = setup({ cells: cells({ 0: "ES" }), guesses: 1, points: 20 });
+  const before = stored(repo);
+  const { i } = fakeClick("u");
+  await newHandler(source).handle(i, [], ctx);
+
+  expect(stored(repo)).toEqual(before);
+  expect(repo.practice.get("g", "u")).not.toBeNull();
+});
+
+/** The same sequence on every call to the factory. */
+const seeded = () => {
+  let x = 7;
+
+  return () => (x = (x * 48271) % 2147483647) / 2147483647;
+};
+
+test("New uses the injected random and refuses outside a server", async () => {
+  const { repo, ctx } = setup(null);
+  const a = fakeClick("u");
+  await newHandler(source, seeded()).handle(a.i, [], ctx);
+  const first = repo.practice.get("g", "u")?.grid;
+  const b = fakeClick("u");
+  await newHandler(source, seeded()).handle(b.i, [], ctx);
+  const dm = fakeClick("u", { noGuild: true });
+  await newHandler(source).handle(dm.i, [], ctx);
+
+  expect(first).toBeDefined();
+  expect(repo.practice.get("g", "u")?.grid).toEqual(first);
+  expect(dm.calls.reply[0]?.content).toBe("Country grid works in a server.");
+  expect(dm.calls.update).toHaveLength(0);
+});
+
+test("page re-renders the leaderboard for the period and page asked", async () => {
+  setSystemTime(new Date("2026-11-03T12:00:00Z"));
+  const { repo, ctx } = setup(null);
+
+  for (let n = 0; n < 12; n++) {
+    repo.games.start(
+      game({ userId: `p${n}`, filled: 3, points: 50 + n, streak: 1, finishedAt: 5 }),
+    );
+  }
+
+  repo.games.start(
+    game({ date: "2026-11-01", userId: "old", filled: 1, points: 5, finishedAt: 5 }),
+  );
+
+  const ask = async (period: string, page: string) => {
+    const { i, calls } = fakeClick("u");
+    await pageHandler.handle(i, [period, page], ctx);
+
+    return calls.update[0]?.content ?? "";
+  };
+
+  const today1 = await ask("today", "1");
+  const today2 = await ask("today", "2");
+  const all1 = await ask("all", "1");
+  setSystemTime();
+
+  expect(today1).toContain("<@p11>");
+  expect(today1).not.toContain("<@p0>");
+  expect(today2).toContain("<@p0>");
+  expect(today1).not.toContain("<@old>");
+  expect(all1).not.toBe(today1);
 });
 
 test("the handlers are listed", () => {

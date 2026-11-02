@@ -17,6 +17,8 @@ export interface Calls {
 interface Opts {
   failSend?: boolean;
   noChannel?: boolean;
+  noGuild?: boolean;
+  notFromMessage?: boolean;
 }
 
 function parts(opts: Opts) {
@@ -32,7 +34,7 @@ function parts(opts: Opts) {
   return {
     calls,
     base: {
-      guildId: "g",
+      guildId: opts.noGuild ? null : "g",
       channel: opts.noChannel ? null : channel,
       update: async (m: Sent) => void calls.update.push(m),
       reply: async (m: Sent) => void calls.reply.push(m),
@@ -59,7 +61,7 @@ export function fakeModal(userId: string, text: string, opts: Opts = {}) {
     ...base,
     user: { id: userId },
     fields,
-    isFromMessage: () => true,
+    isFromMessage: () => !opts.notFromMessage,
   } as unknown as ModalSubmitInteraction;
 
   return { i, calls };

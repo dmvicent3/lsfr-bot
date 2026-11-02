@@ -1,14 +1,16 @@
+import { MessageFlags } from "discord.js";
 import { tell } from "../../../core/replies.ts";
 import type { ModalHandler } from "../../../core/types.ts";
 import { missLine, submit } from "../play/answer.ts";
 import type { Outcome } from "../play/types.ts";
+import { isGame, land } from "../play/round.ts";
+import { boardView } from "../render/board-view.ts";
 import { gridView } from "../render/view.ts";
 import { obscurity } from "../scoring.ts";
 import type { Game, Practice } from "../types.ts";
 import { announce } from "./announce.ts";
-import { cellIndex } from "./cell.ts";
+import { cellIndex } from "./ids.ts";
 import { OUT_OF_DATE, type Round, type Source, load } from "./guard.ts";
-import { boardView, isGame, land } from "./land.ts";
 
 type Rec = Game | Practice;
 type Moved = Extract<Outcome, { kind: "hit" | "miss" }>;
@@ -45,9 +47,14 @@ export const answerHandler = (source: Source): ModalHandler => ({
     if (out.kind === "used") return tell(i, `${out.name} is already on your grid — no guess used.`);
 
     const { game, award } =
-      out.kind === "stale" ? { game: r.rec, award: r.award } : land(r, applied(r.rec, out));
+      out.kind === "stale"
+        ? { game: r.rec, award: r.award }
+        : land(r.repo, applied(r.rec, out), r.now);
 
-    if (i.isFromMessage()) await i.update(gridView(boardView(r, r.grid, game, award), r.snap));
+    const view = gridView(boardView(r, r.grid, game, award), r.snap);
+
+    if (i.isFromMessage()) await i.update(view);
+    else await i.reply({ ...view, flags: MessageFlags.Ephemeral });
 
     if (award && isGame(game)) await announce(i, game, r.number ?? 0);
   },

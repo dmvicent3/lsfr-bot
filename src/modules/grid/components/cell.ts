@@ -1,17 +1,12 @@
 import { tell } from "../../../core/replies.ts";
 import type { ComponentHandler } from "../../../core/types.ts";
+import { isGame } from "../play/round.ts";
+import { boardView } from "../render/board-view.ts";
 import { answerModal } from "../render/modal.ts";
 import { gridView } from "../render/view.ts";
 import { announce } from "./announce.ts";
+import { cellIndex } from "./ids.ts";
 import { OUT_OF_DATE, type Source, load } from "./guard.ts";
-import { boardView, isGame } from "./land.ts";
-
-/** A cell number 0..8 from a custom ID part; null when it is not one. */
-export function cellIndex(part: string | undefined): number | null {
-  const n = Number(part);
-
-  return part !== undefined && Number.isInteger(n) && n >= 0 && n < 9 ? n : null;
-}
 
 /** `grid:cell:<date|practice>:<0-8>`: the answer modal for an empty cell, else the board. */
 export const cellHandler = (source: Source): ComponentHandler => ({

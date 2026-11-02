@@ -7,9 +7,12 @@ import { newHandler } from "./new.ts";
 import { pageHandler } from "./page.ts";
 
 /** Every grid button. */
-export const gridComponents = (source: Source = () => readSnapshot()): ComponentHandler[] => [
+export const gridComponents = (
+  source: Source = () => readSnapshot(),
+  random: () => number = Math.random,
+): ComponentHandler[] => [
   cellHandler(source),
   giveUpHandler(source),
-  newHandler(source),
+  newHandler(source, random),
   pageHandler,
 ];

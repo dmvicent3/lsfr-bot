@@ -72,3 +72,10 @@ describe("award", () => {
     expect(award(0, 0, 0)).toEqual({ points: 0, parts: ["0 cells: 0"] });
   });
 });
+
+test("obscurity is computed once per snapshot", () => {
+  const s = snap(pop("AA", 300), pop("BB", 100));
+
+  expect(obscurity(s)).toBe(obscurity(s));
+  expect(obscurity(snap(pop("AA", 300), pop("BB", 100)))).not.toBe(obscurity(s));
+});

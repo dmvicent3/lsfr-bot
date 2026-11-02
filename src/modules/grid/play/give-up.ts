@@ -1,7 +1,6 @@
 import type { GridRepo } from "../store/repo.ts";
-import type { Award, Game } from "../types.ts";
-import { finish } from "./finish.ts";
+import { type Landed, type Rec, end } from "./round.ts";
 
-/** Ends the day game with what is filled so far. */
-export const giveUp = (repo: GridRepo, g: Game, now: number): { game: Game; award: Award | null } =>
-  finish(repo, g, now);
+/** Ends the round with what is filled so far; a finished one stays as it is. */
+export const giveUp = (repo: GridRepo, rec: Rec, now: number): Landed =>
+  rec.finishedAt === null ? end(repo, rec, now) : { game: rec, award: null };

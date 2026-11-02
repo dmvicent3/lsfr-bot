@@ -5,8 +5,21 @@ import type { Award } from "./types.ts";
 export const PER_PERFECT = 30;
 export const CELLS = 9;
 
-/** Population rank scaled 0 (most populous) to 1 (least); no reading counts as 1. */
+const memo = new WeakMap<Snapshot, Map<string, number>>();
+
+/** Population rank scaled 0 (most populous) to 1 (least); no reading counts as 1. Kept per snapshot. */
 export function obscurity(snapshot: Snapshot): Map<string, number> {
+  const kept = memo.get(snapshot);
+
+  if (kept) return kept;
+
+  const made = ranks(snapshot);
+  memo.set(snapshot, made);
+
+  return made;
+}
+
+function ranks(snapshot: Snapshot): Map<string, number> {
   const read = snapshot.countries
     .flatMap((c) => {
       const pop = c.values.population?.value;

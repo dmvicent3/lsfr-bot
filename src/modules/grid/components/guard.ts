@@ -2,12 +2,10 @@ import type { Database } from "bun:sqlite";
 import type { Snapshot } from "../../../core/countries/types.ts";
 import { puzzleNumber, untilNext } from "../../../core/daily.ts";
 import { FIRST_PUZZLE } from "../periods.ts";
-import { isOver } from "../play/answer.ts";
 import { healed } from "../play/heal.ts";
 import { gridTimeZone } from "../settings.ts";
 import { GridRepo } from "../store/repo.ts";
 import type { Award, Game, Grid, Practice } from "../types.ts";
-import { end, isGame } from "./land.ts";
 
 export const OUT_OF_DATE = "This grid is out of date. Use /grid play.";
 export const PRACTICE = "practice";
@@ -30,14 +28,6 @@ export interface Round {
   /** Puzzle number and time to the next grid; null/undefined for practice. */
   number: number | null;
   untilNext?: string;
-}
-
-function healRound(repo: GridRepo, rec: Game | Practice, now: number) {
-  if (isGame(rec)) return healed(repo, rec, now);
-
-  if (isOver(rec.cells, rec.guesses) && rec.finishedAt === null) return end(repo, rec, now);
-
-  return { game: rec, award: null };
 }
 
 /**
@@ -63,7 +53,7 @@ export function load(
 
     if (!rec) return null;
 
-    const { game, award } = healRound(repo, rec, now);
+    const { game, award } = healed(repo, rec, now);
 
     return { repo, snap, now, scope, grid: rec.grid, rec: game, award, number: null };
   }
@@ -73,7 +63,7 @@ export function load(
 
   if (!puzzle || !stored) return null;
 
-  const { game, award } = healRound(repo, stored, now);
+  const { game, award } = healed(repo, stored, now);
   const number = puzzleNumber(scope, FIRST_PUZZLE);
   const left = untilNext(now, gridTimeZone(db, i.guildId));
 
