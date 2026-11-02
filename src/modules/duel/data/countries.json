@@ -775,21 +775,6 @@
       }
     },
     {
-      "iso2": "JG",
-      "name": "Channel Islands",
-      "values": {
-        "population": { "value": 168466, "year": 2025 },
-        "area": { "value": 198, "year": 2021 },
-        "density": { "value": 842.126262626263, "year": 2021 },
-        "gdp_pc": { "value": 74585.5224096294, "year": 2023 },
-        "life_exp": { "value": 81.2, "year": 2024 },
-        "urban": { "value": 32.6430856346098, "year": 2025 },
-        "forest": { "value": 5.15151515151515, "year": 2021 },
-        "fertility": { "value": 1.37, "year": 2024 },
-        "aged_65": { "value": 20.4143293859259, "year": 2025 }
-      }
-    },
-    {
       "iso2": "CL",
       "name": "Chile",
       "values": {

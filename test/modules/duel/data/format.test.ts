@@ -10,6 +10,10 @@ describe("flag", () => {
     expect(flag("NL")).toBe("🇳🇱");
     expect(flag("pt")).toBe("🇵🇹");
   });
+
+  test("white flag for Kosovo, which has no emoji", () => {
+    expect(flag("XK")).toBe("🏳️");
+  });
 });
 
 describe("formatValue", () => {

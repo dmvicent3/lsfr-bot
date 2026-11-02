@@ -3,6 +3,8 @@ import type { Country, Reading, Snapshot, StatId } from "../../src/modules/duel/
 import { NAME_OVERRIDES } from "./names.ts";
 
 const MIN_STATS = 8;
+// World Bank groups "Channel Islands" (JG) as a country; it has no ISO 3166 code, so no flag.
+export const EXCLUDED_CODES = ["JG"];
 
 function valuesOf(iso2: string, readings: Record<StatId, Map<string, Reading>>): Country["values"] {
   const values: Country["values"] = {};
@@ -23,6 +25,7 @@ export function build(
   builtAt: string,
 ): Snapshot {
   const full = countries
+    .filter((c) => !EXCLUDED_CODES.includes(c.iso2))
     .map((c) => ({
       ...c,
       name: NAME_OVERRIDES[c.iso2] ?? c.name,

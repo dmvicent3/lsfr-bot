@@ -11,7 +11,7 @@ function readings(skip: Record<string, number>): Record<StatId, Map<string, Read
   STATS.forEach((s, i) => {
     out[s.id] = new Map();
 
-    for (const iso2 of ["NL", "PT", "AW", "KR"]) {
+    for (const iso2 of ["NL", "PT", "AW", "KR", "JG"]) {
       if (i < STATS.length - (skip[iso2] ?? 0)) out[s.id].set(iso2, { value: i + 1, year: 2022 });
     }
   });
@@ -26,6 +26,16 @@ const COUNTRIES = [
 ];
 
 describe("build", () => {
+  test("drops excluded codes (Channel Islands)", () => {
+    const snap = build(
+      [...COUNTRIES, { iso2: "JG", name: "Channel Islands" }],
+      readings({}),
+      "2026-11-02",
+    );
+
+    expect(snap.countries.map((c) => c.iso2)).not.toContain("JG");
+  });
+
   test("drops a country with 7 stats and sorts by name", () => {
     const snap = build(COUNTRIES, readings({ AW: 7 }), "2026-11-02");
 
