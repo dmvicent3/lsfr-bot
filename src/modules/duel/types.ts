@@ -39,3 +39,17 @@ export interface Snapshot {
   builtAt: string;
   countries: Country[];
 }
+
+export interface Side {
+  iso2: string;
+  name: string;
+  value: number;
+  year: number;
+}
+
+export interface Question {
+  stat: StatId;
+  a: Side;
+  b: Side;
+  higher: "a" | "b";
+}
