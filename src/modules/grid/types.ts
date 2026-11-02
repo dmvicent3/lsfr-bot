@@ -57,3 +57,10 @@ export interface RuleDef {
   why: string;
   test(c: Country): boolean;
 }
+
+/** Cell index is r*3+c; answers are sorted iso2 lists. */
+export interface Grid {
+  rows: RuleId[];
+  cols: RuleId[];
+  answers: string[][];
+}
