@@ -64,3 +64,41 @@ export interface Grid {
   cols: RuleId[];
   answers: string[][];
 }
+
+export interface Award {
+  points: number;
+  parts: string[];
+}
+
+export interface Puzzle {
+  guildId: string;
+  date: string;
+  grid: Grid;
+}
+
+/** `cells` holds nine iso2 codes, "" when empty. */
+export interface Game {
+  guildId: string;
+  date: string;
+  userId: string;
+  cells: string[];
+  guesses: number;
+  lastMiss: string | null;
+  filled: number | null;
+  points: number | null;
+  streak: number | null;
+  startedAt: number;
+  finishedAt: number | null;
+}
+
+export interface Practice {
+  guildId: string;
+  userId: string;
+  grid: Grid;
+  cells: string[];
+  guesses: number;
+  lastMiss: string | null;
+  points: number;
+  startedAt: number;
+  finishedAt: number | null;
+}

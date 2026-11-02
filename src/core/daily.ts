@@ -23,6 +23,13 @@ export function untilNext(now: number, tz: string): string {
   return h > 0 ? `${h}h ${minutes % 60}m` : `${minutes}m`;
 }
 
+export const PER_STREAK_DAY = 5;
+export const STREAK_BONUS_CAP = 50;
+
+/** Daily-streak bonus points; `streak` is the streak after this game, so day 1 earns none. */
+export const streakBonus = (streak: number): number =>
+  Math.max(0, Math.min(PER_STREAK_DAY * (streak - 1), STREAK_BONUS_CAP));
+
 /** A win extends a win from the day before; anything else starts over. A loss is 0. */
 export function nextStreak(last: LastGame | null, date: string, won: boolean): number {
   if (!won) return 0;
