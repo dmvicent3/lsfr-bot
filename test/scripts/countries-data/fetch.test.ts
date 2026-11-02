@@ -3,7 +3,7 @@ import {
   fetchWbCountries,
   fetchWbIndicator,
   fetchWikidata,
-} from "../../../scripts/duel-data/fetch.ts";
+} from "../../../scripts/countries-data/fetch.ts";
 
 function fake(body: unknown, ok = true) {
   const calls: { url: string; init: RequestInit | undefined }[] = [];

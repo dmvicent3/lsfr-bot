@@ -3,7 +3,7 @@ import { STATS } from "../data/stats.ts";
 import type { Question, Snapshot, StatDef } from "../types.ts";
 import { BANDS, widen } from "./bands.ts";
 import { pickPair } from "./pick.ts";
-import { seedFor } from "./seed.ts";
+import { seedFor } from "../../../core/seed.ts";
 
 interface Day {
   snapshot: Snapshot;

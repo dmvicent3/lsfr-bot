@@ -3,7 +3,7 @@ import { STAT_BY_ID } from "../../../../src/modules/duel/data/stats.ts";
 import { BANDS, widen } from "../../../../src/modules/duel/questions/bands.ts";
 import { generate } from "../../../../src/modules/duel/questions/generate.ts";
 import { pickPair, recentKeys } from "../../../../src/modules/duel/questions/pick.ts";
-import { seedFor } from "../../../../src/modules/duel/questions/seed.ts";
+import { seedFor } from "../../../../src/core/seed.ts";
 import type { Question, Snapshot } from "../../../../src/modules/duel/types.ts";
 import { seeded } from "../../shed/testing/random.ts";
 import { fixtureSnapshot } from "../fixtures.ts";

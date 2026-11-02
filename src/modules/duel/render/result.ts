@@ -1,4 +1,4 @@
-import { flag } from "../data/flag.ts";
+import { flag } from "../../../core/countries/flag.ts";
 import { formatValue } from "../data/format.ts";
 import { STAT_BY_ID } from "../data/stats.ts";
 import { correctCount } from "../play/answer.ts";

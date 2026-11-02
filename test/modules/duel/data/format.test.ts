@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { flag } from "../../../../src/modules/duel/data/flag.ts";
+import { flag } from "../../../../src/core/countries/flag.ts";
 import { formatValue } from "../../../../src/modules/duel/data/format.ts";
 import type { StatId } from "../../../../src/modules/duel/types.ts";
 

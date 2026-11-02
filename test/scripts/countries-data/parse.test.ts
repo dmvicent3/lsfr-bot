@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { parseWbCountries, parseWbIndicator } from "../../../scripts/duel-data/parse-wb.ts";
-import { parseWikidataPeaks } from "../../../scripts/duel-data/parse-wikidata.ts";
+import { parseWbCountries, parseWbIndicator } from "../../../scripts/countries-data/parse-wb.ts";
+import { parseWikidataPeaks } from "../../../scripts/countries-data/parse-wikidata.ts";
 import countries from "./fixtures/wb-countries.json";
 import indicator from "./fixtures/wb-indicator.json";
 import peaks from "./fixtures/wikidata-peaks.json";

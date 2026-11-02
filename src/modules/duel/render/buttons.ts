@@ -4,7 +4,7 @@ import {
   ButtonStyle,
   ComponentType,
 } from "discord.js";
-import { flag } from "../data/flag.ts";
+import { flag } from "../../../core/countries/flag.ts";
 import type { Question, Side } from "../types.ts";
 
 type Row = APIActionRowComponent<APIButtonComponentWithCustomId>;

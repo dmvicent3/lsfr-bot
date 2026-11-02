@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { build } from "../../../scripts/duel-data/build.ts";
-import { loadSnapshot } from "../../../src/modules/duel/data/load.ts";
+import { build } from "../../../scripts/countries-data/build.ts";
+import { loadSnapshot } from "../../../src/core/countries/load.ts";
 import { STATS } from "../../../src/modules/duel/data/stats.ts";
 import type { Reading, StatId } from "../../../src/modules/duel/types.ts";
 

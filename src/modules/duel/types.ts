@@ -1,3 +1,5 @@
+export type { Country, Reading, Snapshot } from "../../core/countries/types.ts";
+
 export type StatId =
   | "population"
   | "area"
@@ -26,22 +28,6 @@ export interface StatDef {
   maxYear?: number;
   /** The value does not date; the reveal shows no year. */
   timeless?: boolean;
-}
-
-export interface Reading {
-  value: number;
-  year: number;
-}
-
-export interface Country {
-  iso2: string;
-  name: string;
-  values: Partial<Record<StatId, Reading>>;
-}
-
-export interface Snapshot {
-  builtAt: string;
-  countries: Country[];
 }
 
 export interface Side {

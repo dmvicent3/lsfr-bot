@@ -1,16 +1,16 @@
 /**
- * Builds src/modules/duel/data/countries.json from the World Bank and Wikidata.
- * Usage: bun scripts/duel-data.ts, then `bun run fmt`.
+ * Builds src/core/countries/countries.json from the World Bank and Wikidata.
+ * Usage: bun scripts/countries-data.ts, then `bun run fmt`.
  */
 import { writeFileSync } from "node:fs";
 import { STATS } from "../src/modules/duel/data/stats.ts";
 import type { Reading, StatDef, StatId } from "../src/modules/duel/types.ts";
-import { build } from "./duel-data/build.ts";
-import { fetchWbCountries, fetchWbIndicator, fetchWikidata } from "./duel-data/fetch.ts";
-import { parseWbCountries, parseWbIndicator } from "./duel-data/parse-wb.ts";
-import { parseWikidataPeaks } from "./duel-data/parse-wikidata.ts";
+import { build } from "./countries-data/build.ts";
+import { fetchWbCountries, fetchWbIndicator, fetchWikidata } from "./countries-data/fetch.ts";
+import { parseWbCountries, parseWbIndicator } from "./countries-data/parse-wb.ts";
+import { parseWikidataPeaks } from "./countries-data/parse-wikidata.ts";
 
-const OUT = new URL("../src/modules/duel/data/countries.json", import.meta.url);
+const OUT = new URL("../src/core/countries/countries.json", import.meta.url);
 
 async function read(stat: StatDef, today: Date): Promise<Map<string, Reading>> {
   const year = today.getUTCFullYear();

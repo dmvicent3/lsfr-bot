@@ -1,11 +1,14 @@
 import type { BotModule } from "../../core/types.ts";
 import { duelCommand } from "./commands/commands.ts";
 import { duelComponents } from "./components/components.ts";
-import { readSnapshot } from "./data/load.ts";
+import { readSnapshot } from "../../core/countries/load.ts";
+import { isStatId } from "./data/stats.ts";
 import { duelMigrations } from "./store/migrations.ts";
 import type { Snapshot } from "./types.ts";
 
-export function duelModule(snapshotSource: () => Snapshot | null = readSnapshot): BotModule {
+export function duelModule(
+  snapshotSource: () => Snapshot | null = () => readSnapshot(isStatId),
+): BotModule {
   return {
     name: "duel",
     title: "📊 Stat duel",

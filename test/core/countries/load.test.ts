@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, spyOn, test } from "bun:test";
-import { loadSnapshot } from "../../../../src/modules/duel/data/load.ts";
+import { loadSnapshot } from "../../../src/core/countries/load.ts";
 
 const spies: { mockRestore(): void }[] = [];
 
@@ -37,6 +37,7 @@ describe("loadSnapshot", () => {
         nonsense: { value: 5, year: 2023 },
         life_exp: { value: 80, year: 2022 },
       }),
+      (id) => id !== "nonsense",
     );
 
     expect(snap?.countries[0]?.values).toEqual({ life_exp: { value: 80, year: 2022 } });

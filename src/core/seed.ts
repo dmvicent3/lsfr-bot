@@ -1,4 +1,4 @@
-import { lcg } from "../../../core/random.ts";
+import { lcg } from "./random.ts";
 
 /** FNV-1a 32-bit over the UTF-16 code units: the same on every run and platform. */
 function hash(text: string): number {
