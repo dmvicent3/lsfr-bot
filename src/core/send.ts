@@ -1,4 +1,5 @@
 import type {
+  ChatInputCommandInteraction,
   Client,
   MessageComponentInteraction,
   MessageCreateOptions,
@@ -53,7 +54,7 @@ export async function sendTo(
 
 /** Posts `content` in the clicked message's channel, pinging no one; a failure or no channel is logged, never thrown. */
 export async function postOrLog(
-  i: MessageComponentInteraction,
+  i: Pick<MessageComponentInteraction | ChatInputCommandInteraction, "channel">,
   scope: string,
   what: string,
   content: string,

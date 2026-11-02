@@ -1,4 +1,4 @@
-import type { MessageComponentInteraction } from "discord.js";
+import type { ChatInputCommandInteraction, MessageComponentInteraction } from "discord.js";
 import { puzzleNumber } from "../../../core/daily.ts";
 import { postOrLog } from "../../../core/send.ts";
 import { FIRST_PUZZLE } from "../periods.ts";
@@ -7,7 +7,7 @@ import type { Game, Puzzle } from "../types.ts";
 
 /** The public line for a finished game; a failed post is logged, the game still counts. */
 export async function announce(
-  i: MessageComponentInteraction,
+  i: Pick<MessageComponentInteraction | ChatInputCommandInteraction, "channel">,
   puzzle: Puzzle,
   g: Game,
 ): Promise<void> {
