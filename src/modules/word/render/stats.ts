@@ -1,10 +1,9 @@
+import { PERIODS } from "../../../core/types.ts";
 import type { Period, PlayerStats } from "../types.ts";
 
 const BAR = 10;
 
 export type Ranks = Record<Period, { rank: number; of: number } | null>;
-
-const PERIODS: Period[] = ["today", "week", "month", "all"];
 
 /** Wins per attempt count, bars scaled to the biggest, one block at least when not zero. */
 function bars(distribution: number[]): string[] {

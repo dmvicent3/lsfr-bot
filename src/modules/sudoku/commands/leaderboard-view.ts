@@ -6,13 +6,11 @@ import { standings } from "../ranking.ts";
 import { renderLeaderboard } from "../render/leaderboard.ts";
 import { sudokuTimeZone } from "../settings.ts";
 import type { SudokuRepo } from "../store/repo.ts";
+import { PERIODS } from "../../../core/types.ts";
 import type { Period } from "../types.ts";
 
-const PERIODS: readonly string[] = ["today", "week", "month", "all"] satisfies Period[];
-
-const isPeriod = (s: string): s is Period => PERIODS.includes(s);
-
-export const toPeriod = (s: string | null | undefined): Period => (s && isPeriod(s) ? s : "today");
+export const toPeriod = (s: string | null | undefined): Period =>
+  PERIODS.find((p) => p === s) ?? "today";
 
 /** A leaderboard page as of `now`; the slash command and the page buttons both send this. */
 export function leaderboardView(

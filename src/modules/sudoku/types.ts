@@ -1,4 +1,6 @@
-export type Level = "easy" | "medium" | "hard";
+export const LEVELS = ["easy", "medium", "hard"] as const;
+
+export type Level = (typeof LEVELS)[number];
 
 export type Kind = "daily" | "practice";
 

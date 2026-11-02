@@ -27,3 +27,13 @@ test("solved practice", () => {
   const g = { ...G, kind: "practice" as const, solvedAt: 1000 + 61_000 };
   expect(renderStatus(g, 0)).toBe("Practice · Easy · Solved in 1m 1s · 1 check");
 });
+
+test("solved daily with points appends them", () => {
+  const g = { ...G, cells: EASY_SOLUTION, solvedAt: 1000 + 23 * MIN + 10_000, points: 120 };
+  expect(renderStatus(g, 0)).toBe("Easy · #3 · Solved in 23m 10s · 1 check · 120 pts");
+});
+
+test("solved practice never shows points", () => {
+  const g = { ...G, kind: "practice" as const, solvedAt: 1000 + 61_000, points: 50 };
+  expect(renderStatus(g, 0)).toBe("Practice · Easy · Solved in 1m 1s · 1 check");
+});

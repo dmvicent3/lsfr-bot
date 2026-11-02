@@ -1,8 +1,6 @@
-import type { Level, Period, PlayerStats } from "../types.ts";
+import { PERIODS } from "../../../core/types.ts";
+import { LEVELS, type Level, type Period, type PlayerStats } from "../types.ts";
 import { formatDuration } from "./duration.ts";
-
-const LEVELS: Level[] = ["easy", "medium", "hard"];
-const PERIODS: Period[] = ["today", "week", "month", "all"];
 
 const perLevel = (label: string, f: (l: Level) => string): string =>
   `${label}: ${LEVELS.map((l) => `${l} ${f(l)}`).join(" · ")}`;

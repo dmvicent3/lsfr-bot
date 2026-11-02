@@ -17,9 +17,10 @@ export function renderStatus(g: Game, now: number): string {
   const checks = plural(g.checks, "check");
 
   if (g.solvedAt !== null) {
-    return [...heading(g), `Solved in ${formatDuration(g.solvedAt - g.startedAt)}`, checks].join(
-      " · ",
-    );
+    const took = `Solved in ${formatDuration(g.solvedAt - g.startedAt)}`;
+    const points = g.kind === "daily" && g.points !== null ? ` · ${g.points} pts` : "";
+
+    return [...heading(g), took, checks].join(" · ") + points;
   }
 
   const left = g.cells.split("").filter((c) => c === "0").length;

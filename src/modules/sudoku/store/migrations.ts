@@ -31,7 +31,7 @@ export const sudokuMigrations: Migration[] = [
         streak INTEGER,
         PRIMARY KEY (guild_id, user_id, kind, date, slot)
       );
-      CREATE INDEX sudoku_games_by_user ON sudoku_games (guild_id, user_id, kind, date);
+      CREATE INDEX sudoku_games_by_day ON sudoku_games (guild_id, kind, date);
     `,
   },
 ];

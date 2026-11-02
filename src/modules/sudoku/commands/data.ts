@@ -67,6 +67,7 @@ export const data = new SlashCommandBuilder()
         o
           .setName("timezone")
           .setDescription("IANA time zone, e.g. Europe/Lisbon")
+          .setMaxLength(64)
           .setRequired(true),
       ),
   )

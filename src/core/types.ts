@@ -39,7 +39,9 @@ export interface DateRange {
   label: string;
 }
 
-export type Period = "today" | "week" | "month" | "all";
+export const PERIODS = ["today", "week", "month", "all"] as const;
+
+export type Period = (typeof PERIODS)[number];
 
 export type FetchFn = (url: string, init?: RequestInit) => Promise<Response>;
 

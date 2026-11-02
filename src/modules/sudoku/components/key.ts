@@ -1,6 +1,4 @@
-import type { GameKey, Level } from "../types.ts";
-
-const LEVELS: readonly string[] = ["easy", "medium", "hard"] satisfies Level[];
+import { type GameKey, LEVELS } from "../types.ts";
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -14,7 +12,7 @@ export function parseKey(args: string[], userId: string, guildId: string): GameK
 
   if (kind !== "daily" || args.length !== 3 || !date || !level) return null;
 
-  if (!DATE.test(date) || !LEVELS.includes(level)) return null;
+  if (!DATE.test(date) || !LEVELS.some((l) => l === level)) return null;
 
   return { guildId, userId, kind: "daily", date, slot: level };
 }

@@ -37,19 +37,20 @@ export function monthRange(today: string): DateRange {
 
 export const ALL_TIME: DateRange = { from: "0000-01-01", to: "9999-12-31", label: "all time" };
 
+const RANGES: Record<Period, (today: string, todayLabel: (t: string) => string) => DateRange> = {
+  today: (today, todayLabel) => ({ from: today, to: today, label: todayLabel(today) }),
+  week: weekRange,
+  month: monthRange,
+  all: () => ALL_TIME,
+};
+
 /** The dates a leaderboard period covers; `todayLabel` names the single-day range. */
 export function periodRange(
   period: Period,
   today: string,
   todayLabel: (today: string) => string,
 ): DateRange {
-  if (period === "week") return weekRange(today);
-
-  if (period === "month") return monthRange(today);
-
-  if (period === "all") return ALL_TIME;
-
-  return { from: today, to: today, label: todayLabel(today) };
+  return RANGES[period](today, todayLabel);
 }
 
 /** The instants a date range covers in `tz`; `to` is the midnight after the last day. */

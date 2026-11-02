@@ -78,6 +78,20 @@ test("a failing public post is logged and the game still counts", async () => {
   expect(calls.update).toHaveLength(1);
 });
 
+test("a missing channel is logged and the game still counts", async () => {
+  const { repo } = freshDb();
+  const g = daily(almost());
+  repo.games.start(g);
+  const err = spyOn(console, "error").mockImplementation(() => {});
+  const { i, calls } = fakeClick("u", { noChannel: true });
+  await act(i, repo, DAILY, (x) => put(x, Number(x.solution[40])));
+
+  expect(err).toHaveBeenCalled();
+  err.mockRestore();
+  expect(repo.games.get(g)?.points).toBeGreaterThan(0);
+  expect(calls.update).toHaveLength(1);
+});
+
 test("a click on a solved game shows the finished board", async () => {
   const { repo } = freshDb();
   const g = daily({ solvedAt: Date.now(), points: 10, streak: 1 });
