@@ -2,6 +2,7 @@ import {
   type ChatInputCommandInteraction,
   type MessageComponentInteraction,
   MessageFlags,
+  type ModalSubmitInteraction,
 } from "discord.js";
 
 /** An ephemeral reply, or the deferred reply's edit; pings no one, whatever text it quotes. */
@@ -12,8 +13,11 @@ export async function reply(i: ChatInputCommandInteraction, content: string): Pr
     : i.reply({ content, flags: MessageFlags.Ephemeral, allowedMentions }));
 }
 
-/** An ephemeral answer to a button click; pings no one. */
-export async function tell(i: MessageComponentInteraction, content: string): Promise<void> {
+/** An ephemeral answer to a button click or modal submit; pings no one. */
+export async function tell(
+  i: MessageComponentInteraction | ModalSubmitInteraction,
+  content: string,
+): Promise<void> {
   await i.reply({ content, flags: MessageFlags.Ephemeral, allowedMentions: { parse: [] } });
 }
 

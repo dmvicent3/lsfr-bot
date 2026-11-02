@@ -1,0 +1,27 @@
+import type { Database } from "bun:sqlite";
+import { pageButtons } from "../../../core/page-buttons.ts";
+import { dateIn } from "../../../core/zoned.ts";
+import { periodRange } from "../periods.ts";
+import { standings } from "../ranking.ts";
+import type { Period } from "../ranking-types.ts";
+import { renderLeaderboard } from "../render/leaderboard.ts";
+import { gridTimeZone } from "../settings.ts";
+import type { GridRepo } from "../store/repo.ts";
+
+/** A leaderboard page as of `now`; the slash command and the page buttons both send this. */
+export function leaderboardView(
+  db: Database,
+  repo: GridRepo,
+  v: { guildId: string; period: Period; page: number; viewerId: string; now: number },
+) {
+  const today = dateIn(v.now, gridTimeZone(db, v.guildId));
+  const range = periodRange(v.period, today);
+  const list = standings(repo.games.finishedIn(v.guildId, range));
+  const page = renderLeaderboard({ ...v, range, list });
+
+  return {
+    content: page.content,
+    components: pageButtons("grid:page", v.period, page.page, page.pages),
+    allowedMentions: { parse: [] as [] },
+  };
+}
