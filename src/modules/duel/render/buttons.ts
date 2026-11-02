@@ -1,24 +1,7 @@
-import {
-  type APIActionRowComponent,
-  type APIButtonComponentWithCustomId,
-  ButtonStyle,
-  ComponentType,
-} from "discord.js";
+import { ButtonStyle } from "discord.js";
+import { button, type Row, row } from "../../../core/buttons.ts";
 import { flag } from "../../../core/countries/flag.ts";
 import type { Question, Side } from "../types.ts";
-
-type Row = APIActionRowComponent<APIButtonComponentWithCustomId>;
-
-const button = (
-  custom_id: string,
-  label: string,
-  style: APIButtonComponentWithCustomId["style"],
-): APIButtonComponentWithCustomId => ({ type: ComponentType.Button, custom_id, label, style });
-
-const row = (components: APIButtonComponentWithCustomId[]): Row => ({
-  type: ComponentType.ActionRow,
-  components,
-});
 
 /** The two countries as buttons; the date and number let an old message still resolve. */
 export function pickButtons(date: string, n: number, q: Question): Row[] {

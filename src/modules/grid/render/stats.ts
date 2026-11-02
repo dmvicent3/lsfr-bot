@@ -1,9 +1,6 @@
-import { PERIODS } from "../../../core/types.ts";
+import { rankText } from "../../../core/leaderboard-page.ts";
 import type { Period, PlayerStats } from "../ranking-types.ts";
 import { CELLS } from "../scoring.ts";
-
-const rankText = (ranks: Record<Period, number | null>): string =>
-  PERIODS.map((p) => `${p} ${ranks[p] === null ? "unranked" : `#${ranks[p]}`}`).join(" · ");
 
 export function renderStats(
   name: string,

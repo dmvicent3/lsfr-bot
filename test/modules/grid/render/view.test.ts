@@ -40,3 +40,15 @@ test("practice finished: new stays", () => {
   const v = gridView({ ...V, scope: "practice", number: null, finished: true }, snapshot);
   expect(ids(v)).toEqual([["grid:new"]]);
 });
+
+test("filled cell buttons stay enabled", () => {
+  const buttons = gridView(V, snapshot).components.flatMap((r) => r.components);
+  expect(buttons.some((b) => (b as { disabled?: boolean }).disabled)).toBe(false);
+});
+
+test("worst case finished board stays under 2000 chars", () => {
+  const longest = snapshot.countries.toSorted((a, b) => b.name.length - a.name.length);
+  const full = GRID.answers.map((a) => longest.find((c) => a.includes(c.iso2))?.iso2 ?? a[0]!);
+  const out = gridView({ ...V, cells: full, guesses: 9, finished: true, points: 999 }, snapshot);
+  expect(out.content.length).toBeLessThan(2000);
+});

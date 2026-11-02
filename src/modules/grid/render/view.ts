@@ -1,6 +1,7 @@
 import type { Snapshot } from "../../../core/countries/types.ts";
 import { renderBoard } from "./board.ts";
 import { cellButtons, controlRow } from "./buttons.ts";
+import { countryNames } from "./names.ts";
 import { renderResult } from "./result.ts";
 import type { BoardView } from "./types.ts";
 
@@ -11,7 +12,7 @@ import type { BoardView } from "./types.ts";
  */
 export function gridView(v: BoardView, snap: Snapshot) {
   const practice = v.number === null;
-  const names = new Map(snap.countries.map((c) => [c.iso2, c.name]));
+  const names = countryNames(snap);
   const board = renderBoard(v);
 
   return {

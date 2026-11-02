@@ -1,3 +1,4 @@
+import { PERIODS, type Period } from "./types.ts";
 import { rankOf } from "./daily.ts";
 
 export const PAGE_SIZE = 10;
@@ -44,3 +45,7 @@ export function leaderboardPage<T extends Ranked>(v: {
 
   return { content, page, pages };
 }
+
+/** `day #3 · week unranked · …` for a player's rank in each period. */
+export const rankText = (ranks: Record<Period, number | null>): string =>
+  PERIODS.map((p) => `${p} ${ranks[p] === null ? "unranked" : `#${ranks[p]}`}`).join(" · ");

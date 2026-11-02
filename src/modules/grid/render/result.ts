@@ -2,6 +2,7 @@ import { flag } from "../../../core/countries/flag.ts";
 import type { Snapshot } from "../../../core/countries/types.ts";
 import { cellPoints, obscurity } from "../scoring.ts";
 import { cellId } from "./labels.ts";
+import { countryNames } from "./names.ts";
 import type { BoardView } from "./types.ts";
 
 /** Three lines of 🟩 (filled) and ⬜ (empty) for the announcement. */
@@ -16,7 +17,8 @@ export const shareGrid = (cells: string[]): string =>
     .join("\n");
 
 function cellLine(v: BoardView, i: number, snap: Snapshot, obs: Map<string, number>): string {
-  const name = (iso2: string) => snap.countries.find((c) => c.iso2 === iso2)?.name ?? iso2;
+  const names = countryNames(snap);
+  const name = (iso2: string) => names.get(iso2) ?? iso2;
   const iso2 = v.cells[i]!;
 
   if (iso2) {

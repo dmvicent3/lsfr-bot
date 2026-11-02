@@ -1,4 +1,4 @@
-import { PERIODS } from "../../../core/types.ts";
+import { rankText } from "../../../core/leaderboard-page.ts";
 import { LEVELS, type Level, type Period, type PlayerStats } from "../types.ts";
 import { formatDuration } from "./duration.ts";
 
@@ -6,9 +6,6 @@ const perLevel = (label: string, f: (l: Level) => string): string =>
   `${label}: ${LEVELS.map((l) => `${l} ${f(l)}`).join(" · ")}`;
 
 const time = (ms: number | null): string => (ms === null ? "—" : formatDuration(ms));
-
-const rankText = (ranks: Record<Period, number | null>): string =>
-  PERIODS.map((p) => `${p} ${ranks[p] === null ? "unranked" : `#${ranks[p]}`}`).join(" · ");
 
 export function renderStats(
   name: string,
