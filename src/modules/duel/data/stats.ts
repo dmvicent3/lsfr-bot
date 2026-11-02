@@ -37,7 +37,3 @@ export const STAT_BY_ID: Record<StatId, StatDef> = {
 };
 
 export const STATS: readonly StatDef[] = Object.values(STAT_BY_ID);
-
-export function isStatId(id: string): id is StatId {
-  return Object.hasOwn(STAT_BY_ID, id);
-}

@@ -6,7 +6,7 @@ export interface Reading {
 export interface Country {
   iso2: string;
   name: string;
-  /** Readings by stat id; each module narrows the ids it knows. */
+  /** Readings by stat id; ids are not validated here, modules look up the ones they use. */
   values: Partial<Record<string, Reading>>;
 }
 
