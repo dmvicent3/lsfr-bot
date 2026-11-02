@@ -60,3 +60,11 @@ export function rangeInstants(range: DateRange, tz: string): { from: number; to:
     to: wallToInstant(dayMs(range.to) + DAY_MS, tz),
   };
 }
+
+/** The `period` choices of every `leaderboard` subcommand. */
+export const PERIOD_CHOICES = [
+  { name: "Today", value: "today" },
+  { name: "This week", value: "week" },
+  { name: "This month", value: "month" },
+  { name: "All time", value: "all" },
+];
