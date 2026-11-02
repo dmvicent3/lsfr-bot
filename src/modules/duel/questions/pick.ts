@@ -56,7 +56,8 @@ export function pickPair(v: PickInput): Question | null {
     const [rx, ry] = [x.values[stat.id]!, y.values[stat.id]!];
     const ratio = Math.max(rx.value, ry.value) / Math.min(rx.value, ry.value);
 
-    if (x === y || !inBand(ratio, v.band) || v.recent.has(pairKey(stat.id, x.iso2, y.iso2))) continue;
+    if (x === y || !inBand(ratio, v.band) || v.recent.has(pairKey(stat.id, x.iso2, y.iso2)))
+      continue;
 
     if (unfair(stat, rx, ry)) continue;
 

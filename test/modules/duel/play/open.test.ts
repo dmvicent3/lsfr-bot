@@ -20,7 +20,7 @@ const view = (userId: string, snapshot: Snapshot) => ({
 });
 
 test("two players get the same puzzle and generation runs once", () => {
-  const first = openDay(repo, view("u", fixtureSnapshot()));
+  const first = openDay(repo, view("u", fixtureSnapshot()))!;
   let reads = 0;
   const spy = new Proxy(fixtureSnapshot(), {
     get(target, key) {
@@ -29,7 +29,7 @@ test("two players get the same puzzle and generation runs once", () => {
       return Reflect.get(target, key);
     },
   });
-  const second = openDay(repo, view("v", spy));
+  const second = openDay(repo, view("v", spy))!;
 
   expect(reads).toBe(0);
   expect(second.puzzle).toEqual(first.puzzle);
@@ -40,10 +40,18 @@ test("two players get the same puzzle and generation runs once", () => {
 });
 
 test("reopening returns the stored game", () => {
-  const first = openDay(repo, view("u", fixtureSnapshot()));
+  const first = openDay(repo, view("u", fixtureSnapshot()))!;
   repo.games.save({ ...first.game, answers: "a" });
-  const again = openDay(repo, { ...view("u", fixtureSnapshot()), now: 99 });
+  const again = openDay(repo, { ...view("u", fixtureSnapshot()), now: 99 })!;
 
   expect(again.game.answers).toBe("a");
   expect(again.game.startedAt).toBe(5);
+});
+
+test("an empty day is not stored", () => {
+  const opened = openDay(repo, view("u", { builtAt: "x", countries: [] }));
+
+  expect(opened).toBeNull();
+  expect(repo.puzzles.get("g", "2026-11-03")).toBeNull();
+  expect(repo.games.get("g", "2026-11-03", "u")).toBeNull();
 });

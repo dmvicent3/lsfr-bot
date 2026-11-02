@@ -139,6 +139,16 @@ describe("/duel play", () => {
     error.mockRestore();
     expect(sent.edited).toBe("No questions today — the country data looks broken.");
   });
+
+  test("logs a puzzle with fewer questions than a full day", async () => {
+    const { i } = playFake();
+    const small = { ...fixtureSnapshot(), countries: fixtureSnapshot().countries.slice(0, 5) };
+    const error = spyOn(log, "error").mockImplementation(() => {});
+    await play(ctx(i, small));
+    const messages = error.mock.calls.map((c) => c[1]);
+    error.mockRestore();
+    expect(messages.some((m) => m.includes("questions"))).toBe(true);
+  });
 });
 
 function seeded(over: Parameters<typeof game>[0]) {

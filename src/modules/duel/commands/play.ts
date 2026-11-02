@@ -5,6 +5,7 @@ import { dateIn } from "../../../core/zoned.ts";
 import { announce } from "../components/announce.ts";
 import { FIRST_PUZZLE } from "../periods.ts";
 import { healed } from "../play/heal.ts";
+import { QUESTIONS } from "../questions/bands.ts";
 import { openDay } from "../play/open.ts";
 import { view } from "../render/view.ts";
 import { duelTimeZone } from "../settings.ts";
@@ -28,13 +29,18 @@ export async function play({ i, guildId, db, repo, snapshotSource }: CommandCtx)
   const tz = duelTimeZone(db, guildId);
   const date = dateIn(now, tz);
   const opened = openDay(repo, { guildId, userId: i.user.id, date, now, snapshot });
-  const { puzzle } = opened;
 
-  if (puzzle.questions.length === 0) {
+  if (!opened) {
     log.error("duel", `no questions generated for ${guildId} ${date}`);
     await i.editReply("No questions today — the country data looks broken.");
 
     return;
+  }
+
+  const { puzzle } = opened;
+
+  if (puzzle.questions.length < QUESTIONS) {
+    log.error("duel", `only ${puzzle.questions.length} questions for ${guildId} ${date}`);
   }
 
   const { game, award } = healed(repo, puzzle, opened.game, now);
