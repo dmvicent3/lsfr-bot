@@ -1,10 +1,10 @@
+import { QUESTIONS } from "./questions/bands.ts";
 import type { Award } from "./types.ts";
 
 export const PER_CORRECT = 20;
 export const PERFECT_BONUS = 20;
 export const PER_STREAK_DAY = 5;
 export const STREAK_BONUS_CAP = 50;
-const QUESTIONS = 5;
 
 /** `streak`: the streak after this game, so a first day (1) has no bonus. */
 export function award(correct: number, streak: number): Award {

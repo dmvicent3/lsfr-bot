@@ -9,6 +9,9 @@ export const BANDS: readonly Band[] = [
   [1.15, 1.25],
 ];
 
+/** Questions per day: one per band. */
+export const QUESTIONS = BANDS.length;
+
 /** The next easier band, or null for the first question. */
 export function widen(n: number): Band | null {
   return BANDS[n - 1] ?? null;
