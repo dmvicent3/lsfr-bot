@@ -96,7 +96,7 @@ describe("pickPair", () => {
       ...snapshot,
       countries: snapshot.countries.map((c) => ({
         ...c,
-        values: { ...c.values, area: { value: c.iso2 === "NL" ? 0 : 5 + c.iso2.length, year: 1 } },
+        values: { ...c.values, area: { value: c.iso2 === "NL" ? 0 : c.iso2.charCodeAt(0), year: 2020 } },
       })),
     };
     const v = { stat: STAT_BY_ID.area, used: new Set<string>(), recent: new Set<string>() };
@@ -114,5 +114,34 @@ describe("pickPair", () => {
     const [k] = [...recentKeys([{ questions: [q] }])];
 
     expect(k).toBe(`${q.stat}:${[q.a.iso2, q.b.iso2].toSorted().join(":")}`);
+  });
+});
+
+describe("pickPair rejections", () => {
+  const two = (a: [number, number], b: [number, number]): Snapshot => ({
+    builtAt: "x",
+    countries: [
+      { iso2: "AA", name: "Aa", values: { co2_pc: { value: a[0], year: a[1] } } },
+      { iso2: "BB", name: "Bb", values: { co2_pc: { value: b[0], year: b[1] } } },
+    ],
+  });
+  const pick = (s: Snapshot) =>
+    pickPair({
+      snapshot: s,
+      stat: STAT_BY_ID.co2_pc,
+      band: [1, 2],
+      used: new Set<string>(),
+      recent: new Set<string>(),
+      random: seeded(1),
+    });
+
+  test("skips pairs that format identically", () => {
+    expect(pick(two([0.04, 2023], [0.035, 2023]))).toBeNull();
+    expect(pick(two([0.04, 2023], [0.06, 2023]))).not.toBeNull();
+  });
+
+  test("skips pairs whose years are more than 3 apart", () => {
+    expect(pick(two([4, 2019], [6, 2023]))).toBeNull();
+    expect(pick(two([4, 2020], [6, 2023]))).not.toBeNull();
   });
 });

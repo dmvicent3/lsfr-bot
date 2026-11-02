@@ -1,7 +1,10 @@
+import { formatValue } from "../data/format.ts";
 import { inBand, type Band } from "./bands.ts";
 import type { Country, Question, Reading, Snapshot, StatDef } from "../types.ts";
 
 const TRIES = 200;
+/** Readings further apart than this make an unfair comparison. */
+const MAX_YEAR_GAP = 3;
 
 interface PickInput {
   snapshot: Snapshot;
@@ -31,6 +34,14 @@ function side(c: Country, r: Reading): Question["a"] {
   return { iso2: c.iso2, name: c.name, value: r.value, year: r.year };
 }
 
+/** Same shown value on both sides, or readings too far apart in time: not a fair question. */
+function unfair(stat: StatDef, rx: Reading, ry: Reading): boolean {
+  return (
+    Math.abs(rx.year - ry.year) > MAX_YEAR_GAP ||
+    formatValue(stat.id, rx) === formatValue(stat.id, ry)
+  );
+}
+
 /** One random pair in the band, or null after 200 tries. */
 export function pickPair(v: PickInput): Question | null {
   const { stat, random } = v;
@@ -45,8 +56,9 @@ export function pickPair(v: PickInput): Question | null {
     const [rx, ry] = [x.values[stat.id]!, y.values[stat.id]!];
     const ratio = Math.max(rx.value, ry.value) / Math.min(rx.value, ry.value);
 
-    if (x === y || !inBand(ratio, v.band) || v.recent.has(pairKey(stat.id, x.iso2, y.iso2)))
-      continue;
+    if (x === y || !inBand(ratio, v.band) || v.recent.has(pairKey(stat.id, x.iso2, y.iso2))) continue;
+
+    if (unfair(stat, rx, ry)) continue;
 
     const flip = random() < 0.5;
     const [a, b] = flip ? [side(y, ry), side(x, rx)] : [side(x, rx), side(y, ry)];
