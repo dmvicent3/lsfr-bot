@@ -5,6 +5,9 @@ import type { Outcome, PlayState, Reference } from "./types.ts";
 
 export const MAX_GUESSES = 9;
 
+/** Shown when no rule fails: the stored answers no longer match the data. */
+export const NO_FIT = "doesn't fit this cell";
+
 /** All cells filled or out of guesses. */
 export const isOver = (cells: string[], guesses: number): boolean =>
   cells.filter((c) => c !== "").length === CELLS || guesses >= MAX_GUESSES;
@@ -33,7 +36,8 @@ export function submit(state: PlayState, cell: number, text: string, ref: Refere
   }
 
   const ids = [grid.rows[Math.floor(cell / 3)]!, grid.cols[cell % 3]!];
-  const reasons = failures(ids, found);
+  const failed = failures(ids, found);
+  const reasons = failed.length > 0 ? failed : [NO_FIT];
 
   return { kind: "miss", name: found.name, reasons, cells, guesses: guesses + 1 };
 }

@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { isOver, submit } from "../../../../src/modules/grid/play/answer.ts";
-import { empty, ref, state } from "./fixtures.ts";
+import { empty, realGrid, ref, state } from "./fixtures.ts";
 
 test("a country valid for the cell fills it and adds points", () => {
   const out = submit(state(), 0, "Spain", ref);
@@ -69,4 +69,26 @@ test("the ninth guess is accepted and ends the game", () => {
   if (out.kind !== "miss") return;
 
   expect(isOver(out.cells, out.guesses)).toBe(true);
+});
+
+test("a miss that fails both rules lists the row reason then the column reason", () => {
+  const out = submit(state(), 0, "Japan", ref);
+
+  expect(out.kind).toBe("miss");
+
+  if (out.kind !== "miss") return;
+
+  expect(out.reasons).toHaveLength(2);
+  expect(out.reasons[0]).toContain("Europe");
+  expect(out.reasons[1]).toContain("EU");
+});
+
+test("a miss where no rule fails says it doesn't fit this cell", () => {
+  const grid = realGrid();
+  grid.answers[0] = [];
+
+  expect(submit(state({ grid }), 0, "Spain", ref)).toMatchObject({
+    kind: "miss",
+    reasons: ["doesn't fit this cell"],
+  });
 });

@@ -21,7 +21,7 @@ export const realGrid = (): Grid => ({
 export const empty = (): string[] => Array.from({ length: 9 }, () => "");
 
 export const state = (
-  over: Partial<{ cells: string[]; guesses: number; finished: boolean }> = {},
+  over: Partial<{ grid: Grid; cells: string[]; guesses: number; finished: boolean }> = {},
 ) => ({
   grid: realGrid(),
   cells: empty(),
