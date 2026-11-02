@@ -1,5 +1,5 @@
 import type { Database } from "bun:sqlite";
-import { PERIODS } from "../../../core/types.ts";
+import { toPeriod } from "../../../core/page-args.ts";
 import { dateIn } from "../../../core/zoned.ts";
 import { periodStandings } from "../play/standings.ts";
 import { renderLeaderboard } from "../render/leaderboard.ts";
@@ -25,9 +25,6 @@ export function leaderboardView(
     allowedMentions: { parse: [] },
   };
 }
-
-export const toPeriod = (s: string | null | undefined): Period =>
-  PERIODS.find((p) => p === s) ?? "today";
 
 /** Public, so the server sees it; mentions never ping. */
 export async function leaderboard({ i, guildId, db, repo }: CommandCtx): Promise<void> {

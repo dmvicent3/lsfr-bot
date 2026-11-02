@@ -1,3 +1,4 @@
+import { tell } from "../../../core/replies.ts";
 import type { MessageComponentInteraction } from "discord.js";
 import type { Ctx } from "../../../core/types.ts";
 import { startThinking, stopThinking } from "../../four/thinking.ts";
@@ -10,7 +11,7 @@ import { settle } from "../settle.ts";
 import { FleetRepo } from "../store/repo.ts";
 import type { Game, Moved } from "../types.ts";
 import { postFleet, syncFleet } from "./fleet-message.ts";
-import { liveGameFor, tell } from "./guard.ts";
+import { liveGameFor } from "./guard.ts";
 import { type Turn, answer } from "./turn.ts";
 
 /** A control's effect on the game: the next game, a move with its outcome, or why not. */

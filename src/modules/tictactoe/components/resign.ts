@@ -1,8 +1,9 @@
+import { tell } from "../../../core/replies.ts";
 import type { ComponentHandler } from "../../../core/types.ts";
 import { renderGame } from "../render.ts";
 import { GameStore } from "../store/games.ts";
 import { startThinking, stopThinking } from "../thinking.ts";
-import { liveGameFor, tell } from "./guard.ts";
+import { liveGameFor } from "./guard.ts";
 
 export const resignHandler: ComponentHandler = {
   id: "tictactoe:resign",

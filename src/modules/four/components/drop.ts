@@ -1,3 +1,4 @@
+import { tell } from "../../../core/replies.ts";
 import type { MessageComponentInteraction } from "discord.js";
 import { log } from "../../../core/log.ts";
 import type { ComponentHandler } from "../../../core/types.ts";
@@ -9,7 +10,7 @@ import { settle } from "../settle.ts";
 import { FourRepo } from "../store/repo.ts";
 import { startThinking, stopThinking, thinkKey } from "../thinking.ts";
 import { COLS, type Game, type Moved } from "../types.ts";
-import { liveGameFor, tell } from "./guard.ts";
+import { liveGameFor } from "./guard.ts";
 
 interface Turn {
   i: MessageComponentInteraction;

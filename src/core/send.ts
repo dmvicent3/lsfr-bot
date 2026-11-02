@@ -1,4 +1,9 @@
-import type { Client, MessageCreateOptions, MessageMentionOptions } from "discord.js";
+import type {
+  Client,
+  MessageComponentInteraction,
+  MessageCreateOptions,
+  MessageMentionOptions,
+} from "discord.js";
 import { DiscordAPIError, RESTJSONErrorCodes } from "discord.js";
 import { log } from "./log.ts";
 import type { SendResult } from "./types.ts";
@@ -43,5 +48,25 @@ export async function sendTo(
     if (result === "failed") log.error(scope, `send to ${channelId} failed`, err);
 
     return { result };
+  }
+}
+
+/** Posts `content` in the clicked message's channel, pinging no one; a failure or no channel is logged, never thrown. */
+export async function postOrLog(
+  i: MessageComponentInteraction,
+  scope: string,
+  what: string,
+  content: string,
+): Promise<void> {
+  try {
+    if (!i.channel || !("send" in i.channel)) {
+      log.error(scope, `${what}: no channel to send to`);
+
+      return;
+    }
+
+    await i.channel.send(outgoing({ content }));
+  } catch (err) {
+    log.error(scope, what, err);
   }
 }

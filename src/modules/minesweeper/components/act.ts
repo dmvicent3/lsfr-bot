@@ -1,8 +1,9 @@
+import { tell } from "../../../core/replies.ts";
 import type { MessageComponentInteraction } from "discord.js";
 import { renderBoard } from "../render/board.ts";
 import type { GameStore } from "../store/games.ts";
 import type { Game, Step } from "../types.ts";
-import { gameOver, refusal, tell } from "./guard.ts";
+import { gameOver, refusal } from "./guard.ts";
 
 /**
  * Plays one click on this board: read, move and save run with no await in between, so two quick

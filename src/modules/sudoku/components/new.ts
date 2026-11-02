@@ -1,8 +1,9 @@
+import { tell } from "../../../core/replies.ts";
 import type { ComponentHandler } from "../../../core/types.ts";
 import { openPractice } from "../play/open.ts";
 import { view } from "../render/view.ts";
 import { SudokuRepo } from "../store/repo.ts";
-import { STALE, tell } from "./guard.ts";
+import { STALE } from "./guard.ts";
 import { parseKey } from "./key.ts";
 
 /** `sudoku:new:practice`: a fresh board at the same level, replacing this one. */

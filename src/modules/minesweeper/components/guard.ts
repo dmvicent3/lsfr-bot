@@ -1,10 +1,6 @@
 import { type MessageComponentInteraction, MessageFlags } from "discord.js";
+import { tell } from "../../../core/replies.ts";
 import type { Game } from "../types.ts";
-
-/** An ephemeral answer to a click; pings no one. */
-export async function tell(i: MessageComponentInteraction, content: string): Promise<void> {
-  await i.reply({ content, flags: MessageFlags.Ephemeral, allowedMentions: { parse: [] } });
-}
 
 /** An old board (finished, replaced or unknown) loses its controls. */
 export async function gameOver(i: MessageComponentInteraction): Promise<void> {

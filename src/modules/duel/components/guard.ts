@@ -1,5 +1,5 @@
 import type { Database } from "bun:sqlite";
-import { type MessageComponentInteraction, MessageFlags } from "discord.js";
+import type { MessageComponentInteraction } from "discord.js";
 import { puzzleNumber, untilNext } from "../../../core/daily.ts";
 import { FIRST_PUZZLE } from "../periods.ts";
 import { isDone } from "../play/answer.ts";
@@ -12,11 +12,6 @@ import type { Award, Game, Puzzle } from "../types.ts";
 export const OUT_OF_DATE = "This question is out of date. Use /duel play.";
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
-
-/** An ephemeral answer to a click; pings no one. */
-export async function tell(i: MessageComponentInteraction, content: string): Promise<void> {
-  await i.reply({ content, flags: MessageFlags.Ephemeral, allowedMentions: { parse: [] } });
-}
 
 export interface Session {
   repo: DuelRepo;
@@ -31,6 +26,7 @@ export interface Session {
 /**
  * The puzzle and the clicker's own game for the date in a custom ID; null when either is missing.
  * A game with every answer but no finish is finished here, so it never renders as finished unsaved.
+ * So this may write (the heal), and the session carries the award it produced.
  */
 export function load(
   i: MessageComponentInteraction,

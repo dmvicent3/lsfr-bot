@@ -1,7 +1,8 @@
+import { tell } from "../../../core/replies.ts";
 import type { ComponentHandler } from "../../../core/types.ts";
 import { view } from "../render/view.ts";
 import { announce } from "./announce.ts";
-import { OUT_OF_DATE, load, tell } from "./guard.ts";
+import { OUT_OF_DATE, load } from "./guard.ts";
 
 /** `duel:next:<date>`: the next question, or the result once there are none. */
 export const nextHandler: ComponentHandler = {

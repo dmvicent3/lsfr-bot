@@ -1,6 +1,6 @@
 import type { MessageComponentInteraction } from "discord.js";
 import { puzzleNumber } from "../../../core/daily.ts";
-import { log } from "../../../core/log.ts";
+import { postOrLog } from "../../../core/send.ts";
 import { FIRST_PUZZLE } from "../periods.ts";
 import { tally } from "../render/question.ts";
 import type { Game, Puzzle } from "../types.ts";
@@ -15,15 +15,5 @@ export async function announce(
   const score = `${g.correct ?? 0}/${puzzle.questions.length}`;
   const content = `<@${g.userId}> scored ${score} on Stat duel #${number} ${tally(puzzle, g.answers)}`;
 
-  try {
-    if (!i.channel || !("send" in i.channel)) {
-      log.error("duel", "could not announce a finished game: no channel to send to");
-
-      return;
-    }
-
-    await i.channel.send({ content, allowedMentions: { parse: [] } });
-  } catch (err) {
-    log.error("duel", "could not announce a finished game", err);
-  }
+  await postOrLog(i, "duel", "could not announce a finished game", content);
 }

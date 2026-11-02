@@ -9,11 +9,7 @@ export interface Sent {
 export interface Calls {
   update: Sent[];
   reply: Sent[];
-  followUp: Sent[];
   send: Sent[];
-  editReply: Sent[];
-  /** Every answer call in order, so a test can see the defer came before the board. */
-  order: string[];
 }
 
 /** A click as the handlers see it, recording what they answer. */
@@ -21,7 +17,7 @@ export function fakeClick(
   userId: string,
   opts: { failSend?: boolean; noChannel?: boolean } = {},
 ): { i: MessageComponentInteraction; calls: Calls } {
-  const calls: Calls = { update: [], reply: [], followUp: [], send: [], editReply: [], order: [] };
+  const calls: Calls = { update: [], reply: [], send: [] };
   const channel = {
     send: async (m: Sent) => {
       if (opts.failSend) throw new Error("no permission");
@@ -34,14 +30,8 @@ export function fakeClick(
     guildId: "g",
     user: { id: userId },
     channel: opts.noChannel ? null : channel,
-    deferUpdate: async () => void calls.order.push("deferUpdate"),
-    editReply: async (m: Sent) => {
-      calls.order.push("editReply");
-      calls.editReply.push(m);
-    },
     update: async (m: Sent) => void calls.update.push(m),
     reply: async (m: Sent) => void calls.reply.push(m),
-    followUp: async (m: Sent) => void calls.followUp.push(m),
   } as unknown as MessageComponentInteraction;
 
   return { i, calls };

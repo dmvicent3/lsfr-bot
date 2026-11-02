@@ -1,6 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import { type ChatInputCommandInteraction, MessageFlags } from "discord.js";
-import { autocompleteChoices, reply } from "../../src/core/replies.ts";
+import {
+  type ChatInputCommandInteraction,
+  type MessageComponentInteraction,
+  MessageFlags,
+} from "discord.js";
+import { autocompleteChoices, reply, tell } from "../../src/core/replies.ts";
 
 function fakeInteraction(deferred: boolean) {
   const calls: { method: string; body: unknown }[] = [];
@@ -63,5 +67,24 @@ describe("autocompleteChoices", () => {
     expect(autocompleteChoices([{ name: "x".repeat(150), value: "1" }], "")[0]?.name).toHaveLength(
       100,
     );
+  });
+});
+
+describe("tell", () => {
+  test("answers a click ephemerally, pinging no one", async () => {
+    const { i, calls } = fakeInteraction(false);
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the same stand-in serves a click
+    await tell(i as unknown as MessageComponentInteraction, "gone @everyone");
+
+    expect(calls).toEqual([
+      {
+        method: "reply",
+        body: {
+          content: "gone @everyone",
+          flags: MessageFlags.Ephemeral,
+          allowedMentions: { parse: [] },
+        },
+      },
+    ]);
   });
 });

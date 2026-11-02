@@ -1,8 +1,9 @@
+import { tell } from "../../../core/replies.ts";
 import type { ComponentHandler } from "../../../core/types.ts";
 import { put } from "../play/put.ts";
 import { SudokuRepo } from "../store/repo.ts";
 import { act } from "./act.ts";
-import { STALE, tell } from "./guard.ts";
+import { STALE } from "./guard.ts";
 
 /** `sudoku:put:<1-9>:<suffix>` */
 export const putHandler: ComponentHandler = {

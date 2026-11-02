@@ -1,9 +1,10 @@
+import { tell } from "../../../core/replies.ts";
 import type { ComponentHandler } from "../../../core/types.ts";
 import { move } from "../play/move.ts";
 import { SudokuRepo } from "../store/repo.ts";
 import type { Direction } from "../types.ts";
 import { act } from "./act.ts";
-import { STALE, tell } from "./guard.ts";
+import { STALE } from "./guard.ts";
 
 const DIRECTIONS: readonly string[] = ["left", "up", "down", "right"] satisfies Direction[];
 

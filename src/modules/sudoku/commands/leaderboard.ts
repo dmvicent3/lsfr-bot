@@ -1,4 +1,5 @@
-import { leaderboardView, toPeriod } from "./leaderboard-view.ts";
+import { toPeriod } from "../../../core/page-args.ts";
+import { leaderboardView } from "./leaderboard-view.ts";
 import type { CommandCtx } from "./types.ts";
 
 /** Public, so the server sees it; mentions never ping. */

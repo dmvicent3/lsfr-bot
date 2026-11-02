@@ -1,13 +1,9 @@
 import { type MessageComponentInteraction, MessageFlags } from "discord.js";
+import { tell } from "../../../core/replies.ts";
 import { clickVerdict } from "../click.ts";
 import { lockedCopy } from "../render.ts";
 import type { GameStore } from "../store/games.ts";
 import type { Game } from "../types.ts";
-
-/** An ephemeral answer to a click; pings no one. */
-export async function tell(i: MessageComponentInteraction, content: string): Promise<void> {
-  await i.reply({ content, flags: MessageFlags.Ephemeral, allowedMentions: { parse: [] } });
-}
 
 /**
  * The live game behind this board when the clicker is its player; otherwise answers them. Runs

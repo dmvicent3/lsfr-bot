@@ -8,6 +8,7 @@ import { nextHandler } from "../../../../src/modules/duel/components/next.ts";
 import { pageArgs, pageHandler } from "../../../../src/modules/duel/components/page.ts";
 import { pickHandler } from "../../../../src/modules/duel/components/pick.ts";
 import { duelMigrations } from "../../../../src/modules/duel/store/migrations.ts";
+import { GameStore } from "../../../../src/modules/duel/store/games.ts";
 import { DuelRepo } from "../../../../src/modules/duel/store/repo.ts";
 import type { Game } from "../../../../src/modules/duel/types.ts";
 import { game, puzzle, question } from "../store/fixtures.ts";
@@ -62,8 +63,13 @@ test("pick uses the date from the custom ID", async () => {
 
 test("the last pick finishes in one write, posts the line and stores points", async () => {
   const { repo, ctx } = setup({ answers: "bb" });
+  const save = spyOn(GameStore.prototype, "save");
   const { i, calls } = fakeClick("u");
   await pickHandler.handle(i, [DATE, "3", "b"], ctx);
+  const writes = save.mock.calls.length;
+  save.mockRestore();
+
+  expect(writes).toBe(1);
 
   const g = stored(repo);
   expect(g?.answers).toBe("bbb");
@@ -111,6 +117,49 @@ test("Next finishes a game with every answer but no finish, then shows the resul
   expect(g?.points).toBeGreaterThan(0);
   expect(calls.update[0]?.content).toContain("3/3 correct");
   expect(calls.update[0]?.components).toEqual([]);
+  expect(calls.send).toHaveLength(1);
+});
+
+const FINISHED = { answers: "bbb", correct: 3, points: 90, streak: 1, finishedAt: 5 };
+
+test("Next on an already finished game announces nothing", async () => {
+  const { ctx } = setup(FINISHED);
+  const { i, calls } = fakeClick("u");
+  await nextHandler.handle(i, [DATE], ctx);
+
+  expect(calls.update).toHaveLength(1);
+  expect(calls.send).toHaveLength(0);
+});
+
+test("a stale pick on a finished game neither writes nor announces", async () => {
+  const { ctx } = setup(FINISHED);
+  const save = spyOn(GameStore.prototype, "save");
+  const { i, calls } = fakeClick("u");
+  await pickHandler.handle(i, [DATE, "1", "a"], ctx);
+  const writes = save.mock.calls.length;
+  save.mockRestore();
+
+  expect(writes).toBe(0);
+  expect(calls.update).toHaveLength(1);
+  expect(calls.send).toHaveLength(0);
+});
+
+test("a stale pick that heals the game announces it once", async () => {
+  const { ctx } = setup({ answers: "bbb" });
+  const { i, calls } = fakeClick("u");
+  await pickHandler.handle(i, [DATE, "1", "a"], ctx);
+
+  expect(calls.send).toHaveLength(1);
+});
+
+test("pick then Next on the finished game announces once overall", async () => {
+  const { ctx } = setup({ answers: "bb" });
+  const pick = fakeClick("u");
+  await pickHandler.handle(pick.i, [DATE, "3", "b"], ctx);
+  const next = fakeClick("u");
+  await nextHandler.handle(next.i, [DATE], ctx);
+
+  expect(pick.calls.send.length + next.calls.send.length).toBe(1);
 });
 
 test("another user's click acts on their own game", async () => {

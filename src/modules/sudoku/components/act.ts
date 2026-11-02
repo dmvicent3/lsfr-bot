@@ -1,3 +1,4 @@
+import { tell } from "../../../core/replies.ts";
 import { type MessageComponentInteraction, MessageFlags } from "discord.js";
 import { finish } from "../play/finish.ts";
 import { unchanged } from "../play/step.ts";
@@ -5,7 +6,7 @@ import { view } from "../render/view.ts";
 import type { SudokuRepo } from "../store/repo.ts";
 import type { Award, Game, Step } from "../types.ts";
 import { announce } from "./announce.ts";
-import { STALE, tell } from "./guard.ts";
+import { STALE } from "./guard.ts";
 import { parseKey } from "./key.ts";
 
 /** Stores the step; the award is set when this click solved a daily. */
