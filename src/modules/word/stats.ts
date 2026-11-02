@@ -1,5 +1,5 @@
 import { MAX_ATTEMPTS } from "./scoring.ts";
-import { currentStreak } from "./streak.ts";
+import { currentStreak } from "../../core/daily.ts";
 import type { Game, PlayerStats } from "./types.ts";
 
 const sum = (ns: number[]): number => ns.reduce((a, b) => a + b, 0);

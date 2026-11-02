@@ -2,7 +2,7 @@ import type { Database } from "bun:sqlite";
 import { feedback } from "../feedback.ts";
 import { award, MAX_ATTEMPTS } from "../scoring.ts";
 import type { WordRepo } from "../store/repo.ts";
-import { nextStreak } from "../streak.ts";
+import { nextStreak } from "../../../core/daily.ts";
 import type { Game, GuessResult, Puzzle } from "../types.ts";
 import { checkGuess } from "../validate.ts";
 

@@ -9,6 +9,7 @@ export type Mark = "hit" | "near" | "miss";
 
 export type Period = "today" | "week" | "month" | "all";
 
+export type { LastGame } from "../../core/daily.ts";
 export type { DateRange } from "../../core/types.ts";
 
 export type RefusedReason = "finished" | "length" | "letters" | "unknown" | "repeat";
@@ -20,13 +21,6 @@ export type GuessCheck = { ok: true; word: string } | { ok: false; reason: Refus
 export interface Award {
   points: number;
   parts: string[];
-}
-
-/** A player's latest finished game, as streaks need it. */
-export interface LastGame {
-  date: string;
-  won: boolean;
-  streak: number;
 }
 
 /** A server's word for one date. */

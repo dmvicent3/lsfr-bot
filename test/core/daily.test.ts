@@ -1,5 +1,11 @@
 import { expect, test } from "bun:test";
-import { currentStreak, nextStreak } from "../../../src/modules/word/streak.ts";
+import {
+  currentStreak,
+  nextStreak,
+  previousDate,
+  puzzleNumber,
+  untilNext,
+} from "../../src/core/daily.ts";
 
 test("win after yesterday's win extends", () => {
   expect(nextStreak({ date: "2026-10-28", won: true, streak: 2 }, "2026-10-29", true)).toBe(3);
@@ -25,4 +31,23 @@ test("current streak survives until the day after", () => {
   expect(currentStreak(last, "2026-10-29")).toBe(4);
   expect(currentStreak(last, "2026-10-30")).toBe(0);
   expect(currentStreak(null, "2026-10-30")).toBe(0);
+});
+
+test("puzzle numbers count from launch", () => {
+  expect(puzzleNumber("2026-10-28", "2026-10-28")).toBe(1);
+  expect(puzzleNumber("2026-11-01", "2026-10-28")).toBe(5);
+  expect(puzzleNumber("2027-10-28", "2026-10-28")).toBe(366);
+});
+
+test("previousDate crosses months and years", () => {
+  expect(previousDate("2026-11-01")).toBe("2026-10-31");
+  expect(previousDate("2027-01-01")).toBe("2026-12-31");
+});
+
+test("untilNext shows hours and minutes", () => {
+  expect(untilNext(Date.UTC(2026, 6, 1, 17, 47, 30), "Europe/Lisbon")).toBe("5h 12m");
+});
+
+test("untilNext drops zero hours", () => {
+  expect(untilNext(Date.UTC(2026, 6, 1, 22, 48), "Europe/Lisbon")).toBe("12m");
 });

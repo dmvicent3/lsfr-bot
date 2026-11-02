@@ -1,5 +1,6 @@
 import type { Database } from "bun:sqlite";
-import type { DateRange, Game, LastGame } from "../types.ts";
+import type { LastGame } from "../../../core/daily.ts";
+import type { DateRange, Game } from "../types.ts";
 import type { GameRow } from "./types.ts";
 
 const toGame = (r: GameRow): Game => ({

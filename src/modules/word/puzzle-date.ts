@@ -1,18 +1,6 @@
-import { DAY_MS, dateOfMs, dayMs } from "../../core/periods.ts";
-import { nextMidnight } from "../../core/zoned.ts";
+import { puzzleNumber as dailyNumber } from "../../core/daily.ts";
 
 export const FIRST_PUZZLE = "2026-10-28";
 
 /** #1 on launch day, one more each day. */
-export const puzzleNumber = (date: string): number =>
-  Math.round((dayMs(date) - dayMs(FIRST_PUZZLE)) / DAY_MS) + 1;
-
-export const previousDate = (date: string): string => dateOfMs(dayMs(date) - DAY_MS);
-
-/** Time to the next puzzle, as "5h 12m" or "12m". */
-export function untilNext(now: number, tz: string): string {
-  const minutes = Math.floor((nextMidnight(now, tz) - now) / 60_000);
-  const h = Math.floor(minutes / 60);
-
-  return h > 0 ? `${h}h ${minutes % 60}m` : `${minutes}m`;
-}
+export const puzzleNumber = (date: string): number => dailyNumber(date, FIRST_PUZZLE);

@@ -1,4 +1,5 @@
-import { puzzleNumber, untilNext } from "../puzzle-date.ts";
+import { untilNext } from "../../../core/daily.ts";
+import { puzzleNumber } from "../puzzle-date.ts";
 import { MAX_ATTEMPTS } from "../scoring.ts";
 import type { Award, Game, Puzzle } from "../types.ts";
 import { boardLines } from "./board.ts";
