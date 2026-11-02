@@ -2,7 +2,7 @@ export type Band = [number, number];
 
 /** Ratio bands per question, hardest to closest; lower bound inclusive, upper exclusive. */
 export const BANDS: readonly Band[] = [
-  [3, Infinity],
+  [3, 10],
   [2, 3],
   [1.5, 2],
   [1.25, 1.5],

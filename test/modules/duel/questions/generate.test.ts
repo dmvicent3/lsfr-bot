@@ -31,6 +31,11 @@ describe("seed and bands", () => {
     expect(widen(0)).toBeNull();
     expect(widen(4)).toEqual(BANDS[3]!);
   });
+
+  test("Q1 band is capped at 10x", () => {
+    expect(BANDS[0]).toEqual([3, 10]);
+    expect(fits(12, BANDS[0]!)).toBe(false);
+  });
 });
 
 describe("generate", () => {
@@ -81,7 +86,7 @@ describe("generate", () => {
   test("returns fewer questions when stats run dry", () => {
     const small: Snapshot = { ...snapshot, countries: snapshot.countries.slice(0, 3) };
 
-    expect(generate({ ...input, snapshot: small }).length).toBeLessThan(5);
+    expect(generate({ ...input, snapshot: small }).length).toBeLessThanOrEqual(1);
   });
 });
 
@@ -97,9 +102,10 @@ describe("pickPair", () => {
     const v = { stat: STAT_BY_ID.area, used: new Set<string>(), recent: new Set<string>() };
 
     for (let s = 0; s < 50; s++) {
-      const q = pickPair({ ...v, snapshot: zeroed, band: [1, Infinity], random: seeded(s) });
+      const q = pickPair({ ...v, snapshot: zeroed, band: [1, 1000], random: seeded(s) });
 
-      if (q) expect([q.a.iso2, q.b.iso2]).not.toContain("NL");
+      expect(q).not.toBeNull();
+      expect([q!.a.iso2, q!.b.iso2]).not.toContain("NL");
     }
   });
 

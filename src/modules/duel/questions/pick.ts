@@ -1,5 +1,4 @@
-import type { Band } from "./bands.ts";
-import { inBand } from "./bands.ts";
+import { inBand, type Band } from "./bands.ts";
 import type { Country, Question, Reading, Snapshot, StatDef } from "../types.ts";
 
 const TRIES = 200;
@@ -28,7 +27,7 @@ export function recentKeys(puzzles: { questions: Question[] }[]): Set<string> {
   return keys;
 }
 
-function side(c: Country, r: Reading) {
+function side(c: Country, r: Reading): Question["a"] {
   return { iso2: c.iso2, name: c.name, value: r.value, year: r.year };
 }
 
