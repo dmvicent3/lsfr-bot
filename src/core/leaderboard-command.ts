@@ -1,15 +1,7 @@
 import type { Database } from "bun:sqlite";
 import type { ChatInputCommandInteraction, InteractionReplyOptions } from "discord.js";
 import { toPeriod } from "./page-args.ts";
-import type { Period } from "./types.ts";
-
-interface PageAsk {
-  guildId: string;
-  period: Period;
-  page: number;
-  viewerId: string;
-  now: number;
-}
+import type { PageAsk } from "./leaderboard-view.ts";
 
 /** The `leaderboard` subcommand: public, so the server sees it; the module's view decides what pings. */
 export function leaderboardHandler<R>(
