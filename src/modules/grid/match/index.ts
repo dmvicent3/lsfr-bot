@@ -15,6 +15,8 @@ export interface Index {
 
 const memo = new WeakMap<Snapshot, Index>();
 
+const short = (s: string) => normaliseName(s).split(" and ")[0] ?? "";
+
 /** Normalised name, alias (exact only) and pre-"and" short-name keys per country, built once per snapshot. */
 export function indexOf(snapshot: Snapshot): Index {
   const hit = memo.get(snapshot);
@@ -26,11 +28,10 @@ export function indexOf(snapshot: Snapshot): Index {
   for (const country of snapshot.countries) {
     index.byIso.set(country.iso2, country);
 
-    const short = normaliseName(country.name).split(" and ")[0] ?? "";
+    const names = [normaliseName(country.name), short(country.name)];
+    const aliases = country.facts.aliases.flatMap((a) => [normaliseName(a), short(a)]);
 
-    const names = [normaliseName(country.name), short];
-
-    for (const key of [...names, ...country.facts.aliases.map(normaliseName)]) {
+    for (const key of [...names, ...aliases]) {
       if (key === "" || index.exact.has(key)) continue;
 
       index.exact.set(key, country.iso2);

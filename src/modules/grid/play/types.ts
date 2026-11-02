@@ -19,5 +19,6 @@ export type Outcome =
   | { kind: "stale" }
   | { kind: "unknown"; text: string }
   | { kind: "used"; name: string }
+  | { kind: "nodata"; name: string; label: string }
   | { kind: "miss"; name: string; reasons: string[]; cells: string[]; guesses: number }
   | { kind: "hit"; iso2: string; points: number; cells: string[]; guesses: number };

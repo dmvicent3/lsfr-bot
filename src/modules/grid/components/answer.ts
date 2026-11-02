@@ -1,6 +1,7 @@
 import { MessageFlags } from "discord.js";
 import { tell } from "../../../core/replies.ts";
 import type { ModalHandler } from "../../../core/types.ts";
+import { notListed } from "../match/not-listed.ts";
 import { missLine, submit } from "../play/answer.ts";
 import type { Outcome } from "../play/types.ts";
 import { isGame, land } from "../play/round.ts";
@@ -32,6 +33,15 @@ function judge(r: Round, cell: number | null, text: string): Outcome {
   return submit(state, cell, text, { snapshot: r.snap, obscurity: obscurity(r.snap) });
 }
 
+/** The reply for text that names no country: a known omission, or just unrecognised. */
+function unknownReply(text: string): string {
+  const shown = notListed(text);
+
+  if (shown) return `${shown} isn't in this game's country list — no guess used.`;
+
+  return `Didn't recognise "${text}" — no guess used.`;
+}
+
 /** `grid:answer:<date|practice>:<0-8>`: judges the typed country for a cell. */
 export const answerHandler = (source: Source): ModalHandler => ({
   id: "grid:answer",
@@ -42,7 +52,11 @@ export const answerHandler = (source: Source): ModalHandler => ({
 
     const out = judge(r, cellIndex(args[1]), i.fields.getTextInputValue("country"));
 
-    if (out.kind === "unknown") return tell(i, `Didn't recognise "${out.text}" — no guess used.`);
+    if (out.kind === "unknown") return tell(i, unknownReply(out.text));
+
+    if (out.kind === "nodata") {
+      return tell(i, `No ${out.label} data for ${out.name} — no guess used.`);
+    }
 
     if (out.kind === "used") return tell(i, `${out.name} is already on your grid — no guess used.`);
 

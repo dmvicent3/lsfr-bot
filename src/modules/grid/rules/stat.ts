@@ -8,22 +8,28 @@ type StatId =
   | "area_under_10k"
   | "gdp_over_30k"
   | "gdp_under_2k";
-
-function over(stat: string, limit: number) {
-  return (c: Country) => (c.values[stat]?.value ?? -Infinity) > limit;
+interface Check {
+  test(c: Country): boolean;
+  known(c: Country): boolean;
 }
 
-function under(stat: string, limit: number) {
-  return (c: Country) => (c.values[stat]?.value ?? Infinity) < limit;
+const has = (stat: string) => (c: Country) => c.values[stat]?.value !== undefined;
+
+function over(stat: string, limit: number): Check {
+  return { test: (c) => (c.values[stat]?.value ?? -Infinity) > limit, known: has(stat) };
 }
 
-const def = (
-  id: StatId,
-  label: string,
-  why: string,
-  test: (c: Country) => boolean,
-): RuleDef & { id: StatId } => ({ id, kind: "stat", label, why, test });
+function under(stat: string, limit: number): Check {
+  return { test: (c) => (c.values[stat]?.value ?? Infinity) < limit, known: has(stat) };
+}
 
+const def = (id: StatId, label: string, why: string, check: Check): RuleDef & { id: StatId } => ({
+  id,
+  kind: "stat",
+  label,
+  why,
+  ...check,
+});
 export const STAT = [
   def("pop_over_50m", "Population over 50M", "population isn't over 50M", over("population", 5e7)),
   def("pop_under_1m", "Population under 1M", "population isn't under 1M", under("population", 1e6)),

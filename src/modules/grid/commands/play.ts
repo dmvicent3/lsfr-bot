@@ -38,7 +38,7 @@ export async function play(c: CommandCtx): Promise<void> {
 
   const { game, award } = healed(repo, opened.game, now);
   const number = puzzleNumber(date, FIRST_PUZZLE);
-  const where = { scope: date, number, untilNext: untilNext(now, tz) };
+  const where = { scope: date, number, snap: snapshot, untilNext: untilNext(now, tz) };
 
   await i.editReply(gridView(boardView(where, opened.puzzle.grid, game, award), snapshot));
 

@@ -56,6 +56,8 @@ export interface RuleDef {
   /** Failure phrase, e.g. "isn't in Africa". */
   why: string;
   test(c: Country): boolean;
+  /** Stat rules: the reading exists. Omitted means always known. */
+  known?(c: Country): boolean;
 }
 
 /** Cell index is r*3+c; answers are sorted iso2 lists. */

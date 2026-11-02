@@ -1,5 +1,8 @@
 import { matchCountry } from "../match/match.ts";
+import type { Country } from "../../../core/countries/types.ts";
+import { RULES } from "../rules/catalogue.ts";
 import { failures } from "../rules/explain.ts";
+import type { RuleId } from "../types.ts";
 import { CELLS, cellPoints } from "../scoring.ts";
 import type { Outcome, PlayState, Reference } from "./types.ts";
 
@@ -15,6 +18,30 @@ export const isOver = (cells: string[], guesses: number): boolean =>
 /** The line the board shows under a wrong guess. */
 export const missLine = (name: string, reasons: string[]): string =>
   `${name}: ${reasons.join(", ")}`;
+
+/** The stat a cell rule needs, when every rule this country fails lacks its reading. */
+function missingData(ids: RuleId[], c: Country): string | null {
+  const failed = ids.map((id) => RULES[id]).filter((r) => !r.test(c));
+  const rule = failed[0];
+
+  if (!rule || failed.some((r) => r.known?.(c) !== false)) return null;
+
+  return rule.why.split(" isn't")[0] ?? rule.label;
+}
+
+/** A guess that fits neither the cell nor the answers: free when its data is missing, else a miss. */
+function wrong(state: PlayState, cell: number, found: Country): Outcome {
+  const { grid, cells, guesses } = state;
+  const ids = [grid.rows[Math.floor(cell / 3)]!, grid.cols[cell % 3]!];
+  const label = missingData(ids, found);
+
+  if (label) return { kind: "nodata", name: found.name, label };
+
+  const failed = failures(ids, found);
+  const reasons = failed.length > 0 ? failed : [NO_FIT];
+
+  return { kind: "miss", name: found.name, reasons, cells, guesses: guesses + 1 };
+}
 
 /** Judges a guess for a cell (0..8) without storing anything. */
 export function submit(state: PlayState, cell: number, text: string, ref: Reference): Outcome {
@@ -35,9 +62,5 @@ export function submit(state: PlayState, cell: number, text: string, ref: Refere
     return { kind: "hit", iso2: found.iso2, points, cells: next, guesses: guesses + 1 };
   }
 
-  const ids = [grid.rows[Math.floor(cell / 3)]!, grid.cols[cell % 3]!];
-  const failed = failures(ids, found);
-  const reasons = failed.length > 0 ? failed : [NO_FIT];
-
-  return { kind: "miss", name: found.name, reasons, cells, guesses: guesses + 1 };
+  return wrong(state, cell, found);
 }
