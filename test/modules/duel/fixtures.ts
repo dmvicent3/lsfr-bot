@@ -1,3 +1,4 @@
+import { emptyFacts } from "../../../src/core/countries/facts.ts";
 import type { Country, Snapshot, StatId } from "../../../src/modules/duel/types.ts";
 
 const IDS: StatId[] = [
@@ -42,7 +43,7 @@ function country(name: [string, string], index: number): Country {
     values[id] = { value: (index + 1) * (s + 1) * 1.5, year: 2020 + ((index + s) % 4) };
   });
 
-  return { iso2: name[0], name: name[1], values };
+  return { iso2: name[0], name: name[1], values, facts: emptyFacts() };
 }
 
 /** Twelve countries covering every stat, with deliberate gaps on MC and NE. */

@@ -1,3 +1,4 @@
+import { emptyFacts } from "../../../../src/core/countries/facts.ts";
 import { describe, expect, test } from "bun:test";
 import { STAT_BY_ID } from "../../../../src/modules/duel/data/stats.ts";
 import { BANDS, widen } from "../../../../src/modules/duel/questions/bands.ts";
@@ -123,8 +124,18 @@ describe("pickPair", () => {
 const two = (a: [number, number], b: [number, number]): Snapshot => ({
   builtAt: "x",
   countries: [
-    { iso2: "AA", name: "Aa", values: { co2_pc: { value: a[0], year: a[1] } } },
-    { iso2: "BB", name: "Bb", values: { co2_pc: { value: b[0], year: b[1] } } },
+    {
+      iso2: "AA",
+      name: "Aa",
+      values: { co2_pc: { value: a[0], year: a[1] } },
+      facts: emptyFacts(),
+    },
+    {
+      iso2: "BB",
+      name: "Bb",
+      values: { co2_pc: { value: b[0], year: b[1] } },
+      facts: emptyFacts(),
+    },
   ],
 });
 const pick = (s: Snapshot) =>

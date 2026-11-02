@@ -18,6 +18,27 @@
         "fertility": { "value": 4.761, "year": 2024 },
         "aged_65": { "value": 2.42557886023075, "year": 2025 },
         "peak": { "value": 7492, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["CN", "IR", "PK", "TJ", "TM", "UZ"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["white", "black"],
+        "flagFeatures": [],
+        "aliases": [
+          "Affghanistan",
+          "Affghanisthan",
+          "Affghaunistan",
+          "Afghania",
+          "Afghanisthan",
+          "Afghaunistan",
+          "Afghaunistaun"
+        ]
       }
     },
     {
@@ -38,6 +59,25 @@
         "tourists": { "value": 6406000, "year": 2019 },
         "aged_65": { "value": 17.6221063807332, "year": 2025 },
         "peak": { "value": 2764, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["GR", "ME", "MK", "RS", "XK"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["nato"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "black"],
+        "flagFeatures": ["emblem"],
+        "aliases": [
+          "People's Socialist Republic of Albania",
+          "Republika Popullore e Shqiperise",
+          "Shqipërisë",
+          "Republic of Albania",
+          "People's Republic of Albania"
+        ]
       }
     },
     {
@@ -58,6 +98,19 @@
         "tourists": { "value": 2371000, "year": 2019 },
         "aged_65": { "value": 6.80593085174533, "year": 2025 },
         "peak": { "value": 2918, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["LY", "MA", "ML", "MR", "NE", "TN"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["opec"],
+        "languages": ["ar"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white"],
+        "flagFeatures": ["star", "crescent"],
+        "aliases": ["Djazaïr", "Dzayer", "People's Democratic Republic of Algeria"]
       }
     },
     {
@@ -77,6 +130,27 @@
         "tourists": { "value": 19200.0007629395, "year": 2019 },
         "aged_65": { "value": 8.53818829638159, "year": 2025 },
         "peak": { "value": 963, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["oceania"],
+        "borders": [],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": [
+          "East Samoa",
+          "ISO 3166-1:AS",
+          "Samoa (American)",
+          "Samoa, United States",
+          "Territory of American Samoa",
+          "U.S. Samoa",
+          "US Samoa"
+        ]
       }
     },
     {
@@ -96,6 +170,19 @@
         "tourists": { "value": 8235000, "year": 2019 },
         "aged_65": { "value": 16.5624302661496, "year": 2025 },
         "peak": { "value": 2942, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["ES", "FR"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "yellow"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Principality of Andorra", "Principality of the Valleys of Andorra"]
       }
     },
     {
@@ -116,6 +203,19 @@
         "tourists": { "value": 218000, "year": 2019 },
         "aged_65": { "value": 2.89492414306917, "year": 2025 },
         "peak": { "value": 2619, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["CD", "CG", "NA", "ZM"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["pt"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "yellow", "black"],
+        "flagFeatures": ["star", "emblem"],
+        "aliases": ["Ngola", "Republic of Angola"]
       }
     },
     {
@@ -136,6 +236,19 @@
         "tourists": { "value": 1035000, "year": 2019 },
         "aged_65": { "value": 12.3369971923977, "year": 2025 },
         "peak": { "value": 402, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "yellow", "white", "black"],
+        "flagFeatures": [],
+        "aliases": ["Antigua-Barbuda"]
       }
     },
     {
@@ -156,6 +269,19 @@
         "tourists": { "value": 7399000, "year": 2019 },
         "aged_65": { "value": 12.634433938217, "year": 2025 },
         "peak": { "value": 6962, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["south_america"],
+        "borders": ["BO", "BR", "CL", "PY", "UY"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["es"],
+        "monarchy": false,
+        "drivesLeft": null,
+        "flagColours": ["blue", "yellow", "white"],
+        "flagFeatures": [],
+        "aliases": ["Argentine Republic", "Republic of Argentina", "Republica Argentina"]
       }
     },
     {
@@ -176,6 +302,19 @@
         "tourists": { "value": 1894000, "year": 2019 },
         "aged_65": { "value": 14.4428643549941, "year": 2025 },
         "peak": { "value": 4090, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["AZ", "GE", "IR", "TR"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "orange"],
+        "flagFeatures": [],
+        "aliases": ["Hayastan", "Hayastani Hanrapetut’yun", "Republic of Armenia"]
       }
     },
     {
@@ -196,6 +335,19 @@
         "tourists": { "value": 1951000, "year": 2019 },
         "aged_65": { "value": 17.7604660301903, "year": 2025 },
         "peak": { "value": 188, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": [],
+        "languages": [],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "yellow", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Country of Aruba", "Island of Aruba"]
       }
     },
     {
@@ -216,6 +368,29 @@
         "tourists": { "value": 9466000, "year": 2019 },
         "aged_65": { "value": 18.0930147394386, "year": 2025 },
         "peak": { "value": 2745, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["oceania"],
+        "borders": [],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["star"],
+        "aliases": [
+          "Down Under",
+          "Stria",
+          "The Commonwealth of Australia",
+          "New Holland",
+          "'Straya",
+          "Nova Hollandia",
+          "Aussieland",
+          "New Hollandia",
+          "Stralia"
+        ]
       }
     },
     {
@@ -236,6 +411,19 @@
         "tourists": { "value": 31884000, "year": 2019 },
         "aged_65": { "value": 21.094709934873, "year": 2025 },
         "peak": { "value": 3798, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["CH", "CZ", "DE", "HU", "IT", "LI", "SI", "SK"],
+        "landlocked": true,
+        "island": false,
+        "memberships": ["eu"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "white"],
+        "flagFeatures": [],
+        "aliases": ["Republic of Austria"]
       }
     },
     {
@@ -256,6 +444,19 @@
         "tourists": { "value": 3170000, "year": 2019 },
         "aged_65": { "value": 9.16837192948103, "year": 2025 },
         "peak": { "value": 4466, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["AM", "GE", "IR", "RU", "TR"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "green", "white"],
+        "flagFeatures": ["star", "crescent"],
+        "aliases": ["Republic of Azerbaijan"]
       }
     },
     {
@@ -276,6 +477,19 @@
         "tourists": { "value": 7250000, "year": 2019 },
         "aged_65": { "value": 12.094434071694, "year": 2025 },
         "peak": { "value": 63, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["blue", "yellow", "black"],
+        "flagFeatures": [],
+        "aliases": ["Bahamas, The", "Bahama Islands", "Commonwealth of The Bahamas"]
       }
     },
     {
@@ -296,6 +510,25 @@
         "tourists": { "value": 11061000, "year": 2019 },
         "aged_65": { "value": 4.01595782713348, "year": 2025 },
         "peak": { "value": 134, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": [],
+        "languages": ["ar"],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "white"],
+        "flagFeatures": [],
+        "aliases": [
+          "Bahrein Islands",
+          "Dawlat al-Bahrain",
+          "ISO 3166-1:BH",
+          "Kingdom of Bahrain",
+          "Mamlakat al-Baḥrayn"
+        ]
       }
     },
     {
@@ -316,6 +549,24 @@
         "tourists": { "value": 323000, "year": 2019 },
         "aged_65": { "value": 6.66842350416686, "year": 2025 },
         "peak": { "value": 1054, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["IN", "MM"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "green"],
+        "flagFeatures": [],
+        "aliases": [
+          "Bangla Desh",
+          "Country of Bengal",
+          "Land of Bengal",
+          "People's Republic of Bangladesh"
+        ]
       }
     },
     {
@@ -336,6 +587,19 @@
         "tourists": { "value": 966000, "year": 2019 },
         "aged_65": { "value": 17.0865126219157, "year": 2025 },
         "peak": { "value": 340, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["blue", "yellow", "black"],
+        "flagFeatures": [],
+        "aliases": ["Barbadoes"]
       }
     },
     {
@@ -356,6 +620,30 @@
         "tourists": { "value": 11832000, "year": 2019 },
         "aged_65": { "value": 18.2845697904208, "year": 2025 },
         "peak": { "value": 345, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["LT", "LV", "PL", "RU", "UA"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white"],
+        "flagFeatures": [],
+        "aliases": [
+          "White Russia",
+          "Belorussia",
+          "Bielaruś",
+          "Bielorussia",
+          "Byeloruss",
+          "Byelorussia",
+          "Republic of Belarus",
+          "Respublika Belarus'",
+          "Respublika Bielaruś",
+          "White Ruthenia"
+        ]
       }
     },
     {
@@ -376,6 +664,19 @@
         "tourists": { "value": 9343000, "year": 2019 },
         "aged_65": { "value": 20.9608828531757, "year": 2025 },
         "peak": { "value": 694.24, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["DE", "FR", "LU", "NL"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["eu", "nato"],
+        "languages": ["fr"],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "yellow", "black"],
+        "flagFeatures": [],
+        "aliases": ["Kingdom of Belgium"]
       }
     },
     {
@@ -396,6 +697,19 @@
         "tourists": { "value": 1674000, "year": 2019 },
         "aged_65": { "value": 5.22800786902611, "year": 2025 },
         "peak": { "value": 1124, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": ["GT", "MX"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": []
       }
     },
     {
@@ -416,6 +730,19 @@
         "tourists": { "value": 337000, "year": 2019 },
         "aged_65": { "value": 3.15305462207379, "year": 2025 },
         "peak": { "value": 658, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["BF", "NE", "NG", "TG"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "yellow"],
+        "flagFeatures": [],
+        "aliases": ["Republic of Benin"]
       }
     },
     {
@@ -435,6 +762,38 @@
         "fertility": { "value": 1.405, "year": 2024 },
         "tourists": { "value": 805000, "year": 2019 },
         "aged_65": { "value": 22.6095779535121, "year": 2025 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": [
+          "The Somers Isles",
+          "Atlantic/Bermuda",
+          "Barmuda",
+          "Barmuda I.",
+          "Barmuda Isl.",
+          "Barmuda Islands",
+          "Barmudas",
+          "Bermoothes",
+          "Bermuda Islands",
+          "Bermudian Islands",
+          "Colony of Bermuda",
+          "Devil's Isles",
+          "Isle of Devils",
+          "Somers Islands",
+          "Summer's Isles",
+          "Summers' Isles",
+          "Territory of Bermuda",
+          "Virgineola"
+        ]
       }
     },
     {
@@ -455,6 +814,19 @@
         "tourists": { "value": 316000, "year": 2019 },
         "aged_65": { "value": 6.62730338284496, "year": 2025 },
         "peak": { "value": 7570, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["CN", "IN"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["yellow", "white", "orange"],
+        "flagFeatures": [],
+        "aliases": ["Kingdom of Bhutan"]
       }
     },
     {
@@ -475,6 +847,23 @@
         "tourists": { "value": 1239000, "year": 2019 },
         "aged_65": { "value": 5.74004562527309, "year": 2025 },
         "peak": { "value": 6542, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["south_america"],
+        "borders": ["AR", "BR", "CL", "PE", "PY"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": ["es"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "yellow"],
+        "flagFeatures": ["emblem"],
+        "aliases": [
+          "Bolivia (Plurinational State of)",
+          "Plurinational State of Bolivia",
+          "Republic of Bolivia"
+        ]
       }
     },
     {
@@ -495,6 +884,19 @@
         "tourists": { "value": 1198000, "year": 2019 },
         "aged_65": { "value": 22.8598779877873, "year": 2025 },
         "peak": { "value": 2386, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["HR", "ME", "RS"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "yellow", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Bosnia", "B&H", "Bosnia and Hercegovina", "Bosnia-Herzegovina"]
       }
     },
     {
@@ -515,6 +917,19 @@
         "tourists": { "value": 1830000, "year": 2018 },
         "aged_65": { "value": 4.08292423233554, "year": 2025 },
         "peak": { "value": 1491, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["NA", "ZA", "ZM", "ZW"],
+        "landlocked": true,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["blue", "white", "black"],
+        "flagFeatures": [],
+        "aliases": ["Lefatshe la Botswana", "Republic of Botswana"]
       }
     },
     {
@@ -535,6 +950,19 @@
         "tourists": { "value": 6353000, "year": 2019 },
         "aged_65": { "value": 11.4803394567154, "year": 2025 },
         "peak": { "value": 2994, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["south_america"],
+        "borders": ["AR", "BO", "CO", "FR", "GY", "PE", "PY", "SR", "UY", "VE"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["brics"],
+        "languages": ["pt"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "green", "yellow", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Federative Republic of Brazil"]
       }
     },
     {
@@ -553,6 +981,23 @@
         "fertility": { "value": 1.048, "year": 2024 },
         "tourists": { "value": 302399.993896484, "year": 2019 },
         "aged_65": { "value": 10.1077217356287, "year": 2025 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": [
+          "B.V.I.",
+          "Virgin Islands of the United Kingdom",
+          "Virgin Islands, United Kingdom"
+        ]
       }
     },
     {
@@ -573,6 +1018,19 @@
         "tourists": { "value": 4449000, "year": 2019 },
         "aged_65": { "value": 7.23853575950962, "year": 2025 },
         "peak": { "value": 1850, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["MY"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": [],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["red", "yellow", "white", "black"],
+        "flagFeatures": ["crescent", "emblem"],
+        "aliases": ["Nation of Brunei, the Abode of Peace", "Negara Brunei Darussalam"]
       }
     },
     {
@@ -593,6 +1051,19 @@
         "tourists": { "value": 12552000, "year": 2019 },
         "aged_65": { "value": 22.2355986271326, "year": 2025 },
         "peak": { "value": 2925.4, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["GR", "MK", "RO", "RS", "TR"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["nato", "eu"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white"],
+        "flagFeatures": [],
+        "aliases": ["Republic of Bulgaria", "Bulgarian Republic"]
       }
     },
     {
@@ -613,6 +1084,19 @@
         "tourists": { "value": 143000, "year": 2019 },
         "aged_65": { "value": 2.68420882108847, "year": 2025 },
         "peak": { "value": 749, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["BJ", "CI", "GH", "ML", "NE", "TG"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": ["fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "yellow"],
+        "flagFeatures": ["star"],
+        "aliases": ["Republic of Burkina Faso", "Republic of Upper Volta (-1984)"]
       }
     },
     {
@@ -633,6 +1117,19 @@
         "tourists": { "value": 299000, "year": 2017 },
         "aged_65": { "value": 2.54810935578364, "year": 2025 },
         "peak": { "value": 2684, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["CD", "RW", "TZ"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": ["fr", "en"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Gouvernement du Burundi", "Republic of Burundi", "Republika y'Uburundi"]
       }
     },
     {
@@ -653,6 +1150,24 @@
         "tourists": { "value": 758000, "year": 2019 },
         "aged_65": { "value": 7.15393054195179, "year": 2025 },
         "peak": { "value": 2829, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": [],
+        "languages": ["pt"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "yellow", "white"],
+        "flagFeatures": ["star"],
+        "aliases": [
+          "Cape Verde",
+          "Cape Verde Islands",
+          "Republic of Cabo Verde",
+          "Republic of Cape Verde"
+        ]
       }
     },
     {
@@ -673,6 +1188,26 @@
         "tourists": { "value": 6611000, "year": 2019 },
         "aged_65": { "value": 6.37709648006975, "year": 2025 },
         "peak": { "value": 1813, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["LA", "TH", "VN"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": [
+          "Kamboja",
+          "Kingdom of Cambodia",
+          "Camboya",
+          "Campuchia",
+          "Kambodzha",
+          "Kampuchea"
+        ]
       }
     },
     {
@@ -693,6 +1228,19 @@
         "tourists": { "value": 1021000, "year": 2019 },
         "aged_65": { "value": 2.81759096595751, "year": 2025 },
         "peak": { "value": 4095, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["CF", "CG", "GA", "GQ", "NG", "TD"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["fr", "en"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "yellow"],
+        "flagFeatures": ["star"],
+        "aliases": ["Republic of Cameroon"]
       }
     },
     {
@@ -713,6 +1261,19 @@
         "tourists": { "value": 32430000, "year": 2019 },
         "aged_65": { "value": 20.2603673865917, "year": 2025 },
         "peak": { "value": 5959, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": ["US"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["nato", "commonwealth"],
+        "languages": ["en", "fr"],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "white"],
+        "flagFeatures": [],
+        "aliases": []
       }
     },
     {
@@ -732,6 +1293,19 @@
         "fertility": { "value": 1.525, "year": 2024 },
         "tourists": { "value": 2334000, "year": 2019 },
         "aged_65": { "value": 9.51366959594428, "year": 2025 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Caymans"]
       }
     },
     {
@@ -752,6 +1326,19 @@
         "tourists": { "value": 87000, "year": 2019 },
         "aged_65": { "value": 2.19798298001082, "year": 2025 },
         "peak": { "value": 1410, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["CD", "CG", "CM", "SD", "SS", "TD"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": ["fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "green", "yellow", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Central Africa"]
       }
     },
     {
@@ -772,6 +1359,19 @@
         "tourists": { "value": 81000, "year": 2019 },
         "aged_65": { "value": 2.11894758567596, "year": 2025 },
         "peak": { "value": 3445, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["CF", "CM", "LY", "NE", "NG", "SD"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": ["fr", "ar"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "yellow"],
+        "flagFeatures": [],
+        "aliases": ["Republic of Chad"]
       }
     },
     {
@@ -792,6 +1392,19 @@
         "tourists": { "value": 5431000, "year": 2019 },
         "aged_65": { "value": 14.5897458504493, "year": 2025 },
         "peak": { "value": 6893, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["south_america"],
+        "borders": ["AR", "BO", "PE"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["es"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Republic of Chile"]
       }
     },
     {
@@ -812,6 +1425,43 @@
         "tourists": { "value": 162538000, "year": 2019 },
         "aged_65": { "value": 14.9114314271952, "year": 2025 },
         "peak": { "value": 8848.86, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": [
+          "AF",
+          "BT",
+          "HK",
+          "IN",
+          "KG",
+          "KP",
+          "KZ",
+          "LA",
+          "MM",
+          "MN",
+          "MO",
+          "NP",
+          "PK",
+          "RU",
+          "TJ",
+          "VN"
+        ],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["brics"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "yellow"],
+        "flagFeatures": ["star"],
+        "aliases": [
+          "the People's Republic of China",
+          "China PR",
+          "P.R.C.",
+          "PR China",
+          "Red China",
+          "Communist China"
+        ]
       }
     },
     {
@@ -832,6 +1482,19 @@
         "tourists": { "value": 4531000, "year": 2019 },
         "aged_65": { "value": 10.2001032818786, "year": 2025 },
         "peak": { "value": 5775, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["south_america"],
+        "borders": ["BR", "EC", "PA", "PE", "VE"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["es"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "yellow"],
+        "flagFeatures": [],
+        "aliases": ["The Republic of Colombia"]
       }
     },
     {
@@ -852,6 +1515,28 @@
         "tourists": { "value": 45099.9984741211, "year": 2019 },
         "aged_65": { "value": 4.45428004270273, "year": 2025 },
         "peak": { "value": 2361, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": [],
+        "languages": ["fr", "ar"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "green", "yellow", "white"],
+        "flagFeatures": ["star", "crescent"],
+        "aliases": [
+          "al-Ittiḥād al-Qumurī",
+          "Juzur al-Qamar",
+          "Juzur al-Qumur",
+          "Massiwa ya komori",
+          "ouvoimoja wakomori",
+          "Udzima wa Komori",
+          "Union des Comores",
+          "Union of the Comoros"
+        ]
       }
     },
     {
@@ -872,6 +1557,19 @@
         "tourists": { "value": 3366000, "year": 2019 },
         "aged_65": { "value": 12.7519673196907, "year": 2025 },
         "peak": { "value": 3820, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": ["NI", "PA"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["es"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": [],
+        "aliases": ["Republic of Costa Rica"]
       }
     },
     {
@@ -892,6 +1590,26 @@
         "tourists": { "value": 2070000, "year": 2019 },
         "aged_65": { "value": 2.65345754900338, "year": 2025 },
         "peak": { "value": 1752, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["BF", "GH", "GN", "LR", "ML"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["green", "white", "orange"],
+        "flagFeatures": [],
+        "aliases": [
+          "Ivory Coast",
+          "Cote d'lvoire",
+          "Cote Ivoire",
+          "Republic of Côte d'Ivoire",
+          "Republic of Ivory Coast",
+          "Republic of the Ivory Coast"
+        ]
       }
     },
     {
@@ -912,6 +1630,19 @@
         "tourists": { "value": 60021000, "year": 2019 },
         "aged_65": { "value": 23.6095692486799, "year": 2025 },
         "peak": { "value": 1831, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["BA", "HU", "ME", "RS", "SI"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["eu", "nato"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Republic of Croatia"]
       }
     },
     {
@@ -932,6 +1663,19 @@
         "tourists": { "value": 4276000, "year": 2019 },
         "aged_65": { "value": 17.0350080804476, "year": 2025 },
         "peak": { "value": 1974, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": [],
+        "languages": ["es"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Republic of Cuba"]
       }
     },
     {
@@ -949,6 +1693,28 @@
         "fertility": { "value": 1.4, "year": 2024 },
         "tourists": { "value": 1293000, "year": 2019 },
         "aged_65": { "value": 17.3006733625537, "year": 2025 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": [],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["blue", "yellow", "white"],
+        "flagFeatures": ["star"],
+        "aliases": [
+          "Country of Curaçao",
+          "Curacau",
+          "Curaçoa",
+          "Curazao",
+          "Curaςao",
+          "Curocao",
+          "Island Territory of Curaçao",
+          "ISO 3166-1:CW"
+        ]
       }
     },
     {
@@ -969,6 +1735,26 @@
         "tourists": { "value": 4117000, "year": 2019 },
         "aged_65": { "value": 14.9323292144324, "year": 2025 },
         "peak": { "value": 1952, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe", "asia"],
+        "borders": [],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["eu", "commonwealth"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["green", "white", "orange"],
+        "flagFeatures": [],
+        "aliases": [
+          "Republic of Cyprus",
+          "Greek Administration of Southern Cyprus",
+          "Greek Cypriot State",
+          "Island of Cyprus",
+          "Cyprus (island)",
+          "Yadnana"
+        ]
       }
     },
     {
@@ -989,6 +1775,19 @@
         "tourists": { "value": 37202000, "year": 2019 },
         "aged_65": { "value": 21.1800713896599, "year": 2025 },
         "peak": { "value": 1603.3, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["AT", "DE", "PL", "SK"],
+        "landlocked": true,
+        "island": false,
+        "memberships": ["eu", "nato"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": [],
+        "aliases": ["the Czech Republic"]
       }
     },
     {
@@ -1009,6 +1808,19 @@
         "tourists": { "value": 33093000, "year": 2019 },
         "aged_65": { "value": 21.1189674580971, "year": 2025 },
         "peak": { "value": 170.86, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["DE"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["eu", "nato"],
+        "languages": [],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "white"],
+        "flagFeatures": [],
+        "aliases": ["Danmark", "Dania", "Danemark", "Denmark proper", "metropolitan Denmark"]
       }
     },
     {
@@ -1028,6 +1840,19 @@
         "fertility": { "value": 2.618, "year": 2024 },
         "aged_65": { "value": 4.97206050453666, "year": 2025 },
         "peak": { "value": 2028, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["ER", "ET"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["fr", "ar"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "green", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Jabuuti", "Gabuuti", "Jībūtī", "Republic of Djibouti"]
       }
     },
     {
@@ -1048,6 +1873,19 @@
         "tourists": { "value": 322000, "year": 2019 },
         "aged_65": { "value": 13.1984242047016, "year": 2025 },
         "peak": { "value": 1447, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "green", "yellow", "white", "black"],
+        "flagFeatures": ["star"],
+        "aliases": ["The Commonwealth of Dominica", "Island of Dominica", "Wai‘tu kubuli"]
       }
     },
     {
@@ -1068,6 +1906,19 @@
         "tourists": { "value": 7550000, "year": 2019 },
         "aged_65": { "value": 8.1878526489375, "year": 2025 },
         "peak": { "value": 3101, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": ["HT"],
+        "landlocked": false,
+        "island": true,
+        "memberships": [],
+        "languages": ["es"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Dominicana", "DomRep", "República Dominicana"]
       }
     },
     {
@@ -1088,6 +1939,29 @@
         "tourists": { "value": 351000, "year": 2016 },
         "aged_65": { "value": 3.08388348450007, "year": 2025 },
         "peak": { "value": 5109, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["AO", "BI", "CF", "CG", "RW", "SS", "TZ", "UG", "ZM"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "yellow"],
+        "flagFeatures": ["star"],
+        "aliases": [
+          "DRC",
+          "Congo (Kinshasa)",
+          "Democratic Republic of the Congo",
+          "Congo DRC",
+          "D.R.C.",
+          "Dem. Rep. Congo",
+          "Dem. Republic of Congo",
+          "Dem. Republic of the Congo",
+          "Democratic Republic of Congo"
+        ]
       }
     },
     {
@@ -1108,6 +1982,24 @@
         "tourists": { "value": 2108000, "year": 2019 },
         "aged_65": { "value": 8.59643215029763, "year": 2025 },
         "peak": { "value": 6263.47, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["south_america"],
+        "borders": ["CO", "PE"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["es"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "yellow"],
+        "flagFeatures": ["emblem"],
+        "aliases": [
+          "Republic of Ecuador",
+          "Republic of the Equator",
+          "The Ecuadorian State",
+          "Republic of Equator"
+        ]
       }
     },
     {
@@ -1128,6 +2020,25 @@
         "tourists": { "value": 13026000, "year": 2019 },
         "aged_65": { "value": 5.27119509818337, "year": 2025 },
         "peak": { "value": 2637, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["IL", "LY", "PS", "SD"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["brics"],
+        "languages": ["ar"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "white", "black"],
+        "flagFeatures": ["emblem"],
+        "aliases": [
+          "Misr",
+          "Republic of Egypt",
+          "Arab Rep. Egypt",
+          "Arab Republic of Egypt",
+          "Rep. Egypt"
+        ]
       }
     },
     {
@@ -1148,6 +2059,19 @@
         "tourists": { "value": 2639000, "year": 2019 },
         "aged_65": { "value": 8.30913126582456, "year": 2025 },
         "peak": { "value": 2730, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": ["GT", "HN"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["es"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Salvador", "Republic of El Salvador"]
       }
     },
     {
@@ -1167,6 +2091,19 @@
         "fertility": { "value": 4.116, "year": 2024 },
         "aged_65": { "value": 3.76410096619379, "year": 2025 },
         "peak": { "value": 3011, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["CM", "GA"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["opec"],
+        "languages": ["es", "fr", "pt"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "green", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Republic of Equatorial Guinea"]
       }
     },
     {
@@ -1186,6 +2123,19 @@
         "tourists": { "value": 142000, "year": 2016 },
         "aged_65": { "value": 4.2581056905137, "year": 2025 },
         "peak": { "value": 3018, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["DJ", "ET", "SD"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["en", "ar"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "green", "yellow"],
+        "flagFeatures": [],
+        "aliases": ["Ertrā", "Iritriyā", "State of Eritrea"]
       }
     },
     {
@@ -1206,6 +2156,19 @@
         "tourists": { "value": 6103000, "year": 2019 },
         "aged_65": { "value": 21.8016309684638, "year": 2025 },
         "peak": { "value": 317.4, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["LV", "RU"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["eu", "nato"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "white", "black"],
+        "flagFeatures": [],
+        "aliases": ["Estland", "Eesti Vabariik", "Republic of Estonia"]
       }
     },
     {
@@ -1226,6 +2189,19 @@
         "tourists": { "value": 1226000, "year": 2019 },
         "aged_65": { "value": 4.34585495321508, "year": 2025 },
         "peak": { "value": 1862, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["MZ", "ZA"],
+        "landlocked": true,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "yellow", "white", "black"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Swaziland", "Kingdom of Eswatini", "Kingdom of Swaziland", "Umbuso weSwatini"]
       }
     },
     {
@@ -1246,6 +2222,19 @@
         "tourists": { "value": 812000, "year": 2019 },
         "aged_65": { "value": 3.2957318380591, "year": 2025 },
         "peak": { "value": 4533, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["DJ", "ER", "KE", "SD", "SO", "SS"],
+        "landlocked": true,
+        "island": false,
+        "memberships": ["brics"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "green", "yellow"],
+        "flagFeatures": ["star"],
+        "aliases": ["Federal Democratic Republic of Ethiopia"]
       }
     },
     {
@@ -1265,6 +2254,49 @@
         "fertility": { "value": 1.9129, "year": 2024 },
         "aged_65": { "value": 17.7816665625028, "year": 2025 },
         "peak": { "value": 880, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": [],
+        "languages": [],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": [],
+        "aliases": [
+          "Færøerne",
+          "Færøyene",
+          "Farre",
+          "Faeroes",
+          "Sheep Islands",
+          "Faroes",
+          "Atlantic/Faroe",
+          "Faer Oer",
+          "Færøer",
+          "Færeyjar",
+          "Faeroe Is",
+          "the Faeroe Islands",
+          "Faeroe Isles",
+          "Faeroer",
+          "Faeroerne",
+          "Færoes",
+          "Faeroyene",
+          "Far Oer",
+          "Fareo islands",
+          "Faroe Island",
+          "Faroe Isles",
+          "Färöer",
+          "Faroese Islands",
+          "Farre I.",
+          "Farre Is.",
+          "Farre Isl.",
+          "Farre Islands",
+          "Foroyar",
+          "Føroyar"
+        ]
       }
     },
     {
@@ -1285,6 +2317,25 @@
         "tourists": { "value": 969000, "year": 2019 },
         "aged_65": { "value": 6.63486057239182, "year": 2025 },
         "peak": { "value": 1324, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["oceania"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": [
+          "Viti",
+          "Fijī Gaṇarājya",
+          "Matanitu Tugalala o Viti",
+          "Republic of Fiji",
+          "Republic of the Fiji Islands"
+        ]
       }
     },
     {
@@ -1305,6 +2356,25 @@
         "tourists": { "value": 3290000, "year": 2019 },
         "aged_65": { "value": 24.2018896456272, "year": 2025 },
         "peak": { "value": 1361.4, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["NO", "RU", "SE"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["nato", "eu"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "white"],
+        "flagFeatures": [],
+        "aliases": [
+          "Finnia",
+          "Land of Thousand Lakes",
+          "Republic of Finland",
+          "Republiken Finland",
+          "Suomen tasavalta"
+        ]
       }
     },
     {
@@ -1325,6 +2395,19 @@
         "tourists": { "value": 217877000, "year": 2019 },
         "aged_65": { "value": 22.5418906984086, "year": 2025 },
         "peak": { "value": 4805.59, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["AD", "BE", "BR", "CH", "DE", "ES", "IT", "LU", "MC", "NL", "SR"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["nato", "eu"],
+        "languages": ["fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": [],
+        "aliases": ["French Republic"]
       }
     },
     {
@@ -1345,6 +2428,24 @@
         "tourists": { "value": 300000, "year": 2019 },
         "aged_65": { "value": 11.9487370116652, "year": 2025 },
         "peak": { "value": 2241, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["oceania"],
+        "borders": [],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "yellow", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": [
+          "French Oceania",
+          "French Establishments in Oceania",
+          "French Settlements in Oceania",
+          "Territory of French Polynesia"
+        ]
       }
     },
     {
@@ -1364,6 +2465,19 @@
         "fertility": { "value": 3.592, "year": 2024 },
         "aged_65": { "value": 4.13008683137499, "year": 2025 },
         "peak": { "value": 1070, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["CG", "CM", "GQ"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["opec", "commonwealth"],
+        "languages": ["fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "green", "yellow"],
+        "flagFeatures": [],
+        "aliases": ["Gabonese Republic", "République Gabonaise"]
       }
     },
     {
@@ -1383,6 +2497,19 @@
         "fertility": { "value": 3.907, "year": 2024 },
         "tourists": { "value": 620000, "year": 2019 },
         "aged_65": { "value": 3.18495882311462, "year": 2025 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["SN"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "green", "white"],
+        "flagFeatures": [],
+        "aliases": ["Islamic Republic of the Gambia", "Republic of the Gambia"]
       }
     },
     {
@@ -1403,6 +2530,24 @@
         "tourists": { "value": 7726000, "year": 2019 },
         "aged_65": { "value": 15.9913346858712, "year": 2025 },
         "peak": { "value": 5193.2, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["AM", "AZ", "RU", "TR"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "white"],
+        "flagFeatures": [],
+        "aliases": [
+          "Georgia (Sakartvelo)",
+          "Georgia (country)",
+          "Sakartvelo",
+          "Republic of Georgia"
+        ]
       }
     },
     {
@@ -1423,6 +2568,19 @@
         "tourists": { "value": 39563000, "year": 2019 },
         "aged_65": { "value": 23.7031981458429, "year": 2025 },
         "peak": { "value": 2962.06, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["AT", "BE", "CH", "CZ", "DK", "FR", "LU", "NL", "PL"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["eu", "nato"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "yellow", "black"],
+        "flagFeatures": [],
+        "aliases": ["Federal Republic of Germany"]
       }
     },
     {
@@ -1443,6 +2601,19 @@
         "tourists": { "value": 897000, "year": 2015 },
         "aged_65": { "value": 3.78769586621254, "year": 2025 },
         "peak": { "value": 2904, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["BF", "CI", "TG"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "yellow", "black"],
+        "flagFeatures": ["star"],
+        "aliases": []
       }
     },
     {
@@ -1458,6 +2629,19 @@
         "internet": { "value": 94.4444715818151, "year": 2016 },
         "fertility": { "value": 1.885, "year": 2024 },
         "aged_65": { "value": 17.8350695309774, "year": 2025 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["ES"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": []
       }
     },
     {
@@ -1478,6 +2662,19 @@
         "tourists": { "value": 34005000, "year": 2019 },
         "aged_65": { "value": 24.3998585549859, "year": 2025 },
         "peak": { "value": 2917.727, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["AL", "BG", "MK", "TR"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["eu", "nato"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "white"],
+        "flagFeatures": [],
+        "aliases": ["Hellas", "Hellenic Republic", "Ellada", "Greek Republic", "Hellas, Greece"]
       }
     },
     {
@@ -1496,6 +2693,19 @@
         "fertility": { "value": 1.706, "year": 2024 },
         "aged_65": { "value": 11.5302854990178, "year": 2025 },
         "peak": { "value": 3694, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": [],
+        "languages": [],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "white"],
+        "flagFeatures": [],
+        "aliases": ["Groenland", "Kalaallit Nunaat", "Greenlandia"]
       }
     },
     {
@@ -1516,6 +2726,19 @@
         "tourists": { "value": 526000, "year": 2019 },
         "aged_65": { "value": 12.6253692345071, "year": 2025 },
         "peak": { "value": 840, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["red", "green", "yellow"],
+        "flagFeatures": ["star"],
+        "aliases": []
       }
     },
     {
@@ -1536,6 +2759,26 @@
         "tourists": { "value": 1667000, "year": 2019 },
         "aged_65": { "value": 13.0950866427809, "year": 2025 },
         "peak": { "value": 1332, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["oceania"],
+        "borders": [],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue"],
+        "flagFeatures": ["emblem"],
+        "aliases": [
+          "US-GU",
+          "Guåhån",
+          "Guam (USA)",
+          "Island of Guam",
+          "ISO 3166-1:GU",
+          "Territory of Guam"
+        ]
       }
     },
     {
@@ -1556,6 +2799,19 @@
         "tourists": { "value": 2560000, "year": 2019 },
         "aged_65": { "value": 4.9632752647752, "year": 2025 },
         "peak": { "value": 4203, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": ["BZ", "HN", "MX", "SV"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["es"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Republic of Guatemala"]
       }
     },
     {
@@ -1576,6 +2832,19 @@
         "tourists": { "value": 99000, "year": 2017 },
         "aged_65": { "value": 3.47302636663564, "year": 2025 },
         "peak": { "value": 1752, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["CI", "GW", "LR", "ML", "SL", "SN"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "yellow"],
+        "flagFeatures": [],
+        "aliases": ["Guinea-Conakry", "Republic of Guinea"]
       }
     },
     {
@@ -1596,6 +2865,19 @@
         "tourists": { "value": 52400.0015258789, "year": 2019 },
         "aged_65": { "value": 3.23723113648942, "year": 2025 },
         "peak": { "value": 262, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["GN", "SN"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["pt"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "yellow", "black"],
+        "flagFeatures": ["star"],
+        "aliases": ["Republic of Guinea-Bissau"]
       }
     },
     {
@@ -1616,6 +2898,19 @@
         "tourists": { "value": 315000, "year": 2019 },
         "aged_65": { "value": 6.98073891189565, "year": 2025 },
         "peak": { "value": 2810, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["south_america"],
+        "borders": ["BR", "SR", "VE"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "green", "yellow", "white", "black"],
+        "flagFeatures": [],
+        "aliases": ["Co-operative Republic of Guyana", "Republic of Guyana"]
       }
     },
     {
@@ -1636,6 +2931,19 @@
         "tourists": { "value": 938000, "year": 2019 },
         "aged_65": { "value": 4.79172202171568, "year": 2025 },
         "peak": { "value": 2674, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": ["DO"],
+        "landlocked": false,
+        "island": true,
+        "memberships": [],
+        "languages": ["fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Hayti", "Ayiti", "Haitian Republic", "Republic of Haiti"]
       }
     },
     {
@@ -1656,6 +2964,19 @@
         "tourists": { "value": 2315000, "year": 2019 },
         "aged_65": { "value": 4.54210281541647, "year": 2025 },
         "peak": { "value": 2849, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": ["GT", "NI", "SV"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["es"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Honduran Republic", "Republic of Honduras"]
       }
     },
     {
@@ -1675,6 +2996,26 @@
         "tourists": { "value": 55913000, "year": 2019 },
         "aged_65": { "value": 23.667320346627, "year": 2025 },
         "peak": { "value": 957, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["CN"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": [
+          "Hong Kong, China",
+          "Hongkong",
+          "HKSAR",
+          "Hong Kong SAR",
+          "Hong Kong SAR, China",
+          "Hong Kong Special Administrative Region"
+        ]
       }
     },
     {
@@ -1695,6 +3036,19 @@
         "tourists": { "value": 61397000, "year": 2019 },
         "aged_65": { "value": 21.1574623970403, "year": 2025 },
         "peak": { "value": 1014, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["AT", "HR", "RO", "RS", "SI", "SK", "UA"],
+        "landlocked": true,
+        "island": false,
+        "memberships": ["nato", "eu"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white"],
+        "flagFeatures": [],
+        "aliases": []
       }
     },
     {
@@ -1715,6 +3069,19 @@
         "tourists": { "value": 2202000, "year": 2019 },
         "aged_65": { "value": 15.9770103398231, "year": 2025 },
         "peak": { "value": 2110, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["nato"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": [],
+        "aliases": ["Ysland", "Icelandic republic", "Republic of Iceland"]
       }
     },
     {
@@ -1735,6 +3102,30 @@
         "tourists": { "value": 17914000, "year": 2019 },
         "aged_65": { "value": 7.37657146047502, "year": 2025 },
         "peak": { "value": 8586, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["BD", "BT", "CN", "MM", "NP", "PK"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["brics", "commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["blue", "green", "white", "orange"],
+        "flagFeatures": [],
+        "aliases": [
+          "Bharat Ganarajya",
+          "Indostan",
+          "Republic of India",
+          "Hindustan",
+          "Bharata",
+          "Tianzhu",
+          "Hindoostan",
+          "Al Hind",
+          "Bharatvarsh",
+          "Tenjiku"
+        ]
       }
     },
     {
@@ -1755,6 +3146,19 @@
         "tourists": { "value": 16107000, "year": 2019 },
         "aged_65": { "value": 7.542769252795, "year": 2025 },
         "peak": { "value": 4884, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["MY", "PG", "TL"],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["brics"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "white"],
+        "flagFeatures": [],
+        "aliases": ["Republic of Indonesia"]
       }
     },
     {
@@ -1775,6 +3179,19 @@
         "tourists": { "value": 9107000, "year": 2019 },
         "aged_65": { "value": 8.58114314727287, "year": 2025 },
         "peak": { "value": 5628, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["AF", "AM", "AZ", "IQ", "PK", "TM", "TR"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["opec", "brics"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Islamic Rep. Iran", "Islamic Republic of Iran"]
       }
     },
     {
@@ -1794,6 +3211,19 @@
         "fertility": { "value": 3.221, "year": 2024 },
         "aged_65": { "value": 3.44918716140232, "year": 2025 },
         "peak": { "value": 3611, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["IR", "JO", "KW", "SA", "SY", "TR"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["opec"],
+        "languages": ["ar"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white", "black"],
+        "flagFeatures": [],
+        "aliases": ["Republic of Iraq"]
       }
     },
     {
@@ -1814,6 +3244,19 @@
         "tourists": { "value": 10951000, "year": 2019 },
         "aged_65": { "value": 16.2081043488942, "year": 2025 },
         "peak": { "value": 1038.6, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["GB"],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["eu"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["green", "white", "orange"],
+        "flagFeatures": [],
+        "aliases": ["Southern Ireland", "Irish Republic", "Republic of Ireland"]
       }
     },
     {
@@ -1831,6 +3274,19 @@
         "fertility": { "value": 1.544, "year": 2024 },
         "aged_65": { "value": 23.609550812247, "year": 2025 },
         "peak": { "value": 621, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": [],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["red", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Mann", "Manx", "I. Man", "I. Mann", "I. Mannin", "Isle of Mann"]
       }
     },
     {
@@ -1851,6 +3307,19 @@
         "tourists": { "value": 4905000, "year": 2019 },
         "aged_65": { "value": 12.6916264748788, "year": 2025 },
         "peak": { "value": 1208, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["EG", "JO", "LB", "PS", "SY"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["State of Israel", "Yisrael"]
       }
     },
     {
@@ -1871,6 +3340,19 @@
         "tourists": { "value": 95399000, "year": 2019 },
         "aged_65": { "value": 25.0981380733118, "year": 2025 },
         "peak": { "value": 4805.59, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["AT", "CH", "FR", "SI", "SM"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["eu", "nato"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white"],
+        "flagFeatures": [],
+        "aliases": ["Italian Republic", "Republic of Italy"]
       }
     },
     {
@@ -1891,6 +3373,19 @@
         "tourists": { "value": 4233000, "year": 2019 },
         "aged_65": { "value": 8.57907476972342, "year": 2025 },
         "peak": { "value": 2256, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["green", "yellow", "black"],
+        "flagFeatures": [],
+        "aliases": ["Commonwealth of Jamaica"]
       }
     },
     {
@@ -1911,6 +3406,27 @@
         "tourists": { "value": 31881000, "year": 2019 },
         "aged_65": { "value": 29.9940966737423, "year": 2025 },
         "peak": { "value": 3777.24, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": [],
+        "languages": [],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["red", "white"],
+        "flagFeatures": [],
+        "aliases": [
+          "Iapan",
+          "Iapon",
+          "Land of Rising Sun",
+          "Nihon-koku",
+          "Nippon-koku",
+          "State of Japan",
+          "Land of the Rising Sun"
+        ]
       }
     },
     {
@@ -1931,6 +3447,26 @@
         "tourists": { "value": 5361000, "year": 2019 },
         "aged_65": { "value": 4.75359341712725, "year": 2025 },
         "peak": { "value": 1854, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["IL", "IQ", "PS", "SA", "SY"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["ar"],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white", "black"],
+        "flagFeatures": ["star"],
+        "aliases": [
+          "Yarden",
+          "Giordania",
+          "Hashemite Kingdom of Jordan",
+          "ISO 3166-1:JO",
+          "Kingdom of Jordan",
+          "State of Jordan"
+        ]
       }
     },
     {
@@ -1951,6 +3487,19 @@
         "tourists": { "value": 8515000, "year": 2019 },
         "aged_65": { "value": 9.00270150466414, "year": 2025 },
         "peak": { "value": 7010, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe", "asia"],
+        "borders": ["CN", "KG", "RU", "TM", "UZ"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "yellow"],
+        "flagFeatures": [],
+        "aliases": ["Qazaqstan", "Republic of Kazakhstan", "Republic of Qazaqstan"]
       }
     },
     {
@@ -1971,6 +3520,19 @@
         "tourists": { "value": 2049000, "year": 2019 },
         "aged_65": { "value": 3.02095116077232, "year": 2025 },
         "peak": { "value": 5199, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["ET", "SO", "SS", "TZ", "UG"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "green", "white", "black"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Republic of Kenya"]
       }
     },
     {
@@ -1991,6 +3553,19 @@
         "tourists": { "value": 12000, "year": 2019 },
         "aged_65": { "value": 4.37509387237753, "year": 2025 },
         "peak": { "value": 81, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["oceania"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "yellow", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Republic of Kiribati"]
       }
     },
     {
@@ -2005,6 +3580,19 @@
         "fertility": { "value": 1.538, "year": 2024 },
         "aged_65": { "value": 10.5099678936758, "year": 2025 },
         "peak": { "value": 2656, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["AL", "ME", "MK", "RS"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "yellow", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Kosova", "Republic of Kosovo"]
       }
     },
     {
@@ -2025,6 +3613,19 @@
         "tourists": { "value": 8565000, "year": 2019 },
         "aged_65": { "value": 3.17490130225807, "year": 2025 },
         "peak": { "value": 140, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["IQ", "SA"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["opec"],
+        "languages": ["ar"],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white", "black"],
+        "flagFeatures": [],
+        "aliases": ["State of Kuwait"]
       }
     },
     {
@@ -2045,6 +3646,19 @@
         "tourists": { "value": 8508000, "year": 2019 },
         "aged_65": { "value": 5.96557151306138, "year": 2025 },
         "peak": { "value": 7439, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["CN", "KZ", "TJ", "UZ"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "yellow"],
+        "flagFeatures": [],
+        "aliases": ["Kyrgyz Republic"]
       }
     },
     {
@@ -2065,6 +3679,19 @@
         "tourists": { "value": 4791000, "year": 2019 },
         "aged_65": { "value": 4.80805045518916, "year": 2025 },
         "peak": { "value": 2819, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["CN", "KH", "MM", "TH", "VN"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": [],
+        "aliases": ["Lao PDR", "Lao People's Democratic Republic"]
       }
     },
     {
@@ -2085,6 +3712,28 @@
         "tourists": { "value": 8342000, "year": 2019 },
         "aged_65": { "value": 22.1950582635891, "year": 2025 },
         "peak": { "value": 311.94, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["BY", "EE", "LT", "RU"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["eu", "nato"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "white"],
+        "flagFeatures": [],
+        "aliases": [
+          "Latveja",
+          "Latvejas Republika",
+          "Latvian Republic",
+          "Latvija",
+          "Latvijas Republika",
+          "Leţmо̄",
+          "Leţmо̄ Vabāmо̄",
+          "Republic of Latvia"
+        ]
       }
     },
     {
@@ -2105,6 +3754,19 @@
         "tourists": { "value": 1936000, "year": 2019 },
         "aged_65": { "value": 10.4430002937898, "year": 2025 },
         "peak": { "value": 3088, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["IL", "SY"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["ar"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white"],
+        "flagFeatures": [],
+        "aliases": ["Lebanese Republic", "Lubnan", "Republic of Lebanon", "State of Lebanon"]
       }
     },
     {
@@ -2125,6 +3787,19 @@
         "tourists": { "value": 1142000, "year": 2019 },
         "aged_65": { "value": 3.88046584377219, "year": 2025 },
         "peak": { "value": 3482, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["ZA"],
+        "landlocked": true,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["blue", "green", "white", "black"],
+        "flagFeatures": [],
+        "aliases": ["Kingdom of Lesotho", "The Mountain Kingdom"]
       }
     },
     {
@@ -2144,6 +3819,19 @@
         "fertility": { "value": 3.864, "year": 2024 },
         "aged_65": { "value": 3.33493509045042, "year": 2025 },
         "peak": { "value": 1440, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["CI", "GN", "SL"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Liber", "Republic of Liberia"]
       }
     },
     {
@@ -2163,6 +3851,19 @@
         "fertility": { "value": 2.298, "year": 2024 },
         "aged_65": { "value": 5.19156895615632, "year": 2025 },
         "peak": { "value": 2267, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["DZ", "EG", "NE", "SD", "TD", "TN"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["opec"],
+        "languages": ["ar"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white", "black"],
+        "flagFeatures": ["star", "crescent"],
+        "aliases": ["State of Libya"]
       }
     },
     {
@@ -2182,6 +3883,19 @@
         "tourists": { "value": 98099.9984741211, "year": 2019 },
         "aged_65": { "value": 21.3753488835726, "year": 2025 },
         "peak": { "value": 2599, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["AT", "CH"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "yellow"],
+        "flagFeatures": [],
+        "aliases": ["Principality of Liechtenstein"]
       }
     },
     {
@@ -2202,6 +3916,19 @@
         "tourists": { "value": 6150000, "year": 2019 },
         "aged_65": { "value": 20.7219454695688, "year": 2025 },
         "peak": { "value": 293.84, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["BY", "LV", "PL", "RU"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["nato", "eu"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "yellow"],
+        "flagFeatures": [],
+        "aliases": ["Republic of Lithuania"]
       }
     },
     {
@@ -2222,6 +3949,19 @@
         "tourists": { "value": 1041000, "year": 2019 },
         "aged_65": { "value": 15.8123957037476, "year": 2025 },
         "peak": { "value": 560, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["BE", "DE", "FR"],
+        "landlocked": true,
+        "island": false,
+        "memberships": ["eu", "nato"],
+        "languages": ["fr"],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": [],
+        "aliases": ["Grand Duchy of Luxembourg"]
       }
     },
     {
@@ -2240,6 +3980,29 @@
         "tourists": { "value": 39406000, "year": 2019 },
         "aged_65": { "value": 15.0947982498785, "year": 2025 },
         "peak": { "value": 1706, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["CN"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["pt"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["green", "yellow", "white"],
+        "flagFeatures": ["star"],
+        "aliases": [
+          "Aomen",
+          "Macao S.A.R.",
+          "Macao SAR",
+          "Macao SAR, China",
+          "Macao Special Administrative Region",
+          "Macau SAR",
+          "Macau SAR, China",
+          "Macau Special Administrative Region",
+          "Macau"
+        ]
       }
     },
     {
@@ -2260,6 +4023,19 @@
         "tourists": { "value": 486000, "year": 2019 },
         "aged_65": { "value": 3.47289998087395, "year": 2025 },
         "peak": { "value": 2876, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": [],
+        "languages": ["fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white"],
+        "flagFeatures": [],
+        "aliases": ["Malagascar", "Malagaskar", "Republic of Madagascar"]
       }
     },
     {
@@ -2280,6 +4056,19 @@
         "tourists": { "value": 871000, "year": 2018 },
         "aged_65": { "value": 2.58857988227872, "year": 2025 },
         "peak": { "value": 3002, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["MZ", "TZ", "ZM"],
+        "landlocked": true,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "green", "black"],
+        "flagFeatures": [],
+        "aliases": ["Republic of Malawi"]
       }
     },
     {
@@ -2300,6 +4089,19 @@
         "tourists": { "value": 26101000, "year": 2019 },
         "aged_65": { "value": 8.03318142685505, "year": 2025 },
         "peak": { "value": 4095, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["BN", "ID", "TH"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": [],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "yellow", "white"],
+        "flagFeatures": ["star", "crescent"],
+        "aliases": ["Federation of Malaysia", "Malaysia Federation"]
       }
     },
     {
@@ -2320,6 +4122,19 @@
         "tourists": { "value": 1703000, "year": 2019 },
         "aged_65": { "value": 4.95821974187994, "year": 2025 },
         "peak": { "value": 5.1, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "green", "white"],
+        "flagFeatures": ["crescent"],
+        "aliases": ["Republic of Maldives"]
       }
     },
     {
@@ -2340,6 +4155,19 @@
         "tourists": { "value": 217000, "year": 2019 },
         "aged_65": { "value": 2.36307876540972, "year": 2025 },
         "peak": { "value": 1153, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["BF", "CI", "DZ", "GN", "MR", "NE", "SN"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": ["fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "yellow"],
+        "flagFeatures": [],
+        "aliases": ["Republic of Mali"]
       }
     },
     {
@@ -2360,6 +4188,19 @@
         "tourists": { "value": 3519000, "year": 2019 },
         "aged_65": { "value": 20.5407907884966, "year": 2025 },
         "peak": { "value": 253, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": [],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["eu", "commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "white"],
+        "flagFeatures": [],
+        "aliases": ["Republic of Malta"]
       }
     },
     {
@@ -2380,6 +4221,19 @@
         "tourists": { "value": 6099.99990463257, "year": 2019 },
         "aged_65": { "value": 4.87569593737942, "year": 2025 },
         "peak": { "value": 10, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["oceania"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": [],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "white", "orange"],
+        "flagFeatures": ["star"],
+        "aliases": ["Republic of the Marshall Islands"]
       }
     },
     {
@@ -2399,6 +4253,27 @@
         "fertility": { "value": 4.625, "year": 2024 },
         "aged_65": { "value": 3.24673388253332, "year": 2025 },
         "peak": { "value": 915, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["DZ", "ML", "SN"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["ar"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "yellow"],
+        "flagFeatures": ["star", "crescent"],
+        "aliases": [
+          "Agawej",
+          "Gànnaar",
+          "Islamic Republic of Mauritania",
+          "Mauretania",
+          "Moritani",
+          "Muritanya",
+          "Murutaane"
+        ]
       }
     },
     {
@@ -2419,6 +4294,19 @@
         "tourists": { "value": 1418000, "year": 2019 },
         "aged_65": { "value": 14.1145544022434, "year": 2025 },
         "peak": { "value": 828, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "green", "yellow"],
+        "flagFeatures": [],
+        "aliases": ["Maurice", "Moris", "Republic of Mauritius"]
       }
     },
     {
@@ -2439,6 +4327,25 @@
         "tourists": { "value": 97406000, "year": 2019 },
         "aged_65": { "value": 8.52143438004228, "year": 2025 },
         "peak": { "value": 5636, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": ["BZ", "GT", "US"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["es"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": [
+          "United Mexican States",
+          "United States of Mexico",
+          "Mexican Republic",
+          "Mexican United States",
+          "US of M"
+        ]
       }
     },
     {
@@ -2459,6 +4366,24 @@
         "tourists": { "value": 18000, "year": 2019 },
         "aged_65": { "value": 6.18298250398037, "year": 2025 },
         "peak": { "value": 791, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["oceania"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": [],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "white"],
+        "flagFeatures": ["star"],
+        "aliases": [
+          "Fed. Sts. Micronesia",
+          "Fed. Sts. of Micronesia",
+          "Federated States of Micronesia, FSM",
+          "Federated States of Micronesia"
+        ]
       }
     },
     {
@@ -2479,6 +4404,19 @@
         "tourists": { "value": 174000, "year": 2019 },
         "aged_65": { "value": 16.8576673952236, "year": 2025 },
         "peak": { "value": 430, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["RO", "UA"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "yellow"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Moldavia", "Republic of Moldova", "Republica Moldova"]
       }
     },
     {
@@ -2496,6 +4434,27 @@
         "tourists": { "value": 363000, "year": 2019 },
         "aged_65": { "value": 36.0110586578337, "year": 2025 },
         "peak": { "value": 162, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["FR"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["fr"],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "white"],
+        "flagFeatures": [],
+        "aliases": [
+          "Fort-Hercule",
+          "Mùnegu",
+          "Principality and Diocese of Monaco",
+          "Principality of Monaco",
+          "Principato di Monaco",
+          "Prinçipatu de Mùnegu",
+          "Principauté de Monaco"
+        ]
       }
     },
     {
@@ -2516,6 +4475,19 @@
         "tourists": { "value": 637000, "year": 2019 },
         "aged_65": { "value": 5.43106536635296, "year": 2025 },
         "peak": { "value": 4374, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["CN", "RU"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "yellow"],
+        "flagFeatures": [],
+        "aliases": ["Mongol State", "State of Mongolia"]
       }
     },
     {
@@ -2535,6 +4507,19 @@
         "tourists": { "value": 2510000, "year": 2019 },
         "aged_65": { "value": 18.2940089675043, "year": 2025 },
         "peak": { "value": 2534, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["AL", "BA", "HR", "RS", "XK"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["nato"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "yellow"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Republic of Montenegro"]
       }
     },
     {
@@ -2555,6 +4540,19 @@
         "tourists": { "value": 13109000, "year": 2019 },
         "aged_65": { "value": 8.45030687649506, "year": 2025 },
         "peak": { "value": 4167, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["DZ", "ES"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["ar"],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "green"],
+        "flagFeatures": ["star"],
+        "aliases": ["al-Maġrib", "Kingdom of Morocco", "Lmaġrib", "Maroc", "Marocco"]
       }
     },
     {
@@ -2575,6 +4573,19 @@
         "tourists": { "value": 2033000, "year": 2019 },
         "aged_65": { "value": 2.73388102426795, "year": 2025 },
         "peak": { "value": 2436, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["MW", "SZ", "TZ", "ZA", "ZM", "ZW"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["pt"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "green", "yellow", "white", "black"],
+        "flagFeatures": ["star", "emblem"],
+        "aliases": ["Moçambique", "Republic of Mozambique", "República de Moçambique"]
       }
     },
     {
@@ -2595,6 +4606,19 @@
         "tourists": { "value": 4364000, "year": 2019 },
         "aged_65": { "value": 7.52222015681565, "year": 2025 },
         "peak": { "value": 5881, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["BD", "CN", "IN", "LA", "TH"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "yellow", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Burma", "Republic of the Union of Myanmar", "Union of Burma"]
       }
     },
     {
@@ -2615,6 +4639,19 @@
         "tourists": { "value": 1651000, "year": 2019 },
         "aged_65": { "value": 3.79304753450455, "year": 2025 },
         "peak": { "value": 2573, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["AO", "BW", "ZA", "ZM"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "green", "yellow", "white"],
+        "flagFeatures": [],
+        "aliases": ["Republic of Namibia"]
       }
     },
     {
@@ -2631,6 +4668,19 @@
         "fertility": { "value": 3.29, "year": 2024 },
         "aged_65": { "value": 3.01026984324976, "year": 2025 },
         "peak": { "value": 71, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["oceania"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["blue", "yellow", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Pleasant Island", "Naoero", "Republic of Nauru", "Republic of Naoero"]
       }
     },
     {
@@ -2651,6 +4701,49 @@
         "tourists": { "value": 1197000, "year": 2019 },
         "aged_65": { "value": 6.62418872502616, "year": 2025 },
         "peak": { "value": 8848.86, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["CN", "IN"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": [],
+        "aliases": [
+          "Palpa",
+          "Balbo",
+          "Nekbal",
+          "Bal-bo",
+          "Bal-po'i yul",
+          "Bal-yul",
+          "Balpo",
+          "Balpo-yul",
+          "Federal Democratic Republic of Nepal",
+          "Naipál",
+          "Naipála",
+          "Ne-pel",
+          "Necbal",
+          "Nehpal",
+          "Nei-pal",
+          "Nekpal",
+          "Népaal",
+          "Nepall",
+          "Nepaul",
+          "Nercerri",
+          "Ni-po-lo",
+          "Ni-po-louo",
+          "Niepal",
+          "Nipal",
+          "Pa-eul-pou",
+          "Pa-le-pou",
+          "Pa-lo-pou",
+          "Paï-pou",
+          "Palpou"
+        ]
       }
     },
     {
@@ -2671,6 +4764,24 @@
         "tourists": { "value": 20129000, "year": 2019 },
         "aged_65": { "value": 20.8687702211484, "year": 2025 },
         "peak": { "value": 870, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["BE", "DE", "FR"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["eu", "nato"],
+        "languages": [],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": [],
+        "aliases": [
+          "Holland",
+          "Kingdom of Netherlands",
+          "Nederlanden",
+          "Kingdom of the Netherlands"
+        ]
       }
     },
     {
@@ -2690,6 +4801,19 @@
         "fertility": { "value": 1.964, "year": 2024 },
         "tourists": { "value": 130000, "year": 2019 },
         "aged_65": { "value": 11.7777220967518, "year": 2025 }
+      },
+      "facts": {
+        "continents": ["oceania"],
+        "borders": [],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "green", "yellow", "black"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["New Cal"]
       }
     },
     {
@@ -2710,6 +4834,19 @@
         "tourists": { "value": 3888000, "year": 2019 },
         "aged_65": { "value": 17.6093066526984, "year": 2025 },
         "peak": { "value": 3724, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["oceania"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Dominion of New Zealand", "Aotearoa New Zealand"]
       }
     },
     {
@@ -2730,6 +4867,19 @@
         "tourists": { "value": 1455000, "year": 2019 },
         "aged_65": { "value": 5.69755099606108, "year": 2025 },
         "peak": { "value": 2107, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": ["CR", "HN"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["es"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Republic of Nicaragua"]
       }
     },
     {
@@ -2750,6 +4900,19 @@
         "tourists": { "value": 192000, "year": 2019 },
         "aged_65": { "value": 2.61799886961133, "year": 2025 },
         "peak": { "value": 2022, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["BF", "BJ", "DZ", "LY", "ML", "NG", "TD"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": ["fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["green", "white", "orange"],
+        "flagFeatures": [],
+        "aliases": ["Republic Niger", "Republic of Niger", "Republic of the Niger"]
       }
     },
     {
@@ -2770,6 +4933,19 @@
         "tourists": { "value": 5265000, "year": 2016 },
         "aged_65": { "value": 3.06953631021894, "year": 2025 },
         "peak": { "value": 2419, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["BJ", "CM", "NE", "TD"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["opec", "commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["green", "white"],
+        "flagFeatures": [],
+        "aliases": ["Federal Republic of Nigeria", "Naija"]
       }
     },
     {
@@ -2787,6 +4963,25 @@
         "fertility": { "value": 1.784, "year": 2024 },
         "aged_65": { "value": 12.7100800151323, "year": 2025 },
         "peak": { "value": 2744, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["CN", "KR", "RU"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["star"],
+        "aliases": [
+          "Korea, North",
+          "DPRK",
+          "Democratic People's Republic of Korea",
+          "DPR Korea",
+          "N. Korea"
+        ]
       }
     },
     {
@@ -2807,6 +5002,26 @@
         "tourists": { "value": 758000, "year": 2019 },
         "aged_65": { "value": 18.5237163487965, "year": 2025 },
         "peak": { "value": 2764, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["AL", "BG", "GR", "RS", "XK"],
+        "landlocked": true,
+        "island": false,
+        "memberships": ["nato"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "yellow"],
+        "flagFeatures": [],
+        "aliases": [
+          "Macedonia",
+          "Makedonia",
+          "Former Yugoslav Republic of Macedonia",
+          "FYR Macedonia",
+          "Republic of Macedonia",
+          "Republic of North Macedonia"
+        ]
       }
     },
     {
@@ -2825,6 +5040,19 @@
         "fertility": { "value": 2.324, "year": 2024 },
         "tourists": { "value": 487000, "year": 2019 },
         "aged_65": { "value": 10.7888058244623, "year": 2025 }
+      },
+      "facts": {
+        "continents": ["oceania"],
+        "borders": [],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "white"],
+        "flagFeatures": ["star", "emblem"],
+        "aliases": ["CNMI", "ISO 3166-1:MP", "Northern Marianas", "US-MP"]
       }
     },
     {
@@ -2845,6 +5073,19 @@
         "tourists": { "value": 5879000, "year": 2019 },
         "aged_65": { "value": 19.080223244558, "year": 2025 },
         "peak": { "value": 2468.854, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["FI", "RU", "SE"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["nato"],
+        "languages": [],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": [],
+        "aliases": ["Kingdom of Norway"]
       }
     },
     {
@@ -2865,6 +5106,19 @@
         "tourists": { "value": 3506000, "year": 2019 },
         "aged_65": { "value": 2.6870391801832, "year": 2025 },
         "peak": { "value": 3018, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["AE", "SA", "YE"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["ar"],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Uman", "Sultanate of Oman"]
       }
     },
     {
@@ -2884,6 +5138,19 @@
         "fertility": { "value": 3.547, "year": 2024 },
         "aged_65": { "value": 4.36186248416949, "year": 2025 },
         "peak": { "value": 8611, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["AF", "CN", "IN", "IR"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["green", "white"],
+        "flagFeatures": ["star", "crescent"],
+        "aliases": ["Islamic Republic of Pakistan", "Republic of Pakistan", "Hồi Quốc", "Tây Hồi"]
       }
     },
     {
@@ -2904,6 +5171,27 @@
         "tourists": { "value": 94000, "year": 2019 },
         "aged_65": { "value": 11.8329794762916, "year": 2025 },
         "peak": { "value": 242, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["oceania"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": [],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "yellow"],
+        "flagFeatures": [],
+        "aliases": [
+          "Belau",
+          "Pellew",
+          "Peeloo",
+          "Pelew",
+          "Pelew islands",
+          "Republic of Belau",
+          "Republic of Palau"
+        ]
       }
     },
     {
@@ -2923,6 +5211,19 @@
         "tourists": { "value": 688000, "year": 2019 },
         "aged_65": { "value": 3.85167300191802, "year": 2025 },
         "peak": { "value": 1026, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["EG", "IL", "JO"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["ar"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white", "black"],
+        "flagFeatures": [],
+        "aliases": ["State of Palestine"]
       }
     },
     {
@@ -2943,6 +5244,19 @@
         "tourists": { "value": 2494000, "year": 2019 },
         "aged_65": { "value": 9.65704983976816, "year": 2025 },
         "peak": { "value": 3475, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": ["CO", "CR"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["es"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Republic of Panama"]
       }
     },
     {
@@ -2963,6 +5277,19 @@
         "tourists": { "value": 211000, "year": 2019 },
         "aged_65": { "value": 3.58807085542753, "year": 2025 },
         "peak": { "value": 4509, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["oceania"],
+        "borders": ["ID"],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["red", "yellow", "white", "black"],
+        "flagFeatures": ["star", "emblem"],
+        "aliases": ["Independent State of Papua New Guinea"]
       }
     },
     {
@@ -2983,6 +5310,19 @@
         "tourists": { "value": 4368000, "year": 2019 },
         "aged_65": { "value": 6.71858395975233, "year": 2025 },
         "peak": { "value": 842, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["south_america"],
+        "borders": ["AR", "BO", "BR"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": ["es"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Heart of South America", "Republic of Paraguay"]
       }
     },
     {
@@ -3003,6 +5343,19 @@
         "tourists": { "value": 5275000, "year": 2019 },
         "aged_65": { "value": 9.46656075708863, "year": 2025 },
         "peak": { "value": 6768, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["south_america"],
+        "borders": ["BO", "BR", "CL", "CO", "EC"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["es"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "white"],
+        "flagFeatures": [],
+        "aliases": ["Republic of Peru", "Republica del Peru"]
       }
     },
     {
@@ -3023,6 +5376,19 @@
         "tourists": { "value": 8261000, "year": 2019 },
         "aged_65": { "value": 5.72400622201301, "year": 2025 },
         "peak": { "value": 2954, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": [],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "yellow", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Republic of the Philippines", "Philippine Islands"]
       }
     },
     {
@@ -3043,6 +5409,19 @@
         "tourists": { "value": 88515000, "year": 2019 },
         "aged_65": { "value": 20.75382733073, "year": 2025 },
         "peak": { "value": 2501, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["BY", "CZ", "DE", "LT", "RU", "SK", "UA"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["nato", "eu"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "white"],
+        "flagFeatures": [],
+        "aliases": ["Republic of Poland"]
       }
     },
     {
@@ -3063,6 +5442,19 @@
         "tourists": { "value": 17283000, "year": 2019 },
         "aged_65": { "value": 24.9426193763087, "year": 2025 },
         "peak": { "value": 2351, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["ES"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["nato", "eu"],
+        "languages": ["pt"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "yellow"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Portuguese Republic"]
       }
     },
     {
@@ -3083,6 +5475,30 @@
         "tourists": { "value": 4931000, "year": 2019 },
         "aged_65": { "value": 25.2728697076413, "year": 2025 },
         "peak": { "value": 1338, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["en", "es"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["star"],
+        "aliases": [
+          "Borinquen",
+          "Porto Rico",
+          "Borikén",
+          "Boriquén",
+          "Commonwealth of Puerto Rico",
+          "Free Associated State of Puerto Rico",
+          "Island of Enchantment",
+          "Isle of Enchantment",
+          "Territory of Puerto Rico",
+          "Territory of Porto Rico"
+        ]
       }
     },
     {
@@ -3103,6 +5519,19 @@
         "tourists": { "value": 2136500, "year": 2019 },
         "aged_65": { "value": 1.70081503237359, "year": 2025 },
         "peak": { "value": 103, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["SA"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["ar"],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "white"],
+        "flagFeatures": [],
+        "aliases": ["State of Qatar"]
       }
     },
     {
@@ -3123,6 +5552,26 @@
         "tourists": { "value": 158000, "year": 2018 },
         "aged_65": { "value": 3.06138374079353, "year": 2025 },
         "peak": { "value": 1020, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["AO", "CD", "CF", "CM", "GA"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["opec"],
+        "languages": ["fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "yellow"],
+        "flagFeatures": [],
+        "aliases": [
+          "Congo-Brazzaville",
+          "Congo",
+          "Congo Republic",
+          "Rep. Congo",
+          "Republic of Congo",
+          "République du Congo"
+        ]
       }
     },
     {
@@ -3143,6 +5592,19 @@
         "tourists": { "value": 12815000, "year": 2019 },
         "aged_65": { "value": 20.1384043774039, "year": 2025 },
         "peak": { "value": 2544, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["BG", "HU", "MD", "RS", "UA"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["eu", "nato"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "yellow"],
+        "flagFeatures": [],
+        "aliases": ["Roumania", "Rumania"]
       }
     },
     {
@@ -3163,6 +5625,34 @@
         "tourists": { "value": 24419000, "year": 2019 },
         "aged_65": { "value": 17.7917873832619, "year": 2025 },
         "peak": { "value": 5642, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe", "asia"],
+        "borders": [
+          "AZ",
+          "BY",
+          "CN",
+          "EE",
+          "FI",
+          "GE",
+          "KP",
+          "KZ",
+          "LT",
+          "LV",
+          "MN",
+          "NO",
+          "PL",
+          "UA"
+        ],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["brics"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": [],
+        "aliases": ["Russian Federation"]
       }
     },
     {
@@ -3183,6 +5673,19 @@
         "tourists": { "value": 1634000, "year": 2019 },
         "aged_65": { "value": 4.02416636497719, "year": 2025 },
         "peak": { "value": 4507, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["BI", "CD", "TZ", "UG"],
+        "landlocked": true,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["en", "fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "green", "yellow"],
+        "flagFeatures": [],
+        "aliases": ["Republic of Rwanda", "The Land of a Thousand Hills"]
       }
     },
     {
@@ -3199,6 +5702,25 @@
         "fertility": { "value": 2.673, "year": 2024 },
         "aged_65": { "value": 19.6547783725266, "year": 2025 },
         "peak": { "value": 424, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": [],
+        "aliases": [
+          "Saint Martin (French part)",
+          "Collectivity of Saint Martin",
+          "FR-MF",
+          "Saint Martin (France)",
+          "St. Martin (French part)"
+        ]
       }
     },
     {
@@ -3218,6 +5740,19 @@
         "tourists": { "value": 181000, "year": 2019 },
         "aged_65": { "value": 6.06890356646976, "year": 2025 },
         "peak": { "value": 1858, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["oceania"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Western Samoa", "Independent State of Samoa"]
       }
     },
     {
@@ -3237,6 +5772,19 @@
         "tourists": { "value": 1904000, "year": 2019 },
         "aged_65": { "value": 23.1484101571226, "year": 2025 },
         "peak": { "value": 756, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["IT"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Most Serene Republic of San Marino"]
       }
     },
     {
@@ -3257,6 +5805,19 @@
         "tourists": { "value": 33400.0015258789, "year": 2018 },
         "aged_65": { "value": 3.94457532444829, "year": 2025 },
         "peak": { "value": 2024, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": [],
+        "languages": ["pt"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "yellow", "black"],
+        "flagFeatures": ["star"],
+        "aliases": ["São Tomé og Príncipe"]
       }
     },
     {
@@ -3277,6 +5838,19 @@
         "tourists": { "value": 20292000, "year": 2019 },
         "aged_65": { "value": 3.05678115419144, "year": 2025 },
         "peak": { "value": 3207, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["AE", "IQ", "JO", "KW", "OM", "QA", "YE"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["opec"],
+        "languages": ["ar"],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["green", "white"],
+        "flagFeatures": [],
+        "aliases": ["Kingdom of Saudi Arabia", "Saudi"]
       }
     },
     {
@@ -3297,6 +5871,19 @@
         "tourists": { "value": 1376000, "year": 2017 },
         "aged_65": { "value": 3.64616639269883, "year": 2025 },
         "peak": { "value": 531, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["GM", "GN", "GW", "ML", "MR"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "yellow"],
+        "flagFeatures": ["star"],
+        "aliases": ["Republic of Senegal"]
       }
     },
     {
@@ -3316,6 +5903,19 @@
         "tourists": { "value": 1847000, "year": 2019 },
         "aged_65": { "value": 23.050411277315, "year": 2025 },
         "peak": { "value": 2658, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["AL", "BA", "BG", "HR", "HU", "ME", "MK", "RO", "XK"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Republic of Serbia"]
       }
     },
     {
@@ -3336,6 +5936,19 @@
         "tourists": { "value": 428000, "year": 2019 },
         "aged_65": { "value": 8.74539176146741, "year": 2025 },
         "peak": { "value": 905, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["fr", "en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "green", "yellow", "white"],
+        "flagFeatures": [],
+        "aliases": ["Republic of Seychelles"]
       }
     },
     {
@@ -3356,6 +5969,19 @@
         "tourists": { "value": 71000, "year": 2019 },
         "aged_65": { "value": 3.28364812148674, "year": 2025 },
         "peak": { "value": 1945, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["GN", "LR"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "green", "white"],
+        "flagFeatures": [],
+        "aliases": ["Republic of Sierra Leone"]
       }
     },
     {
@@ -3376,6 +6002,19 @@
         "tourists": { "value": 19116000, "year": 2019 },
         "aged_65": { "value": 14.2110377720053, "year": 2025 },
         "peak": { "value": 163.63, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "white"],
+        "flagFeatures": ["star", "crescent"],
+        "aliases": ["Republic of Singapore", "S'pore", "Garden City", "Lion City", "Singapore City"]
       }
     },
     {
@@ -3392,6 +6031,25 @@
         "fertility": { "value": 1.44, "year": 2024 },
         "tourists": { "value": 1952000, "year": 2019 },
         "aged_65": { "value": 14.4798852537395, "year": 2025 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": [],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": [
+          "Sint Maarten (Dutch part)",
+          "NL-SX",
+          "Saint Martin (Dutch part)",
+          "Sint Martin",
+          "St. Maarten"
+        ]
       }
     },
     {
@@ -3412,6 +6070,19 @@
         "tourists": { "value": 15299000, "year": 2018 },
         "aged_65": { "value": 19.0363041680723, "year": 2025 },
         "peak": { "value": 2655, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["AT", "CZ", "HU", "PL", "UA"],
+        "landlocked": true,
+        "island": false,
+        "memberships": ["eu", "nato"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Slovak Republic"]
       }
     },
     {
@@ -3432,6 +6103,19 @@
         "tourists": { "value": 4702000, "year": 2019 },
         "aged_65": { "value": 22.2111482273631, "year": 2025 },
         "peak": { "value": 2864, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["AT", "HR", "HU", "IT"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["eu", "nato"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Slovenija", "Republic of Slovenia"]
       }
     },
     {
@@ -3452,6 +6136,19 @@
         "tourists": { "value": 28899.9996185303, "year": 2019 },
         "aged_65": { "value": 3.66871341943646, "year": 2025 },
         "peak": { "value": 2335, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["oceania"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["blue", "green", "yellow", "white"],
+        "flagFeatures": ["star"],
+        "aliases": []
       }
     },
     {
@@ -3471,6 +6168,19 @@
         "fertility": { "value": 6.013, "year": 2024 },
         "aged_65": { "value": 2.61747052453864, "year": 2025 },
         "peak": { "value": 2460, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["ET", "KE"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["ar"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Federal Republic of Somalia"]
       }
     },
     {
@@ -3491,6 +6201,19 @@
         "tourists": { "value": 14797000, "year": 2019 },
         "aged_65": { "value": 6.88503097027824, "year": 2025 },
         "peak": { "value": 3450, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["BW", "LS", "MZ", "NA", "SZ", "ZW"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["brics", "commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "green", "yellow", "white", "black"],
+        "flagFeatures": [],
+        "aliases": ["R.S.A.", "Republic of South Africa"]
       }
     },
     {
@@ -3511,6 +6234,31 @@
         "tourists": { "value": 17503000, "year": 2019 },
         "aged_65": { "value": 20.3304188408974, "year": 2025 },
         "peak": { "value": 1947.06, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["KP"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white", "black"],
+        "flagFeatures": [],
+        "aliases": [
+          "Korea (South)",
+          "Republic of Korea",
+          "Korea Republic",
+          "South Korea (ROK)",
+          "Silla",
+          "Choson",
+          "Hanguk",
+          "Daehan Minguk",
+          "Daehanminguk",
+          "Rep. Korea",
+          "S. Korea"
+        ]
       }
     },
     {
@@ -3529,6 +6277,19 @@
         "fertility": { "value": 3.785, "year": 2024 },
         "aged_65": { "value": 3.07528935608692, "year": 2025 },
         "peak": { "value": 3187, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["CD", "CF", "ET", "KE", "SD", "UG"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "green", "yellow", "white", "black"],
+        "flagFeatures": ["star"],
+        "aliases": ["Republic of South Sudan", "Southern Sudan"]
       }
     },
     {
@@ -3549,6 +6310,19 @@
         "tourists": { "value": 126170000, "year": 2019 },
         "aged_65": { "value": 21.64208099744, "year": 2025 },
         "peak": { "value": 3715, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["AD", "FR", "GI", "MA", "PT"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["eu", "nato"],
+        "languages": ["es"],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "yellow"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Kingdom of Spain"]
       }
     },
     {
@@ -3569,6 +6343,19 @@
         "tourists": { "value": 2027000, "year": 2019 },
         "aged_65": { "value": 12.4747139630238, "year": 2025 },
         "peak": { "value": 2524, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "green", "yellow", "orange"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Ceylan", "Serendib", "Taprobane", "Srilanka", "Lanka, Sri"]
       }
     },
     {
@@ -3589,6 +6376,24 @@
         "tourists": { "value": 1107000, "year": 2019 },
         "aged_65": { "value": 11.720639791993, "year": 2025 },
         "peak": { "value": 1156, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["red", "green", "yellow", "white", "black"],
+        "flagFeatures": ["star"],
+        "aliases": [
+          "Saint Kitts and Nevis",
+          "Federation of Saint Kitts and Nevis",
+          "Kitts and Nevis",
+          "Saint Christopher and Nevis"
+        ]
       }
     },
     {
@@ -3609,6 +6414,19 @@
         "tourists": { "value": 1220000, "year": 2019 },
         "aged_65": { "value": 9.963696717717, "year": 2025 },
         "peak": { "value": 952.4, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["blue", "yellow", "white", "black"],
+        "flagFeatures": [],
+        "aliases": ["Saint Lucia", "Hewanorra", "Iyonola"]
       }
     },
     {
@@ -3629,6 +6447,19 @@
         "tourists": { "value": 392000, "year": 2019 },
         "aged_65": { "value": 12.2502489379482, "year": 2025 },
         "peak": { "value": 1220, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["blue", "green", "yellow"],
+        "flagFeatures": [],
+        "aliases": ["Saint Vincent and the Grenadines", "St. Vincent", "Saint Vincent"]
       }
     },
     {
@@ -3649,6 +6480,26 @@
         "tourists": { "value": 836000, "year": 2018 },
         "aged_65": { "value": 3.38701560944597, "year": 2025 },
         "peak": { "value": 3042, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["CF", "EG", "ER", "ET", "LY", "SS", "TD"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["en", "ar"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white", "black"],
+        "flagFeatures": [],
+        "aliases": [
+          "al-Sudan",
+          "as-Sūdān",
+          "North Sudan",
+          "Republic of Sudan",
+          "Republic of the Sudan",
+          "Soudan"
+        ]
       }
     },
     {
@@ -3669,6 +6520,25 @@
         "tourists": { "value": 279000, "year": 2017 },
         "aged_65": { "value": 8.19129483472689, "year": 2025 },
         "peak": { "value": 1280, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["south_america"],
+        "borders": ["BR", "FR", "GY"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "green", "yellow", "white"],
+        "flagFeatures": ["star"],
+        "aliases": [
+          "Surinam",
+          "Dutch Guiana",
+          "Republic of Surinam",
+          "Republic of Suriname",
+          "Surrinam"
+        ]
       }
     },
     {
@@ -3689,6 +6559,19 @@
         "tourists": { "value": 7616000, "year": 2019 },
         "aged_65": { "value": 20.9127967529707, "year": 2025 },
         "peak": { "value": 2096.8, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["FI", "NO"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["nato", "eu"],
+        "languages": [],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["blue", "yellow"],
+        "flagFeatures": [],
+        "aliases": ["Kingdom of Sweden", "Swedish Kingdom"]
       }
     },
     {
@@ -3709,6 +6592,19 @@
         "tourists": { "value": 11818000, "year": 2019 },
         "aged_65": { "value": 20.4321204316855, "year": 2025 },
         "peak": { "value": 4634, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["AT", "DE", "FR", "IT", "LI"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": ["fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "white"],
+        "flagFeatures": [],
+        "aliases": ["Swiss", "Confoederatio Helvetica", "Swiss Confederation"]
       }
     },
     {
@@ -3729,6 +6625,19 @@
         "tourists": { "value": 2424000, "year": 2019 },
         "aged_65": { "value": 4.83918173649451, "year": 2025 },
         "peak": { "value": 2813.95, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["IL", "IQ", "JO", "LB", "TR"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["ar"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white", "black"],
+        "flagFeatures": ["star"],
+        "aliases": ["Sūriyā", "Syrian Arab Republic"]
       }
     },
     {
@@ -3749,6 +6658,19 @@
         "tourists": { "value": 1035000, "year": 2018 },
         "aged_65": { "value": 4.06783017305471, "year": 2025 },
         "peak": { "value": 7495, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["AF", "CN", "KG", "UZ"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "yellow", "white"],
+        "flagFeatures": ["star", "emblem"],
+        "aliases": ["Republic of Tajikistan"]
       }
     },
     {
@@ -3769,6 +6691,19 @@
         "tourists": { "value": 1527000, "year": 2019 },
         "aged_65": { "value": 3.04176368097549, "year": 2025 },
         "peak": { "value": 5895, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["BI", "CD", "KE", "MW", "MZ", "RW", "UG", "ZM"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["blue", "green", "yellow", "black"],
+        "flagFeatures": [],
+        "aliases": ["United Republic of Tanzania", "Tanzania, United Republic of"]
       }
     },
     {
@@ -3789,6 +6724,25 @@
         "tourists": { "value": 39916000, "year": 2019 },
         "aged_65": { "value": 16.017421033045, "year": 2025 },
         "peak": { "value": 2565, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["KH", "LA", "MM", "MY"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": [],
+        "aliases": [
+          "Thai",
+          "The Kingdom of Siam",
+          "The Kingdom of Thailand",
+          "Prathet Thai",
+          "Ratcha-anachak Thai"
+        ]
       }
     },
     {
@@ -3809,6 +6763,19 @@
         "tourists": { "value": 74800.0030517578, "year": 2019 },
         "aged_65": { "value": 5.22929748839898, "year": 2025 },
         "peak": { "value": 2963, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["ID"],
+        "landlocked": false,
+        "island": true,
+        "memberships": [],
+        "languages": ["pt"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "yellow", "white", "black"],
+        "flagFeatures": ["star"],
+        "aliases": ["East Timor", "Democratic Republic of Timor-Leste"]
       }
     },
     {
@@ -3829,6 +6796,19 @@
         "tourists": { "value": 876000, "year": 2019 },
         "aged_65": { "value": 3.4768505984781, "year": 2025 },
         "peak": { "value": 986, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["BF", "BJ", "GH"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "yellow", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Togolese Republic"]
       }
     },
     {
@@ -3849,6 +6829,19 @@
         "tourists": { "value": 94000, "year": 2019 },
         "aged_65": { "value": 6.85064872472094, "year": 2025 },
         "peak": { "value": 1030, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["oceania"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["red", "white"],
+        "flagFeatures": [],
+        "aliases": ["Kingdom of Tonga", "Tonga Islands", "Friendly Islands"]
       }
     },
     {
@@ -3869,6 +6862,19 @@
         "tourists": { "value": 480000, "year": 2019 },
         "aged_65": { "value": 12.9254775320864, "year": 2025 },
         "peak": { "value": 940, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "white", "black"],
+        "flagFeatures": [],
+        "aliases": ["Republic of Trinidad and Tobago"]
       }
     },
     {
@@ -3889,6 +6895,19 @@
         "tourists": { "value": 9429000, "year": 2019 },
         "aged_65": { "value": 9.9376502855836, "year": 2025 },
         "peak": { "value": 1544, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["DZ", "LY"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["ar"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "white"],
+        "flagFeatures": ["star", "crescent"],
+        "aliases": ["Republic of Tunisia", "Tunisian Republic"]
       }
     },
     {
@@ -3909,6 +6928,19 @@
         "tourists": { "value": 51747000, "year": 2019 },
         "aged_65": { "value": 10.5709408311479, "year": 2025 },
         "peak": { "value": 5137, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe", "asia"],
+        "borders": ["AM", "AZ", "BG", "GE", "GR", "IQ", "IR", "SY"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["nato"],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "white"],
+        "flagFeatures": ["star", "crescent"],
+        "aliases": ["Turkey", "Republic of Turkey", "Republic of Türkiye"]
       }
     },
     {
@@ -3928,6 +6960,19 @@
         "fertility": { "value": 2.661, "year": 2024 },
         "aged_65": { "value": 4.80778752954433, "year": 2025 },
         "peak": { "value": 3139, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["AF", "IR", "KZ", "UZ"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white"],
+        "flagFeatures": ["star", "crescent", "emblem"],
+        "aliases": ["Turkmenia"]
       }
     },
     {
@@ -3947,6 +6992,19 @@
         "tourists": { "value": 1599000, "year": 2019 },
         "aged_65": { "value": 11.6787074880748, "year": 2025 },
         "peak": { "value": 49, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Turks and Caicos"]
       }
     },
     {
@@ -3965,6 +7023,19 @@
         "tourists": { "value": 3599.99990463257, "year": 2019 },
         "aged_65": { "value": 7.04277286135693, "year": 2025 },
         "peak": { "value": 4.6, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["oceania"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "yellow", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Ellice Islands"]
       }
     },
     {
@@ -3985,6 +7056,19 @@
         "tourists": { "value": 1543000, "year": 2019 },
         "aged_65": { "value": 2.22850221312123, "year": 2025 },
         "peak": { "value": 5109, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["CD", "KE", "RW", "SS", "TZ"],
+        "landlocked": true,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "yellow", "white", "black"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Ouganda", "Pearl of Africa", "The Republic of Uganda", "Ugandah"]
       }
     },
     {
@@ -4005,6 +7089,19 @@
         "tourists": { "value": 13710000, "year": 2019 },
         "aged_65": { "value": 18.9717382539904, "year": 2025 },
         "peak": { "value": 2061, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["BY", "HU", "MD", "PL", "RO", "RU", "SK"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "yellow"],
+        "flagFeatures": [],
+        "aliases": ["Ukrainia", "Ukraïna"]
       }
     },
     {
@@ -4025,6 +7122,19 @@
         "tourists": { "value": 25282000, "year": 2019 },
         "aged_65": { "value": 1.79231447206064, "year": 2025 },
         "peak": { "value": 1911, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["OM", "SA"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["opec", "brics"],
+        "languages": ["ar"],
+        "monarchy": true,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "white", "black"],
+        "flagFeatures": [],
+        "aliases": ["UAE", "the Emirates", "U.A.E."]
       }
     },
     {
@@ -4045,6 +7155,25 @@
         "tourists": { "value": 40857000, "year": 2019 },
         "aged_65": { "value": 19.7026932546935, "year": 2025 },
         "peak": { "value": 1344.527, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["europe"],
+        "borders": ["IE"],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["nato"],
+        "languages": ["en"],
+        "monarchy": true,
+        "drivesLeft": true,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": [],
+        "aliases": [
+          "UK",
+          "Britain",
+          "Great Britain",
+          "United Kingdom of Great Britain and Northern Ireland",
+          "Great Britain and Northern Ireland"
+        ]
       }
     },
     {
@@ -4065,6 +7194,32 @@
         "tourists": { "value": 165478000, "year": 2019 },
         "aged_65": { "value": 18.387224828496, "year": 2025 },
         "peak": { "value": 6190, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": ["CA", "MX"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["nato"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "white"],
+        "flagFeatures": ["star"],
+        "aliases": [
+          "USA",
+          "US",
+          "America",
+          "the United States of America",
+          "Murica",
+          "Merica",
+          "the States",
+          "the U.S. of A",
+          "U.S. of America",
+          "U. S. A.",
+          "US of A",
+          "US of America"
+        ]
       }
     },
     {
@@ -4085,6 +7240,19 @@
         "tourists": { "value": 3480000, "year": 2019 },
         "aged_65": { "value": 16.2818995428825, "year": 2025 },
         "peak": { "value": 513.7, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["south_america"],
+        "borders": ["AR", "BR"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["es"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["blue", "yellow", "white"],
+        "flagFeatures": [],
+        "aliases": ["Eastern Republic of Uruguay", "Oriental Republic of Uruguay"]
       }
     },
     {
@@ -4105,6 +7273,23 @@
         "tourists": { "value": 2074000, "year": 2019 },
         "aged_65": { "value": 23.1237780564189, "year": 2025 },
         "peak": { "value": 473, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["north_america"],
+        "borders": [],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["blue", "yellow", "white"],
+        "flagFeatures": ["emblem"],
+        "aliases": [
+          "American Virgin Islands",
+          "United States Virgin Islands",
+          "Virgin Islands of the United States"
+        ]
       }
     },
     {
@@ -4125,6 +7310,19 @@
         "tourists": { "value": 6749000, "year": 2019 },
         "aged_65": { "value": 6.06931428854572, "year": 2025 },
         "peak": { "value": 4643, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["AF", "KG", "KZ", "TJ", "TM"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "green", "white"],
+        "flagFeatures": ["star", "crescent"],
+        "aliases": ["Republic of Uzbekistan"]
       }
     },
     {
@@ -4145,6 +7343,19 @@
         "tourists": { "value": 256000, "year": 2019 },
         "aged_65": { "value": 4.3788357515164, "year": 2025 },
         "peak": { "value": 1879, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["oceania"],
+        "borders": [],
+        "landlocked": false,
+        "island": true,
+        "memberships": ["commonwealth"],
+        "languages": ["en", "fr"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "green", "yellow", "black"],
+        "flagFeatures": ["emblem"],
+        "aliases": ["Republic of Vanuatu"]
       }
     },
     {
@@ -4165,6 +7376,19 @@
         "tourists": { "value": 429000, "year": 2017 },
         "aged_65": { "value": 10.0182554931645, "year": 2025 },
         "peak": { "value": 4978, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["south_america"],
+        "borders": ["BR", "CO", "GY"],
+        "landlocked": false,
+        "island": false,
+        "memberships": ["opec"],
+        "languages": ["es"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "blue", "yellow", "white"],
+        "flagFeatures": ["star"],
+        "aliases": ["Republic of Venezuela", "Bolivarian Republic of Venezuela", "BR Venezuela"]
       }
     },
     {
@@ -4185,6 +7409,19 @@
         "tourists": { "value": 18009000, "year": 2019 },
         "aged_65": { "value": 9.49453578200007, "year": 2025 },
         "peak": { "value": 3147.3, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["CN", "KH", "LA"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": [],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "yellow"],
+        "flagFeatures": ["star"],
+        "aliases": ["Socialist Republic of Viet Nam", "Socialist Republic of Vietnam", "Viet Nam"]
       }
     },
     {
@@ -4205,6 +7442,19 @@
         "tourists": { "value": 398000, "year": 2015 },
         "aged_65": { "value": 2.54534547337627, "year": 2025 },
         "peak": { "value": 3666, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["asia"],
+        "borders": ["OM", "SA"],
+        "landlocked": false,
+        "island": false,
+        "memberships": [],
+        "languages": ["ar"],
+        "monarchy": false,
+        "drivesLeft": false,
+        "flagColours": ["red", "white", "black"],
+        "flagFeatures": [],
+        "aliases": ["Rep. Yemen", "Republic of Yemen"]
       }
     },
     {
@@ -4225,6 +7475,19 @@
         "tourists": { "value": 1266000, "year": 2019 },
         "aged_65": { "value": 2.00005028777659, "year": 2025 },
         "peak": { "value": 2339, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["AO", "BW", "CD", "MW", "MZ", "NA", "TZ", "ZW"],
+        "landlocked": true,
+        "island": false,
+        "memberships": ["commonwealth"],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "green", "black", "orange"],
+        "flagFeatures": [],
+        "aliases": ["Republic of Zambia"]
       }
     },
     {
@@ -4245,6 +7508,19 @@
         "tourists": { "value": 2294000, "year": 2019 },
         "aged_65": { "value": 3.56147602516578, "year": 2025 },
         "peak": { "value": 2592, "year": 2026 }
+      },
+      "facts": {
+        "continents": ["africa"],
+        "borders": ["BW", "MZ", "ZA", "ZM"],
+        "landlocked": true,
+        "island": false,
+        "memberships": [],
+        "languages": ["en"],
+        "monarchy": false,
+        "drivesLeft": true,
+        "flagColours": ["red", "green", "yellow", "white", "black"],
+        "flagFeatures": ["star", "emblem"],
+        "aliases": ["Rhodesia", "Southern Rhodesia", "Zimbabwe Rhodesia", "Republic of Zimbabwe"]
       }
     }
   ]

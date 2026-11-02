@@ -72,3 +72,50 @@ describe("readSnapshot", () => {
     expect(readSnapshot(path)).toBe(first);
   });
 });
+
+describe("facts", () => {
+  test("missing facts load as empty lists and nulls", () => {
+    const facts = loadSnapshot(raw({}))?.countries[0]?.facts;
+
+    expect(facts?.continents).toEqual([]);
+    expect(facts?.aliases).toEqual([]);
+    expect(facts?.landlocked).toBeNull();
+    expect(facts?.drivesLeft).toBeNull();
+  });
+
+  test("keeps valid facts and drops unknown members", () => {
+    const snap = loadSnapshot({
+      builtAt: "x",
+      countries: [
+        {
+          iso2: "NL",
+          name: "Netherlands",
+          values: {},
+          facts: {
+            continents: ["europe", "mars"],
+            borders: ["BE", 3],
+            landlocked: false,
+            island: "yes",
+            memberships: ["eu", "nope"],
+            languages: ["en"],
+            monarchy: true,
+            flagColours: ["red", "pink"],
+            flagFeatures: ["star", "sun"],
+            aliases: ["Holland", 4],
+          },
+        },
+      ],
+    });
+    const facts = snap?.countries[0]?.facts;
+
+    expect(facts?.continents).toEqual(["europe"]);
+    expect(facts?.borders).toEqual(["BE"]);
+    expect(facts?.landlocked).toBe(false);
+    expect(facts?.island).toBeNull();
+    expect(facts?.memberships).toEqual(["eu"]);
+    expect(facts?.monarchy).toBe(true);
+    expect(facts?.flagColours).toEqual(["red"]);
+    expect(facts?.flagFeatures).toEqual(["star"]);
+    expect(facts?.aliases).toEqual(["Holland"]);
+  });
+});

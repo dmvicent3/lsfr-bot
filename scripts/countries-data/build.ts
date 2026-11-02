@@ -1,5 +1,8 @@
+import { emptyFacts } from "../../src/core/countries/facts.ts";
+import type { Country, Facts, Reading, Snapshot } from "../../src/core/countries/types.ts";
 import { STATS } from "../../src/modules/duel/data/stats.ts";
-import type { Country, Reading, Snapshot, StatId } from "../../src/modules/duel/types.ts";
+import type { StatId } from "../../src/modules/duel/types.ts";
+import { mergeAliases } from "./aliases.ts";
 import { NAME_OVERRIDES } from "./names.ts";
 
 const MIN_STATS = 8;
@@ -18,13 +21,18 @@ function valuesOf(iso2: string, readings: Record<StatId, Map<string, Reading>>):
   return values;
 }
 
-/** Joins the country list with every stat's readings; drops thin countries, sorts by name. */
+/**
+ * Joins the country list with every stat's readings and the per-country facts; drops thin
+ * countries, sorts by name. Aliases are merged with the checked-in ones here, once the final
+ * list of countries is known.
+ */
 export function build(
   countries: { iso2: string; name: string }[],
   readings: Record<StatId, Map<string, Reading>>,
   builtAt: string,
+  facts: Map<string, Facts> = new Map(),
 ): Snapshot {
-  const full = countries
+  const kept = countries
     .filter((c) => !EXCLUDED_CODES.includes(c.iso2))
     .map((c) => ({
       ...c,
@@ -32,6 +40,11 @@ export function build(
       values: valuesOf(c.iso2, readings),
     }))
     .filter((c) => Object.keys(c.values).length >= MIN_STATS);
+  const aliases = mergeAliases(kept, new Map([...facts].map(([iso2, f]) => [iso2, f.aliases])));
+  const full = kept.map((c) => ({
+    ...c,
+    facts: { ...(facts.get(c.iso2) ?? emptyFacts()), aliases: aliases.get(c.iso2) ?? [] },
+  }));
 
   return { builtAt, countries: full.toSorted((a, b) => a.name.localeCompare(b.name)) };
 }

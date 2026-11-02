@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { isRecord, isString, records } from "../guards.ts";
 import { log } from "../log.ts";
+import { loadFacts } from "./facts.ts";
 import type { Country, Reading, Snapshot } from "./types.ts";
 
 function reading(raw: unknown): Reading | null {
@@ -29,7 +30,12 @@ function values(iso2: string, raw: unknown): Country["values"] {
 function country(raw: Record<string, unknown>): Country | null {
   if (!isString(raw.iso2) || !isString(raw.name)) return null;
 
-  return { iso2: raw.iso2, name: raw.name, values: values(raw.iso2, raw.values) };
+  return {
+    iso2: raw.iso2,
+    name: raw.name,
+    values: values(raw.iso2, raw.values),
+    facts: loadFacts(raw.facts),
+  };
 }
 
 /** Validates a parsed snapshot; null when the shape is unusable. */

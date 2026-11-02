@@ -5,7 +5,9 @@
 import { writeFileSync } from "node:fs";
 import { STATS } from "../src/modules/duel/data/stats.ts";
 import type { Reading, StatDef, StatId } from "../src/modules/duel/types.ts";
+import { factCounts, flagTable } from "./countries-data/audit.ts";
 import { build } from "./countries-data/build.ts";
+import { gatherFacts } from "./countries-data/gather-facts.ts";
 import { fetchWbCountries, fetchWbIndicator, fetchWikidata } from "./countries-data/fetch.ts";
 import { parseWbCountries, parseWbIndicator } from "./countries-data/parse-wb.ts";
 import { parseWikidataPeaks } from "./countries-data/parse-wikidata.ts";
@@ -39,10 +41,15 @@ async function main(): Promise<void> {
 
   for (const stat of STATS) readings[stat.id] = await read(stat, today);
 
-  const snapshot = build(countries, readings, today.toISOString().slice(0, 10));
+  const builtAt = today.toISOString().slice(0, 10);
+  const stats = build(countries, readings, builtAt);
+  const facts = await gatherFacts(fetch, new Set(stats.countries.map((c) => c.iso2)));
+  const snapshot = build(countries, readings, builtAt, facts);
 
   writeFileSync(OUT, JSON.stringify(snapshot));
   console.log(`${snapshot.countries.length} countries kept of ${countries.length}`);
+  console.log(flagTable(snapshot).join("\n"));
+  console.log(factCounts(snapshot).join("\n"));
   console.log(summary(readings, new Set(snapshot.countries.map((c) => c.iso2))).join("\n"));
 }
 
