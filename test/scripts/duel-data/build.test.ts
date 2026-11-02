@@ -11,7 +11,7 @@ function readings(skip: Record<string, number>): Record<StatId, Map<string, Read
   STATS.forEach((s, i) => {
     out[s.id] = new Map();
 
-    for (const iso2 of ["NL", "PT", "AW"]) {
+    for (const iso2 of ["NL", "PT", "AW", "KR"]) {
       if (i < STATS.length - (skip[iso2] ?? 0)) out[s.id].set(iso2, { value: i + 1, year: 2022 });
     }
   });
@@ -43,5 +43,26 @@ describe("build", () => {
     const snap = build(COUNTRIES, readings({}), "2026-11-02");
 
     expect(loadSnapshot(JSON.parse(JSON.stringify(snap)))).toEqual(snap);
+  });
+
+  test("applies a name override and leaves other names alone", () => {
+    const list = [
+      { iso2: "KR", name: "Korea, Rep." },
+      { iso2: "PT", name: "Portugal" },
+    ];
+    const snap = build(list, readings({}), "2026-11-02");
+
+    expect(snap.countries.map((c) => c.name)).toEqual(["Portugal", "South Korea"]);
+  });
+
+  test("drops readings of zero or below", () => {
+    const r = readings({});
+    const id: StatId = "population";
+
+    r[id].set("PT", { value: 0, year: 2022 });
+
+    const snap = build(COUNTRIES, r, "2026-11-02");
+
+    expect(snap.countries.find((c) => c.iso2 === "PT")?.values[id]).toBeUndefined();
   });
 });

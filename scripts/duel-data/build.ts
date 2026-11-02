@@ -1,5 +1,6 @@
 import { STATS } from "../../src/modules/duel/data/stats.ts";
 import type { Country, Reading, Snapshot, StatId } from "../../src/modules/duel/types.ts";
+import { NAME_OVERRIDES } from "./names.ts";
 
 const MIN_STATS = 8;
 
@@ -9,7 +10,7 @@ function valuesOf(iso2: string, readings: Record<StatId, Map<string, Reading>>):
   for (const { id } of STATS) {
     const r = readings[id].get(iso2);
 
-    if (r) values[id] = r;
+    if (r && r.value > 0) values[id] = r;
   }
 
   return values;
@@ -22,7 +23,11 @@ export function build(
   builtAt: string,
 ): Snapshot {
   const full = countries
-    .map((c) => ({ ...c, values: valuesOf(c.iso2, readings) }))
+    .map((c) => ({
+      ...c,
+      name: NAME_OVERRIDES[c.iso2] ?? c.name,
+      values: valuesOf(c.iso2, readings),
+    }))
     .filter((c) => Object.keys(c.values).length >= MIN_STATS);
 
   return { builtAt, countries: full.toSorted((a, b) => a.name.localeCompare(b.name)) };

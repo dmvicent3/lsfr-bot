@@ -260,7 +260,7 @@
     },
     {
       "iso2": "BS",
-      "name": "Bahamas, The",
+      "name": "Bahamas",
       "values": {
         "population": { "value": 403033, "year": 2025 },
         "area": { "value": 13878, "year": 2024 },
@@ -557,7 +557,7 @@
     },
     {
       "iso2": "BN",
-      "name": "Brunei Darussalam",
+      "name": "Brunei",
       "values": {
         "population": { "value": 466330, "year": 2025 },
         "area": { "value": 5770, "year": 2024 },
@@ -870,28 +870,8 @@
       }
     },
     {
-      "iso2": "CD",
-      "name": "Congo, Dem. Rep.",
-      "values": {
-        "population": { "value": 112832473, "year": 2025 },
-        "area": { "value": 2345410, "year": 2024 },
-        "density": { "value": 48.2019651088419, "year": 2024 },
-        "gdp_pc": { "value": 806.776000708534, "year": 2025 },
-        "life_exp": { "value": 62.074, "year": 2024 },
-        "urban": { "value": 45.1135633042151, "year": 2025 },
-        "forest": { "value": 61.5213338920624, "year": 2024 },
-        "arable": { "value": 7.2850885512009, "year": 2024 },
-        "co2_pc": { "value": 0.0568247825820182, "year": 2024 },
-        "internet": { "value": 19.67350006, "year": 2024 },
-        "fertility": { "value": 5.981, "year": 2024 },
-        "tourists": { "value": 351000, "year": 2016 },
-        "aged_65": { "value": 3.08388348450007, "year": 2025 },
-        "peak": { "value": 5109, "year": 2026 }
-      }
-    },
-    {
       "iso2": "CG",
-      "name": "Congo, Rep.",
+      "name": "Congo",
       "values": {
         "population": { "value": 6484437, "year": 2025 },
         "area": { "value": 342000, "year": 2024 },
@@ -931,7 +911,7 @@
     },
     {
       "iso2": "CI",
-      "name": "Cote d'Ivoire",
+      "name": "Côte d'Ivoire",
       "values": {
         "population": { "value": 32711547, "year": 2025 },
         "area": { "value": 322460, "year": 2024 },
@@ -991,7 +971,7 @@
     },
     {
       "iso2": "CW",
-      "name": "Curacao",
+      "name": "Curaçao",
       "values": {
         "population": { "value": 156263, "year": 2025 },
         "area": { "value": 444, "year": 2024 },
@@ -1126,6 +1106,26 @@
       }
     },
     {
+      "iso2": "CD",
+      "name": "DR Congo",
+      "values": {
+        "population": { "value": 112832473, "year": 2025 },
+        "area": { "value": 2345410, "year": 2024 },
+        "density": { "value": 48.2019651088419, "year": 2024 },
+        "gdp_pc": { "value": 806.776000708534, "year": 2025 },
+        "life_exp": { "value": 62.074, "year": 2024 },
+        "urban": { "value": 45.1135633042151, "year": 2025 },
+        "forest": { "value": 61.5213338920624, "year": 2024 },
+        "arable": { "value": 7.2850885512009, "year": 2024 },
+        "co2_pc": { "value": 0.0568247825820182, "year": 2024 },
+        "internet": { "value": 19.67350006, "year": 2024 },
+        "fertility": { "value": 5.981, "year": 2024 },
+        "tourists": { "value": 351000, "year": 2016 },
+        "aged_65": { "value": 3.08388348450007, "year": 2025 },
+        "peak": { "value": 5109, "year": 2026 }
+      }
+    },
+    {
       "iso2": "EC",
       "name": "Ecuador",
       "values": {
@@ -1147,7 +1147,7 @@
     },
     {
       "iso2": "EG",
-      "name": "Egypt, Arab Rep.",
+      "name": "Egypt",
       "values": {
         "population": { "value": 118365995, "year": 2025 },
         "area": { "value": 1001450, "year": 2024 },
@@ -1403,7 +1403,7 @@
     },
     {
       "iso2": "GM",
-      "name": "Gambia, The",
+      "name": "Gambia",
       "values": {
         "population": { "value": 2822093, "year": 2025 },
         "area": { "value": 11295, "year": 2024 },
@@ -1489,7 +1489,6 @@
         "density": { "value": 3932.9, "year": 2024 },
         "life_exp": { "value": 83.63, "year": 2024 },
         "urban": { "value": 100, "year": 2025 },
-        "forest": { "value": 0, "year": 2023 },
         "co2_pc": { "value": 16.1483892293219, "year": 2024 },
         "internet": { "value": 94.4444715818151, "year": 2016 },
         "fertility": { "value": 1.885, "year": 2024 },
@@ -1696,7 +1695,7 @@
     },
     {
       "iso2": "HK",
-      "name": "Hong Kong SAR, China",
+      "name": "Hong Kong",
       "values": {
         "population": { "value": 7498900, "year": 2025 },
         "area": { "value": 1110, "year": 2024 },
@@ -1795,7 +1794,7 @@
     },
     {
       "iso2": "IR",
-      "name": "Iran, Islamic Rep.",
+      "name": "Iran",
       "values": {
         "population": { "value": 92417681, "year": 2025 },
         "area": { "value": 1745150, "year": 2024 },
@@ -2030,43 +2029,6 @@
       }
     },
     {
-      "iso2": "KP",
-      "name": "Korea, Dem. People's Rep.",
-      "values": {
-        "population": { "value": 26571036, "year": 2025 },
-        "area": { "value": 120540, "year": 2024 },
-        "density": { "value": 220.071613653351, "year": 2024 },
-        "life_exp": { "value": 73.743, "year": 2024 },
-        "urban": { "value": 64.1897858311258, "year": 2025 },
-        "forest": { "value": 64.0857902167594, "year": 2024 },
-        "arable": { "value": 19.0598787476123, "year": 2024 },
-        "co2_pc": { "value": 2.49971102490099, "year": 2024 },
-        "fertility": { "value": 1.784, "year": 2024 },
-        "aged_65": { "value": 12.7100800151323, "year": 2025 },
-        "peak": { "value": 2744, "year": 2026 }
-      }
-    },
-    {
-      "iso2": "KR",
-      "name": "Korea, Rep.",
-      "values": {
-        "population": { "value": 51684564, "year": 2025 },
-        "area": { "value": 100460, "year": 2024 },
-        "density": { "value": 530.236321721311, "year": 2024 },
-        "gdp_pc": { "value": 36226.9663637512, "year": 2025 },
-        "life_exp": { "value": 83.6292682926829, "year": 2024 },
-        "urban": { "value": 81.1740263306674, "year": 2025 },
-        "forest": { "value": 64.3739754098361, "year": 2024 },
-        "arable": { "value": 13.3401639344262, "year": 2024 },
-        "co2_pc": { "value": 11.3622569893006, "year": 2024 },
-        "internet": { "value": 97.89563777, "year": 2024 },
-        "fertility": { "value": 0.748, "year": 2024 },
-        "tourists": { "value": 2519000, "year": 2020 },
-        "aged_65": { "value": 20.3304188408974, "year": 2025 },
-        "peak": { "value": 1947.06, "year": 2026 }
-      }
-    },
-    {
       "iso2": "XK",
       "name": "Kosovo",
       "values": {
@@ -2102,7 +2064,7 @@
     },
     {
       "iso2": "KG",
-      "name": "Kyrgyz Republic",
+      "name": "Kyrgyzstan",
       "values": {
         "population": { "value": 7343064, "year": 2025 },
         "area": { "value": 199950, "year": 2024 },
@@ -2122,7 +2084,7 @@
     },
     {
       "iso2": "LA",
-      "name": "Lao PDR",
+      "name": "Laos",
       "values": {
         "population": { "value": 7873046, "year": 2025 },
         "area": { "value": 236800, "year": 2024 },
@@ -2299,7 +2261,7 @@
     },
     {
       "iso2": "MO",
-      "name": "Macao SAR, China",
+      "name": "Macao",
       "values": {
         "population": { "value": 685900, "year": 2025 },
         "area": { "value": 33.3, "year": 2024 },
@@ -2516,7 +2478,7 @@
     },
     {
       "iso2": "FM",
-      "name": "Micronesia, Fed. Sts.",
+      "name": "Micronesia",
       "values": {
         "population": { "value": 113683, "year": 2025 },
         "area": { "value": 701, "year": 2024 },
@@ -2564,7 +2526,6 @@
         "gdp_pc": { "value": 288001.574856495, "year": 2024 },
         "life_exp": { "value": 86.497, "year": 2024 },
         "urban": { "value": 100, "year": 2025 },
-        "forest": { "value": 0, "year": 2023 },
         "internet": { "value": 99.04489899, "year": 2024 },
         "fertility": { "value": 2.102, "year": 2024 },
         "tourists": { "value": 159000, "year": 2020 },
@@ -2693,7 +2654,7 @@
     },
     {
       "iso2": "NR",
-      "name": "Naoero",
+      "name": "Nauru",
       "values": {
         "population": { "value": 12025, "year": 2025 },
         "area": { "value": 21, "year": 2024 },
@@ -2701,8 +2662,6 @@
         "gdp_pc": { "value": 14639.5046929186, "year": 2025 },
         "life_exp": { "value": 62.279, "year": 2024 },
         "urban": { "value": 100, "year": 2025 },
-        "forest": { "value": 0, "year": 2023 },
-        "co2_pc": { "value": 0, "year": 2024 },
         "internet": { "value": 83.01170349, "year": 2024 },
         "fertility": { "value": 3.29, "year": 2024 },
         "aged_65": { "value": 3.01026984324976, "year": 2025 },
@@ -2849,6 +2808,23 @@
       }
     },
     {
+      "iso2": "KP",
+      "name": "North Korea",
+      "values": {
+        "population": { "value": 26571036, "year": 2025 },
+        "area": { "value": 120540, "year": 2024 },
+        "density": { "value": 220.071613653351, "year": 2024 },
+        "life_exp": { "value": 73.743, "year": 2024 },
+        "urban": { "value": 64.1897858311258, "year": 2025 },
+        "forest": { "value": 64.0857902167594, "year": 2024 },
+        "arable": { "value": 19.0598787476123, "year": 2024 },
+        "co2_pc": { "value": 2.49971102490099, "year": 2024 },
+        "fertility": { "value": 1.784, "year": 2024 },
+        "aged_65": { "value": 12.7100800151323, "year": 2025 },
+        "peak": { "value": 2744, "year": 2026 }
+      }
+    },
+    {
       "iso2": "MK",
       "name": "North Macedonia",
       "values": {
@@ -2963,6 +2939,25 @@
         "tourists": { "value": 18399.9996185303, "year": 2020 },
         "aged_65": { "value": 11.8329794762916, "year": 2025 },
         "peak": { "value": 242, "year": 2026 }
+      }
+    },
+    {
+      "iso2": "PS",
+      "name": "Palestine",
+      "values": {
+        "population": { "value": 5413596, "year": 2025 },
+        "area": { "value": 6025, "year": 2024 },
+        "density": { "value": 877.86755186722, "year": 2024 },
+        "gdp_pc": { "value": 3171.10844621579, "year": 2025 },
+        "life_exp": { "value": 69.213, "year": 2024 },
+        "urban": { "value": 87.3818962963393, "year": 2025 },
+        "forest": { "value": 1.84232365145228, "year": 2024 },
+        "arable": { "value": 6.95435684647303, "year": 2024 },
+        "internet": { "value": 86.63765334, "year": 2023 },
+        "fertility": { "value": 3.25, "year": 2024 },
+        "tourists": { "value": 93000, "year": 2020 },
+        "aged_65": { "value": 3.85167300191802, "year": 2025 },
+        "peak": { "value": 1026, "year": 2026 }
       }
     },
     {
@@ -3107,7 +3102,7 @@
     },
     {
       "iso2": "PR",
-      "name": "Puerto Rico (US)",
+      "name": "Puerto Rico",
       "values": {
         "population": { "value": 3184835, "year": 2025 },
         "area": { "value": 8870, "year": 2024 },
@@ -3167,7 +3162,7 @@
     },
     {
       "iso2": "RU",
-      "name": "Russian Federation",
+      "name": "Russia",
       "values": {
         "population": { "value": 143513328, "year": 2025 },
         "area": { "value": 17125190, "year": 2024 },
@@ -3203,6 +3198,22 @@
         "tourists": { "value": 1634000, "year": 2019 },
         "aged_65": { "value": 4.02416636497719, "year": 2025 },
         "peak": { "value": 4507, "year": 2026 }
+      }
+    },
+    {
+      "iso2": "MF",
+      "name": "Saint Martin",
+      "values": {
+        "population": { "value": 24941, "year": 2025 },
+        "area": { "value": 53, "year": 2024 },
+        "density": { "value": 493, "year": 2024 },
+        "gdp_pc": { "value": 21668.3776525323, "year": 2021 },
+        "life_exp": { "value": 80.438, "year": 2024 },
+        "urban": { "value": 100, "year": 2025 },
+        "forest": { "value": 23.3962264150943, "year": 2024 },
+        "fertility": { "value": 2.673, "year": 2024 },
+        "aged_65": { "value": 19.6547783725266, "year": 2025 },
+        "peak": { "value": 424, "year": 2026 }
       }
     },
     {
@@ -3245,7 +3256,7 @@
     },
     {
       "iso2": "ST",
-      "name": "Sao Tome and Principe",
+      "name": "São Tomé and Príncipe",
       "values": {
         "population": { "value": 240254, "year": 2025 },
         "area": { "value": 960, "year": 2024 },
@@ -3384,7 +3395,7 @@
     },
     {
       "iso2": "SX",
-      "name": "Sint Maarten (Dutch part)",
+      "name": "Sint Maarten",
       "values": {
         "population": { "value": 43923, "year": 2025 },
         "area": { "value": 34, "year": 2024 },
@@ -3400,7 +3411,7 @@
     },
     {
       "iso2": "SK",
-      "name": "Slovak Republic",
+      "name": "Slovakia",
       "values": {
         "population": { "value": 5413813, "year": 2025 },
         "area": { "value": 49030, "year": 2024 },
@@ -3460,7 +3471,7 @@
     },
     {
       "iso2": "SO",
-      "name": "Somalia, Fed. Rep.",
+      "name": "Somalia",
       "values": {
         "population": { "value": 19654739, "year": 2025 },
         "area": { "value": 637657, "year": 2024 },
@@ -3495,6 +3506,26 @@
         "tourists": { "value": 3886600.09765625, "year": 2020 },
         "aged_65": { "value": 6.88503097027824, "year": 2025 },
         "peak": { "value": 3450, "year": 2026 }
+      }
+    },
+    {
+      "iso2": "KR",
+      "name": "South Korea",
+      "values": {
+        "population": { "value": 51684564, "year": 2025 },
+        "area": { "value": 100460, "year": 2024 },
+        "density": { "value": 530.236321721311, "year": 2024 },
+        "gdp_pc": { "value": 36226.9663637512, "year": 2025 },
+        "life_exp": { "value": 83.6292682926829, "year": 2024 },
+        "urban": { "value": 81.1740263306674, "year": 2025 },
+        "forest": { "value": 64.3739754098361, "year": 2024 },
+        "arable": { "value": 13.3401639344262, "year": 2024 },
+        "co2_pc": { "value": 11.3622569893006, "year": 2024 },
+        "internet": { "value": 97.89563777, "year": 2024 },
+        "fertility": { "value": 0.748, "year": 2024 },
+        "tourists": { "value": 2519000, "year": 2020 },
+        "aged_65": { "value": 20.3304188408974, "year": 2025 },
+        "peak": { "value": 1947.06, "year": 2026 }
       }
     },
     {
@@ -3593,22 +3624,6 @@
         "tourists": { "value": 432500, "year": 2020 },
         "aged_65": { "value": 9.963696717717, "year": 2025 },
         "peak": { "value": 952.4, "year": 2026 }
-      }
-    },
-    {
-      "iso2": "MF",
-      "name": "St. Martin (French part)",
-      "values": {
-        "population": { "value": 24941, "year": 2025 },
-        "area": { "value": 53, "year": 2024 },
-        "density": { "value": 493, "year": 2024 },
-        "gdp_pc": { "value": 21668.3776525323, "year": 2021 },
-        "life_exp": { "value": 80.438, "year": 2024 },
-        "urban": { "value": 100, "year": 2025 },
-        "forest": { "value": 23.3962264150943, "year": 2024 },
-        "fertility": { "value": 2.673, "year": 2024 },
-        "aged_65": { "value": 19.6547783725266, "year": 2025 },
-        "peak": { "value": 424, "year": 2026 }
       }
     },
     {
@@ -3713,7 +3728,7 @@
     },
     {
       "iso2": "SY",
-      "name": "Syrian Arab Republic",
+      "name": "Syria",
       "values": {
         "population": { "value": 25620427, "year": 2025 },
         "area": { "value": 185180, "year": 2024 },
@@ -3893,7 +3908,7 @@
     },
     {
       "iso2": "TR",
-      "name": "Turkiye",
+      "name": "Türkiye",
       "values": {
         "population": { "value": 85878556, "year": 2025 },
         "area": { "value": 785350, "year": 2024 },
@@ -3960,7 +3975,6 @@
         "life_exp": { "value": 67.259, "year": 2024 },
         "urban": { "value": 65.4480709525093, "year": 2025 },
         "forest": { "value": 39.6153846153846, "year": 2024 },
-        "co2_pc": { "value": 0, "year": 2024 },
         "internet": { "value": 35.20000076, "year": 2017 },
         "fertility": { "value": 3.174, "year": 2024 },
         "tourists": { "value": 3599.99990463257, "year": 2019 },
@@ -4089,6 +4103,26 @@
       }
     },
     {
+      "iso2": "VI",
+      "name": "US Virgin Islands",
+      "values": {
+        "population": { "value": 103792, "year": 2025 },
+        "area": { "value": 348, "year": 2024 },
+        "density": { "value": 299.933908045977, "year": 2024 },
+        "gdp_pc": { "value": 44320.909185774, "year": 2022 },
+        "life_exp": { "value": 80.7707317073171, "year": 2024 },
+        "urban": { "value": 95.388579075538, "year": 2025 },
+        "forest": { "value": 58.9367816091954, "year": 2024 },
+        "arable": { "value": 2.1551724137931, "year": 2024 },
+        "co2_pc": { "value": 0.00191613094838901, "year": 2024 },
+        "internet": { "value": 64.3774942980087, "year": 2017 },
+        "fertility": { "value": 1.97, "year": 2024 },
+        "tourists": { "value": 8612000, "year": 2020 },
+        "aged_65": { "value": 23.1237780564189, "year": 2025 },
+        "peak": { "value": 473, "year": 2026 }
+      }
+    },
+    {
       "iso2": "UZ",
       "name": "Uzbekistan",
       "values": {
@@ -4130,7 +4164,7 @@
     },
     {
       "iso2": "VE",
-      "name": "Venezuela, RB",
+      "name": "Venezuela",
       "values": {
         "population": { "value": 28516896, "year": 2025 },
         "area": { "value": 912050, "year": 2024 },
@@ -4150,7 +4184,7 @@
     },
     {
       "iso2": "VN",
-      "name": "Viet Nam",
+      "name": "Vietnam",
       "values": {
         "population": { "value": 101598527, "year": 2025 },
         "area": { "value": 331338.31, "year": 2024 },
@@ -4169,47 +4203,8 @@
       }
     },
     {
-      "iso2": "VI",
-      "name": "Virgin Islands (U.S.)",
-      "values": {
-        "population": { "value": 103792, "year": 2025 },
-        "area": { "value": 348, "year": 2024 },
-        "density": { "value": 299.933908045977, "year": 2024 },
-        "gdp_pc": { "value": 44320.909185774, "year": 2022 },
-        "life_exp": { "value": 80.7707317073171, "year": 2024 },
-        "urban": { "value": 95.388579075538, "year": 2025 },
-        "forest": { "value": 58.9367816091954, "year": 2024 },
-        "arable": { "value": 2.1551724137931, "year": 2024 },
-        "co2_pc": { "value": 0.00191613094838901, "year": 2024 },
-        "internet": { "value": 64.3774942980087, "year": 2017 },
-        "fertility": { "value": 1.97, "year": 2024 },
-        "tourists": { "value": 8612000, "year": 2020 },
-        "aged_65": { "value": 23.1237780564189, "year": 2025 },
-        "peak": { "value": 473, "year": 2026 }
-      }
-    },
-    {
-      "iso2": "PS",
-      "name": "West Bank and Gaza",
-      "values": {
-        "population": { "value": 5413596, "year": 2025 },
-        "area": { "value": 6025, "year": 2024 },
-        "density": { "value": 877.86755186722, "year": 2024 },
-        "gdp_pc": { "value": 3171.10844621579, "year": 2025 },
-        "life_exp": { "value": 69.213, "year": 2024 },
-        "urban": { "value": 87.3818962963393, "year": 2025 },
-        "forest": { "value": 1.84232365145228, "year": 2024 },
-        "arable": { "value": 6.95435684647303, "year": 2024 },
-        "internet": { "value": 86.63765334, "year": 2023 },
-        "fertility": { "value": 3.25, "year": 2024 },
-        "tourists": { "value": 93000, "year": 2020 },
-        "aged_65": { "value": 3.85167300191802, "year": 2025 },
-        "peak": { "value": 1026, "year": 2026 }
-      }
-    },
-    {
       "iso2": "YE",
-      "name": "Yemen, Rep.",
+      "name": "Yemen",
       "values": {
         "population": { "value": 41773878, "year": 2025 },
         "area": { "value": 527968, "year": 2024 },

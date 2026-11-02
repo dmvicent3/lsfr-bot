@@ -47,6 +47,8 @@ describe("fetch", () => {
   });
 
   test("a failed response throws", async () => {
-    expect(fetchWbCountries(fake([], false).fn)).rejects.toThrow();
+    const err = await fetchWbCountries(fake([], false).fn).catch((e: unknown) => e);
+
+    expect(err).toBeInstanceOf(Error);
   });
 });
