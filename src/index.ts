@@ -18,6 +18,7 @@ import { tictactoeModule } from "./modules/tictactoe/index.ts";
 import { triviaModule } from "./modules/trivia/index.ts";
 import { cardsModule } from "./modules/cards/index.ts";
 import { shedModule } from "./modules/shed/index.ts";
+import { sudokuModule } from "./modules/sudoku/index.ts";
 import { wordModule } from "./modules/word/index.ts";
 
 guardProcess();
@@ -32,6 +33,7 @@ const modules: BotModule[] = [
   motorsportModule,
   remindersModule,
   wordModule(),
+  sudokuModule(),
   minesweeperModule(),
   triviaModule(),
   cardsModule(),
