@@ -58,3 +58,21 @@ export interface Award {
   points: number;
   parts: string[];
 }
+
+export interface Puzzle {
+  guildId: string;
+  date: string;
+  questions: Question[];
+}
+
+export interface Game {
+  guildId: string;
+  date: string;
+  userId: string;
+  answers: string;
+  correct: number | null;
+  points: number | null;
+  streak: number | null;
+  startedAt: number;
+  finishedAt: number | null;
+}
