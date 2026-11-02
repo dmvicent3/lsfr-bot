@@ -15,3 +15,31 @@ export interface Award {
   points: number;
   parts: string[];
 }
+
+export interface Game {
+  guildId: string;
+  userId: string;
+  kind: Kind;
+  date: string;
+  slot: string;
+  level: Level;
+  givens: string;
+  solution: string;
+  cells: string;
+  wrong: string;
+  cursor: number;
+  checks: number;
+  startedAt: number;
+  solvedAt: number | null;
+  points: number | null;
+  streak: number | null;
+}
+
+export type Direction = "left" | "up" | "down" | "right";
+
+/** One move result; note is the ephemeral line shown to the player. */
+export interface Step {
+  game: Game;
+  note: string | null;
+  solved: boolean;
+}
