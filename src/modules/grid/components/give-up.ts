@@ -15,7 +15,10 @@ export const giveUpHandler = (source: Source): ComponentHandler => ({
 
     if (!r) return tell(i, OUT_OF_DATE);
 
-    const { game, award } = giveUp(r.repo, r.rec, r.now);
+    const done = giveUp(r.repo, r.rec, r.now);
+    // load may have just finished an over round; that award is this click's to show and announce.
+    const { game } = done;
+    const award = done.award ?? r.award;
 
     await i.update(gridView(boardView(r, r.grid, game, award), r.snap));
 

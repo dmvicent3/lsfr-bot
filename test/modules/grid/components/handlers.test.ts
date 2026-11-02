@@ -309,6 +309,19 @@ test("a submit on an over but unfinished game finishes it and announces once", a
   expect(b.calls.send).toHaveLength(0);
 });
 
+test("Give up on an over but unfinished game finishes it, shows the award and announces once", async () => {
+  const { repo, ctx } = setup(OVER);
+  const a = fakeClick("u");
+  await giveUp.handle(a.i, [DATE], ctx);
+  const b = fakeClick("u");
+  await giveUp.handle(b.i, [DATE], ctx);
+
+  expect(stored(repo)?.finishedAt).not.toBeNull();
+  expect(a.calls.update[0]?.content).toContain("**+");
+  expect(a.calls.send).toHaveLength(1);
+  expect(b.calls.send).toHaveLength(0);
+});
+
 test("a practice round that is over heals on the next click, without an announcement", async () => {
   const { repo, ctx } = setup(null, { ...OVER, points: 0 });
   const { i, calls } = fakeClick("u");
