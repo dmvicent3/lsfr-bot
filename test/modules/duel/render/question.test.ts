@@ -21,6 +21,15 @@ test("reveal with the same year", () => {
   );
 });
 
+test("reveal of a timeless stat shows no year", () => {
+  const peak = { ...PUZZLE.questions[0]!, stat: "peak" as const };
+  const at = (s: typeof peak.a) => ({ ...s, year: 2026 });
+
+  expect(renderReveal({ ...peak, a: at(peak.a), b: at(peak.b) }, "a")).toBe(
+    "✅ Right\n🇳🇱 Netherlands 521 m · 🇧🇪 Belgium 383 m",
+  );
+});
+
 test("reveal with differing years", () => {
   expect(renderReveal(DIFF_YEARS, "b")).toBe(
     "❌ Wrong\n🇳🇱 Netherlands 521 /km² (2023) · 🇧🇪 Belgium 383 /km² (2021)",

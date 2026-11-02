@@ -17,3 +17,9 @@ test("result without an award", () => {
     "🟩🟥🟩🟩🟩\n4/5 correct\n\nNext puzzle in 12m",
   );
 });
+
+test("result without an award still shows the stored points", () => {
+  expect(renderResult(PUZZLE, { ...done, points: 90 }, null, "12m")).toBe(
+    "🟩🟥🟩🟩🟩\n4/5 correct\n\n**90 points**\n\nNext puzzle in 12m",
+  );
+});

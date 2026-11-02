@@ -2,8 +2,7 @@ import type { Database } from "bun:sqlite";
 import type { MessageComponentInteraction } from "discord.js";
 import { puzzleNumber, untilNext } from "../../../core/daily.ts";
 import { FIRST_PUZZLE } from "../periods.ts";
-import { isDone } from "../play/answer.ts";
-import { finish } from "../play/finish.ts";
+import { healed } from "../play/heal.ts";
 import type { ViewContext } from "../render/view.ts";
 import { duelTimeZone } from "../settings.ts";
 import { DuelRepo } from "../store/repo.ts";
@@ -42,8 +41,7 @@ export function load(
   if (!puzzle || !stored) return null;
 
   const now = Date.now();
-  const heal = isDone(puzzle, stored) && stored.finishedAt === null;
-  const { game, award } = heal ? finish(repo, puzzle, stored, now) : { game: stored, award: null };
+  const { game, award } = healed(repo, puzzle, stored, now);
   const view = {
     number: puzzleNumber(date, FIRST_PUZZLE),
     untilNext: untilNext(now, duelTimeZone(db, i.guildId)),
