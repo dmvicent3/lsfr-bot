@@ -1,5 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import type { BotModule, ComponentHandler, SlashCommand } from "../../src/core/types.ts";
+import type {
+  BotModule,
+  ComponentHandler,
+  ModalHandler,
+  SlashCommand,
+} from "../../src/core/types.ts";
 import { buildRouter } from "../../src/core/router.ts";
 
 const noop = async (): Promise<void> => {};
@@ -12,7 +17,26 @@ function component(id: string): ComponentHandler {
   return { id, handle: noop };
 }
 
+function modal(id: string): ModalHandler {
+  return { id, handle: noop };
+}
+
 describe("buildRouter", () => {
+  test("routes a modal by module:action and returns the rest as args", () => {
+    const guess = modal("x:y");
+    const router = buildRouter([{ name: "x", modals: [guess] }]);
+    expect(router.modal("x:y:a:b")).toEqual({ handler: guess, args: ["a", "b"] });
+    expect(router.modal("x:z")).toBeUndefined();
+  });
+
+  test("rejects duplicate modal ids", () => {
+    const modules: BotModule[] = [
+      { name: "a", modals: [modal("x:y")] },
+      { name: "b", modals: [modal("x:y")] },
+    ];
+    expect(() => buildRouter(modules)).toThrow(/x:y/);
+  });
+
   test("routes a component by module:action and returns the rest as args", () => {
     const remind = component("motorsport:remind");
     const router = buildRouter([{ name: "motorsport", components: [remind] }]);

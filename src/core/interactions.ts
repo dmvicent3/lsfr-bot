@@ -28,6 +28,14 @@ async function dispatch(interaction: Interaction, router: Router, ctx: Ctx): Pro
     return router.command(interaction.commandName)?.autocomplete?.(interaction, ctx);
   }
 
+  if (interaction.isModalSubmit()) {
+    const route = router.modal(interaction.customId);
+
+    return route
+      ? route.handler.handle(interaction, route.args, ctx)
+      : replyStale(interaction, "button");
+  }
+
   if (!interaction.isMessageComponent()) return;
 
   const route = router.component(interaction.customId);

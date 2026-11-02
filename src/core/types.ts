@@ -5,6 +5,7 @@ import type {
   Client,
   ClientEvents,
   MessageComponentInteraction,
+  ModalSubmitInteraction,
   RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from "discord.js";
 
@@ -79,6 +80,12 @@ export interface ComponentHandler {
   handle(i: MessageComponentInteraction, args: string[], ctx: Ctx): Promise<void>;
 }
 
+/** Handles modal submits whose custom ID starts with `id` ("<module>:<action>"). */
+export interface ModalHandler {
+  id: string;
+  handle(i: ModalSubmitInteraction, args: string[], ctx: Ctx): Promise<void>;
+}
+
 export interface EventHandler {
   event: keyof ClientEvents;
   handle(ctx: Ctx, ...args: unknown[]): Promise<void>;
@@ -99,6 +106,7 @@ export interface BotModule {
   helpNote?: string;
   commands?: SlashCommand[];
   components?: ComponentHandler[];
+  modals?: ModalHandler[];
   events?: EventHandler[];
   jobs?: Job[];
   migrations?: Migration[];
@@ -112,5 +120,6 @@ export interface ProcessLike {
 export interface Router {
   command(name: string): SlashCommand | undefined;
   component(customId: string): { handler: ComponentHandler; args: string[] } | undefined;
+  modal(customId: string): { handler: ModalHandler; args: string[] } | undefined;
   commands: SlashCommand[];
 }
