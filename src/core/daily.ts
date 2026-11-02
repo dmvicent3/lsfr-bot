@@ -1,3 +1,4 @@
+import type { Period } from "./types.ts";
 import { DAY_MS, dateOfMs, dayMs } from "./periods.ts";
 import { nextMidnight } from "./zoned.ts";
 
@@ -41,4 +42,9 @@ export function rankOf(list: readonly { userId: string }[], userId: string): num
   const i = list.findIndex((s) => s.userId === userId);
 
   return i < 0 ? null : i + 1;
+}
+
+/** A player's rank in each period, as `rank` finds it. */
+export function periodRanks(rank: (p: Period) => number | null): Record<Period, number | null> {
+  return { today: rank("today"), week: rank("week"), month: rank("month"), all: rank("all") };
 }

@@ -3,6 +3,7 @@ import {
   currentStreak,
   nextStreak,
   previousDate,
+  periodRanks,
   puzzleNumber,
   rankOf,
   untilNext,
@@ -57,4 +58,13 @@ test("rankOf is 1-based, null when absent", () => {
   const list = [{ userId: "a" }, { userId: "b" }];
   expect(rankOf(list, "b")).toBe(2);
   expect(rankOf(list, "z")).toBeNull();
+});
+
+test("periodRanks asks for each period in turn", () => {
+  expect(periodRanks((p) => (p === "week" ? 2 : null))).toEqual({
+    today: null,
+    week: 2,
+    month: null,
+    all: null,
+  });
 });

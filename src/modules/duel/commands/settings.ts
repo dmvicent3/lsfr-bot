@@ -1,16 +1,5 @@
-import { PermissionFlagsBits } from "discord.js";
-import { reply } from "../../../core/replies.ts";
+import { zoneSettingsHandler } from "../../../core/zone-command.ts";
 import { saveDuelTimeZone } from "../settings.ts";
 import type { CommandCtx } from "./types.ts";
 
-/** Manage Server only; checked here since the other subcommands are for everyone. */
-export async function settings({ i, guildId, db }: CommandCtx): Promise<void> {
-  if (!i.memberPermissions?.has(PermissionFlagsBits.ManageGuild)) {
-    return reply(i, "Only members with Manage Server can change the stat duel settings.");
-  }
-
-  const timeZone = i.options.getString("timezone", true).trim();
-  const error = saveDuelTimeZone(db, guildId, timeZone);
-
-  await reply(i, error ?? `Time zone set to ${timeZone}. Applies from the next puzzle.`);
-}
+export const settings = zoneSettingsHandler<CommandCtx>("stat duel", saveDuelTimeZone);

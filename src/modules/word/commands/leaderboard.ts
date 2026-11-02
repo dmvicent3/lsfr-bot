@@ -1,5 +1,5 @@
 import type { Database } from "bun:sqlite";
-import { toPeriod } from "../../../core/page-args.ts";
+import { leaderboardHandler } from "../../../core/leaderboard-command.ts";
 import { dateIn } from "../../../core/zoned.ts";
 import { periodStandings } from "../play/standings.ts";
 import { renderLeaderboard } from "../render/leaderboard.ts";
@@ -7,7 +7,6 @@ import { pageButtons } from "../../../core/page-buttons.ts";
 import { wordSettings } from "../settings.ts";
 import type { WordRepo } from "../store/repo.ts";
 import type { Period } from "../types.ts";
-import type { CommandCtx } from "./types.ts";
 
 /** A leaderboard page as of `now`; the slash command and the page buttons both send this. */
 export function leaderboardView(
@@ -27,9 +26,4 @@ export function leaderboardView(
 }
 
 /** Public, so the server sees it; mentions never ping. */
-export async function leaderboard({ i, guildId, db, repo }: CommandCtx): Promise<void> {
-  const period = toPeriod(i.options.getString("period"));
-  const page = i.options.getInteger("page") ?? 1;
-  const view = { guildId, period, page, viewerId: i.user.id, now: Date.now() };
-  await i.reply(leaderboardView(db, repo, view));
-}
+export const leaderboard = leaderboardHandler(leaderboardView);

@@ -4,8 +4,7 @@ import { log } from "../../../core/log.ts";
 import { dateIn } from "../../../core/zoned.ts";
 import { announce } from "../components/announce.ts";
 import { FIRST_PUZZLE } from "../periods.ts";
-import { isDone } from "../play/answer.ts";
-import { finish } from "../play/finish.ts";
+import { healed } from "../play/heal.ts";
 import { openDay } from "../play/open.ts";
 import { view } from "../render/view.ts";
 import { duelTimeZone } from "../settings.ts";
@@ -38,11 +37,7 @@ export async function play({ i, guildId, db, repo, snapshotSource }: CommandCtx)
     return;
   }
 
-  /** Every answer but no finish: finish it here so it never renders as finished unsaved. */
-  const heal = isDone(puzzle, opened.game) && opened.game.finishedAt === null;
-  const { game, award } = heal
-    ? finish(repo, puzzle, opened.game, now)
-    : { game: opened.game, award: null };
+  const { game, award } = healed(repo, puzzle, opened.game, now);
   const number = puzzleNumber(date, FIRST_PUZZLE);
 
   await i.editReply(view(puzzle, game, { number, untilNext: untilNext(now, tz), award }));

@@ -1,5 +1,5 @@
 import { MessageFlags } from "discord.js";
-import { rankOf } from "../../../core/daily.ts";
+import { periodRanks, rankOf } from "../../../core/daily.ts";
 import { dateIn } from "../../../core/zoned.ts";
 import { periodRange } from "../periods.ts";
 import { standings } from "../ranking.ts";
@@ -15,16 +15,10 @@ export async function stats({ i, guildId, db, repo }: CommandCtx): Promise<void>
   const today = dateIn(Date.now(), duelTimeZone(db, guildId));
   const rank = (p: Period): number | null =>
     rankOf(standings(repo.games.finishedIn(guildId, periodRange(p, today))), user.id);
-  const ranks = {
-    today: rank("today"),
-    week: rank("week"),
-    month: rank("month"),
-    all: rank("all"),
-  };
   const content = renderStats(
     user.displayName,
     playerStats(repo.games.finishedBy(guildId, user.id), today),
-    ranks,
+    periodRanks(rank),
   );
 
   await i.reply({ content, flags: MessageFlags.Ephemeral, allowedMentions: { parse: [] } });
