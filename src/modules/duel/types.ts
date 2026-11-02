@@ -53,3 +53,8 @@ export interface Question {
   b: Side;
   higher: "a" | "b";
 }
+
+export interface Award {
+  points: number;
+  parts: string[];
+}
