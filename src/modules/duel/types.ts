@@ -76,3 +76,21 @@ export interface Game {
   startedAt: number;
   finishedAt: number | null;
 }
+
+export type { Period } from "../../core/types.ts";
+
+export interface Standing {
+  userId: string;
+  points: number;
+  correct: number;
+  lastFinishedAt: number;
+}
+
+export interface PlayerStats {
+  points: number;
+  days: number;
+  avgCorrect: number | null;
+  perfect: number;
+  currentStreak: number;
+  longestStreak: number;
+}
