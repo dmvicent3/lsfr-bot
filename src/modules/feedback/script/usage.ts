@@ -5,4 +5,6 @@ export const USAGE = `Usage: bun scripts/feedback.ts <command>
                                   post a poll in the server's poll channel
   polls                           the polls posted so far
   results <id>                    votes and voters of a poll
-  say <text> [--guild <id>]       post a message in the server's poll channel`;
+  say <text> [--guild <id>] [--close <poll id>]...
+                                  post a message in the server's poll channel, then end those polls
+  close <id...>                   end polls now (Discord finalises the votes)`;

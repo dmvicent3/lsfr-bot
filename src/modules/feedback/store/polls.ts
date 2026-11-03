@@ -55,6 +55,11 @@ export class PollStore {
     return row ? toPoll(row) : null;
   }
 
+  /** Records that the poll ended at `now` (closed early). */
+  close(id: number, now: number): void {
+    this.db.run("UPDATE feedback_polls SET ends_at = ? WHERE id = ?", [now, id]);
+  }
+
   /** Oldest first. */
   all(): StoredPoll[] {
     return this.db

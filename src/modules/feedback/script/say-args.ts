@@ -1,12 +1,12 @@
-import { lastValue, tokenize } from "./tokens.ts";
+import { lastValue, positiveId, tokenize } from "./tokens.ts";
 import type { Parsed } from "./types.ts";
 
 /** Discord's message length limit. */
 export const SAY_MAX = 2000;
 
-/** `say <text> [--guild id]`: one quoted message for the server's feedback channel. */
+/** `say <text> [--guild id] [--close <poll id>]...`: one quoted message for the feedback channel. */
 export function parseSay(argv: string[]): Parsed {
-  const t = tokenize(argv, { values: ["guild"], flags: [] });
+  const t = tokenize(argv, { values: ["guild", "close"], flags: [] });
 
   if (typeof t === "string") return { error: t };
 
@@ -18,5 +18,10 @@ export function parseSay(argv: string[]): Parsed {
 
   if (text.length > SAY_MAX) return { error: `The message is over ${SAY_MAX} characters.` };
 
-  return { name: "say", args: { text, guildId: lastValue(t, "guild") } };
+  const close = (t.values.get("close") ?? []).map(positiveId);
+  const ids = close.filter((id) => id !== null);
+
+  if (ids.length !== close.length) return { error: "--close takes a poll id (whole number)." };
+
+  return { name: "say", args: { text, guildId: lastValue(t, "guild"), close: ids } };
 }

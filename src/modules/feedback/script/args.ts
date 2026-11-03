@@ -28,6 +28,15 @@ function parseRead(argv: string[]): Parsed {
     : { error: "read takes entry ids (whole numbers) or --all." };
 }
 
+function parseClose(argv: string[]): Parsed {
+  const ids = argv.map(positiveId);
+  const valid = ids.filter((id) => id !== null);
+
+  if (ids.length === 0 || valid.length !== ids.length) return { error: "close takes poll ids." };
+
+  return { name: "close", args: { ids: valid } };
+}
+
 const parsePolls = (argv: string[]): Parsed =>
   argv.length === 0 ? { name: "polls", args: {} } : { error: "polls takes no arguments." };
 
@@ -44,6 +53,7 @@ const PARSERS: Record<CommandName, (argv: string[]) => Parsed> = {
   polls: parsePolls,
   results: parseResults,
   say: parseSay,
+  close: parseClose,
 };
 
 const isCommandName = (name: string): name is CommandName => Object.hasOwn(PARSERS, name);

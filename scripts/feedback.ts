@@ -7,7 +7,8 @@
  *   poll <question> --option <text> (2-10 times) [--hours 24] [--multi] [--guild <id>]
  *   polls
  *   results <id>
- *   say <text> [--guild <id>]
+ *   say <text> [--guild <id>] [--close <poll id>]...
+ *   close <id...>
  */
 import { REST } from "discord.js";
 import { loadConfig } from "../src/core/config.ts";

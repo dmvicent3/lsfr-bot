@@ -191,3 +191,38 @@ describe("say", () => {
     expect(calls).toEqual([]);
   });
 });
+
+describe("close", () => {
+  test("close ends the poll on Discord and stores it closed", async () => {
+    const { rest, calls } = fakeRest({}, {});
+    const { repo, d } = withPoll(rest);
+
+    expect(await runScript(["close", "1", "7"], d)).toEqual({
+      ok: false,
+      text: "closed poll #1\nNo poll #7.",
+    });
+    expect(calls).toEqual([
+      { method: "post", route: "/channels/c/polls/m/expire", body: undefined },
+    ]);
+    expect(repo.polls.get(1)?.endsAt).toBe(NOW);
+    expect((await runScript(["close"], d)).text).toBe("close takes poll ids.");
+  });
+
+  test("say --close posts first, then ends the polls it answers", async () => {
+    const { rest, calls } = fakeRest({}, { id: "m9" });
+    const { db, d } = withPoll(rest);
+    setPollChannel(db, "g1", "c1");
+
+    expect(await runScript(["say", "Done!", "--close", "1"], d)).toEqual({
+      ok: true,
+      text: "posted: https://discord.com/channels/g1/c1/m9\nclosed poll #1",
+    });
+    expect(calls.map((c) => c.route)).toEqual([
+      "/channels/c1/messages",
+      "/channels/c/polls/m/expire",
+    ]);
+    expect((await runScript(["say", "x", "--close", "a"], d)).text).toBe(
+      "--close takes a poll id (whole number).",
+    );
+  });
+});
