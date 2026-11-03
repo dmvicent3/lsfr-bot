@@ -41,3 +41,27 @@ test("practice builds the asked size from the given random", async () => {
 test("no grid means null", async () => {
   expect(await build({ bank: [], size: 5, random: lcg(1), avoid: new Set() }, null)).toBeNull();
 });
+
+const DAY = 86_400_000;
+const dateAt = (start: string, i: number): string =>
+  new Date(Date.parse(start) + i * DAY).toISOString().slice(0, 10);
+
+test("60 daily puzzles in a row: no answer within 30 days, no two days alike", async () => {
+  const { repo } = freshDb();
+  const days: string[][] = [];
+
+  for (let i = 0; i < 60; i++) {
+    const date = dateAt("2026-11-04", i);
+    const made = await dailyMake(repo, { guildId: "123456789012345678", date }, null)();
+
+    repo.puzzles.create("123456789012345678", date, made!);
+    days.push(made!.puzzle.answers);
+  }
+
+  days.forEach((answers, i) => {
+    for (let j = Math.max(0, i - 30); j < i; j++) {
+      expect(answers.filter((a) => days[j]!.includes(a))).toEqual([]);
+    }
+  });
+  expect(new Set(days.map((d) => d.toSorted().join())).size).toBe(60);
+});

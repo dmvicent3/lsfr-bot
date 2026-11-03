@@ -31,15 +31,21 @@ export async function build(o: Build, ask: Ask | null): Promise<StoredPuzzle | n
   return { puzzle, clues: await writeClues(entries, ask) };
 }
 
-/** The server's puzzle of a date: seeded by guild and date, avoiding the day before's answers. */
+/** Days back whose answers a daily puzzle avoids. */
+const AVOID_DAYS = 30;
+
+const daysBefore = (date: string, days: number): string =>
+  Array.from({ length: days }).reduce<string>((d) => previousDate(d), date);
+
+/** The server's puzzle of a date: seeded by guild and date, avoiding the last 30 days' answers. */
 export function dailyMake(
   repo: CrosswordRepo,
   v: { guildId: string; date: string },
   ask: Ask | null,
 ): Make {
   return () => {
-    const before = repo.puzzles.get(v.guildId, previousDate(v.date));
-    const avoid = new Set(before?.puzzle.answers ?? []);
+    const recent = repo.puzzles.since(v.guildId, daysBefore(v.date, AVOID_DAYS), v.date);
+    const avoid = new Set(recent.flatMap((s) => s.puzzle.answers));
     const random = seedFor(v.guildId, v.date);
 
     return build({ bank: loadBank(), size: 5, random, avoid }, ask);

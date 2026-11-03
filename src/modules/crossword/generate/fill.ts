@@ -48,9 +48,9 @@ function mostConstrained(state: FillState): { i: number; options: BankWord[] } |
   return best;
 }
 
-/** Commonest first, with random jitter. */
+/** Common words first, but softly: the key is the square root of the rank times a draw. */
 function ordered(state: FillState, options: BankWord[]): BankWord[] {
-  const keyed = options.map((w) => ({ w, k: (w.rank + 1) * (0.25 + state.random()) }));
+  const keyed = options.map((w) => ({ w, k: Math.sqrt(w.rank + 1) * state.random() }));
 
   return keyed.toSorted((a, b) => a.k - b.k).map((e) => e.w);
 }
