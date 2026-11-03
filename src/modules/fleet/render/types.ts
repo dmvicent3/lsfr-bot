@@ -1,4 +1,8 @@
-import type { APIActionRowComponent, APIComponentInMessageActionRow, APIEmbed } from "discord.js";
+import type {
+  APIActionRowComponent,
+  APIComponentInMessageActionRow,
+  APIMessageTopLevelComponent,
+} from "discord.js";
 import type { Game, Outcome } from "../types.ts";
 import type { Mark } from "./marks.ts";
 
@@ -11,10 +15,12 @@ export interface GameView {
 
 export type Row = APIActionRowComponent<APIComponentInMessageActionRow>;
 
-/** The board message before its picture is drawn: `svg` becomes the attached fleet.png. */
+/**
+ * The board message before its picture is drawn (Components V2): the card, then the controls;
+ * `svg` becomes the attached fleet.png.
+ */
 export interface BoardMessage {
-  embeds: APIEmbed[];
-  components: Row[];
+  components: APIMessageTopLevelComponent[];
   svg: string;
 }
 

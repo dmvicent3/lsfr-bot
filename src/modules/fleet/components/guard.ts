@@ -1,4 +1,4 @@
-import { type MessageComponentInteraction, MessageFlags } from "discord.js";
+import { ComponentType, type MessageComponentInteraction, MessageFlags } from "discord.js";
 import { tell } from "../../../core/replies.ts";
 import type { FleetRepo } from "../store/repo.ts";
 import type { Game } from "../types.ts";
@@ -16,7 +16,9 @@ export async function liveGameFor(
   if (game?.playerId === i.user.id) return game;
 
   if (!game) {
-    await i.update({ components: [] });
+    // Only the controls go: a V2 board keeps its card (an older embed board has nothing else).
+    const card = i.message.components.filter((c) => c.type !== ComponentType.ActionRow);
+    await i.update({ components: card });
     await i.followUp({ content: "This game is over.", flags: MessageFlags.Ephemeral });
 
     return null;

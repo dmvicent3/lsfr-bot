@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import type { MessageComponentInteraction } from "discord.js";
+import { ComponentType, type MessageComponentInteraction, MessageFlags } from "discord.js";
 import type { Jev } from "../../../src/core/jev/types.ts";
 import type { ComponentHandler, Ctx } from "../../../src/core/types.ts";
 import { startThinking, stopThinking } from "../../../src/modules/four/thinking.ts";
@@ -7,13 +7,16 @@ import { fleetKey } from "../../../src/modules/fleet/commands/play.ts";
 import { fleetModule } from "../../../src/modules/fleet/index.ts";
 import type { FleetRepo } from "../../../src/modules/fleet/store/repo.ts";
 import type { Game } from "../../../src/modules/fleet/types.ts";
+import { viewText } from "../crossword/view-text.ts";
 import { playing, rowsFleet } from "./fixtures.ts";
 import { repo, shotGame } from "./store/repo.ts";
 
-/** A message as the handlers send it: the embed text and the attached picture. */
+/** A message as the handlers send it: Components V2, its text and the attached picture. */
 interface Sent {
   components?: unknown[];
-  embeds?: { description?: string }[];
+  flags?: number;
+  content?: string | null;
+  embeds?: unknown[];
   files?: { name: string }[];
   attachments?: unknown[];
 }
@@ -46,6 +49,8 @@ interface ClickOpts {
   values?: string[];
   editFails?: boolean;
   deleteFails?: boolean;
+  /** The board message's components as Discord holds them. */
+  board?: { type: ComponentType }[];
 }
 
 function fakeChannel(seen: Seen, p: ClickOpts) {
@@ -67,7 +72,7 @@ function fakeClick(seen: Seen, p: ClickOpts) {
     user: { id: p.userId ?? "u" },
     message: {
       id: "m",
-      components: [],
+      components: p.board ?? [],
       edit: async (m: Sent) => void seen.messageEdits.push(m),
     },
     channel: fakeChannel(seen, p),
@@ -116,8 +121,8 @@ test("a full turn: Fire, then jevos's shot on the board", async () => {
   const s = setup();
   s.r.games.put(fresh({ cursor: 11 }));
   const seen = await click(s, "fleet:fire");
-  expect(seen.updates[0]?.embeds?.[0]?.description).toContain("jevos is aiming…");
-  expect(seen.edits[0]?.embeds?.[0]?.description).toContain("jevos fired at");
+  expect(viewText(seen.updates[0])).toContain("jevos is aiming…");
+  expect(viewText(seen.edits[0])).toContain("jevos fired at");
   expect(live(s.r)?.player.shots).toEqual([11]);
   expect(live(s.r)?.jevos.shots).toHaveLength(1);
 });
@@ -204,7 +209,7 @@ test("resign with no shot leaves no result; with shots records a loss", async ()
     updatedAt: Date.now(),
   });
   const seen = await click(s, "fleet:resign");
-  expect(seen.updates[0]?.embeds?.[0]?.description).toContain("You resigned.");
+  expect(viewText(seen.updates[0])).toContain("You resigned.");
   expect(s.r.results.stats("g", "u").resigned).toBe(1);
 });
 
@@ -212,7 +217,7 @@ test("a failed edit after jevos's shot falls back to editing the message", async
   const s = setup();
   s.r.games.put(fresh({ cursor: 11 }));
   const seen = await click(s, "fleet:fire", { editFails: true });
-  expect(seen.messageEdits[0]?.embeds?.[0]?.description).toContain("jevos fired at");
+  expect(viewText(seen.messageEdits[0])).toContain("jevos fired at");
   expect(picture(seen.messageEdits[0])).toEqual(FLEET_PNG);
 });
 
@@ -234,9 +239,13 @@ const placed = () => fresh({ phase: "placing", player: { ships: rowsFleet(), sho
 const picture = (m: Sent | undefined) => ({
   files: m?.files?.map((f) => f.name),
   all: m?.attachments,
+  v2: m?.flags === MessageFlags.IsComponentsV2,
+  // Cleared, so an edit turns a board sent before V2 into the V2 view.
+  content: m?.content,
+  embeds: m?.embeds,
 });
 
-const FLEET_PNG = { files: ["fleet.png"], all: [] };
+const FLEET_PNG = { files: ["fleet.png"], all: [], v2: true, content: null, embeds: [] };
 
 test("Ready shows both grids on the board itself: no second message", async () => {
   const s = setup();
@@ -275,4 +284,12 @@ test("an old fleet message that can't be deleted is still forgotten", async () =
   const seen = await click(s, "fleet:place", { deleteFails: true });
   expect(seen.deferred).toBe(1);
   expect(live(s.r)?.fleetMessageId).toBeNull();
+});
+
+test("a V2 board whose game is gone loses only its controls, keeping the card", async () => {
+  const s = setup();
+  const board = [{ type: ComponentType.Container }, { type: ComponentType.ActionRow }];
+  const seen = await click(s, "fleet:fire", { board });
+  expect(seen.updates).toEqual([{ components: [{ type: ComponentType.Container }] }]);
+  expect(seen.replies).toEqual(["This game is over."]);
 });

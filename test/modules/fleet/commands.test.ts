@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import type { ChatInputCommandInteraction } from "discord.js";
+import { type ChatInputCommandInteraction, MessageFlags } from "discord.js";
 import type { Ctx } from "../../../src/core/types.ts";
 import { leaderboard, stats } from "../../../src/modules/fleet/commands/boards.ts";
 import { data } from "../../../src/modules/fleet/commands/data.ts";
@@ -16,7 +16,7 @@ function interaction(calls: string[], replies: unknown[]): ChatInputCommandInter
     channelId: "c",
     options: { getString: () => null, getInteger: () => null, getUser: () => null },
     deferReply: async () => void calls.push("defer"),
-    editReply: async () => (calls.push("edit"), { id: "m2" }),
+    editReply: async (m: unknown) => (calls.push("edit"), replies.push(m), { id: "m2" }),
     reply: async (r: unknown) => void replies.push(r),
   };
 
@@ -43,7 +43,15 @@ test("/fleet play acknowledges before touching the old board", async () => {
     updatedAt: Date.now(),
   });
   const calls: string[] = [];
-  await play({ i: interaction(calls, []), guildId: "g", ctx: context(calls), repo: r, d });
+  const sent: unknown[] = [];
+  await play({ i: interaction(calls, sent), guildId: "g", ctx: context(calls), repo: r, d });
+  expect(sent).toEqual([
+    expect.objectContaining({
+      flags: MessageFlags.IsComponentsV2,
+      files: [expect.objectContaining({ name: "fleet.png" })],
+      allowedMentions: { parse: [] },
+    }),
+  ]);
   expect(calls).toEqual(["defer", "fetch old", "edit"]);
   const g = r.games.get("g", "u");
   expect(g?.messageId).toBe("m2");
@@ -80,24 +88,42 @@ test("stats and leaderboard reply without pinging", async () => {
   for (const reply of replies) expect(reply).toMatchObject({ allowedMentions: { parse: [] } });
 });
 
+/** A board edit as `markOld` sends it. */
+interface Edit {
+  id: string;
+  files?: { name: string }[];
+  attachments?: unknown[];
+  flags?: number;
+  content?: string | null;
+  embeds?: unknown[];
+}
+
 test("/fleet play marks the old board abandoned with its picture and deletes an old fleet message", async () => {
   const { repo: r } = repo();
   r.games.put({ ...playing({ fleetMessageId: "f", updatedAt: Date.now() }), messageId: "old" });
-  const edits: { id: string; files?: { name: string }[]; attachments?: unknown[] }[] = [];
+  const edits: Edit[] = [];
   const deletes: string[] = [];
   const channel = {
     isTextBased: () => true,
     messages: {
-      edit: async (id: string, m: { files?: { name: string }[]; attachments?: unknown[] }) =>
-        void edits.push({ id, ...m }),
+      edit: async (id: string, m: Omit<Edit, "id">) => void edits.push({ id, ...m }),
       delete: async (id: string) => void deletes.push(id),
     },
   };
   // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- only the client's channel fetch
   const ctx = { client: { channels: { fetch: async () => channel } } } as unknown as Ctx;
   await play({ i: interaction([], []), guildId: "g", ctx, repo: r, d });
-  expect(edits.map((e) => [e.id, e.files?.map((f) => f.name), e.attachments])).toEqual([
-    ["old", ["fleet.png"], []],
+  const shown = (e: Edit) => [
+    e.id,
+    e.files?.map((f) => f.name),
+    e.attachments,
+    e.flags,
+    e.content,
+    e.embeds,
+  ];
+  // An embed board from before V2 becomes the V2 view: content and embeds cleared.
+  expect(edits.map(shown)).toEqual([
+    ["old", ["fleet.png"], [], MessageFlags.IsComponentsV2, null, []],
   ]);
   expect(deletes).toEqual(["f"]);
 });

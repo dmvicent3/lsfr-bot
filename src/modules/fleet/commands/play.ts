@@ -28,7 +28,7 @@ async function begin({ i, guildId, repo, d }: CommandCtx): Promise<void> {
     random: d.random,
   });
   const view = { game, outcome: { kind: "playing" }, aiming: false } as const;
-  const message = await i.editReply({ ...boardMessage(view), allowedMentions: { parse: [] } });
+  const message = await i.editReply(boardMessage(view));
   repo.games.put({ ...game, messageId: message.id });
 }
 

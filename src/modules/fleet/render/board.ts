@@ -1,3 +1,9 @@
+import {
+  type APIContainerComponent,
+  type APIMediaGalleryComponent,
+  type APITextDisplayComponent,
+  ComponentType,
+} from "discord.js";
 import { nextKind } from "../place.ts";
 import { FLEET, type Game, type Outcome } from "../types.ts";
 import { firingControls, placingControls } from "./controls.ts";
@@ -9,16 +15,26 @@ export const TITLE = "🚢 Hidden fleet";
 
 export const EMBED_COLOR = 0x1d6fa5;
 
-/** The grids picture's file name, which the embed shows as its image. */
+/** The grids picture's file name, which the board's gallery shows. */
 export const FLEET_FILE = "fleet.png";
 
 export const players = (g: Game): string => `<@${g.playerId}> vs jevos · ${g.difficulty}`;
 
-const embed = (title: string, description: string[]) => ({
-  title,
-  color: EMBED_COLOR,
-  description: description.join("\n"),
-  image: { url: `attachment://${FLEET_FILE}` },
+const text = (content: string): APITextDisplayComponent => ({
+  type: ComponentType.TextDisplay,
+  content,
+});
+
+const GALLERY: APIMediaGalleryComponent = {
+  type: ComponentType.MediaGallery,
+  items: [{ media: { url: `attachment://${FLEET_FILE}` } }],
+};
+
+/** The board's card: its title, its text lines and the grids picture. */
+const card = (title: string, lines: string[]): APIContainerComponent => ({
+  type: ComponentType.Container,
+  accent_color: EMBED_COLOR,
+  components: [text(`### ${title}`), text(lines.join("\n")), GALLERY],
 });
 
 function placing(g: Game): BoardMessage {
@@ -27,8 +43,10 @@ function placing(g: Game): BoardMessage {
   const next = ship ? `Place your ${ship.name} (${ship.size})` : "Fleet ready: press Ready.";
 
   return {
-    embeds: [embed(`${TITLE} — place your fleet`, [players(g), "", next])],
-    components: placingControls(g),
+    components: [
+      card(`${TITLE} — place your fleet`, [players(g), "", next]),
+      ...placingControls(g),
+    ],
     svg: fleetSvg(g, { preview: true }),
   };
 }
@@ -38,9 +56,8 @@ function playing(g: Game, aiming: boolean): BoardMessage {
   const lines = [players(g), "", jevosAfloat(g), yourAfloat(g), ...lastShots(g), status];
 
   return {
-    embeds: [embed(TITLE, lines)],
     // Kept while aiming: a restart or failed edit mid-turn leaves this board, and a click resumes.
-    components: firingControls(g),
+    components: [card(TITLE, lines), ...firingControls(g)],
     svg: battleSvg(g, { reveal: false }),
   };
 }
@@ -49,8 +66,7 @@ function over(g: Game, o: Exclude<Outcome, { kind: "playing" }>): BoardMessage {
   const lines = [players(g), "", ...lastShots(g), resultLine(g, o), ...accuracyLines(g)];
 
   return {
-    embeds: [embed(TITLE, lines)],
-    components: [],
+    components: [card(TITLE, lines)],
     svg: battleSvg(g, { reveal: true }),
   };
 }

@@ -1,8 +1,10 @@
 import { expect, test } from "bun:test";
+import { ComponentType } from "discord.js";
 import { FLEET_FILE, renderGame } from "../../../src/modules/fleet/render/board.ts";
 import { renderStats } from "../../../src/modules/fleet/render/boards.ts";
 import { battleSvg, fleetSvg } from "../../../src/modules/fleet/render/grids-svg.ts";
 import type { GameView } from "../../../src/modules/fleet/render/types.ts";
+import { viewText } from "../crossword/view-text.ts";
 import { playing, rowsFleet } from "./fixtures.ts";
 
 const SHIP_CELLS = rowsFleet().flatMap((s) => s.cells);
@@ -18,21 +20,28 @@ const view = (over: Partial<GameView>): GameView => ({
 
 const ids = (v: GameView): string[] =>
   renderGame(v).components.flatMap((r) =>
-    r.components.map((c) => ("custom_id" in c ? c.custom_id : "")),
+    r.type === ComponentType.ActionRow
+      ? r.components.map((c) => ("custom_id" in c ? c.custom_id : ""))
+      : [],
   );
 
-const text = (v: GameView): string => renderGame(v).embeds[0]?.description ?? "";
+const text = (v: GameView): string => viewText(renderGame(v));
 
 const GRID_EMOJI = /[🟦⬜💥⚪🟥🟨]|\p{Regional_Indicator}|⃣/u;
 
-test("every board shows fleet.png as its embed image and no grid emoji", () => {
+test("every board shows fleet.png in its gallery and no grid emoji", () => {
   const over = { kind: "win", winner: "player" } as const;
 
   for (const v of [view({ game: placing }), view({}), view({ outcome: over })]) {
     expect(FLEET_FILE).toBe("fleet.png");
-    expect(renderGame(v).embeds[0]?.image).toEqual({ url: "attachment://fleet.png" });
+    expect(JSON.stringify(renderGame(v).components)).toContain('"url":"attachment://fleet.png"');
     expect(text(v)).not.toMatch(GRID_EMOJI);
   }
+});
+
+test("the title says when you're placing your fleet", () => {
+  expect(text(view({ game: placing }))).toStartWith("### 🚢 Hidden fleet — place your fleet\n");
+  expect(text(view({}))).toStartWith("### 🚢 Hidden fleet\n<@u> vs jevos");
 });
 
 test("placing draws your grid with the preview and names the next ship", () => {
@@ -77,7 +86,8 @@ test("a won game reveals jevos's fleet and accuracy", () => {
   const v = view({ game: g, outcome: { kind: "win", winner: "player" } });
   expect(text(v)).toContain("You sank jevos's fleet in 17 shots!");
   expect(text(v)).toContain("17/17 hits (100%)");
-  expect(renderGame(v).components).toEqual([]);
+  expect(ids(v)).toEqual([]);
+  expect(renderGame(v).components.map((c) => c.type)).toEqual([ComponentType.Container]);
   expect(renderGame(v).svg).toBe(battleSvg(g, { reveal: true }));
 });
 
