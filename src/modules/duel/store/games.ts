@@ -1,11 +1,16 @@
 import type { Database } from "bun:sqlite";
+import { FinishedGames } from "../../../core/finished-games.ts";
 import type { DateRange } from "../../../core/types.ts";
 import type { Game } from "../types.ts";
-import { COLUMNS, FINISHED, type GameRow, KEY, MARKS, toGame, values } from "./rows.ts";
+import { COLUMNS, type GameRow, KEY, MARKS, toGame, values } from "./rows.ts";
 
 /** duel_games: one row per player and date. */
 export class GameStore {
-  constructor(private readonly db: Database) {}
+  private readonly finished: FinishedGames<GameRow, Game>;
+
+  constructor(private readonly db: Database) {
+    this.finished = new FinishedGames<GameRow, Game>(db, "duel_games", toGame);
+  }
 
   get(guildId: string, date: string, userId: string): Game | null {
     const row = this.db
@@ -38,26 +43,14 @@ export class GameStore {
   }
 
   finishedIn(guildId: string, range: DateRange): Game[] {
-    return this.db
-      .query<GameRow, [string, string, string]>(`${FINISHED} AND date BETWEEN ? AND ?`)
-      .all(guildId, range.from, range.to)
-      .map(toGame);
+    return this.finished.in(guildId, range);
   }
 
   finishedBy(guildId: string, userId: string): Game[] {
-    return this.db
-      .query<GameRow, [string, string]>(`${FINISHED} AND user_id = ? ORDER BY date`)
-      .all(guildId, userId)
-      .map(toGame);
+    return this.finished.by(guildId, userId);
   }
 
   lastFinishedBefore(guildId: string, userId: string, date: string): Game | null {
-    const row = this.db
-      .query<GameRow, [string, string, string]>(
-        `${FINISHED} AND user_id = ? AND date < ? ORDER BY date DESC LIMIT 1`,
-      )
-      .get(guildId, userId, date);
-
-    return row ? toGame(row) : null;
+    return this.finished.lastBefore(guildId, userId, date);
   }
 }

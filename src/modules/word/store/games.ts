@@ -1,4 +1,5 @@
 import type { Database } from "bun:sqlite";
+import { FinishedGames } from "../../../core/finished-games.ts";
 import type { LastGame } from "../../../core/daily.ts";
 import type { DateRange, Game } from "../types.ts";
 import type { GameRow } from "./types.ts";
@@ -14,13 +15,24 @@ const toGame = (r: GameRow): Game => ({
   finishedAt: r.finished_at,
 });
 
-const FINISHED = "SELECT * FROM word_games WHERE guild_id = ? AND finished_at IS NOT NULL";
+const toLast = (r: GameRow): LastGame => ({
+  date: r.date,
+  won: r.won === 1,
+  streak: r.streak ?? 0,
+});
+
 const OPEN_ROW =
   "INSERT OR IGNORE INTO word_games (guild_id, date, user_id, guesses) VALUES (?, ?, ?, ?)";
 
 /** word_games: one row per server, date and player. */
 export class GameStore {
-  constructor(private readonly db: Database) {}
+  private readonly last: FinishedGames<GameRow, LastGame>;
+  private readonly finished: FinishedGames<GameRow, Game>;
+
+  constructor(private readonly db: Database) {
+    this.last = new FinishedGames<GameRow, LastGame>(db, "word_games", toLast);
+    this.finished = new FinishedGames<GameRow, Game>(db, "word_games", toGame);
+  }
 
   get(guildId: string, date: string, userId: string): Game | null {
     const row = this.db
@@ -66,26 +78,14 @@ export class GameStore {
   }
 
   lastFinished(guildId: string, userId: string, before: string): LastGame | null {
-    const row = this.db
-      .query<GameRow, [string, string, string]>(
-        `${FINISHED} AND user_id = ? AND date < ? ORDER BY date DESC LIMIT 1`,
-      )
-      .get(guildId, userId, before);
-
-    return row ? { date: row.date, won: row.won === 1, streak: row.streak ?? 0 } : null;
+    return this.last.lastBefore(guildId, userId, before);
   }
 
   finishedIn(guildId: string, range: DateRange): Game[] {
-    return this.db
-      .query<GameRow, [string, string, string]>(`${FINISHED} AND date BETWEEN ? AND ?`)
-      .all(guildId, range.from, range.to)
-      .map(toGame);
+    return this.finished.in(guildId, range);
   }
 
   finishedBy(guildId: string, userId: string): Game[] {
-    return this.db
-      .query<GameRow, [string, string]>(`${FINISHED} AND user_id = ? ORDER BY date`)
-      .all(guildId, userId)
-      .map(toGame);
+    return this.finished.by(guildId, userId);
   }
 }

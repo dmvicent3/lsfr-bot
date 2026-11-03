@@ -21,6 +21,12 @@ test("migration creates the spec tables and index", () => {
     "crossword_practice",
     "crossword_puzzles",
   ]);
+  const defaults = db
+    .query<{ name: string; dflt_value: string | null }, []>("PRAGMA table_info(crossword_games)")
+    .all()
+    .filter((c) => c.name === "wrong" || c.name === "reveals")
+    .map((c) => c.dflt_value);
+  expect(defaults).toEqual(["0", "0"]);
 });
 
 test("start twice keeps the first and round-trips", () => {

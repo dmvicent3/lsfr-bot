@@ -84,7 +84,6 @@ export const COLUMNS =
   "guild_id, date, user_id, cells, guesses, last_miss, filled, points, streak, started_at, finished_at";
 export const MARKS = "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
 export const KEY = "guild_id = ? AND date = ? AND user_id = ?";
-export const FINISHED = "SELECT * FROM grid_games WHERE guild_id = ? AND finished_at IS NOT NULL";
 
 export const values = (g: Game) => [
   g.guildId,
