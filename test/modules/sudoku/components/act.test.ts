@@ -5,7 +5,7 @@ import { put } from "../../../../src/modules/sudoku/play/put.ts";
 import type { Game } from "../../../../src/modules/sudoku/types.ts";
 import { almostSolved, makeGame } from "../play/game.ts";
 import { freshDb } from "../store/fixtures.ts";
-import { fakeClick } from "./fake.ts";
+import { fakeClick } from "../../../core/fake-interaction.ts";
 
 const DAILY = ["daily", "2026-11-03", "easy"];
 
@@ -33,6 +33,8 @@ test("a put updates the board and saves it", async () => {
 
   expect(repo.games.get(g)?.cells[2]).toBe("5");
   expect(calls.update).toHaveLength(1);
+  expect(calls.update[0]?.files?.map((x) => x.name)).toEqual(["sudoku.png"]);
+  expect(calls.update[0]?.attachments).toEqual([]);
   expect(calls.reply).toHaveLength(0);
 });
 
@@ -101,6 +103,7 @@ test("a click on a solved game shows the finished board", async () => {
 
   const msg = calls.update[0];
   expect(msg?.components).toEqual([]);
+  expect(msg?.files?.map((x) => x.name)).toEqual(["sudoku.png"]);
   expect(calls.send).toHaveLength(0);
 });
 

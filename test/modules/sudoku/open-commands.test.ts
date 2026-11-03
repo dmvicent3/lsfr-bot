@@ -7,9 +7,15 @@ import { practice } from "../../../src/modules/sudoku/commands/practice.ts";
 import type { CommandCtx } from "../../../src/modules/sudoku/commands/types.ts";
 import { freshDb } from "./store/fixtures.ts";
 
+interface Edited {
+  components?: unknown[];
+  files?: { name?: string }[];
+  attachments?: unknown[];
+}
+
 function fake() {
   const order: string[] = [];
-  const sent: { deferFlags?: unknown; edited?: { components?: unknown[] } } = {};
+  const sent: { deferFlags?: unknown; edited?: Edited } = {};
   const i = {
     user: { id: "u" },
     options: { getString: () => "easy" },
@@ -17,7 +23,7 @@ function fake() {
       order.push("deferReply");
       sent.deferFlags = o.flags;
     },
-    editReply: async (m: { components?: unknown[] }) => {
+    editReply: async (m: Edited) => {
       order.push("editReply");
       sent.edited = m;
     },
@@ -43,6 +49,8 @@ test("practice defers privately before it sends the board", async () => {
   expect(order).toEqual(["deferReply", "editReply"]);
   expect(sent.deferFlags).toBe(MessageFlags.Ephemeral);
   expect(sent.edited?.components?.length).toBeGreaterThan(0);
+  expect(sent.edited?.files?.map((x) => x.name)).toEqual(["sudoku.png"]);
+  expect(sent.edited?.attachments).toEqual([]);
 });
 
 test("daily defers privately before it sends the board", async () => {
@@ -52,4 +60,6 @@ test("daily defers privately before it sends the board", async () => {
   expect(order).toEqual(["deferReply", "editReply"]);
   expect(sent.deferFlags).toBe(MessageFlags.Ephemeral);
   expect(sent.edited?.components?.length).toBeGreaterThan(0);
+  expect(sent.edited?.files?.map((x) => x.name)).toEqual(["sudoku.png"]);
+  expect(sent.edited?.attachments).toEqual([]);
 });

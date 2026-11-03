@@ -11,7 +11,7 @@ import { putHandler } from "../../../../src/modules/sudoku/components/put.ts";
 import { EASY_SOLUTION } from "../fixtures.ts";
 import { makeGame } from "../play/game.ts";
 import { freshDb } from "../store/fixtures.ts";
-import { fakeClick } from "./fake.ts";
+import { fakeClick } from "../../../core/fake-interaction.ts";
 
 const practice = (over: Partial<Game> = {}): Game => makeGame({ date: "", slot: "", ...over });
 
@@ -49,6 +49,7 @@ test("mode flips note mode and re-renders; a put then toggles a note", async () 
 
   expect(repo.games.get(practice())?.noteMode).toBe(true);
   expect(calls.update).toHaveLength(1);
+  expect(calls.update[0]?.files?.map((x) => x.name)).toEqual(["sudoku.png"]);
 
   await putHandler.handle(fakeClick("u").i, ["5", "practice"], ctxOf(db));
   const after = repo.games.get(practice());
@@ -86,6 +87,8 @@ test("new replaces the practice game at the same level", async () => {
 
   expect(calls.order).toEqual(["deferUpdate", "editReply"]);
   expect(calls.update).toHaveLength(0);
+  expect(calls.editReply[0]?.files?.map((x) => x.name)).toEqual(["sudoku.png"]);
+  expect(calls.editReply[0]?.attachments).toEqual([]);
   const fresh = repo.games.get(practice());
   expect(fresh?.level).toBe("easy");
   expect(fresh?.startedAt).toBeGreaterThan(0);
