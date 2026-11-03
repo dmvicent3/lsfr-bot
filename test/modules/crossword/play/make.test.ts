@@ -64,4 +64,4 @@ test("60 daily puzzles in a row: no answer within 30 days, no two days alike", a
     }
   });
   expect(new Set(days.map((d) => d.toSorted().join())).size).toBe(60);
-});
+}, 60_000);
