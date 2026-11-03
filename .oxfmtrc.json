@@ -1,4 +1,9 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  "ignorePatterns": ["docs/**", "**/fixtures/**", ".superpowers/**"]
+  "ignorePatterns": [
+    "docs/**",
+    "**/fixtures/**",
+    "src/modules/crossword/words/bank.json",
+    ".superpowers/**"
+  ]
 }
