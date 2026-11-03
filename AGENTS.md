@@ -45,6 +45,10 @@ Tunous/MotorsportCalendar (F1, WEC, WRC) and sportstimes/f1 (F2, F3, FE, IndyCar
 
 Spec and plan (local only, gitignored): `docs/superpowers/specs/2026-10-15-gork-rewrite-design.md`, `docs/superpowers/plans/2026-10-15-gork-rewrite.md`.
 
+## Player feedback and polls
+
+Players leave feedback with `/feedback`; check it when starting Gork work, and ask them design questions as Discord polls. Both go through `scripts/feedback.ts` inside the running bot container on the Pi: `ssh -i ~/.ssh/pi_opencode pi@192.168.1.224 'docker exec lsfr-bot-bot-1 bun scripts/feedback.ts <command>'` (no command prints the usage). Mark entries read once acted on. Reading feedback and results is free; a poll is public, so show the user the question and options and post only after they approve.
+
 ## Task board
 
 `C:\Users\Utilizador\Documents\Obsidian Vault\Gork\Gork Kanban.md` (lanes: todo, in-progress, done). Check it when starting; move cards as status changes.
