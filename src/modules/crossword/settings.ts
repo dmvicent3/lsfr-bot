@@ -1,7 +1,5 @@
 import type { Database } from "bun:sqlite";
-import { DEFAULT_TIME_ZONE, zoneSetting } from "../../core/zone-setting.ts";
-
-export { DEFAULT_TIME_ZONE };
+import { zoneSetting } from "../../core/zone-setting.ts";
 
 const zone = zoneSetting("crossword");
 

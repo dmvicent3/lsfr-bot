@@ -27,6 +27,9 @@ export function buildIndex(bank: BankWord[]): WordIndex {
 /** Fixed letters of a slot: [position, letter] pairs. */
 export type Fixed = [number, string][];
 
+const shortest = (lists: BankWord[][]): BankWord[] =>
+  lists.reduce((a, b) => (b.length < a.length ? b : a));
+
 /** Unused words of `len` that carry every fixed letter. */
 export function candidates(
   index: WordIndex,
@@ -35,9 +38,7 @@ export function candidates(
   used: Set<string>,
 ): BankWord[] {
   const lists = fixed.map(([pos, ch]) => index.get(`${len}:${pos}:${ch}`) ?? []);
-  const base = lists.length
-    ? lists.reduce((a, b) => (b.length < a.length ? b : a))
-    : index.get(String(len));
+  const base = lists.length ? shortest(lists) : index.get(String(len));
 
   if (!base) return [];
 

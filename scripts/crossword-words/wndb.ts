@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { glossOf } from "./gloss.ts";
+import { glossOf, pickGloss } from "./gloss.ts";
 
 export type Pos = "n" | "v" | "a" | "r";
 
@@ -7,8 +7,8 @@ export interface IndexEntry {
   lemma: string;
   pos: Pos;
   senses: number;
-  /** Synset offset of the first (most common) sense. */
-  first: string;
+  /** Synset offsets of the senses, most common first. */
+  offsets: string[];
 }
 
 /** Tie-break order when parts of speech have equally many senses. */
@@ -22,12 +22,12 @@ export function parseIndexLine(line: string): IndexEntry | null {
 
   const t = line.trim().split(/\s+/);
   const senses = Number(t[2]);
-  const first = t[t.length - senses];
+  const offsets = t.slice(t.length - senses);
   const pos = POS[t[1] ?? ""];
 
-  if (!t[0] || !pos || !first || !senses) return null;
+  if (!t[0] || !pos || !senses || offsets.length !== senses) return null;
 
-  return { lemma: t[0], pos, senses, first };
+  return { lemma: t[0], pos, senses, offsets };
 }
 
 /** `offset lex_filenum ss_type ... | gloss`. */
@@ -58,7 +58,7 @@ const glosses = (dir: string, pos: Pos): Map<string, string> =>
       .map((d) => [d.offset, d.gloss]),
   );
 
-/** word -> gloss of the first sense of its richest part of speech; single words only. */
+/** word -> gloss of the best sense of its richest part of speech (see pickGloss); single words only. */
 export function readDefinitions(dir: string): Map<string, string> {
   const byLemma = new Map<string, IndexEntry[]>();
 
@@ -82,7 +82,7 @@ export function readDefinitions(dir: string): Map<string, string> {
     if (!head) continue;
 
     const best = pickEntry(head, ...rest);
-    const gloss = data[best.pos].get(best.first);
+    const gloss = pickGloss(best.offsets.map((o) => data[best.pos].get(o) ?? ""));
 
     if (gloss !== undefined) out.set(lemma, gloss);
   }

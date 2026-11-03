@@ -65,3 +65,13 @@ describe("writeClues", () => {
     expect(await writeClues(entries, null)).toEqual(["a small feline", "a loyal pet"]);
   });
 });
+
+describe("long definitions", () => {
+  test("are cut at a word boundary", async () => {
+    const def = `${"word ".repeat(30)}end`;
+    const out = await writeClues([{ word: "CAT", def }], null);
+
+    expect(out[0]).toBe(`${"word ".repeat(18).trim()}…`);
+    expect(out[0]!.length).toBeLessThanOrEqual(CLUE_MAX);
+  });
+});

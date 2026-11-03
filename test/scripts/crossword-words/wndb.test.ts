@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import { describe, expect, test } from "bun:test";
 import { glossOf } from "../../../scripts/crossword-words/gloss.ts";
 import {
@@ -7,7 +8,7 @@ import {
   readDefinitions,
 } from "../../../scripts/crossword-words/wndb.ts";
 
-const FIXTURES = new URL("fixtures/", import.meta.url).pathname.replace(/^\/(\w:)/, "$1");
+const FIXTURES = fileURLToPath(new URL("fixtures/", import.meta.url));
 
 describe("glossOf", () => {
   test("cuts at the first semicolon", () => expect(glossOf("a bat; more")).toBe("a bat"));
@@ -24,7 +25,7 @@ describe("parseIndexLine", () => {
       lemma: "cat",
       pos: "n",
       senses: 2,
-      first: "00000010",
+      offsets: ["00000010", "00000020"],
     });
   });
   test("skips the licence header", () => expect(parseIndexLine("  1 License")).toBeNull());
@@ -40,7 +41,12 @@ describe("parseDataLine", () => {
   test("skips the licence header", () => expect(parseDataLine("  1 License")).toBeNull());
 });
 
-const e = (pos: "n" | "v" | "a" | "r", senses: number) => ({ lemma: "x", pos, senses, first: pos });
+const e = (pos: "n" | "v" | "a" | "r", senses: number) => ({
+  lemma: "x",
+  pos,
+  senses,
+  offsets: [pos],
+});
 
 describe("pickEntry", () => {
   test("most senses wins", () => expect(pickEntry(e("n", 1), e("v", 3)).pos).toBe("v"));
@@ -64,4 +70,22 @@ describe("readDefinitions", () => {
   });
   test("multi-word lemmas are skipped", () => expect(defs.has("ice_cream")).toBe(false));
   test("adverbs are included", () => expect(defs.get("fast")).toBe("quickly"));
+
+  test("skips offensive, slur, vulgar, obscene, disparaging and derogatory senses", () => {
+    expect(defs.get("taco")).toBe("a folded tortilla filled with meat");
+    expect(defs.get("gross")).toBe("twelve dozen");
+  });
+  test("drops a word whose senses are all offensive", () => {
+    for (const w of ["crude", "insult", "hurt"]) expect(defs.has(w)).toBe(false);
+  });
+  test("prefers the first sense of at most 90 characters", () => {
+    expect(defs.get("lengthy")).toBe("a brief one");
+  });
+  test("keeps the first sense when none is short", () => {
+    expect(defs.get("longer")?.startsWith("a very long")).toBe(true);
+  });
+  test("skips glosses starting with a backtick", () => {
+    expect(defs.get("reb")).toBe("a Confederate soldier");
+    expect(defs.has("only")).toBe(false);
+  });
 });

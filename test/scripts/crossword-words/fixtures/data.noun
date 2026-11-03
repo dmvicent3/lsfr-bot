@@ -8,3 +8,18 @@
 00000070 05 n 01 run 0 000 | a score in baseball  
 00000080 05 n 01 shed 0 000 | a small hut  
 00000090 05 n 01 bad 0 000 | x  
+00000500 05 n 01 taco 0 000 | offensive term for a person of Mexican descent  
+00000510 05 n 01 taco 1 000 | a folded tortilla filled with meat  
+00000520 05 n 01 crude 0 000 | a vulgar word for the unclean  
+00000530 05 n 01 lengthy 0 000 | a very long and winding explanation that goes on and on well past the point of any real use to a solver  
+00000540 05 n 01 lengthy 1 000 | a brief one  
+00000550 05 n 01 longer 0 000 | a very long and winding explanation that goes on and on well past the point of any real use to a solver  
+00000560 05 n 01 longer 1 000 | an even longer explanation that goes on and on well past the point of any real use to a solver  
+00000570 05 n 01 reb 0 000 | `Johnny' was applied as a nickname  
+00000580 05 n 01 reb 1 000 | a Confederate soldier  
+00000590 05 n 01 only 0 000 | `Johnny' was applied as a nickname  
+00000600 05 n 01 insult 0 000 | a disparaging remark  
+00000610 05 n 01 insult 1 000 | a derogatory one  
+00000620 05 n 01 gross 0 000 | an obscene act  
+00000630 05 n 01 gross 1 000 | twelve dozen  
+00000640 05 n 01 hurt 0 000 | a SLUR on someone  
