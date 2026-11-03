@@ -89,10 +89,11 @@ export function fakeClick(userId: string, opts: Opts = {}) {
   return { i, calls };
 }
 
-/** A modal submit with the typed text (every field reads it). */
-export function fakeModal(userId: string, text: string, opts: Opts = {}) {
+/** A modal submit with the typed text: one text every field reads, or a text per field id. */
+export function fakeModal(userId: string, text: string | Record<string, string>, opts: Opts = {}) {
   const { calls, base } = parts(opts);
-  const fields = { getTextInputValue: () => text };
+  const read = (id: string) => (typeof text === "string" ? text : (text[id] ?? ""));
+  const fields = { getTextInputValue: read };
   // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- a stand-in for the calls act makes
   const i = {
     ...base,

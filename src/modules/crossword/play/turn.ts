@@ -3,7 +3,8 @@ import { checkLine, verdict } from "./check.ts";
 import { isCorrect } from "./cells.ts";
 import { REVEAL_LINE, reveal, revealRandom } from "./reveal.ts";
 import { end, keep } from "./round.ts";
-import { type Entry, isGame, type Landed, type PlayState, type Turn } from "./types.ts";
+import { type Entry, isGame, type Landed, type PlayState, type Turn, type Typed } from "./types.ts";
+import { enterWords } from "./words.ts";
 
 const stateOf = ({ rec, puzzle }: Turn): PlayState => ({
   puzzle,
@@ -16,13 +17,13 @@ const stateOf = ({ rec, puzzle }: Turn): PlayState => ({
 const unchanged = (t: Turn): Landed => ({ game: t.rec, award: null });
 
 /** Writes a typed word and stores it; never finishes. `landed` is null when nothing was stored. */
-export function answerSlot(
-  t: Turn,
-  slotIndex: number,
-  text: string,
-): { entry: Entry; landed: Landed | null } {
-  const entry = enter(stateOf(t), slotIndex, text);
+export const answerSlot = (t: Turn, slotIndex: number, text: string) =>
+  store(t, enter(stateOf(t), slotIndex, text));
 
+/** Writes the words typed for a square's slots in one stored write; never finishes. */
+export const answerCell = (t: Turn, typed: Typed[]) => store(t, enterWords(stateOf(t), typed));
+
+function store(t: Turn, entry: Entry): { entry: Entry; landed: Landed | null } {
   if (entry.kind !== "entered") return { entry, landed: null };
 
   return { entry, landed: keep(t.repo, { ...t.rec, cells: entry.cells, lastLine: entry.line }) };

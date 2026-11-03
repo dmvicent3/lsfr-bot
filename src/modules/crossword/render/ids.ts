@@ -1,4 +1,4 @@
-import type { Slot } from "../types.ts";
+import type { Puzzle, Slot } from "../types.ts";
 
 type SlotRef = Pick<Slot, "n" | "dir">;
 
@@ -40,3 +40,12 @@ const SIZES = new Map<string, 5 | 7>([
 
 /** The size in a `crossword:new:<size>` id part; null when it is not one. */
 export const sizeOf = (part: string | undefined): 5 | 7 | null => SIZES.get(part ?? "") ?? null;
+
+/** The white square a `crossword:cell` id part names; null for a block (`x<i>`) or no square. */
+export function whiteCellOf(p: Puzzle, part: string | undefined): number | null {
+  if (!part || !/^\d+$/.test(part)) return null;
+
+  const cell = Number(part);
+
+  return cell < p.size * p.size && !p.blocks.includes(cell) ? cell : null;
+}
