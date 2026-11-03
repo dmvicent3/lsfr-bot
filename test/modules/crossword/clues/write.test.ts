@@ -37,6 +37,15 @@ describe("writeClues", () => {
     const out2 = await writeClues(entries, reply('{"CAT":"  ","DOG":"Barker"}'));
     expect(out2[0]).toBe("a small feline");
   });
+  test("a brace inside a clue doesn't lose the reply", async () => {
+    const out = await writeClues(entries, reply('{"CAT":"Purrs {softly}","DOG":"Barker"}'));
+    expect(out).toEqual(["Purrs {softly}", "Barker"]);
+  });
+  test("a clue of exactly 90 characters is kept; an inflected answer leaks", async () => {
+    const exact = "z".repeat(CLUE_MAX);
+    const out = await writeClues(entries, reply(JSON.stringify({ CAT: exact, DOG: "Dogs' pal" })));
+    expect(out).toEqual([exact, "a loyal pet"]);
+  });
   test("long definition is cut to 89 plus ellipsis", async () => {
     const out = await writeClues([{ word: "CAT", def: "y".repeat(200) }], null);
     expect(out[0]).toBe(`${"y".repeat(CLUE_MAX - 1)}…`);
