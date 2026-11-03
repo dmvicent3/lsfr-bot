@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import { seedFor } from "../../../../src/core/seed.ts";
 import { fakeClick, fakeModal } from "../../../core/fake-interaction.ts";
+import { viewText } from "../view-text.ts";
 import { answerHandler } from "../../../../src/modules/crossword/components/answer.ts";
 import { checkHandler } from "../../../../src/modules/crossword/components/check.ts";
 import { crosswordComponents } from "../../../../src/modules/crossword/components/components.ts";
@@ -20,7 +21,7 @@ test("a new practice puzzle replaces the row, deferring first", async () => {
   await newHandler(null, seedFor("a", "b")).handle(i, ["5"], ctx);
 
   expect(calls.order).toEqual(["deferUpdate", "editReply"]);
-  expect(calls.editReply[0]?.content).toContain("Practice crossword 5×5");
+  expect(viewText(calls.editReply[0])).toContain("Practice crossword 5×5");
   expect(calls.editReply[0]?.files).toHaveLength(1);
   expect(repo.practice.get("g", "u")?.startedAt).not.toBe(7);
 });
@@ -44,7 +45,7 @@ test("a modal opened before New is stale: board when it can update, else the sta
 
   const a = fakeModal("u", "crane");
   await answer.handle(a.i, id, ctx);
-  expect(a.calls.update[0]?.content).toContain("Practice crossword");
+  expect(viewText(a.calls.update[0])).toContain("Practice crossword");
 
   const b = fakeModal("u", "crane", { notFromMessage: true });
   await answer.handle(b.i, id, ctx);
@@ -101,7 +102,7 @@ test("a daily modal and Check after midnight still apply to that date's stored g
 
     expect(stored(repo)?.solved).toBe(true);
     expect(a.calls.update).toHaveLength(1);
-    expect(b.calls.update[0]?.content).toContain("Next crossword in 23h");
+    expect(viewText(b.calls.update[0])).toContain("Next crossword in 23h");
   } finally {
     Date.now = realNow;
   }

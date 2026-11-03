@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { fakeClick, fakeModal } from "../../../core/fake-interaction.ts";
+import { viewText } from "../view-text.ts";
 import { answerHandler } from "../../../../src/modules/crossword/components/answer.ts";
 import { checkHandler } from "../../../../src/modules/crossword/components/check.ts";
 import { giveUpHandler } from "../../../../src/modules/crossword/components/give-up.ts";
@@ -30,7 +31,7 @@ test("Check on a correct grid finishes, scores and announces once", async () => 
   await check.handle(a.i, [DATE, "1"], ctx);
 
   expect(stored(repo)).toMatchObject({ solved: true, points: 90 });
-  expect(a.calls.update[0]?.content).toContain("Next crossword in");
+  expect(viewText(a.calls.update[0])).toContain("Next crossword in");
   expect(a.calls.send).toHaveLength(1);
   expect(a.calls.send[0]?.content).toStartWith(
     "<@u> solved Crossword #2 — 90 pts · 1 wrong checks · 0 reveals · ",
@@ -48,8 +49,8 @@ test("Check on a wrong grid costs 10 and does not say which", async () => {
   await check.handle(a.i, [DATE, "1"], ctx);
 
   expect(stored(repo)).toMatchObject({ wrong: 1, finishedAt: null });
-  expect(a.calls.update[0]?.content).toContain("90 pts");
-  expect(a.calls.update[0]?.content).toEndWith("❌ Not quite — some letters are wrong (−10)");
+  expect(viewText(a.calls.update[0])).toContain("90 pts");
+  expect(viewText(a.calls.update[0])).toEndWith("❌ Not quite — some letters are wrong (−10)");
   expect(a.calls.send).toHaveLength(0);
 });
 
@@ -59,7 +60,7 @@ test("a practice wrong check shows no cost", async () => {
   await check.handle(a.i, ["practice", "1"], ctx);
 
   expect(repo.practice.get("g", "u")?.wrong).toBe(1);
-  expect(a.calls.update[0]?.content).toEndWith("❌ Not quite — some letters are wrong");
+  expect(viewText(a.calls.update[0])).toEndWith("❌ Not quite — some letters are wrong");
 });
 
 test("Check on a grid that isn't full refreshes the board and changes nothing", async () => {
@@ -95,7 +96,7 @@ test("Give up scores 0, announces once and ignores a second click", async () => 
   await giveUp.handle(a.i, [DATE, "1"], ctx);
 
   expect(stored(repo)).toMatchObject({ solved: false, points: 0 });
-  expect(a.calls.update[0]?.content).toContain("Gave up");
+  expect(viewText(a.calls.update[0])).toContain("Gave up");
   expect(a.calls.update[0]?.files).toHaveLength(1);
   expect(a.calls.send.map((m) => m.content)).toEqual(["<@u> gave up on Crossword #2"]);
 
@@ -121,8 +122,8 @@ test("a practice crossword finishes without announcing", async () => {
 
   expect(repo.practice.get("g", "u")?.finishedAt).not.toBeNull();
   expect(a.calls.send).toHaveLength(0);
-  expect(a.calls.update[0]?.content).toContain("Practice crossword");
-  expect(a.calls.update[0]?.content).toContain("Solved!");
+  expect(viewText(a.calls.update[0])).toContain("Practice crossword");
+  expect(viewText(a.calls.update[0])).toContain("Solved!");
 });
 
 test("a click on a finished board re-renders it and changes nothing", async () => {

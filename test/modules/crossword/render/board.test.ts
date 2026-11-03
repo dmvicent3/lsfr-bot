@@ -1,7 +1,8 @@
 import { expect, test } from "bun:test";
 import { solutionOf } from "../../../../src/modules/crossword/play/cells.ts";
 import { square } from "../play/fixtures.ts";
-import { boardText } from "../../../../src/modules/crossword/render/board.ts";
+import { boardText as parts } from "../../../../src/modules/crossword/render/board.ts";
+import type { BoardView } from "../../../../src/modules/crossword/render/types.ts";
 import { bigView, V } from "./fixtures.ts";
 
 const SHAPE = [
@@ -21,6 +22,20 @@ const SHAPE = [
 ].join("\n");
 
 const FULL = solutionOf(square());
+
+/** Header and body as the two text displays read, one after the other. */
+const boardText = (v: BoardView): string => {
+  const { header, body } = parts(v);
+
+  return `${header}\n${body}`;
+};
+
+test("the header is its own line; the body starts with the across list", () => {
+  const { header, body } = parts(V);
+
+  expect(header).toBe("Crossword #3 · Words 1/10 · 95 pts · 2:14");
+  expect(body).toStartWith("**Across**\n");
+});
 
 test("daily in progress: header and clue lists, no grid text", () => {
   expect(boardText(V)).toBe(SHAPE);
@@ -83,18 +98,27 @@ test("finished practice shows wrong checks and reveals, no next line", () => {
   expect(out).not.toContain("Next crossword");
 });
 
-test("a 7×7 with 90-character clues stays within 2000 characters", () => {
+test("a 7×7 with 90-character clues stays within the 4000-character text budget", () => {
   const out = boardText(bigView());
 
-  expect(out.length).toBeLessThanOrEqual(2000);
-  expect(out).toContain("…");
+  expect(out.length).toBeLessThanOrEqual(4000);
+  expect(out).not.toContain("…");
+});
+
+test("past the budget every clue is cut to the same, longest fitting length", () => {
+  const out = boardText(bigView({ lastLine: "z".repeat(2500) }));
+  const cut = out.split("\n").filter((l) => l.includes("…"));
+
+  expect(out.length).toBeLessThanOrEqual(4000);
+  expect(cut).toHaveLength(22);
+  expect(new Set(cut.map((l) => l.replace(/^\d+\. /, "").length)).size).toBeLessThanOrEqual(2);
 });
 
 test("a finished 7×7 with answers also fits, deterministically", () => {
   const v = bigView({ finished: true, award: { points: 80, parts: ["Solved: 100"] } });
   const out = boardText(v);
 
-  expect(out.length).toBeLessThanOrEqual(2000);
+  expect(out.length).toBeLessThanOrEqual(4000);
   expect(boardText(v)).toBe(out);
 });
 

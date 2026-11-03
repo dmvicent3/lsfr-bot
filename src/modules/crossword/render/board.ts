@@ -6,7 +6,8 @@ import { clock, DIR_NAME } from "./labels.ts";
 import { resultLines } from "./result.ts";
 import type { BoardView } from "./types.ts";
 
-export const MESSAGE_MAX = 2000;
+/** Discord's budget for all the text of a Components V2 message. */
+export const TEXT_MAX = 4000;
 
 function header(v: BoardView): string {
   const { puzzle } = v.stored;
@@ -41,7 +42,6 @@ function build(v: BoardView, cap: number): string {
   const tail = resultLines(v);
 
   return [
-    header(v),
     ...list(v, "a", cap),
     ...list(v, "d", cap),
     ...(v.lastLine ? [v.lastLine] : []),
@@ -49,13 +49,18 @@ function build(v: BoardView, cap: number): string {
   ].join("\n");
 }
 
-/** The message text; every clue is cut with `…` to the same length, the longest that fits. */
-export function boardText(v: BoardView): string {
-  for (let cap = CLUE_MAX; cap > 1; cap--) {
-    const text = build(v, cap);
+/**
+ * The header line and the body (clue lists, last line, result); every clue is cut with `…` to the
+ * same length, the longest that keeps both within the text budget.
+ */
+export function boardText(v: BoardView): { header: string; body: string } {
+  const head = header(v);
 
-    if (text.length <= MESSAGE_MAX) return text;
+  for (let cap = CLUE_MAX; cap > 1; cap--) {
+    const body = build(v, cap);
+
+    if (head.length + body.length <= TEXT_MAX) return { header: head, body };
   }
 
-  return build(v, 1);
+  return { header: head, body: build(v, 1) };
 }

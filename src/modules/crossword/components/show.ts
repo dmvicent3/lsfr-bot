@@ -28,7 +28,7 @@ export async function present(i: Click, r: Round, landed: Landed): Promise<void>
 
   try {
     if (canUpdate(i)) await i.update(view);
-    else await i.reply({ ...view, flags: MessageFlags.Ephemeral });
+    else await i.reply({ ...view, flags: [MessageFlags.Ephemeral, MessageFlags.IsComponentsV2] });
   } catch (err) {
     log.error("crossword", "could not show the board", err);
   }

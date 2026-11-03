@@ -1,37 +1,90 @@
 import { expect, test } from "bun:test";
+import { ComponentType, MessageFlags } from "discord.js";
 import { solutionOf } from "../../../../src/modules/crossword/play/cells.ts";
 import { boardView } from "../../../../src/modules/crossword/render/board-view.ts";
 import { newId, slotKey } from "../../../../src/modules/crossword/render/ids.ts";
 import { crosswordView } from "../../../../src/modules/crossword/render/view.ts";
+import type { BoardView } from "../../../../src/modules/crossword/render/types.ts";
 import type { Game, Practice } from "../../../../src/modules/crossword/types.ts";
+import { flatComponents, viewText } from "../view-text.ts";
 import { bigView, SQUARE, V } from "./fixtures.ts";
 
-const ids = (v: ReturnType<typeof crosswordView>) =>
-  v.components.map((r) => r.components.map((c) => (c as { custom_id: string }).custom_id));
+type View = ReturnType<typeof crosswordView>;
 
-const control = (v: ReturnType<typeof crosswordView>) =>
-  v.components[1]!.components.map((c) => ({
-    style: "style" in c ? c.style : 0,
-    disabled: "disabled" in c ? c.disabled : undefined,
-  }));
+const PRACTICE: BoardView = { ...V, scope: "practice", number: null };
 
-test("daily in progress: select, check, reveal and give up", () => {
+/** The custom ids of each action row, top to bottom. */
+const ids = (v: View) =>
+  v.components.flatMap((r) =>
+    r.type === ComponentType.ActionRow
+      ? [r.components.map((c) => ("custom_id" in c ? c.custom_id : ""))]
+      : [],
+  );
+
+const rows = (v: View) => v.components.filter((r) => r.type === ComponentType.ActionRow);
+
+const control = (v: View) =>
+  rows(v)
+    .at(-1)!
+    .components.map((c) => ({
+      style: "style" in c ? c.style : 0,
+      disabled: "disabled" in c ? c.disabled : undefined,
+    }));
+
+test("Components V2: header text, the grid image, the clue text, then the rows", () => {
   const v = crosswordView(V);
 
+  expect(v.flags).toBe(MessageFlags.IsComponentsV2);
+  expect("content" in v).toBe(false);
   expect(v.allowedMentions).toEqual({ parse: [] });
-  expect(ids(v)).toEqual([
-    ["crossword:pick:2026-11-05:mh1x"],
-    [
-      "crossword:check:2026-11-05:mh1x",
-      "crossword:reveal:2026-11-05:mh1x",
-      "crossword:giveup:2026-11-05:mh1x",
-    ],
+  expect(v.components.slice(0, 3)).toEqual([
+    { type: ComponentType.TextDisplay, content: "Crossword #3 · Words 1/10 · 95 pts · 2:14" },
+    {
+      type: ComponentType.MediaGallery,
+      items: [{ media: { url: "attachment://crossword.png" } }],
+    },
+    expect.objectContaining({ type: ComponentType.TextDisplay }),
+  ]);
+  expect(viewText(v)).toContain("**Across**\n1. clue 1a (5)");
+});
+
+test("5×5 in progress: 25 square buttons, then check, reveal and give up", () => {
+  const v = crosswordView(V);
+  const r = ids(v);
+
+  expect(r).toHaveLength(6);
+  expect(r.slice(0, 5).flat()).toEqual(
+    Array.from({ length: 25 }, (_, i) => `crossword:cell:2026-11-05:mh1x:${i}`),
+  );
+  expect(r[5]).toEqual([
+    "crossword:check:2026-11-05:mh1x",
+    "crossword:reveal:2026-11-05:mh1x",
+    "crossword:giveup:2026-11-05:mh1x",
   ]);
   expect(control(v)).toEqual([
     { style: 1, disabled: true },
     { style: 2, disabled: undefined },
     { style: 4, disabled: undefined },
   ]);
+});
+
+test("7×7 in progress keeps the clue select above the controls", () => {
+  const v = crosswordView(bigView());
+
+  expect(ids(v)[0]).toEqual(["crossword:pick:2026-11-05:mh1x"]);
+  expect(ids(v)).toHaveLength(2);
+});
+
+test("a 5×5 practice fits Discord's limits: 38 components, unique ids, 5 buttons a row", () => {
+  const v = crosswordView(PRACTICE);
+  const all = flatComponents(v.components);
+  const custom = all.flatMap((c) => (typeof c.custom_id === "string" ? [c.custom_id] : []));
+
+  expect(all).toHaveLength(38);
+  expect(all.length).toBeLessThanOrEqual(40);
+  expect(new Set(custom).size).toBe(custom.length);
+
+  for (const r of rows(v)) expect(r.components.length).toBeLessThanOrEqual(5);
 });
 
 test("Check is enabled once the grid is full, right or wrong", () => {
@@ -52,9 +105,7 @@ test("every view carries one crossword.png and clears old attachments", () => {
 });
 
 test("practice in progress adds New for its size", () => {
-  const v = crosswordView({ ...V, scope: "practice", number: null });
-
-  expect(ids(v)[1]).toEqual([
+  expect(ids(crosswordView(PRACTICE))[5]).toEqual([
     "crossword:check:practice:mh1x",
     "crossword:reveal:practice:mh1x",
     "crossword:giveup:practice:mh1x",
@@ -62,18 +113,27 @@ test("practice in progress adds New for its size", () => {
   ]);
 });
 
-test("daily finished: no components", () => {
-  expect(crosswordView({ ...V, finished: true }).components).toEqual([]);
+test("daily finished: only the texts and the image, no squares or controls", () => {
+  const v = crosswordView({ ...V, finished: true });
+
+  expect(v.components.map((c) => c.type)).toEqual([
+    ComponentType.TextDisplay,
+    ComponentType.MediaGallery,
+    ComponentType.TextDisplay,
+  ]);
 });
 
-test("practice finished keeps New", () => {
-  const v = crosswordView({ ...V, scope: "practice", number: null, finished: true });
-
-  expect(ids(v)).toEqual([["crossword:new:5"]]);
+test("practice finished keeps New, no squares", () => {
+  expect(ids(crosswordView({ ...PRACTICE, finished: true }))).toEqual([["crossword:new:5"]]);
+  expect(ids(crosswordView(bigView({ scope: "practice", number: null, finished: true })))).toEqual([
+    ["crossword:new:7"],
+  ]);
 });
 
-test("the message is within 2000 characters", () => {
-  expect(crosswordView(bigView()).content.length).toBeLessThanOrEqual(2000);
+test("all the text is within 4000 characters", () => {
+  for (const b of [bigView(), bigView({ finished: true })]) {
+    expect(viewText(crosswordView(b)).length).toBeLessThanOrEqual(4000);
+  }
 });
 
 test("id builders", () => {

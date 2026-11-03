@@ -1,5 +1,7 @@
 import { expect, test } from "bun:test";
+import { MessageFlags } from "discord.js";
 import { fakeClick, fakeModal } from "../../../core/fake-interaction.ts";
+import { viewText } from "../view-text.ts";
 import { answerHandler } from "../../../../src/modules/crossword/components/answer.ts";
 import { pickHandler } from "../../../../src/modules/crossword/components/pick.ts";
 import { revealHandler } from "../../../../src/modules/crossword/components/reveal.ts";
@@ -50,7 +52,7 @@ test("a typed word fills the board with the grid image", async () => {
   await answer.handle(i, [DATE, "1", keyOf(row(0))], ctx);
 
   expect(stored(repo)?.cells.startsWith("crane")).toBe(true);
-  expect(calls.update[0]?.content).toContain("Words 1/10");
+  expect(viewText(calls.update[0])).toContain("Words 1/10");
   expect(calls.update[0]?.files?.map((f) => f.name)).toEqual(["crossword.png"]);
   expect(calls.update[0]?.attachments).toEqual([]);
   expect(calls.update[0]?.allowedMentions).toEqual({ parse: [] });
@@ -63,8 +65,8 @@ test("a wrong word goes in unjudged and costs nothing", async () => {
 
   expect(stored(repo)).toMatchObject({ wrong: 0, lastLine: null });
   expect(stored(repo)?.cells.startsWith("olive")).toBe(true);
-  expect(calls.update[0]?.content).toContain("100 pts");
-  expect(calls.update[0]?.content).not.toContain("❌");
+  expect(viewText(calls.update[0])).toContain("100 pts");
+  expect(viewText(calls.update[0])).not.toContain("❌");
 });
 
 test("a bad length is an ephemeral reply and costs nothing", async () => {
@@ -84,7 +86,7 @@ test("a filled clue can be typed again; revealed letters stay and say so", async
   await answer.handle(i, [DATE, "1", keyOf(row(0))], ctx);
 
   expect(stored(repo)?.cells.slice(0, 5)).toBe("oRive");
-  expect(calls.update[0]?.content).toContain("🔎 Kept the revealed letters in 1 Across");
+  expect(viewText(calls.update[0])).toContain("🔎 Kept the revealed letters in 1 Across");
 });
 
 test("a submit not from a message answers ephemerally with the board", async () => {
@@ -92,9 +94,9 @@ test("a submit not from a message answers ephemerally with the board", async () 
   const { i, calls } = fakeModal("u", "crane", { notFromMessage: true });
   await answer.handle(i, [DATE, "1", keyOf(row(0))], ctx);
 
-  expect(calls.reply[0]?.content).toContain("Words 1/10");
+  expect(viewText(calls.reply[0])).toContain("Words 1/10");
   expect(calls.reply[0]?.files).toHaveLength(1);
-  expect(calls.reply[0]?.flags).toBeDefined();
+  expect(calls.reply[0]?.flags).toEqual([MessageFlags.Ephemeral, MessageFlags.IsComponentsV2]);
 });
 
 test("a down answer overwrites the cells it shares with an across answer", async () => {
@@ -115,6 +117,6 @@ test("Reveal letter costs 10 and fills one cell, uppercase", async () => {
   const game = stored(repo)!;
   expect(game.reveals).toBe(1);
   expect(game.cells.replaceAll(".", "")).toMatch(/^[A-Z]$/);
-  expect(calls.update[0]?.content).toContain("90 pts");
-  expect(calls.update[0]?.content).toContain("🔎 Revealed a letter");
+  expect(viewText(calls.update[0])).toContain("90 pts");
+  expect(viewText(calls.update[0])).toContain("🔎 Revealed a letter");
 });

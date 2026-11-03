@@ -16,6 +16,7 @@ import { crosswordComponents } from "../../../../src/modules/crossword/component
 import { crosswordModule } from "../../../../src/modules/crossword/index.ts";
 import { seeded } from "../../shed/testing/random.ts";
 import { storedSquare } from "../play/fixtures.ts";
+import { viewText } from "../view-text.ts";
 import { freshDb, game, practice as practiceRound, puzzle } from "../store/fixtures.ts";
 
 type Opt = {
@@ -91,7 +92,7 @@ function ctx(i: object, r = db()): CommandCtx {
 
 function playFake(size: number | null = null) {
   const order: string[] = [];
-  type Edit = { content?: string; components?: unknown[]; files?: { name?: string }[] };
+  type Edit = { flags?: unknown; components?: unknown[]; files?: { name?: string }[] };
   const sent: { flags?: unknown; edited?: Edit | string } = {};
   const i = {
     user: { id: "u" },
@@ -100,7 +101,7 @@ function playFake(size: number | null = null) {
       order.push("deferReply");
       sent.flags = o.flags;
     },
-    editReply: async (m: { content?: string } | string) => {
+    editReply: async (m: Edit | string) => {
       order.push("editReply");
       sent.edited = m;
     },
@@ -122,7 +123,9 @@ describe("/crossword play", () => {
     expect(order).toEqual(["deferReply", "editReply"]);
     expect(sent.flags).toBe(MessageFlags.Ephemeral);
     const edited = typeof sent.edited === "object" ? sent.edited : {};
-    expect(edited.content).toContain("Crossword #");
+    expect(edited.flags).toBe(MessageFlags.IsComponentsV2);
+    expect("content" in edited).toBe(false);
+    expect(viewText(edited)).toContain("Crossword #");
     expect(edited.components?.length).toBeGreaterThan(0);
     expect(edited.files?.map((f) => f.name)).toEqual(["crossword.png"]);
     expect(r.repo.games.get("g", date, "u")).not.toBeNull();
