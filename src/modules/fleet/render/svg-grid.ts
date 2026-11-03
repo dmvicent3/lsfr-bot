@@ -84,7 +84,7 @@ function lines(at: Point): string[] {
 export function gridSvg(p: GridPaint): string {
   const cells = Array.from({ length: SIZE * SIZE }, (_, c) => c);
   const at = (c: number) => corner(p.at, c);
-  const preview = `fill="${COLOURS.cursor}" fill-opacity="0.6"`;
+  const preview = `fill="${COLOURS.cursor}" fill-opacity="1"`;
   const outline = `fill="none" stroke="${COLOURS.cursor}" stroke-width="3"`;
 
   return [

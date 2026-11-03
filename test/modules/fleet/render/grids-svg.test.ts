@@ -53,7 +53,7 @@ const has = (svg: string, at: Point, c: number, rest: string): boolean => {
 const outlines = (svg: string): number =>
   svg.match(/stroke="#f5c211" stroke-width="3"/g)?.length ?? 0;
 
-const previews = (svg: string): number => svg.match(/fill-opacity="0.6"/g)?.length ?? 0;
+const previews = (svg: string): number => svg.match(/fill-opacity="1"/g)?.length ?? 0;
 
 /** The white dot of a miss in cell `c`. */
 const dot = (at: Point, c: number): string => {
@@ -75,7 +75,7 @@ const cross = (svg: string, at: Point, c: number, colour: string): number => {
 
 const LABELS = "ABCDEFGHIJ12345678910";
 
-const PREVIEW = 'fill="#f5c211" fill-opacity="0.6"';
+const PREVIEW = 'fill="#f5c211" fill-opacity="1"';
 
 const placing = (over: Partial<Game> = {}): Game =>
   playing({ phase: "placing", player: { ships: [], shots: [] }, ...over });
