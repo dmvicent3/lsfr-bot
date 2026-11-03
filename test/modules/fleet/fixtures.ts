@@ -29,7 +29,7 @@ export const playing = (over: Partial<Game> = {}): Game => ({
   playerId: "u",
   channelId: "c",
   messageId: "m",
-  fleetMessageId: "f",
+  fleetMessageId: null,
   difficulty: "normal",
   phase: "playing",
   first: "player",

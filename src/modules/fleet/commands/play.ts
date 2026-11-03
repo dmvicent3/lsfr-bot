@@ -1,7 +1,7 @@
 import { reply } from "../../../core/replies.ts";
 import { startThinking, stopThinking } from "../../four/thinking.ts";
 import { startGame } from "../game.ts";
-import { renderGame } from "../render/board.ts";
+import { boardMessage } from "../board-message.ts";
 import { markOld } from "../settle.ts";
 import type { Difficulty } from "../types.ts";
 import { replaceOld } from "./replace.ts";
@@ -28,7 +28,7 @@ async function begin({ i, guildId, repo, d }: CommandCtx): Promise<void> {
     random: d.random,
   });
   const view = { game, outcome: { kind: "playing" }, aiming: false } as const;
-  const message = await i.editReply({ ...renderGame(view), allowedMentions: { parse: [] } });
+  const message = await i.editReply({ ...boardMessage(view), allowedMentions: { parse: [] } });
   repo.games.put({ ...game, messageId: message.id });
 }
 

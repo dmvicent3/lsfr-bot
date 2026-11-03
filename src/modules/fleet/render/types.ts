@@ -11,9 +11,11 @@ export interface GameView {
 
 export type Row = APIActionRowComponent<APIComponentInMessageActionRow>;
 
+/** The board message before its picture is drawn: `svg` becomes the attached fleet.png. */
 export interface BoardMessage {
   embeds: APIEmbed[];
   components: Row[];
+  svg: string;
 }
 
 /** A spot on the board image, in pixels. */

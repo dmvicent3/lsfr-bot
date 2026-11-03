@@ -10,12 +10,20 @@ import type { Game } from "../../../src/modules/fleet/types.ts";
 import { playing, rowsFleet } from "./fixtures.ts";
 import { repo, shotGame } from "./store/repo.ts";
 
+/** A message as the handlers send it: the embed text and the attached picture. */
+interface Sent {
+  components?: unknown[];
+  embeds?: { description?: string }[];
+  files?: { name: string }[];
+  attachments?: unknown[];
+}
+
 interface Seen {
-  updates: { components?: unknown[]; embeds?: { description?: string }[] }[];
-  edits: { embeds?: { description?: string }[] }[];
-  messageEdits: { embeds?: { description?: string }[] }[];
-  posts: { embeds?: { description?: string }[] }[];
-  fleetEdits: { id: string; embeds?: { description?: string }[] }[];
+  updates: Sent[];
+  edits: Sent[];
+  messageEdits: Sent[];
+  posts: Sent[];
+  deletes: string[];
   replies: string[];
   deferred: number;
 }
@@ -37,21 +45,19 @@ interface ClickOpts {
   userId?: string;
   values?: string[];
   editFails?: boolean;
-  postFails?: boolean;
+  deleteFails?: boolean;
 }
 
 function fakeChannel(seen: Seen, p: ClickOpts) {
   return {
     isSendable: () => true,
-    send: async (m: Seen["posts"][number]) => {
-      if (p.postFails) throw new Error("Missing Permissions");
-
-      seen.posts.push(m);
-
-      return { id: "f1" };
-    },
+    send: async (m: Sent) => (seen.posts.push(m), { id: "f1" }),
     messages: {
-      edit: async (id: string, m: Seen["posts"][number]) => void seen.fleetEdits.push({ id, ...m }),
+      delete: async (id: string) => {
+        if (p.deleteFails) throw new Error("Unknown Message");
+
+        seen.deletes.push(id);
+      },
     },
   };
 }
@@ -62,13 +68,13 @@ function fakeClick(seen: Seen, p: ClickOpts) {
     message: {
       id: "m",
       components: [],
-      edit: async (m: Seen["edits"][number]) => void seen.messageEdits.push(m),
+      edit: async (m: Sent) => void seen.messageEdits.push(m),
     },
     channel: fakeChannel(seen, p),
     values: p.values ?? [],
     isStringSelectMenu: () => p.values !== undefined,
-    update: async (m: Seen["updates"][number]) => void seen.updates.push(m),
-    editReply: async (m: Seen["edits"][number]) => {
+    update: async (m: Sent) => void seen.updates.push(m),
+    editReply: async (m: Sent) => {
       if (p.editFails) throw new Error("Unknown Webhook");
 
       seen.edits.push(m);
@@ -87,7 +93,7 @@ const newSeen = (): Seen => ({
   edits: [],
   messageEdits: [],
   posts: [],
-  fleetEdits: [],
+  deletes: [],
   replies: [],
   deferred: 0,
 });
@@ -207,6 +213,7 @@ test("a failed edit after jevos's shot falls back to editing the message", async
   s.r.games.put(fresh({ cursor: 11 }));
   const seen = await click(s, "fleet:fire", { editFails: true });
   expect(seen.messageEdits[0]?.embeds?.[0]?.description).toContain("jevos fired at");
+  expect(picture(seen.messageEdits[0])).toEqual(FLEET_PNG);
 });
 
 test("a click while another click is still updating says so, without blaming jevos", async () => {
@@ -222,33 +229,50 @@ test("a click while another click is still updating says so, without blaming jev
   }
 });
 
-const placed = () =>
-  fresh({ phase: "placing", fleetMessageId: null, player: { ships: rowsFleet(), shots: [] } });
+const placed = () => fresh({ phase: "placing", player: { ships: rowsFleet(), shots: [] } });
 
-test("Ready posts your fleet under the board", async () => {
+const picture = (m: Sent | undefined) => ({
+  files: m?.files?.map((f) => f.name),
+  all: m?.attachments,
+});
+
+const FLEET_PNG = { files: ["fleet.png"], all: [] };
+
+test("Ready shows both grids on the board itself: no second message", async () => {
   const s = setup();
   s.r.games.put(placed());
   const seen = await click(s, "fleet:ready");
-  expect(seen.posts).toHaveLength(1);
-  expect(seen.posts[0]?.embeds?.[0]?.description).toContain("Your ships afloat:");
-  expect(live(s.r)?.fleetMessageId).toBe("f1");
-  expect(seen.updates[0]?.embeds?.[0]?.description).not.toContain("couldn't be shown");
-});
-
-test("if your fleet can't be posted the game goes on and the board says so", async () => {
-  const s = setup();
-  s.r.games.put(placed());
-  const seen = await click(s, "fleet:ready", { postFails: true });
   expect(live(s.r)?.phase).toBe("playing");
+  expect(seen.posts).toEqual([]);
+  expect(picture(seen.updates[0])).toEqual(FLEET_PNG);
   expect(live(s.r)?.fleetMessageId).toBeNull();
-  expect(seen.updates[0]?.embeds?.[0]?.description).toContain("couldn't be shown");
 });
 
-test("jevos's shot and the end of the game edit your fleet message", async () => {
+test("every board update and edit replaces the picture", async () => {
   const s = setup();
   s.r.games.put(fresh({ cursor: 11 }));
   const turn = await click(s, "fleet:fire");
-  expect(turn.fleetEdits.map((e) => e.id)).toEqual(["f"]);
+  expect(picture(turn.updates[0])).toEqual(FLEET_PNG);
+  expect(picture(turn.edits[0])).toEqual(FLEET_PNG);
+  const move = await click(s, "fleet:col", { values: ["4"] });
+  expect(picture(move.updates[0])).toEqual(FLEET_PNG);
   const end = await click(s, "fleet:resign");
-  expect(end.fleetEdits[0]?.embeds?.[0]?.description).toContain("You resigned.");
+  expect(picture(end.updates[0])).toEqual(FLEET_PNG);
+  expect([...turn.posts, ...move.posts, ...end.posts]).toEqual([]);
+});
+
+test("a game from before the picture deletes its old fleet message once", async () => {
+  const s = setup();
+  s.r.games.put(fresh({ fleetMessageId: "f" }));
+  expect((await click(s, "fleet:row", { values: ["3"] })).deletes).toEqual(["f"]);
+  expect(live(s.r)?.fleetMessageId).toBeNull();
+  expect((await click(s, "fleet:row", { values: ["4"] })).deletes).toEqual([]);
+});
+
+test("an old fleet message that can't be deleted is still forgotten", async () => {
+  const s = setup();
+  s.r.games.put(fresh({ fleetMessageId: "f" }));
+  const seen = await click(s, "fleet:place", { deleteFails: true });
+  expect(seen.deferred).toBe(1);
+  expect(live(s.r)?.fleetMessageId).toBeNull();
 });

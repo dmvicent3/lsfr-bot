@@ -6,11 +6,11 @@ import { fleetKey } from "../commands/play.ts";
 import type { PlayDeps } from "../commands/types.ts";
 import { jevosToMove, outcomeOf, touch } from "../game.ts";
 import { cellName } from "../grid.ts";
-import { renderGame } from "../render/board.ts";
+import { boardMessage } from "../board-message.ts";
+import { dropOldFleet } from "../old-fleet.ts";
 import { settle } from "../settle.ts";
 import { FleetRepo } from "../store/repo.ts";
 import type { Game, Moved } from "../types.ts";
-import { postFleet, syncFleet } from "./fleet-message.ts";
 import { liveGameFor } from "./guard.ts";
 import { type Turn, answer } from "./turn.ts";
 
@@ -27,15 +27,7 @@ const REFUSALS: Record<string, (g: Game) => string> = {
 async function abandon(t: Turn, game: Game, now: number): Promise<void> {
   t.repo.games.finish(game, { result: "loss", how: "abandoned", endedAt: now });
   const view = { game, outcome: { kind: "abandoned" }, aiming: false } as const;
-  await t.i.update(renderGame(view));
-  await syncFleet(t.i.channel, view);
-}
-
-/** Firing starts at Ready: the player's own grid goes in a message of its own. */
-async function started(t: Turn, before: Game, moved: Moved): Promise<Moved> {
-  if (before.phase !== "placing" || moved.game.phase !== "playing") return moved;
-
-  return { ...moved, game: await postFleet(t.i, moved.game) };
+  await t.i.update(boardMessage(view));
 }
 
 async function apply(t: Turn, game: Game, change: Change): Promise<void> {
@@ -54,18 +46,12 @@ async function apply(t: Turn, game: Game, change: Change): Promise<void> {
     return refusal ? tell(t.i, refusal(game)) : void (await t.i.deferUpdate());
   }
 
-  const moved = await started(
-    t,
-    game,
-    "outcome" in next ? next : { game: next, outcome: outcomeOf(next) },
-  );
+  const moved = "outcome" in next ? next : { game: next, outcome: outcomeOf(next) };
 
   if (moved.outcome.kind === "playing" && jevosToMove(moved.game)) return answer(t, moved);
 
   settle(t.repo, moved, now);
-  await t.i.update(renderGame({ ...moved, aiming: false }));
-
-  if (moved.outcome.kind !== "playing") await syncFleet(t.i.channel, { ...moved, aiming: false });
+  await t.i.update(boardMessage({ ...moved, aiming: false }));
 }
 
 /** Runs one control on the clicker's live game, under their lock. */
@@ -86,7 +72,11 @@ export async function act(
   }
 
   try {
-    await apply({ i, repo, d: c.d }, game, change);
+    const current = await dropOldFleet(i.channel, game);
+
+    if (current !== game) repo.games.put(current);
+
+    await apply({ i, repo, d: c.d }, current, change);
   } finally {
     stopThinking(key);
   }

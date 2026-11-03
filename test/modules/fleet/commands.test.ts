@@ -79,3 +79,25 @@ test("stats and leaderboard reply without pinging", async () => {
 
   for (const reply of replies) expect(reply).toMatchObject({ allowedMentions: { parse: [] } });
 });
+
+test("/fleet play marks the old board abandoned with its picture and deletes an old fleet message", async () => {
+  const { repo: r } = repo();
+  r.games.put({ ...playing({ fleetMessageId: "f", updatedAt: Date.now() }), messageId: "old" });
+  const edits: { id: string; files?: { name: string }[]; attachments?: unknown[] }[] = [];
+  const deletes: string[] = [];
+  const channel = {
+    isTextBased: () => true,
+    messages: {
+      edit: async (id: string, m: { files?: { name: string }[]; attachments?: unknown[] }) =>
+        void edits.push({ id, ...m }),
+      delete: async (id: string) => void deletes.push(id),
+    },
+  };
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- only the client's channel fetch
+  const ctx = { client: { channels: { fetch: async () => channel } } } as unknown as Ctx;
+  await play({ i: interaction([], []), guildId: "g", ctx, repo: r, d });
+  expect(edits.map((e) => [e.id, e.files?.map((f) => f.name), e.attachments])).toEqual([
+    ["old", ["fleet.png"], []],
+  ]);
+  expect(deletes).toEqual(["f"]);
+});
