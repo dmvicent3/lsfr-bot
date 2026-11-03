@@ -4,6 +4,7 @@ import { poll } from "./run/poll.ts";
 import { polls } from "./run/polls.ts";
 import { read } from "./run/read.ts";
 import { results } from "./run/results.ts";
+import { say } from "./run/say.ts";
 import type { Args, Command, CommandName, Outcome, ScriptDeps } from "./types.ts";
 
 const RUNNERS: { [K in CommandName]: (args: Args[K], d: ScriptDeps) => Promise<Outcome> } = {
@@ -12,6 +13,7 @@ const RUNNERS: { [K in CommandName]: (args: Args[K], d: ScriptDeps) => Promise<O
   poll,
   polls,
   results,
+  say,
 };
 
 const run = <K extends CommandName>(c: Command<K>, d: ScriptDeps): Promise<Outcome> =>

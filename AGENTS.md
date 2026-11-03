@@ -47,7 +47,7 @@ Spec and plan (local only, gitignored): `docs/superpowers/specs/2026-10-15-gork-
 
 ## Player feedback and polls
 
-Players leave feedback with `/feedback`; check it when starting Gork work, and ask them design questions as Discord polls. Both go through `scripts/feedback.ts` inside the running bot container on the Pi: `ssh -i ~/.ssh/pi_opencode pi@192.168.1.224 'docker exec lsfr-bot-bot-1 bun scripts/feedback.ts <command>'` (no command prints the usage). Mark entries read once acted on. Reading feedback and results is free; a poll is public, so show the user the question and options and post only after they approve.
+Players leave feedback with `/feedback`; check it when starting Gork work, and ask them design questions as Discord polls. Both go through `scripts/feedback.ts` inside the running bot container on the Pi: `ssh -i ~/.ssh/pi_opencode pi@192.168.1.224 'docker exec lsfr-bot-bot-1 bun scripts/feedback.ts <command>'` (no command prints the usage). Once a change from feedback is deployed, announce it with `say` (what changed, thanking the player by name; mentions are off) and mark the entry read. Reading feedback and results is free, and so is the shipped-feedback announcement; a poll is public, so show the user the question and options and post only after they approve.
 
 ## Task board
 

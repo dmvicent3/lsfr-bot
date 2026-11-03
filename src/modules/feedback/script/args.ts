@@ -1,4 +1,5 @@
 import { parsePoll } from "./poll-args.ts";
+import { parseSay } from "./say-args.ts";
 import { lastValue, positiveId, tokenize } from "./tokens.ts";
 import type { CommandName, Parsed } from "./types.ts";
 import { USAGE } from "./usage.ts";
@@ -42,6 +43,7 @@ const PARSERS: Record<CommandName, (argv: string[]) => Parsed> = {
   poll: parsePoll,
   polls: parsePolls,
   results: parseResults,
+  say: parseSay,
 };
 
 const isCommandName = (name: string): name is CommandName => Object.hasOwn(PARSERS, name);

@@ -157,3 +157,37 @@ describe("polls and results", () => {
     expect(await runScript(["results", "9"], d)).toEqual({ ok: false, text: "No poll #9." });
   });
 });
+
+describe("say", () => {
+  test("posts the message in the server's channel, pinging no one", async () => {
+    const { rest, calls } = fakeRest({}, { id: "m9" });
+    const { db, d } = deps(rest);
+    setPollChannel(db, "g1", "c1");
+
+    expect(await runScript(["say", "Fleet is one message now"], d)).toEqual({
+      ok: true,
+      text: "posted: https://discord.com/channels/g1/c1/m9",
+    });
+    expect(calls[0]).toEqual({
+      method: "post",
+      route: "/channels/c1/messages",
+      body: { content: "Fleet is one message now", allowed_mentions: { parse: [] } },
+    });
+  });
+
+  test("bad text or no channel posts nothing", async () => {
+    const { rest, calls } = fakeRest({}, { id: "m9" });
+    const { db, d } = deps(rest);
+
+    expect((await runScript(["say", "hi"], d)).text).toBe(
+      "No server has a poll channel; set one with /feedback settings.",
+    );
+    setPollChannel(db, "g1", "c1");
+    expect((await runScript(["say"], d)).text).toBe("say takes one message; quote it.");
+    expect((await runScript(["say", "  "], d)).text).toBe("The message is empty.");
+    expect((await runScript(["say", "x".repeat(2001)], d)).text).toBe(
+      "The message is over 2000 characters.",
+    );
+    expect(calls).toEqual([]);
+  });
+});

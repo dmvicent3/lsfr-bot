@@ -4,4 +4,5 @@ export const USAGE = `Usage: bun scripts/feedback.ts <command>
   poll <question> --option <text> (2-10 times) [--hours 24] [--multi] [--guild <id>]
                                   post a poll in the server's poll channel
   polls                           the polls posted so far
-  results <id>                    votes and voters of a poll`;
+  results <id>                    votes and voters of a poll
+  say <text> [--guild <id>]       post a message in the server's poll channel`;

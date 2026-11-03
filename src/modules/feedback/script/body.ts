@@ -25,5 +25,11 @@ export function pollEnd(sent: unknown, now: number, hours: number): number {
   return Number.isNaN(expiry) ? now + hours * HOUR_MS : expiry;
 }
 
+/** A plain message; pings no one. */
+export const sayBody = (content: string): RESTPostAPIChannelMessageJSONBody => ({
+  content,
+  allowed_mentions: { parse: [] },
+});
+
 export const messageUrl = (guildId: string, channelId: string, messageId: string): string =>
   `https://discord.com/channels/${guildId}/${channelId}/${messageId}`;

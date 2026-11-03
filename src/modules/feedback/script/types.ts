@@ -28,6 +28,7 @@ export interface Args {
   poll: { poll: PollRequest; guildId: string | null };
   polls: Record<string, never>;
   results: { id: number };
+  say: { text: string; guildId: string | null };
 }
 
 export type CommandName = keyof Args;
