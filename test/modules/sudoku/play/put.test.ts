@@ -14,13 +14,13 @@ test("put on a given is unchanged with a note", () => {
   expect(step.solved).toBe(false);
 });
 
-test("put sets the cell, clears wrong and jumps to the next empty", () => {
+test("put sets the cell, clears wrong and keeps the cursor", () => {
   const g = makeGame({ wrong: setAt("0".repeat(81), 2, "1") });
   const step = put(g, 1);
 
   expect(step.game.cells[2]).toBe("1");
   expect(step.game.wrong[2]).toBe("0");
-  expect(step.game.cursor).toBe(3);
+  expect(step.game.cursor).toBe(2);
   expect(step.note).toBeNull();
   expect(step.solved).toBe(false);
   expect(g.cells[2]).toBe("0");
@@ -30,13 +30,6 @@ test("overwriting a filled non-given cell is allowed", () => {
   const g = makeGame({ cells: setAt(makeGame().cells, 2, "5") });
 
   expect(put(g, 7).game.cells[2]).toBe("7");
-});
-
-test("wraps from 80 to the first empty", () => {
-  const givens = setAt(makeGame().givens, 80, "0");
-  const step = put(makeGame({ givens, cells: givens, cursor: 80 }), 9);
-
-  expect(step.game.cursor).toBe(2);
 });
 
 test("last correct put solves and keeps the cursor", () => {

@@ -1,11 +1,10 @@
 import type { Game, Step } from "../types.ts";
-import { nextEmpty } from "./next-empty.ts";
 import { clearNotes } from "./notes.ts";
 import { blocked, setChar, unchanged } from "./step.ts";
 
 const FULL_WRONG = "Grid is full but something's off.";
 
-/** Writes a digit at the cursor (dropping its notes), then jumps on or reports the full grid. */
+/** Writes a digit at the cursor (dropping its notes), keeping the cursor there; reports a full wrong grid. */
 export function putDigit(g: Game, digit: number): Step {
   const stop = blocked(g);
 
@@ -20,7 +19,5 @@ export function putDigit(g: Game, digit: number): Step {
     return { game: { ...g, cells, wrong, notes }, note: null, solved: true };
   }
 
-  const cursor = full ? g.cursor : nextEmpty(cells, g.cursor);
-
-  return unchanged({ ...g, cells, wrong, notes, cursor }, full ? FULL_WRONG : null);
+  return unchanged({ ...g, cells, wrong, notes }, full ? FULL_WRONG : null);
 }
