@@ -110,3 +110,19 @@ test("placing a digit clears only that cell's notes", () => {
   expect(notesOf(step.game.notes, 2)).toEqual([]);
   expect(notesOf(step.game.notes, 3)).toEqual([1]);
 });
+
+test("placing a digit drops it from the row, column and box peers' notes", () => {
+  // Cell 2 is row 0, column 2, box 0; cell 80 is no peer.
+  const peers = [3, 74, 19];
+  const notes = [...peers, 80].reduce((n, i) => toggleNote(toggleNote(n, i, 4), i, 9), NONE);
+  const step = put(makeGame({ notes: toggleNote(notes, 2, 1) }), 4);
+
+  for (const i of peers) expect(notesOf(step.game.notes, i)).toEqual([9]);
+
+  expect(notesOf(step.game.notes, 80)).toEqual([4, 9]);
+  expect(notesOf(step.game.notes, 2)).toEqual([]);
+});
+
+test("placing a digit with no notes keeps notes ''", () => {
+  expect(put(makeGame(), 4).game.notes).toBe("");
+});

@@ -1,5 +1,11 @@
 import { expect, test } from "bun:test";
-import { clearNotes, notesOf, toggleNote } from "../../../../src/modules/sudoku/play/notes.ts";
+import {
+  clearNotes,
+  dropNote,
+  notesOf,
+  peersOf,
+  toggleNote,
+} from "../../../../src/modules/sudoku/play/notes.ts";
 
 const NONE = "0".repeat(729);
 
@@ -38,4 +44,32 @@ test("clear empties one cell's notes only", () => {
 
 test("clear on '' stays ''", () => {
   expect(clearNotes("", 3)).toBe("");
+});
+
+test("a cell has 20 peers: its row, column and box, not itself", () => {
+  const peers = peersOf(40);
+
+  expect(peers).toHaveLength(20);
+  expect(peers).not.toContain(40);
+  expect(peers).toEqual(expect.arrayContaining([36, 44, 4, 76, 30, 50]));
+  expect(peers).not.toContain(0);
+  expect(peersOf(0).toSorted((a, b) => a - b)).toEqual([
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 18, 19, 20, 27, 36, 45, 54, 63, 72,
+  ]);
+});
+
+test("dropNote removes one digit from the given cells only", () => {
+  const notes = [
+    [3, 5],
+    [3, 6],
+    [4, 5],
+  ].reduce((n, [i = 0, d = 0]) => toggleNote(n, i, d), NONE);
+  const dropped = dropNote(notes, [3, 7], 5);
+
+  expect(notesOf(dropped, 3)).toEqual([6]);
+  expect(notesOf(dropped, 4)).toEqual([5]);
+});
+
+test("dropNote on '' stays ''", () => {
+  expect(dropNote("", [1, 2], 5)).toBe("");
 });
