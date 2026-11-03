@@ -8,15 +8,19 @@ const MARGIN = 12;
 const ROWS_GUTTER = 20;
 const COLS_GUTTER = 18;
 const TITLE_BAND = 24;
-const GAP = 40;
+/** Between the top grid's bottom edge and the bottom grid's title. */
+const GAP = 28;
 const SIDE = 10 * CELL;
 
 const TITLE: TextStyle = { size: 16, fill: "#111", bold: true };
 
 /** Where each grid's top-left cell starts. */
 export const PLACING_AT: Point = { x: MARGIN + ROWS_GUTTER, y: MARGIN + COLS_GUTTER };
-export const LEFT_AT: Point = { x: PLACING_AT.x, y: PLACING_AT.y + TITLE_BAND };
-export const RIGHT_AT: Point = { x: LEFT_AT.x + SIDE + GAP, y: LEFT_AT.y };
+export const TOP_AT: Point = { x: PLACING_AT.x, y: PLACING_AT.y + TITLE_BAND };
+export const BOTTOM_AT: Point = {
+  x: TOP_AT.x,
+  y: TOP_AT.y + SIDE + GAP + TITLE_BAND + COLS_GUTTER,
+};
 
 const NONE = new Set<number>();
 
@@ -37,15 +41,18 @@ export function fleetSvg(g: Game, o: { preview: boolean }): string {
   return frame(PLACING_AT.x + SIDE + MARGIN, PLACING_AT.y + SIDE + MARGIN, [grid]);
 }
 
-/** Playing or over: jevos's waters left (`reveal` shows its ships), the player's fleet right. */
-export function battleSvg(g: Game, o: { reveal: boolean }): string {
-  const titleY = MARGIN + TITLE.size;
-  const target = { at: LEFT_AT, mark: targetMarks(g, o.reveal), cursor: aimedCell(g, o.reveal) };
+/** A grid's title, centred above its column letters. */
+const title = (at: Point, s: string): string =>
+  text({ x: at.x + SIDE / 2, y: at.y - COLS_GUTTER - TITLE_BAND + TITLE.size }, TITLE, s);
 
-  return frame(RIGHT_AT.x + SIDE + MARGIN, LEFT_AT.y + SIDE + MARGIN, [
-    text({ x: LEFT_AT.x + SIDE / 2, y: titleY }, TITLE, "jevos's waters"),
-    text({ x: RIGHT_AT.x + SIDE / 2, y: titleY }, TITLE, "your fleet"),
+/** Playing or over: jevos's waters on top (`reveal` shows its ships), the player's fleet below. */
+export function battleSvg(g: Game, o: { reveal: boolean }): string {
+  const target = { at: TOP_AT, mark: targetMarks(g, o.reveal), cursor: aimedCell(g, o.reveal) };
+
+  return frame(TOP_AT.x + SIDE + MARGIN, BOTTOM_AT.y + SIDE + MARGIN, [
+    title(TOP_AT, "jevos's waters"),
+    title(BOTTOM_AT, "your fleet"),
     gridSvg({ ...target, preview: NONE }),
-    gridSvg({ at: RIGHT_AT, mark: ownMarks(g), preview: NONE, cursor: null }),
+    gridSvg({ at: BOTTOM_AT, mark: ownMarks(g), preview: NONE, cursor: null }),
   ]);
 }

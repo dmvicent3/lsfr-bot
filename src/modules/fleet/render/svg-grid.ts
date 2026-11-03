@@ -3,7 +3,9 @@ import { SIZE } from "../types.ts";
 import type { Mark } from "./marks.ts";
 import type { GridPaint, Point, TextStyle } from "./types.ts";
 
-export const CELL = 30;
+export const CELL = 36;
+/** How far a hit's ✕ sits in from its cell's edges. */
+const INSET = 10;
 
 /** Cell fills, keeping the old emoji meanings (🟦 ⬜ 💥 🟥 🟨). */
 export const COLOURS = {
@@ -36,19 +38,21 @@ const corner = (at: Point, c: number): Point => ({
 const square = ({ x, y }: Point, paint: string): string =>
   `<rect x="${x}" y="${y}" width="${CELL}" height="${CELL}" ${paint}/>`;
 
-/** A ✕ of two strokes, 8 px in from the cell's edges. */
+/** A ✕ of two strokes, `INSET` in from the cell's edges. */
 function cross({ x, y }: Point, colour: string): string {
   const stroke = `stroke="${colour}" stroke-width="2.5" stroke-linecap="round"`;
 
+  const [near, far] = [INSET, CELL - INSET];
+
   return [
-    `<line x1="${x + 8}" y1="${y + 8}" x2="${x + 22}" y2="${y + 22}" ${stroke}/>`,
-    `<line x1="${x + 22}" y1="${y + 8}" x2="${x + 8}" y2="${y + 22}" ${stroke}/>`,
+    `<line x1="${x + near}" y1="${y + near}" x2="${x + far}" y2="${y + far}" ${stroke}/>`,
+    `<line x1="${x + far}" y1="${y + near}" x2="${x + near}" y2="${y + far}" ${stroke}/>`,
   ].join("");
 }
 
 /** What a shot leaves on its cell: a white dot for a miss, a dark ✕ for a hit, white when sunk. */
 const SYMBOL: Partial<Record<Mark, (p: Point) => string>> = {
-  miss: ({ x, y }) => `<circle cx="${x + CELL / 2}" cy="${y + CELL / 2}" r="5" fill="#fff"/>`,
+  miss: ({ x, y }) => `<circle cx="${x + CELL / 2}" cy="${y + CELL / 2}" r="6" fill="#fff"/>`,
   hit: (p) => cross(p, "#3b1d00"),
   sunk: (p) => cross(p, "#fff"),
 };
