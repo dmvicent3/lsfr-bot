@@ -1,0 +1,7 @@
+  1 License header line
+00000110 38 v 01 fly 0 000 | travel through the air; "birds fly"  
+00000120 38 v 01 fly 1 000 | flee  
+00000130 38 v 01 fly 2 000 | operate a plane  
+00000140 38 v 01 run 0 000 | move fast by using legs  
+00000150 38 v 01 run 1 000 | operate  
+00000160 38 v 01 shed 0 000 | cast off hair  
