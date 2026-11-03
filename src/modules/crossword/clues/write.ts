@@ -1,3 +1,4 @@
+import { clip } from "../../../core/clip.ts";
 import { leaks } from "../words/leak.ts";
 import { parseClues } from "./parse.ts";
 import { type ClueEntry, cluePrompt } from "./prompt.ts";
@@ -10,7 +11,7 @@ type Ask = (prompt: string) => Promise<string>;
 const fromDefinition = (def: string): string => {
   const text = def.replace(/^\([^)]*\)\s*/, "").trim();
 
-  return text.length > CLUE_MAX ? `${text.slice(0, CLUE_MAX - 1)}…` : text;
+  return clip(text, CLUE_MAX);
 };
 
 const usable = (clue: string | undefined, word: string): clue is string =>
