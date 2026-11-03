@@ -1,14 +1,15 @@
-import type { Puzzle } from "../types.ts";
+import type { Puzzle, Slot } from "../types.ts";
 
 export const EMPTY_CELL = ".";
+export const BLOCK = "#";
 
 /** A fresh board: `#` on blocks, `.` on white cells. */
 export const emptyCells = (p: Puzzle): string => {
   const black = new Set(p.blocks);
 
-  return Array.from({ length: p.size * p.size }, (_, i) => (black.has(i) ? "#" : EMPTY_CELL)).join(
-    "",
-  );
+  return Array.from({ length: p.size * p.size }, (_, i) =>
+    black.has(i) ? BLOCK : EMPTY_CELL,
+  ).join("");
 };
 
 /** The solution letter of every white cell (blocks stay `#`), as a board string. */
@@ -24,12 +25,29 @@ export function solutionOf(p: Puzzle): string {
   return out.join("");
 }
 
-/** Per slot: every cell filled (cells only ever hold correct letters). */
-export const solvedSlots = (p: Puzzle, cells: string): boolean[] =>
+/** A letter the player cannot overwrite: revealed letters are stored uppercase. */
+export const isRevealed = (ch: string | undefined): boolean => !!ch && /^[A-Z]$/.test(ch);
+
+/** Every white cell holds a letter. */
+export const isFull = (cells: string): boolean => !cells.includes(EMPTY_CELL);
+
+/** Indices of the white cells that are empty or differ from the solution (case-insensitive). */
+export function wrongOrEmpty(p: Puzzle, cells: string): number[] {
+  const sol = solutionOf(p);
+
+  return cells.split("").flatMap((c, i) => (c !== BLOCK && c.toLowerCase() !== sol[i] ? [i] : []));
+}
+
+/** Every white cell equals the solution, case-insensitive. */
+export const isCorrect = (p: Puzzle, cells: string): boolean => wrongOrEmpty(p, cells).length === 0;
+
+/** Per slot: none of its cells is empty. */
+export const filledSlots = (p: Puzzle, cells: string): boolean[] =>
   p.slots.map((slot) => slot.cells.every((i) => cells[i] !== EMPTY_CELL));
 
-/** Every white cell is filled. */
-export const isFull = (cells: string): boolean => !cells.includes(EMPTY_CELL);
+/** The slot's letters uppercased, `.` kept. */
+export const slotText = (cells: string, slot: Slot): string =>
+  slot.cells.map((i) => cells[i]!.toUpperCase()).join("");
 
 /** `cells` with `letters` written at `at`. */
 export function fill(cells: string, at: number[], letters: string): string {
@@ -41,3 +59,7 @@ export function fill(cells: string, at: number[], letters: string): string {
 
   return out.join("");
 }
+
+/** Per slot: every cell filled (cells only ever hold correct letters). */
+export const solvedSlots = (p: Puzzle, cells: string): boolean[] =>
+  p.slots.map((slot) => slot.cells.every((i) => cells[i] !== EMPTY_CELL));
