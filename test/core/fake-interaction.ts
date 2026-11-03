@@ -6,6 +6,8 @@ export interface Sent {
   allowedMentions?: unknown;
   custom_id?: string;
   flags?: unknown;
+  files?: { name?: string }[];
+  attachments?: unknown[];
 }
 
 export interface Calls {

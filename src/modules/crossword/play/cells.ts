@@ -59,7 +59,3 @@ export function fill(cells: string, at: number[], letters: string): string {
 
   return out.join("");
 }
-
-/** Per slot: every cell filled (cells only ever hold correct letters). */
-export const solvedSlots = (p: Puzzle, cells: string): boolean[] =>
-  p.slots.map((slot) => slot.cells.every((i) => cells[i] !== EMPTY_CELL));

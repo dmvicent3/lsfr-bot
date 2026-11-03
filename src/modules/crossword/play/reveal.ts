@@ -1,5 +1,5 @@
 import { seedFor } from "../../../core/seed.ts";
-import { EMPTY_CELL, fill, isFull, solutionOf } from "./cells.ts";
+import { fill, solutionOf, wrongOrEmpty } from "./cells.ts";
 import { type PlayState, type Rec, isGame } from "./types.ts";
 
 export const REVEAL_LINE = "🔎 Revealed a letter";
@@ -13,18 +13,21 @@ export function revealRandom(rec: Rec): () => number {
   return random;
 }
 
-/** Fills one empty cell chosen by `random`; a full board is left as it is. */
+/**
+ * Writes the solution, uppercase, into one empty or wrong cell chosen by `random`; null when
+ * every cell is already right.
+ */
 export function reveal(
   state: PlayState,
   random: () => number,
-): { cells: string; reveals: number; done: boolean } {
+): { cells: string; reveals: number } | null {
   const { puzzle, cells, reveals } = state;
-  const empty = cells.split("").flatMap((c, i) => (c === EMPTY_CELL ? [i] : []));
+  const open = wrongOrEmpty(puzzle, cells);
 
-  if (empty.length === 0) return { cells, reveals, done: true };
+  if (open.length === 0) return null;
 
-  const cell = empty[Math.floor(random() * empty.length)]!;
-  const next = fill(cells, [cell], solutionOf(puzzle)[cell]!);
+  const cell = open[Math.floor(random() * open.length)]!;
+  const next = fill(cells, [cell], solutionOf(puzzle)[cell]!.toUpperCase());
 
-  return { cells: next, reveals: reveals + 1, done: isFull(next) };
+  return { cells: next, reveals: reveals + 1 };
 }

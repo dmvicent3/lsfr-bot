@@ -19,7 +19,7 @@ const G: Game = {
 
 test("solved announcement", () => {
   expect(resultLine(3, G)).toBe(
-    "<@u1> solved Crossword #3 — 80 pts · 2 mistakes · 1 reveals · 2:14",
+    "<@u1> solved Crossword #3 — 80 pts · 2 wrong checks · 1 reveals · 2:14",
   );
 });
 

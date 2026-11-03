@@ -1,4 +1,4 @@
-import { isFull } from "../play/cells.ts";
+import { isCorrect } from "../play/cells.ts";
 import { isGame, type Rec } from "../play/types.ts";
 import { award, basePoints } from "../scoring.ts";
 import type { Award, StoredPuzzle } from "../types.ts";
@@ -16,7 +16,14 @@ export interface Where {
 function recap(rec: Rec): Award | null {
   if (!isGame(rec) || rec.finishedAt === null) return null;
 
-  return award(isFull(rec.cells), rec.wrong, rec.reveals, rec.streak ?? 0);
+  return award(rec.solved === true, rec.wrong, rec.reveals, rec.streak ?? 0);
+}
+
+/** A finished round was solved: a daily says so; a practice one is solved when its grid is right. */
+function solvedOf(where: Where, rec: Rec): boolean {
+  if (rec.finishedAt === null) return false;
+
+  return isGame(rec) ? rec.solved === true : isCorrect(where.stored.puzzle, rec.cells);
 }
 
 /** What the board shows for a round record at time `now`; `won` is the award of the finishing move. */
@@ -37,6 +44,7 @@ export function boardView(
     lastLine: rec.lastLine,
     points: (isGame(rec) ? rec.points : null) ?? basePoints(rec.wrong, rec.reveals),
     finished: rec.finishedAt !== null,
+    solved: solvedOf(where, rec),
     elapsedMs: (rec.finishedAt ?? now) - rec.startedAt,
     award: won ?? recap(rec),
     ...(where.untilNext === undefined ? {} : { untilNext: where.untilNext }),

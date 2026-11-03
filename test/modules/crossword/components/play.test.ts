@@ -11,22 +11,31 @@ const answer = answerHandler;
 const reveal = revealHandler;
 const FINISHED = { finishedAt: 5, solved: true, points: 100, streak: 1 };
 
-test("the select opens the answer modal for the chosen clue", async () => {
+/** The prefilled value of a modal's input, if any. */
+const inputOf = (modal: unknown) => ({
+  value: /"value":"([A-Z.]+)"/.exec(JSON.stringify(modal))?.[1],
+});
+
+test("the select opens the answer modal for the chosen clue, empty", async () => {
   const { ctx } = setup();
   const { i, calls } = fakeClick("u", { values: [keyOf(row(1))] });
   await pick.handle(i, [DATE, "1"], ctx);
 
   expect(calls.modal).toHaveLength(1);
   expect(calls.modal[0]?.custom_id).toBe(`crossword:answer:${DATE}:1:${keyOf(row(1))}`);
+  expect(inputOf(calls.modal[0])?.value).toBeUndefined();
   expect(calls.update).toHaveLength(0);
 });
 
-test("a solved clue or a finished game re-renders instead of opening the modal", async () => {
-  const solved = setup({ cells: `crane${".".repeat(20)}` });
+test("a filled clue opens prefilled with its letters, uppercase; a finished game re-renders", async () => {
+  const filled = setup({ cells: `cRate${".".repeat(20)}` });
   const a = fakeClick("u", { values: [keyOf(row(0))] });
-  await pick.handle(a.i, [DATE, "1"], solved.ctx);
-  expect(a.calls.modal).toHaveLength(0);
-  expect(a.calls.update[0]?.content).toContain("Crossword #2");
+  await pick.handle(a.i, [DATE, "1"], filled.ctx);
+  expect(inputOf(a.calls.modal[0])?.value).toBe("CRATE");
+
+  const partial = fakeClick("u", { values: [keyOf(col(0))] });
+  await pick.handle(partial.i, [DATE, "1"], filled.ctx);
+  expect(inputOf(partial.calls.modal[0])?.value).toBeUndefined();
 
   const done = setup(FINISHED);
   const b = fakeClick("u", { values: [keyOf(row(1))] });
@@ -35,24 +44,27 @@ test("a solved clue or a finished game re-renders instead of opening the modal",
   expect(b.calls.update).toHaveLength(1);
 });
 
-test("a right word fills the board", async () => {
+test("a typed word fills the board with the grid image", async () => {
   const { ctx, repo } = setup();
   const { i, calls } = fakeModal("u", "CRANE");
   await answer.handle(i, [DATE, "1", keyOf(row(0))], ctx);
 
   expect(stored(repo)?.cells.startsWith("crane")).toBe(true);
   expect(calls.update[0]?.content).toContain("Words 1/10");
+  expect(calls.update[0]?.files?.map((f) => f.name)).toEqual(["crossword.png"]);
+  expect(calls.update[0]?.attachments).toEqual([]);
   expect(calls.update[0]?.allowedMentions).toEqual({ parse: [] });
 });
 
-test("a wrong word costs 5 and shows the miss", async () => {
+test("a wrong word goes in unjudged and costs nothing", async () => {
   const { ctx, repo } = setup();
   const { i, calls } = fakeModal("u", "olive");
   await answer.handle(i, [DATE, "1", keyOf(row(0))], ctx);
 
-  expect(stored(repo)?.wrong).toBe(1);
-  expect(calls.update[0]?.content).toContain("95 pts");
-  expect(calls.update[0]?.content).toContain("❌ 1 Across: not OLIVE");
+  expect(stored(repo)).toMatchObject({ wrong: 0, lastLine: null });
+  expect(stored(repo)?.cells.startsWith("olive")).toBe(true);
+  expect(calls.update[0]?.content).toContain("100 pts");
+  expect(calls.update[0]?.content).not.toContain("❌");
 });
 
 test("a bad length is an ephemeral reply and costs nothing", async () => {
@@ -66,13 +78,13 @@ test("a bad length is an ephemeral reply and costs nothing", async () => {
   expect(calls.update).toHaveLength(0);
 });
 
-test("an answer to a solved clue changes nothing", async () => {
-  const { ctx, repo } = setup({ cells: `crane${".".repeat(20)}` });
+test("a filled clue can be typed again; revealed letters stay and say so", async () => {
+  const { ctx, repo } = setup({ cells: `cRane${".".repeat(20)}` });
   const { i, calls } = fakeModal("u", "olive");
   await answer.handle(i, [DATE, "1", keyOf(row(0))], ctx);
 
-  expect(stored(repo)?.wrong).toBe(0);
-  expect(calls.update).toHaveLength(1);
+  expect(stored(repo)?.cells.slice(0, 5)).toBe("oRive");
+  expect(calls.update[0]?.content).toContain("🔎 Kept the revealed letters in 1 Across");
 });
 
 test("a submit not from a message answers ephemerally with the board", async () => {
@@ -81,27 +93,28 @@ test("a submit not from a message answers ephemerally with the board", async () 
   await answer.handle(i, [DATE, "1", keyOf(row(0))], ctx);
 
   expect(calls.reply[0]?.content).toContain("Words 1/10");
+  expect(calls.reply[0]?.files).toHaveLength(1);
   expect(calls.reply[0]?.flags).toBeDefined();
 });
 
-test("a down answer fills the cells it shares with an across answer", async () => {
+test("a down answer overwrites the cells it shares with an across answer", async () => {
   const { ctx, repo } = setup();
-  await answer.handle(fakeModal("u", "crane").i, [DATE, "1", keyOf(row(0))], ctx);
+  await answer.handle(fakeModal("u", "zzzzz").i, [DATE, "1", keyOf(row(0))], ctx);
   await answer.handle(fakeModal("u", "coups").i, [DATE, "1", keyOf(col(0))], ctx);
 
   const cells = stored(repo)!.cells;
   expect([0, 5, 10, 15, 20].map((c) => cells[c]).join("")).toBe("coups");
-  expect(cells.slice(0, 5)).toBe("crane");
+  expect(cells.slice(0, 5)).toBe("czzzz");
 });
 
-test("Reveal letter costs 10 and fills one cell", async () => {
+test("Reveal letter costs 10 and fills one cell, uppercase", async () => {
   const { ctx, repo } = setup();
   const { i, calls } = fakeClick("u");
   await reveal.handle(i, [DATE, "1"], ctx);
 
   const game = stored(repo)!;
   expect(game.reveals).toBe(1);
-  expect(game.cells.replaceAll(".", "")).toHaveLength(1);
+  expect(game.cells.replaceAll(".", "")).toMatch(/^[A-Z]$/);
   expect(calls.update[0]?.content).toContain("90 pts");
   expect(calls.update[0]?.content).toContain("🔎 Revealed a letter");
 });

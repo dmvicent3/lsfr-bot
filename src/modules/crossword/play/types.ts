@@ -1,3 +1,4 @@
+import type { CrosswordRepo } from "../store/repo.ts";
 import type { Award, Game, Practice, Puzzle } from "../types.ts";
 
 /** What a move is judged against; callers persist the result. */
@@ -9,13 +10,14 @@ export interface PlayState {
   finished: boolean;
 }
 
-/** What one answer does. */
-export type Outcome =
+/** What typing a word does: nothing (stale, bad) or new cells and a last line. */
+export type Entry =
   | { kind: "stale" }
-  | { kind: "solved-already" }
   | { kind: "bad"; len: number }
-  | { kind: "miss"; line: string; wrong: number }
-  | { kind: "hit"; cells: string; done: boolean };
+  | { kind: "entered"; cells: string; line: string | null };
+
+/** What a full grid is, once checked; `incomplete` while any cell is empty. */
+export type Verdict = "incomplete" | "correct" | "wrong";
 
 /** A player's round: the day's game or the practice puzzle. */
 export type Rec = Game | Practice;
@@ -23,6 +25,14 @@ export type Rec = Game | Practice;
 export interface Landed {
   game: Rec;
   award: Award | null;
+}
+
+/** One player's round at a moment: where to store it, the puzzle it plays, the clock. */
+export interface Turn {
+  repo: CrosswordRepo;
+  rec: Rec;
+  puzzle: Puzzle;
+  now: number;
 }
 
 export const isGame = (rec: Rec): rec is Game => "date" in rec;

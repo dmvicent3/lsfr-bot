@@ -11,7 +11,7 @@ export interface PlayerStats {
   points: number;
   days: number;
   solved: number;
-  avgMistakes: number | null;
+  avgWrongChecks: number | null;
   currentStreak: number;
   longestStreak: number;
 }

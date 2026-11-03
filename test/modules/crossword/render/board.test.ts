@@ -6,15 +6,8 @@ import { bigView, V } from "./fixtures.ts";
 
 const SHAPE = [
   "Crossword #3 · Words 1/10 · 95 pts · 2:14",
-  "```",
-  "¹C ²R ³A ⁴N ⁵E",
-  "⁶·  ·  ·  ·  ·",
-  "⁷·  ·  ·  ·  ·",
-  "⁸·  ·  ·  ·  ·",
-  "⁹·  ·  ·  ·  ·",
-  "```",
   "**Across**",
-  "✅ 1. clue 1a (5)",
+  "1. clue 1a (5)",
   "6. clue 6a (5)",
   "7. clue 7a (5)",
   "8. clue 8a (5)",
@@ -29,14 +22,20 @@ const SHAPE = [
 
 const FULL = solutionOf(square());
 
-test("daily in progress: header, grid, solved clues marked", () => {
+test("daily in progress: header and clue lists, no grid text", () => {
   expect(boardText(V)).toBe(SHAPE);
 });
 
-test("last-action line follows the lists", () => {
-  const out = boardText({ ...V, lastLine: "❌ 6 Across: not CRANE" });
+test("Words counts filled slots, right or wrong", () => {
+  expect(boardText({ ...V, cells: `zzzzz${"z".repeat(5)}${".".repeat(15)}` })).toStartWith(
+    "Crossword #3 · Words 2/10 ·",
+  );
+});
 
-  expect(out).toBe(`${SHAPE}\n❌ 6 Across: not CRANE`);
+test("last-action line follows the lists", () => {
+  const out = boardText({ ...V, lastLine: "❌ Not quite — some letters are wrong (−10)" });
+
+  expect(out).toBe(`${SHAPE}\n❌ Not quite — some letters are wrong (−10)`);
 });
 
 test("practice header", () => {
@@ -45,40 +44,42 @@ test("practice header", () => {
   expect(head).toBe("Practice crossword 5×5 · Words 1/10 · 2:14");
 });
 
-test("finished daily: full grid, answers, award, next", () => {
+test("finished daily: answers, award, next", () => {
   const out = boardText({
     ...V,
     cells: FULL,
     finished: true,
+    solved: true,
     points: 90,
-    award: { points: 90, parts: ["Solved: 100", "Mistakes: −5", "Streak 3: +10"] },
+    award: { points: 90, parts: ["Solved: 100", "Wrong checks: −10", "Streak 3: +10"] },
     untilNext: "5h 2m",
   });
 
-  expect(out).toContain("⁹S  T  E  M  S");
-  expect(out).toContain("✅ 1. clue 1a — CRANE");
+  expect(out).not.toContain("```");
+  expect(out).toContain("\n1. clue 1a — CRANE\n");
   expect(out).toContain("Streak 3: +10\n**90 points**");
   expect(out.endsWith("\n\nNext crossword in 5h 2m")).toBe(true);
 });
 
-test("finished daily gave up: zero points", () => {
-  const out = boardText({ ...V, finished: true, points: 0 });
+test("finished daily gave up, even on a full grid: zero points", () => {
+  const out = boardText({ ...V, cells: FULL, finished: true, points: 0 });
 
   expect(out).toContain("Gave up — 0 points");
 });
 
-test("finished practice shows mistakes and reveals, no next line", () => {
+test("finished practice shows wrong checks and reveals, no next line", () => {
   const out = boardText({
     ...V,
     number: null,
     finished: true,
+    solved: true,
     cells: FULL,
     wrong: 2,
     reveals: 1,
     untilNext: "1h",
   });
 
-  expect(out).toContain("Mistakes: 2 · Reveals: 1");
+  expect(out).toContain("Solved!\nWrong checks: 2 · Reveals: 1");
   expect(out).not.toContain("Next crossword");
 });
 

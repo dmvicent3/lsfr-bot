@@ -13,7 +13,7 @@ export function crosswordModule(
     name: "crossword",
     title: "📰 Crossword",
     helpNote:
-      "A daily 5×5 mini crossword, the same for everyone in the server; answers are private. Words: ENABLE (public domain) and FrequencyWords; definitions: Princeton WordNet 3.1 (WordNet licence); clues written by the local model.",
+      "A daily 5×5 mini crossword, the same for everyone in the server; answers are private. Words: ENABLE (public domain) and FrequencyWords; definitions: Princeton WordNet 3.1 (WordNet licence); clues written by the local model. Grid font: DejaVu Sans.",
     commands: [crosswordCommand(ask, random)],
     components: crosswordComponents(ask, random),
     modals: crosswordModals(),

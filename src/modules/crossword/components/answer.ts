@@ -5,7 +5,7 @@ import { slotIndexOf } from "../render/ids.ts";
 import { load, turnOf } from "./guard.ts";
 import { present, refresh } from "./show.ts";
 
-/** `crossword:answer:<date|practice>:<stamp>:<n><a|d>`: judges the typed word for a clue. */
+/** `crossword:answer:<date|practice>:<stamp>:<n><a|d>`: writes the typed word into a clue, unjudged. */
 export const answerHandler: ModalHandler = {
   id: "crossword:answer",
   async handle(i, args, ctx) {
@@ -14,10 +14,10 @@ export const answerHandler: ModalHandler = {
     if (!r || r.stale) return refresh(i, r);
 
     const at = slotIndexOf(r.where.stored.puzzle.slots, args[2]);
-    const { outcome, landed } = answerSlot(turnOf(r), at, i.fields.getTextInputValue("word"));
+    const { entry, landed } = answerSlot(turnOf(r), at, i.fields.getTextInputValue("word"));
 
-    if (outcome.kind === "bad") {
-      return tell(i, `Answers are ${outcome.len} letters, A–Z — no points lost.`);
+    if (entry.kind === "bad") {
+      return tell(i, `Answers are ${entry.len} letters, A–Z — no points lost.`);
     }
 
     await present(i, r, landed ?? { game: r.rec, award: null });

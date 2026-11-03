@@ -16,7 +16,7 @@ const g = (date: string, o: Over = {}) =>
     finishedAt: 1,
   });
 
-test("points, days, solved, average mistakes and streaks", () => {
+test("points, days, solved, average wrong checks and streaks", () => {
   const s = playerStats(
     [
       g("2026-11-04", { points: 100 }),
@@ -27,7 +27,7 @@ test("points, days, solved, average mistakes and streaks", () => {
   );
 
   expect(s).toMatchObject({ points: 200, days: 3, solved: 2, currentStreak: 3, longestStreak: 3 });
-  expect(s.avgMistakes).toBeCloseTo(2);
+  expect(s.avgWrongChecks).toBeCloseTo(2);
 });
 
 test("current streak lives through yesterday only", () => {
@@ -42,7 +42,7 @@ test("no games, and unfinished games ignored", () => {
     points: 0,
     days: 0,
     solved: 0,
-    avgMistakes: null,
+    avgWrongChecks: null,
     currentStreak: 0,
     longestStreak: 0,
   });
@@ -55,7 +55,7 @@ test("stats text lists every figure and the ranks", () => {
 
   expect(text).toContain("## 📰 Crossword — Una");
   expect(text).toContain("**90 points**");
-  expect(text).toContain("Days played 1 · solved 1 · average mistakes 2");
+  expect(text).toContain("Days played 1 · solved 1 · average wrong checks 2");
   expect(text).toContain("Streak 1 · best 1");
 });
 

@@ -19,6 +19,7 @@ export const V: BoardView = {
   lastLine: null,
   points: 95,
   finished: false,
+  solved: false,
   elapsedMs: 134_000,
   award: null,
 };

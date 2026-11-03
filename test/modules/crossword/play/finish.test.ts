@@ -17,12 +17,12 @@ test("a solved finish stores points, streak and time, and awards once", () => {
   repo.games.start(playing());
   const out = finish(repo, playing(), true, 77);
 
-  expect(out.game).toMatchObject({ solved: true, streak: 1, points: 80, finishedAt: 77 });
+  expect(out.game).toMatchObject({ solved: true, streak: 1, points: 70, finishedAt: 77 });
   expect(out.award).toEqual({
-    points: 80,
-    parts: ["Solved: 100", "Mistakes: −10", "Reveals: −10"],
+    points: 70,
+    parts: ["Solved: 100", "Wrong checks: −20", "Reveals: −10"],
   });
-  expect(repo.games.get("g", "2026-11-03", "u")).toMatchObject({ points: 80, solved: true });
+  expect(repo.games.get("g", "2026-11-03", "u")).toMatchObject({ points: 70, solved: true });
 });
 
 test("a second finish writes nothing and awards nothing", () => {
@@ -31,7 +31,7 @@ test("a second finish writes nothing and awards nothing", () => {
   const again = finish(repo, playing({ wrong: 0 }), true, 88);
 
   expect(again.award).toBeNull();
-  expect(again.game).toMatchObject({ points: 80, finishedAt: 77 });
+  expect(again.game).toMatchObject({ points: 70, finishedAt: 77 });
 });
 
 test("giving up scores 0 but the day counts toward the streak", () => {

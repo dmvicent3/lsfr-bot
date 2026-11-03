@@ -6,12 +6,12 @@ export function renderStats(
   s: PlayerStats,
   ranks: Record<Period, number | null>,
 ): string {
-  const avg = s.avgMistakes === null ? "—" : `${Math.round(s.avgMistakes * 10) / 10}`;
+  const avg = s.avgWrongChecks === null ? "—" : `${Math.round(s.avgWrongChecks * 10) / 10}`;
 
   return [
     `## 📰 Crossword — ${name}`,
     `**${s.points} points**`,
-    `Days played ${s.days} · solved ${s.solved} · average mistakes ${avg}`,
+    `Days played ${s.days} · solved ${s.solved} · average wrong checks ${avg}`,
     `Streak ${s.currentStreak} · best ${s.longestStreak}`,
     rankText(ranks),
   ].join("\n");

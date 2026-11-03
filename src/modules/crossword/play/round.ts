@@ -1,5 +1,4 @@
 import type { CrosswordRepo } from "../store/repo.ts";
-import { isFull } from "./cells.ts";
 import { finish } from "./finish.ts";
 import { type Landed, type Rec, isGame } from "./types.ts";
 
@@ -17,10 +16,8 @@ export function end(repo: CrosswordRepo, rec: Rec, solved: boolean, now: number)
   return { game: repo.practice.save(done) ? done : stored(repo, rec), award: null };
 }
 
-/** Stores a round after a move; one with every cell filled is finished in the same write. */
-export function land(repo: CrosswordRepo, rec: Rec, now: number): Landed {
-  if (isFull(rec.cells)) return end(repo, rec, true, now);
-
+/** Stores a round after a move that did not finish it. */
+export function keep(repo: CrosswordRepo, rec: Rec): Landed {
   const saved = isGame(rec) ? repo.games.save(rec) : repo.practice.save(rec);
 
   return { game: saved ? rec : stored(repo, rec), award: null };

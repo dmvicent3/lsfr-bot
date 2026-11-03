@@ -1,32 +1,74 @@
 import { expect, test } from "bun:test";
 import { fakeClick, fakeModal } from "../../../core/fake-interaction.ts";
 import { answerHandler } from "../../../../src/modules/crossword/components/answer.ts";
+import { checkHandler } from "../../../../src/modules/crossword/components/check.ts";
 import { giveUpHandler } from "../../../../src/modules/crossword/components/give-up.ts";
 import { revealHandler } from "../../../../src/modules/crossword/components/reveal.ts";
 import { row } from "../play/fixtures.ts";
 import { DATE, keyOf, missing, setup, stored } from "./setup.ts";
 
 const answer = answerHandler;
+const check = checkHandler;
 const reveal = revealHandler;
 const giveUp = giveUpHandler;
 
-test("the last cell by word finishes, scores and announces once", async () => {
-  const { ctx, repo } = setup({ cells: missing(0), wrong: 1 });
+/** The solved square with its first cell typed wrong. */
+const WRONG = `z${missing().slice(1)}`;
+
+test("the last word fills the grid but does not finish", async () => {
+  const { ctx, repo } = setup({ cells: missing(0) });
   const a = fakeModal("u", "crane");
   await answer.handle(a.i, [DATE, "1", keyOf(row(0))], ctx);
 
-  const game = stored(repo)!;
-  expect(game.solved).toBe(true);
-  expect(game.points).toBe(95);
+  expect(stored(repo)).toMatchObject({ finishedAt: null, cells: missing() });
+  expect(a.calls.send).toHaveLength(0);
+});
+
+test("Check on a correct grid finishes, scores and announces once", async () => {
+  const { ctx, repo } = setup({ cells: missing(), wrong: 1 });
+  const a = fakeClick("u");
+  await check.handle(a.i, [DATE, "1"], ctx);
+
+  expect(stored(repo)).toMatchObject({ solved: true, points: 90 });
   expect(a.calls.update[0]?.content).toContain("Next crossword in");
   expect(a.calls.send).toHaveLength(1);
   expect(a.calls.send[0]?.content).toStartWith(
-    "<@u> solved Crossword #2 — 95 pts · 1 mistakes · 0 reveals · ",
+    "<@u> solved Crossword #2 — 90 pts · 1 wrong checks · 0 reveals · ",
   );
 
-  const again = fakeModal("u", "crane");
-  await answer.handle(again.i, [DATE, "1", keyOf(row(0))], ctx);
+  const again = fakeClick("u");
+  await check.handle(again.i, [DATE, "1"], ctx);
   expect(again.calls.send).toHaveLength(0);
+  expect(again.calls.update).toHaveLength(1);
+});
+
+test("Check on a wrong grid costs 10 and does not say which", async () => {
+  const { ctx, repo } = setup({ cells: WRONG });
+  const a = fakeClick("u");
+  await check.handle(a.i, [DATE, "1"], ctx);
+
+  expect(stored(repo)).toMatchObject({ wrong: 1, finishedAt: null });
+  expect(a.calls.update[0]?.content).toContain("90 pts");
+  expect(a.calls.update[0]?.content).toEndWith("❌ Not quite — some letters are wrong (−10)");
+  expect(a.calls.send).toHaveLength(0);
+});
+
+test("a practice wrong check shows no cost", async () => {
+  const { ctx, repo } = setup(null, { cells: WRONG });
+  const a = fakeClick("u");
+  await check.handle(a.i, ["practice", "1"], ctx);
+
+  expect(repo.practice.get("g", "u")?.wrong).toBe(1);
+  expect(a.calls.update[0]?.content).toEndWith("❌ Not quite — some letters are wrong");
+});
+
+test("Check on a grid that isn't full refreshes the board and changes nothing", async () => {
+  const { ctx, repo } = setup({ cells: missing(3) });
+  const a = fakeClick("u");
+  await check.handle(a.i, [DATE, "1"], ctx);
+
+  expect(stored(repo)).toMatchObject({ wrong: 0, finishedAt: null, lastLine: null });
+  expect(a.calls.update).toHaveLength(1);
 });
 
 test("the last cell by reveal finishes and announces once", async () => {
@@ -38,7 +80,7 @@ test("the last cell by reveal finishes and announces once", async () => {
   expect(stored(repo)?.points).toBe(90);
   expect(a.calls.send).toHaveLength(1);
   expect(a.calls.send[0]?.content).toStartWith(
-    "<@u> solved Crossword #2 — 90 pts · 0 mistakes · 1 reveals",
+    "<@u> solved Crossword #2 — 90 pts · 0 wrong checks · 1 reveals",
   );
 
   const again = fakeClick("u");
@@ -54,6 +96,7 @@ test("Give up scores 0, announces once and ignores a second click", async () => 
 
   expect(stored(repo)).toMatchObject({ solved: false, points: 0 });
   expect(a.calls.update[0]?.content).toContain("Gave up");
+  expect(a.calls.update[0]?.files).toHaveLength(1);
   expect(a.calls.send.map((m) => m.content)).toEqual(["<@u> gave up on Crossword #2"]);
 
   const again = fakeClick("u");
@@ -72,13 +115,14 @@ test("a failed announcement does not undo the finish", async () => {
 });
 
 test("a practice crossword finishes without announcing", async () => {
-  const { ctx, repo } = setup(null, { cells: missing(12) });
+  const { ctx, repo } = setup(null, { cells: missing() });
   const a = fakeClick("u");
-  await reveal.handle(a.i, ["practice", "1"], ctx);
+  await check.handle(a.i, ["practice", "1"], ctx);
 
   expect(repo.practice.get("g", "u")?.finishedAt).not.toBeNull();
   expect(a.calls.send).toHaveLength(0);
   expect(a.calls.update[0]?.content).toContain("Practice crossword");
+  expect(a.calls.update[0]?.content).toContain("Solved!");
 });
 
 test("a click on a finished board re-renders it and changes nothing", async () => {
@@ -88,11 +132,14 @@ test("a click on a finished board re-renders it and changes nothing", async () =
   await reveal.handle(a.i, [DATE, "1"], ctx);
   const b = fakeClick("u");
   await giveUp.handle(b.i, [DATE, "1"], ctx);
+  const c = fakeClick("u");
+  await check.handle(c.i, [DATE, "1"], ctx);
 
-  expect(stored(repo)).toMatchObject({ reveals: 0, solved: true, points: 100 });
+  expect(stored(repo)).toMatchObject({ reveals: 0, wrong: 0, solved: true, points: 100 });
   expect(a.calls.update).toHaveLength(1);
   expect(b.calls.update).toHaveLength(1);
-  expect(a.calls.send.length + b.calls.send.length).toBe(0);
+  expect(c.calls.update).toHaveLength(1);
+  expect(a.calls.send.length + b.calls.send.length + c.calls.send.length).toBe(0);
 });
 
 test("a failed board edit still announces the finish once", async () => {

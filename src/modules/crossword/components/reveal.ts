@@ -3,7 +3,7 @@ import { revealLetter } from "../play/turn.ts";
 import { load, turnOf } from "./guard.ts";
 import { present, refresh } from "./show.ts";
 
-/** `crossword:reveal:<date|practice>:<stamp>`: fills one empty cell for 10 points. */
+/** `crossword:reveal:<date|practice>:<stamp>`: fixes one empty or wrong cell for 10 points. */
 export const revealHandler: ComponentHandler = {
   id: "crossword:reveal",
   async handle(i, args, ctx) {

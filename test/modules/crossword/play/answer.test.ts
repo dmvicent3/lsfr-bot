@@ -1,79 +1,66 @@
 import { expect, test } from "bun:test";
-import { submit } from "../../../../src/modules/crossword/play/answer.ts";
-import { emptyCells, isFull, solvedSlots } from "../../../../src/modules/crossword/play/cells.ts";
+import { enter } from "../../../../src/modules/crossword/play/answer.ts";
+import { emptyCells } from "../../../../src/modules/crossword/play/cells.ts";
 import { col, row, square, state, word } from "./fixtures.ts";
 
 const BLANK = emptyCells(square());
 
-const hit = (cells: string, slot: number, text = word(slot)): string => {
-  const out = submit(state({ cells }), slot, text);
+const entered = (cells: string, slot: number, text: string) => {
+  const out = enter(state({ cells }), slot, text);
 
-  if (out.kind !== "hit") throw new Error(`expected a hit, got ${out.kind}`);
+  if (out.kind !== "entered") throw new Error(`expected an entry, got ${out.kind}`);
 
-  return out.cells;
+  return out;
 };
 
-test("a right word fills its cells, case-insensitive and trimmed", () => {
-  expect(submit(state(), row(0), " CrAnE ")).toEqual({
-    kind: "hit",
-    cells: "crane" + ".".repeat(20),
-    done: false,
+test("a word goes in lowercase, trimmed, unjudged", () => {
+  expect(enter(state(), row(0), " CrAtE ")).toEqual({
+    kind: "entered",
+    cells: `crate${".".repeat(20)}`,
+    line: null,
   });
 });
 
-test("a down word fills its column", () => {
-  const cells = hit(BLANK, col(0));
+test("a down word fills its column and overwrites typed crossings", () => {
+  const first = entered(BLANK, row(0), "zzzzz").cells;
+  const both = entered(first, col(0), "coups").cells;
 
-  expect(cells.split("").filter((c) => c !== ".")).toEqual(word(col(0)).split(""));
-  expect(cells[0]).toBe("c");
-  expect(cells[5]).toBe("o");
+  expect([0, 5, 10, 15, 20].map((c) => both[c]).join("")).toBe("coups");
+  expect(both.slice(0, 5)).toBe("czzzz");
 });
 
-test("two clues sharing a cell: solving both neither double counts nor overwrites", () => {
-  const first = hit(BLANK, row(0));
-  const both = hit(first, col(0));
+test("a filled slot can be typed again", () => {
+  const once = entered(BLANK, row(0), "crate").cells;
 
-  expect(both.slice(0, 5)).toBe("crane");
-  expect(both[5]).toBe("o");
-  expect(both.replaceAll(".", "")).toHaveLength(9);
-  expect(solvedSlots(square(), both).filter(Boolean)).toHaveLength(2);
+  expect(entered(once, row(0), "crane").cells.slice(0, 5)).toBe("crane");
 });
 
-test("a clue completed by crossing words counts solved, and is solved-already", () => {
-  const cells = [0, 1, 2, 3, 4].reduce((c, n) => hit(c, col(n)), BLANK);
+test("revealed letters stay; a clash says so", () => {
+  const cells = `.R...${".".repeat(20)}`;
 
-  expect(solvedSlots(square(), cells)[row(0)]).toBe(true);
-  expect(submit(state({ cells }), row(0), "crane")).toEqual({ kind: "solved-already" });
-  expect(submit(state({ cells }), row(0), "x")).toEqual({ kind: "solved-already" });
+  expect(enter(state({ cells }), row(0), "olive")).toEqual({
+    kind: "entered",
+    cells: `oRive${".".repeat(20)}`,
+    line: "🔎 Kept the revealed letters in 1 Across",
+  });
+  expect(entered(cells, row(0), "crane")).toMatchObject({ line: null });
+  expect(entered(cells, row(0), "crane").cells.slice(0, 5)).toBe("cRane");
 });
 
-test("non-letters or a wrong length are bad and change nothing", () => {
+test("non-letters or a wrong length are bad", () => {
   for (const text of ["cran", "cr4ne", "cr ne", "", "   ", "cranes"]) {
-    expect(submit(state(), row(0), text)).toEqual({ kind: "bad", len: 5 });
+    expect(enter(state(), row(0), text)).toEqual({ kind: "bad", len: 5 });
   }
 });
 
-test("a wrong word costs a mistake and names the clue", () => {
-  expect(submit(state({ wrong: 2 }), row(0), "crate")).toEqual({
-    kind: "miss",
-    line: "❌ 1 Across: not CRATE",
-    wrong: 3,
-  });
-  expect(submit(state(), col(1), "zzzzz")).toMatchObject({ line: "❌ 2 Down: not ZZZZZ" });
+test("typing a full correct grid is still just an entry", () => {
+  const cells = [0, 1, 2, 3, 4].reduce((c, n) => entered(c, row(n), word(row(n))).cells, BLANK);
+
+  expect(cells).not.toContain(".");
+  expect(enter(state({ cells }), row(0), "crane").kind).toBe("entered");
 });
 
 test("a finished round or an unknown clue is stale", () => {
-  expect(submit(state({ finished: true }), row(0), "crane")).toEqual({ kind: "stale" });
-  expect(submit(state(), 99, "crane")).toEqual({ kind: "stale" });
-});
-
-test("the word that fills the last empty cells reports done", () => {
-  const four = [1, 2, 3, 4].reduce((c, n) => hit(c, row(n)), BLANK);
-
-  expect(submit(state({ cells: four }), row(0), "crane")).toMatchObject({
-    kind: "hit",
-    done: true,
-  });
-  expect(isFull(four)).toBe(false);
-  expect(submit(state({ cells: BLANK }), row(0), "crane")).toMatchObject({ done: false });
+  expect(enter(state({ finished: true }), row(0), "crane")).toEqual({ kind: "stale" });
+  expect(enter(state(), 99, "crane")).toEqual({ kind: "stale" });
 });

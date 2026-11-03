@@ -7,22 +7,20 @@ export function resultLine(number: number, g: Game): string {
   if (!g.solved) return `<@${g.userId}> gave up on Crossword #${number}`;
 
   const time = clock((g.finishedAt ?? g.startedAt) - g.startedAt);
-  const parts = [`${g.points ?? 0} pts`, `${g.wrong} mistakes`, `${g.reveals} reveals`, time];
+  const parts = [`${g.points ?? 0} pts`, `${g.wrong} wrong checks`, `${g.reveals} reveals`, time];
 
   return `<@${g.userId}> solved Crossword #${number} — ${parts.join(" · ")}`;
 }
 
-const solved = (v: BoardView): boolean => !v.cells.includes(".");
-
 function dailyLines(v: BoardView): string[] {
-  if (!solved(v)) return ["Gave up — 0 points"];
+  if (!v.solved) return ["Gave up — 0 points"];
 
   return [...(v.award?.parts ?? []), `**${v.award?.points ?? v.points} points**`];
 }
 
 const practiceLines = (v: BoardView): string[] => [
-  solved(v) ? "Solved!" : "Gave up",
-  `Mistakes: ${v.wrong} · Reveals: ${v.reveals}`,
+  v.solved ? "Solved!" : "Gave up",
+  `Wrong checks: ${v.wrong} · Reveals: ${v.reveals}`,
 ];
 
 /** What follows the board once finished: the award parts, and for a daily the time to the next. */

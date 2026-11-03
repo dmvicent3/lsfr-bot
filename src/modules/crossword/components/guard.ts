@@ -1,8 +1,7 @@
 import type { Database } from "bun:sqlite";
 import { dailyLookup, dayOf } from "../../../core/daily-guard.ts";
 import { FIRST_PUZZLE } from "../periods.ts";
-import type { Turn } from "../play/turn.ts";
-import type { Rec } from "../play/types.ts";
+import type { Rec, Turn } from "../play/types.ts";
 import type { Where } from "../render/board-view.ts";
 import { crosswordTimeZone } from "../settings.ts";
 import { CrosswordRepo } from "../store/repo.ts";

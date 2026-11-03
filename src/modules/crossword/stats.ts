@@ -12,5 +12,5 @@ export function playerStats(all: Game[], today: string): PlayerStats {
   );
   const solved = all.filter((g) => g.finishedAt !== null && g.solved).length;
 
-  return { points, days, solved, avgMistakes: avgScore, currentStreak, longestStreak };
+  return { points, days, solved, avgWrongChecks: avgScore, currentStreak, longestStreak };
 }

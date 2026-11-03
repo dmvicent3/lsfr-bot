@@ -1,42 +1,39 @@
 import { expect, test } from "bun:test";
 import { lcg } from "../../../../src/core/random.ts";
-import { isFull, solutionOf } from "../../../../src/modules/crossword/play/cells.ts";
+import { solutionOf } from "../../../../src/modules/crossword/play/cells.ts";
 import { reveal, revealRandom } from "../../../../src/modules/crossword/play/reveal.ts";
 import { game, practice } from "../store/fixtures.ts";
 import { square, state } from "./fixtures.ts";
 
+const SOL = solutionOf(square());
 const filled = (cells: string): number => cells.split("").filter((c) => c !== ".").length;
 
-test("reveal fills exactly one empty cell with its solution letter", () => {
-  const out = reveal(state(), lcg(7));
+test("reveal writes one empty cell's solution letter, uppercase", () => {
+  const out = reveal(state(), lcg(7))!;
   const at = out.cells.split("").findIndex((c) => c !== ".");
 
   expect(filled(out.cells)).toBe(1);
-  expect(out.cells[at]).toBe(solutionOf(square())[at]);
-  expect(out).toMatchObject({ reveals: 1, done: false });
+  expect(out.cells[at]).toBe(SOL[at]!.toUpperCase());
+  expect(out.reveals).toBe(1);
 });
 
 test("the same random reveals the same cell", () => {
   expect(reveal(state(), lcg(7))).toEqual(reveal(state(), lcg(7)));
 });
 
-test("reveal on the last empty cell finishes the board", () => {
-  const sol = solutionOf(square());
-  const cells = sol.slice(0, 24) + ".";
-  const out = reveal(state({ cells, reveals: 2 }), lcg(1));
+test("only wrong or empty cells are picked: a wrong typed letter gets fixed", () => {
+  const cells = `z${SOL.slice(1)}`;
 
-  expect(out).toEqual({ cells: sol, reveals: 3, done: true });
-  expect(isFull(out.cells)).toBe(true);
+  for (const seed of [1, 2, 3, 4, 5]) {
+    expect(reveal(state({ cells, reveals: 2 }), lcg(seed))).toEqual({
+      cells: `C${SOL.slice(1)}`,
+      reveals: 3,
+    });
+  }
 });
 
-test("a full board reveals nothing", () => {
-  const sol = solutionOf(square());
-
-  expect(reveal(state({ cells: sol, reveals: 1 }), lcg(1))).toEqual({
-    cells: sol,
-    reveals: 1,
-    done: true,
-  });
+test("a grid with nothing wrong reveals nothing", () => {
+  expect(reveal(state({ cells: SOL, reveals: 1 }), lcg(1))).toBeNull();
 });
 
 test("revealRandom is per game and advances with each reveal", () => {

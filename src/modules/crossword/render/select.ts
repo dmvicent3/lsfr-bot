@@ -4,7 +4,6 @@ import {
   ComponentType,
 } from "discord.js";
 import { clip } from "../../../core/clip.ts";
-import { solvedSlots } from "../play/cells.ts";
 import { pickId, slotKey } from "./ids.ts";
 import { slotLabel } from "./labels.ts";
 import type { BoardView } from "./types.ts";
@@ -14,15 +13,14 @@ const DESCRIPTION_MAX = 100;
 
 export type SelectRow = APIActionRowComponent<APIStringSelectComponent>;
 
-/** `Pick a clue` over the unsolved clues; value `<n>a|<n>d`. */
+/** `Pick a clue` over every clue, filled or not; value `<n>a|<n>d`. */
 export function clueSelect(v: BoardView): SelectRow {
   const { puzzle, clues } = v.stored;
-  const done = solvedSlots(puzzle, v.cells);
-  const options = puzzle.slots.flatMap((s, i) =>
-    done[i]
-      ? []
-      : [{ label: slotLabel(s), value: slotKey(s), description: clip(clues[i]!, DESCRIPTION_MAX) }],
-  );
+  const options = puzzle.slots.map((s, i) => ({
+    label: slotLabel(s),
+    value: slotKey(s),
+    description: clip(clues[i]!, DESCRIPTION_MAX),
+  }));
 
   if (options.length > OPTIONS_MAX)
     throw new Error(`${options.length} options, max ${OPTIONS_MAX}`);

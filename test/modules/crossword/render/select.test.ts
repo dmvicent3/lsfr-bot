@@ -6,12 +6,12 @@ import type { BoardView } from "../../../../src/modules/crossword/render/types.t
 const twice = <T>(list: T[]): T[] => [...list, ...list];
 const menu = (v: BoardView = V) => clueSelect(v).components[0]!;
 
-test("lists only unsolved clues with labels and values", () => {
+test("lists every clue, filled or not, with labels and values", () => {
   const options = menu().options;
 
-  expect(options).toHaveLength(9);
-  expect(options[0]).toEqual({ label: "6 Across (5)", value: "6a", description: "clue 6a" });
-  expect(options.map((o) => o.value)).not.toContain("1a");
+  expect(options).toHaveLength(10);
+  expect(options[0]).toEqual({ label: "1 Across (5)", value: "1a", description: "clue 1a" });
+  expect(options[1]).toEqual({ label: "6 Across (5)", value: "6a", description: "clue 6a" });
   expect(options.at(-1)!.value).toBe("5d");
 });
 
@@ -34,7 +34,7 @@ test("at most 25 options on the densest 7×7", () => {
   expect(menu(bigView()).options.length).toBeLessThanOrEqual(25);
 });
 
-test("more than 25 unsolved clues is an error", () => {
+test("more than 25 clues is an error", () => {
   const { puzzle, clues } = bigView().stored;
   const doubled = {
     puzzle: { ...puzzle, slots: twice(puzzle.slots), answers: twice(puzzle.answers) },

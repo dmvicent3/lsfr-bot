@@ -14,6 +14,9 @@ export const answerId = (scope: string, stamp: string, slot: SlotRef): string =>
 export const revealId = (scope: string, stamp: string): string =>
   `crossword:reveal:${scope}:${stamp}`;
 
+export const checkId = (scope: string, stamp: string): string =>
+  `crossword:check:${scope}:${stamp}`;
+
 export const giveUpId = (scope: string, stamp: string): string =>
   `crossword:giveup:${scope}:${stamp}`;
 

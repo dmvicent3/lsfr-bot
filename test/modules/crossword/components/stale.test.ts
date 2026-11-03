@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import { seedFor } from "../../../../src/core/seed.ts";
 import { fakeClick, fakeModal } from "../../../core/fake-interaction.ts";
 import { answerHandler } from "../../../../src/modules/crossword/components/answer.ts";
+import { checkHandler } from "../../../../src/modules/crossword/components/check.ts";
 import { crosswordComponents } from "../../../../src/modules/crossword/components/components.ts";
 import { newHandler } from "../../../../src/modules/crossword/components/new.ts";
 import { pickHandler } from "../../../../src/modules/crossword/components/pick.ts";
@@ -20,6 +21,7 @@ test("a new practice puzzle replaces the row, deferring first", async () => {
 
   expect(calls.order).toEqual(["deferUpdate", "editReply"]);
   expect(calls.editReply[0]?.content).toContain("Practice crossword 5×5");
+  expect(calls.editReply[0]?.files).toHaveLength(1);
   expect(repo.practice.get("g", "u")?.startedAt).not.toBe(7);
 });
 
@@ -69,6 +71,7 @@ test("a click with an old stamp or without a game is stale", async () => {
 test("the factories list every handler id", () => {
   expect(crosswordComponents(null, Math.random).map((h) => h.id)).toEqual([
     "crossword:pick",
+    "crossword:check",
     "crossword:reveal",
     "crossword:giveup",
     "crossword:new",
@@ -85,7 +88,7 @@ test("a non-select click on the pick id still gets an answer", async () => {
   expect(a.calls.reply[0]?.content).toBe(STALE);
 });
 
-test("a daily modal after midnight still applies to that date's stored game", async () => {
+test("a daily modal and Check after midnight still apply to that date's stored game", async () => {
   const { ctx, repo } = setup({ cells: missing(0), startedAt: 1 });
   const realNow = Date.now;
   Date.now = () => Date.UTC(2026, 10, 5, 0, 30);
@@ -93,10 +96,12 @@ test("a daily modal after midnight still applies to that date's stored game", as
   try {
     const a = fakeModal("u", "crane");
     await answer.handle(a.i, [DATE, "1", slot], ctx);
+    const b = fakeClick("u");
+    await checkHandler.handle(b.i, [DATE, "1"], ctx);
 
     expect(stored(repo)?.solved).toBe(true);
     expect(a.calls.update).toHaveLength(1);
-    expect(a.calls.update[0]?.content).toContain("Next crossword in 23h");
+    expect(b.calls.update[0]?.content).toContain("Next crossword in 23h");
   } finally {
     Date.now = realNow;
   }

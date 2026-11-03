@@ -63,7 +63,7 @@ describe("/crossword data and module", () => {
     expect(m.name).toBe("crossword");
     expect(m.title).toBe("📰 Crossword");
     expect(m.helpNote).toBe(
-      "A daily 5×5 mini crossword, the same for everyone in the server; answers are private. Words: ENABLE (public domain) and FrequencyWords; definitions: Princeton WordNet 3.1 (WordNet licence); clues written by the local model.",
+      "A daily 5×5 mini crossword, the same for everyone in the server; answers are private. Words: ENABLE (public domain) and FrequencyWords; definitions: Princeton WordNet 3.1 (WordNet licence); clues written by the local model. Grid font: DejaVu Sans.",
     );
     expect(m.commands?.map((c) => c.data.name)).toEqual(["crossword"]);
     expect(m.modals?.length).toBeGreaterThan(0);
@@ -91,8 +91,8 @@ function ctx(i: object, r = db()): CommandCtx {
 
 function playFake(size: number | null = null) {
   const order: string[] = [];
-  const sent: { flags?: unknown; edited?: { content?: string; components?: unknown[] } | string } =
-    {};
+  type Edit = { content?: string; components?: unknown[]; files?: { name?: string }[] };
+  const sent: { flags?: unknown; edited?: Edit | string } = {};
   const i = {
     user: { id: "u" },
     options: { getInteger: () => size },
@@ -124,6 +124,7 @@ describe("/crossword play", () => {
     const edited = typeof sent.edited === "object" ? sent.edited : {};
     expect(edited.content).toContain("Crossword #");
     expect(edited.components?.length).toBeGreaterThan(0);
+    expect(edited.files?.map((f) => f.name)).toEqual(["crossword.png"]);
     expect(r.repo.games.get("g", date, "u")).not.toBeNull();
   });
 
