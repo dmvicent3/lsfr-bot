@@ -16,6 +16,12 @@ export type Entry =
   | { kind: "bad"; len: number }
   | { kind: "entered"; cells: string; line: string | null };
 
+/** One input of a cell's modal: the slot it writes and the raw text typed. */
+export interface Typed {
+  slot: number;
+  text: string;
+}
+
 /** What a full grid is, once checked; `incomplete` while any cell is empty. */
 export type Verdict = "incomplete" | "correct" | "wrong";
 

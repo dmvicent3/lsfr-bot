@@ -64,3 +64,25 @@ test("a finished round or an unknown clue is stale", () => {
   expect(enter(state({ finished: true }), row(0), "crane")).toEqual({ kind: "stale" });
   expect(enter(state(), 99, "crane")).toEqual({ kind: "stale" });
 });
+
+test("`.` leaves a cell as it is: empty stays empty, a letter stays", () => {
+  const cells = `cr...${".".repeat(20)}`;
+
+  expect(entered(cells, row(0), "..ANE").cells.slice(0, 5)).toBe("crane");
+  expect(entered(cells, row(0), "z.n..").cells.slice(0, 5)).toBe("zrn..");
+});
+
+test("`.` over a revealed letter keeps it without a clash", () => {
+  const cells = `.R...${".".repeat(20)}`;
+
+  expect(entered(cells, row(0), "c.ane")).toEqual({
+    kind: "entered",
+    cells: `cRane${".".repeat(20)}`,
+    line: null,
+  });
+});
+
+test("`.` counts toward the length; other symbols are bad", () => {
+  expect(enter(state(), row(0), "....")).toEqual({ kind: "bad", len: 5 });
+  expect(enter(state(), row(0), "cr-ne")).toEqual({ kind: "bad", len: 5 });
+});

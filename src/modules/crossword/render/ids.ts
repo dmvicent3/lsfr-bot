@@ -11,6 +11,13 @@ export const pickId = (scope: string, stamp: string): string => `crossword:pick:
 export const answerId = (scope: string, stamp: string, slot: SlotRef): string =>
   `crossword:answer:${scope}:${stamp}:${slotKey(slot)}`;
 
+/** A square's button; a block's carries `x` so its id stays unique without opening anything. */
+export const cellId = (scope: string, stamp: string, cell: number, block = false): string =>
+  `crossword:cell:${scope}:${stamp}:${block ? "x" : ""}${cell}`;
+
+export const cellWordId = (scope: string, stamp: string, cell: number): string =>
+  `crossword:cellword:${scope}:${stamp}:${cell}`;
+
 export const revealId = (scope: string, stamp: string): string =>
   `crossword:reveal:${scope}:${stamp}`;
 
