@@ -2,6 +2,7 @@ import type { ComponentHandler } from "../../../core/types.ts";
 import type { Ask } from "../play/make.ts";
 import { giveUpHandler } from "./give-up.ts";
 import { newHandler } from "./new.ts";
+import { pageHandler } from "./page.ts";
 import { pickHandler } from "./pick.ts";
 import { revealHandler } from "./reveal.ts";
 
@@ -11,4 +12,5 @@ export const crosswordComponents = (ask: Ask | null, random: () => number): Comp
   revealHandler,
   giveUpHandler,
   newHandler(ask, random),
+  pageHandler,
 ];

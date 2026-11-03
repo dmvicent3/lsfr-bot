@@ -72,6 +72,7 @@ test("the factories list every handler id", () => {
     "crossword:reveal",
     "crossword:giveup",
     "crossword:new",
+    "crossword:page",
   ]);
   expect(crosswordModals().map((h) => h.id)).toEqual(["crossword:answer"]);
 });
