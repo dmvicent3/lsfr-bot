@@ -7,11 +7,11 @@ import { bigView, V } from "./fixtures.ts";
 const SHAPE = [
   "Crossword #3 · Words 1/10 · 95 pts · 2:14",
   "```",
-  "¹ C² R³ A⁴ N⁵ E",
-  "⁶ ·  ·  ·  ·  ·",
-  "⁷ ·  ·  ·  ·  ·",
-  "⁸ ·  ·  ·  ·  ·",
-  "⁹ ·  ·  ·  ·  ·",
+  "¹C ²R ³A ⁴N ⁵E",
+  "⁶·  ·  ·  ·  ·",
+  "⁷·  ·  ·  ·  ·",
+  "⁸·  ·  ·  ·  ·",
+  "⁹·  ·  ·  ·  ·",
   "```",
   "**Across**",
   "✅ 1. clue 1a (5)",
@@ -55,7 +55,7 @@ test("finished daily: full grid, answers, award, next", () => {
     untilNext: "5h 2m",
   });
 
-  expect(out).toContain("⁹ S  T  E  M  S");
+  expect(out).toContain("⁹S  T  E  M  S");
   expect(out).toContain("✅ 1. clue 1a — CRANE");
   expect(out).toContain("Streak 3: +10\n**90 points**");
   expect(out.endsWith("\n\nNext crossword in 5h 2m")).toBe(true);
