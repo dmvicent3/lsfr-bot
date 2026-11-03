@@ -6,6 +6,7 @@ import { moveHandler } from "./move.ts";
 import { newHandler } from "./new.ts";
 import { pageHandler } from "./page.ts";
 import { putHandler } from "./put.ts";
+import { undoHandler } from "./undo.ts";
 
 /** Every sudoku button; `new` needs the generator's randomness. */
 export const sudokuComponents = (random: () => number): ComponentHandler[] => [
@@ -14,6 +15,7 @@ export const sudokuComponents = (random: () => number): ComponentHandler[] => [
   modeHandler,
   clearHandler,
   checkHandler,
+  undoHandler,
   newHandler(random),
   pageHandler,
 ];

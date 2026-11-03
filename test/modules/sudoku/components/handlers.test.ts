@@ -8,6 +8,7 @@ import { moveHandler } from "../../../../src/modules/sudoku/components/move.ts";
 import { newHandler } from "../../../../src/modules/sudoku/components/new.ts";
 import { pageArgs } from "../../../../src/modules/sudoku/components/page.ts";
 import { putHandler } from "../../../../src/modules/sudoku/components/put.ts";
+import { undoHandler } from "../../../../src/modules/sudoku/components/undo.ts";
 import { EASY_SOLUTION } from "../fixtures.ts";
 import { makeGame } from "../play/game.ts";
 import { freshDb } from "../store/fixtures.ts";
@@ -59,6 +60,23 @@ test("mode flips note mode and re-renders; a put then toggles a note", async () 
 
   await modeHandler.handle(fakeClick("u").i, ["practice"], ctxOf(db));
   expect(repo.games.get(practice())?.noteMode).toBe(false);
+});
+
+test("undo takes back a put and saves; with nothing left it only tells", async () => {
+  const { db, repo } = freshDb();
+  repo.games.replace(practice());
+  await putHandler.handle(fakeClick("u").i, ["5", "practice"], ctxOf(db));
+  expect(repo.games.get(practice())?.cells[2]).toBe("5");
+
+  const { i, calls } = fakeClick("u");
+  await undoHandler.handle(i, ["practice"], ctxOf(db));
+  expect(calls.update).toHaveLength(1);
+  expect(repo.games.get(practice())).toEqual(practice());
+
+  const again = fakeClick("u");
+  await undoHandler.handle(again.i, ["practice"], ctxOf(db));
+  expect(again.calls.update).toHaveLength(0);
+  expect(again.calls.reply).toHaveLength(1);
 });
 
 test("move refuses an unknown direction", async () => {
@@ -130,5 +148,6 @@ test("every handler is registered once", () => {
     "sudoku:new",
     "sudoku:page",
     "sudoku:put",
+    "sudoku:undo",
   ]);
 });
