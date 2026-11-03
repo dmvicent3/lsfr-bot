@@ -68,7 +68,7 @@ test("givens bold dark, entries blue, checked-wrong entries red, centred 30 px",
     { x: 144, y: 59, size: 30, bold: false, fill: COLOURS.entry, text: "4" },
     { x: 192, y: 59, size: 30, bold: false, fill: COLOURS.wrong, text: "9" },
   ]);
-  expect(COLOURS).toEqual({ given: "#111", entry: "#1a5fb4", wrong: "#c01c28" });
+  expect(COLOURS).toEqual({ given: "#111", entry: "#1a5fb4", wrong: "#c01c28", repeat: "#c01c28" });
 });
 
 test("notes sit at their 3×3 spot in the cell, 12 px grey", () => {
@@ -98,4 +98,22 @@ test("text content is only digits and A–I, so nothing needs escaping", () => {
   expect(contents.length).toBeGreaterThan(0);
 
   for (const c of contents) expect(c).toMatch(/^[0-9A-I]$/);
+});
+
+test("repeated digits are red on a light-red cell; a repeated given keeps its bold", () => {
+  // Cell 0 is a given 5; a 5 typed in cell 2 (same row) clashes with it.
+  const g = makeGame({ cells: setAt(makeGame().cells, 2, "5"), cursor: 40 });
+  const svg = boardSvg(g);
+  const fives = sized(g, 30).filter((t) => t.y === 24 + 35 && t.text === "5");
+
+  expect(svg).toContain('<rect x="24" y="24" width="48" height="48" fill="#f8d0d3"/>');
+  expect(svg).toContain('<rect x="120" y="24" width="48" height="48" fill="#f8d0d3"/>');
+  expect(fives.map((t) => [t.fill, t.bold])).toEqual([
+    ["#c01c28", true],
+    ["#c01c28", false],
+  ]);
+});
+
+test("no repeats, no light-red cells", () => {
+  expect(boardSvg(makeGame())).not.toContain("#f8d0d3");
 });

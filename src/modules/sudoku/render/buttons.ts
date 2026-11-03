@@ -4,6 +4,7 @@ import {
   ButtonStyle,
   ComponentType,
 } from "discord.js";
+import { doneDigits } from "../play/done-digits.ts";
 import type { Game } from "../types.ts";
 
 type Row = APIActionRowComponent<APIButtonComponentWithCustomId>;
@@ -38,10 +39,17 @@ const row = (components: APIButtonComponentWithCustomId[]): Row => ({
 /** Primary while noting, so the mode shows on the buttons it changes. */
 const modeStyle = (g: Game) => (g.noteMode ? ButtonStyle.Primary : ButtonStyle.Secondary);
 
-const digits = (g: Game, from: number, to: number): APIButtonComponentWithCustomId[] =>
-  Array.from({ length: to - from + 1 }, (_, i) =>
-    button(`sudoku:put:${from + i}:${suffix(g)}`, `${from + i}`, modeStyle(g)),
+/** Green once all nine of a digit are on the board (still clickable), else the mode's style. */
+const digitStyle = (g: Game, done: Set<number>, d: number) =>
+  done.has(d) ? ButtonStyle.Success : modeStyle(g);
+
+function digits(g: Game, from: number, to: number): APIButtonComponentWithCustomId[] {
+  const done = doneDigits(g.cells);
+
+  return Array.from({ length: to - from + 1 }, (_, i) =>
+    button(`sudoku:put:${from + i}:${suffix(g)}`, `${from + i}`, digitStyle(g, done, from + i)),
   );
+}
 
 const newButton = (s: string) => button(`sudoku:new:${s}`, "New", ButtonStyle.Success);
 

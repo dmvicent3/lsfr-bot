@@ -1,4 +1,5 @@
 import { notesOf } from "../play/notes.ts";
+import { repeats } from "../play/repeats.ts";
 import type { Game } from "../types.ts";
 import type { Point, TextStyle } from "./types.ts";
 
@@ -9,8 +10,16 @@ const PAD = 4;
 const END = GUTTER + 9 * CELL;
 const SIDE = END + PAD;
 
-/** Digit colours: givens, the player's entries, and entries a check found wrong. */
-export const COLOURS = { given: "#111", entry: "#1a5fb4", wrong: "#c01c28" } as const;
+/** Digit colours: givens, the player's entries, entries a check found wrong, and repeats. */
+export const COLOURS = {
+  given: "#111",
+  entry: "#1a5fb4",
+  wrong: "#c01c28",
+  repeat: "#c01c28",
+} as const;
+
+/** Behind a repeated digit, so a rule clash reads apart from a checked-wrong entry. */
+export const REPEAT_FILL = "#f8d0d3";
 
 type Kind = keyof typeof COLOURS;
 
@@ -18,6 +27,7 @@ const DIGIT: Record<Kind, TextStyle> = {
   given: { size: 30, fill: COLOURS.given, bold: true },
   entry: { size: 30, fill: COLOURS.entry },
   wrong: { size: 30, fill: COLOURS.wrong },
+  repeat: { size: 30, fill: COLOURS.repeat },
 };
 const LABEL: TextStyle = { size: 14, fill: "#555" };
 const NOTE: TextStyle = { size: 12, fill: "#666" };
@@ -67,6 +77,13 @@ function notePoint({ x, y }: Point, d: number): Point {
   return { x: x + third(k % 3), y: y + third(Math.floor(k / 3)) + 4 };
 }
 
+/** How a filled cell's digit is drawn; a repeated given keeps its bold. */
+function style(g: Game, i: number, clash: Set<number>): TextStyle {
+  const own = DIGIT[kind(g, i)];
+
+  return clash.has(i) ? { ...own, fill: COLOURS.repeat } : own;
+}
+
 /** What a filled cell's digit is. */
 function kind(g: Game, i: number): Kind {
   if (g.givens[i] !== "0") return "given";
@@ -75,7 +92,7 @@ function kind(g: Game, i: number): Kind {
 }
 
 /** A filled cell's digit, coloured by what it is; an empty cell's notes. */
-function cell(g: Game, i: number): string {
+function cell(g: Game, i: number, clash: Set<number>): string {
   const d = g.cells[i] ?? "0";
   const at = corner(i);
 
@@ -85,20 +102,27 @@ function cell(g: Game, i: number): string {
       .join("");
   }
 
-  return text({ x: at.x + CELL / 2, y: at.y + 35 }, DIGIT[kind(g, i)], d);
+  return text({ x: at.x + CELL / 2, y: at.y + 35 }, style(g, i, clash), d);
 }
 
-/** The board as an SVG: the cursor cell yellow, givens bold, notes small in empty cells. */
+const square = ({ x, y }: Point, fill: string): string =>
+  `<rect x="${x}" y="${y}" width="${CELL}" height="${CELL}" fill="${fill}"/>`;
+
+/**
+ * The board as an SVG: repeated digits red on a light-red cell, the cursor cell yellow (drawn
+ * over a repeat's fill), givens bold, notes small in empty cells.
+ */
 export function boardSvg(g: Game): string {
-  const { x, y } = corner(g.cursor);
+  const clash = repeats(g.cells);
 
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${SIDE}" height="${SIDE}" viewBox="0 0 ${SIDE} ${SIDE}" font-family="DejaVu Sans">`,
     `<rect width="${SIDE}" height="${SIDE}" fill="#fff"/>`,
-    `<rect x="${x}" y="${y}" width="${CELL}" height="${CELL}" fill="#fff3b0"/>`,
+    ...[...clash].map((i) => square(corner(i), REPEAT_FILL)),
+    square(corner(g.cursor), "#fff3b0"),
     ...grid(),
     ...labels(),
-    ...Array.from({ length: 81 }, (_, i) => cell(g, i)),
+    ...Array.from({ length: 81 }, (_, i) => cell(g, i, clash)),
     "</svg>",
   ].join("");
 }

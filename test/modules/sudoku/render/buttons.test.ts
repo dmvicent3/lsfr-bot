@@ -80,3 +80,16 @@ test("a solved practice board keeps only New", () => {
   expect(labels(g)).toEqual([["New"]]);
   expect(ids(g)).toEqual(["sudoku:new:practice"]);
 });
+
+const styleOf = (g: Game, d: string) =>
+  buttons(g)
+    .flatMap((r) => r.components)
+    .find((c) => c.label === d)?.style;
+
+test("a digit placed nine times turns its button green, in either mode", () => {
+  const done = { ...GAME, cells: GAME.solution };
+
+  expect(styleOf(done, "5")).toBe(ButtonStyle.Success);
+  expect(styleOf({ ...done, noteMode: true }, "5")).toBe(ButtonStyle.Success);
+  expect(styleOf(GAME, "5")).toBe(ButtonStyle.Secondary);
+});
