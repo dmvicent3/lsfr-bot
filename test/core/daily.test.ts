@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import {
   currentStreak,
   dailyStreak,
+  streakOf,
   nextStreak,
   previousDate,
   periodRanks,
@@ -75,4 +76,18 @@ test("dailyStreak extends yesterday's streak and otherwise starts at 1", () => {
   expect(dailyStreak({ date: "2026-11-02", streak: 3 }, "2026-11-05")).toBe(1);
   expect(dailyStreak({ date: "2026-11-04", streak: null }, "2026-11-05")).toBe(1);
   expect(dailyStreak(null, "2026-11-05")).toBe(1);
+});
+
+test("streakOf asks the store for the last finished game before the date", () => {
+  const seen: string[] = [];
+  const games = {
+    lastFinishedBefore: (guildId: string, userId: string, date: string) => {
+      seen.push(`${guildId}/${userId}/${date}`);
+
+      return { date: "2026-11-04", streak: 3 };
+    },
+  };
+
+  expect(streakOf(games, { guildId: "g", userId: "u", date: "2026-11-05" })).toBe(4);
+  expect(seen).toEqual(["g/u/2026-11-05"]);
 });

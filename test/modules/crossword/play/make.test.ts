@@ -19,9 +19,11 @@ test("a daily puzzle is built from the date seed, with a clue per slot", async (
 
 test("a daily puzzle avoids yesterday's answers", async () => {
   const { repo } = freshDb();
-  const yesterday = await dailyMake(repo, { guildId: "g", date: "2026-11-02" }, ask)();
+  const v = { guildId: "g", date: "2026-11-03" };
+  // Yesterday holds exactly the answers today would pick without avoiding them.
+  const yesterday = await dailyMake(repo, v, ask)();
   repo.puzzles.create("g", "2026-11-02", yesterday!);
-  const today = await dailyMake(repo, { guildId: "g", date: "2026-11-03" }, ask)();
+  const today = await dailyMake(repo, v, ask)();
 
   for (const word of today!.puzzle.answers) {
     expect(yesterday!.puzzle.answers).not.toContain(word);

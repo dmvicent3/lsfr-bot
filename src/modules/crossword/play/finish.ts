@@ -1,7 +1,7 @@
+import { streakOf } from "../../../core/daily.ts";
 import { award } from "../scoring.ts";
 import type { CrosswordRepo } from "../store/repo.ts";
 import type { Award, Game } from "../types.ts";
-import { dailyStreak } from "./streak.ts";
 
 /**
  * Scores a finished daily in one guarded write; the award is null when it was already
@@ -13,7 +13,7 @@ export function finish(
   solved: boolean,
   now: number,
 ): { game: Game; award: Award | null } {
-  const streak = dailyStreak(repo, g);
+  const streak = streakOf(repo.games, g);
   const won = award(solved, g.wrong, g.reveals, streak);
   const game = { ...g, solved, streak, points: won.points, finishedAt: now };
 

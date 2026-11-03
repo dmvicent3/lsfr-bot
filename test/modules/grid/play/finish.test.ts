@@ -2,7 +2,7 @@ import { beforeEach, expect, test } from "bun:test";
 import { finish } from "../../../../src/modules/grid/play/finish.ts";
 import { giveUp } from "../../../../src/modules/grid/play/give-up.ts";
 import { healed } from "../../../../src/modules/grid/play/heal.ts";
-import { dailyStreak } from "../../../../src/modules/grid/play/streak.ts";
+import { streakOf } from "../../../../src/core/daily.ts";
 import type { GridRepo } from "../../../../src/modules/grid/store/repo.ts";
 import { freshDb, game, practice } from "../store/fixtures.ts";
 
@@ -89,8 +89,8 @@ const finished = (date: string, streak: number) =>
   repo.games.start(game({ date, filled: 1, points: 20, streak, finishedAt: 5 }));
 
 test("streak: first day, extend, reset", () => {
-  expect(dailyStreak(repo, game())).toBe(1);
+  expect(streakOf(repo.games, game())).toBe(1);
   finished("2026-11-02", 3);
-  expect(dailyStreak(repo, game())).toBe(4);
-  expect(dailyStreak(repo, game({ date: "2026-11-05" }))).toBe(1);
+  expect(streakOf(repo.games, game())).toBe(4);
+  expect(streakOf(repo.games, game({ date: "2026-11-05" }))).toBe(1);
 });

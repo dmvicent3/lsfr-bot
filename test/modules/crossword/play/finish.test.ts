@@ -1,7 +1,7 @@
 import { beforeEach, expect, test } from "bun:test";
 import { finish } from "../../../../src/modules/crossword/play/finish.ts";
 import { giveUp } from "../../../../src/modules/crossword/play/give-up.ts";
-import { dailyStreak } from "../../../../src/modules/crossword/play/streak.ts";
+import { streakOf } from "../../../../src/core/daily.ts";
 import type { CrosswordRepo } from "../../../../src/modules/crossword/store/repo.ts";
 import { freshDb, game, practice } from "../store/fixtures.ts";
 
@@ -40,7 +40,7 @@ test("giving up scores 0 but the day counts toward the streak", () => {
 
   expect(out.award).toEqual({ points: 0, parts: [] });
   expect(out.game).toMatchObject({ solved: false, points: 0, streak: 1, finishedAt: 50 });
-  expect(dailyStreak(repo, playing({ date: "2026-11-04" }))).toBe(2);
+  expect(streakOf(repo.games, playing({ date: "2026-11-04" }))).toBe(2);
 });
 
 test("giving up a finished round changes nothing", () => {

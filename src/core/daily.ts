@@ -47,6 +47,24 @@ export function dailyStreak(
   return nextStreak(prev, date, true);
 }
 
+/** A store that can find a player's latest finished game before a date. */
+export interface FinishedBefore {
+  lastFinishedBefore(
+    guildId: string,
+    userId: string,
+    date: string,
+  ): { date: string; streak: number | null } | null;
+}
+
+/**
+ * The streak after playing `g` when every finished game counts as a day. Finishing an older day
+ * after a later one leaves the later stored streak stale; that is accepted.
+ */
+export const streakOf = (
+  games: FinishedBefore,
+  g: { guildId: string; userId: string; date: string },
+): number => dailyStreak(games.lastFinishedBefore(g.guildId, g.userId, g.date), g.date);
+
 /** Alive while the latest game was today or yesterday. */
 export function currentStreak(last: LastGame | null, today: string): number {
   if (!last) return 0;

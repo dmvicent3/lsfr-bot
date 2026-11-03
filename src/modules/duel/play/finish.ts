@@ -1,8 +1,8 @@
+import { streakOf } from "../../../core/daily.ts";
 import { award } from "../scoring.ts";
 import type { DuelRepo } from "../store/repo.ts";
 import type { Award, Game, Puzzle } from "../types.ts";
 import { correctCount } from "./answer.ts";
-import { dailyStreak } from "./streak.ts";
 
 /** Scores a completed game; the award is null when it was already finished. */
 export function finish(
@@ -12,7 +12,7 @@ export function finish(
   now: number,
 ): { game: Game; award: Award | null } {
   const correct = correctCount(puzzle, g.answers);
-  const streak = dailyStreak(repo, g);
+  const streak = streakOf(repo.games, g);
   const won = award(correct, streak);
   const game = { ...g, correct, streak, points: won.points, finishedAt: now };
 

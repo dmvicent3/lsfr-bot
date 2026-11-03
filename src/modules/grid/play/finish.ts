@@ -1,8 +1,8 @@
+import { streakOf } from "../../../core/daily.ts";
 import type { Snapshot } from "../../../core/countries/types.ts";
 import { award, cellPoints, obscurity } from "../scoring.ts";
 import type { GridRepo } from "../store/repo.ts";
 import type { Award, Game } from "../types.ts";
-import { dailyStreak } from "./streak.ts";
 
 /**
  * Scores a completed game; the award is null when it was already finished. While a game is
@@ -10,7 +10,7 @@ import { dailyStreak } from "./streak.ts";
  */
 export function finish(repo: GridRepo, g: Game, now: number): { game: Game; award: Award | null } {
   const filled = g.cells.filter((c) => c !== "").length;
-  const streak = dailyStreak(repo, g);
+  const streak = streakOf(repo.games, g);
   const won = award(g.points ?? 0, filled, streak);
   const game = { ...g, filled, streak, points: won.points, finishedAt: now };
 
