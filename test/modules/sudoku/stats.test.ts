@@ -28,6 +28,7 @@ const game = (date: string, level: Level, { ms, points, streak }: Won): Game => 
   streak,
   notes: "",
   noteMode: false,
+  history: "",
 });
 
 test("best and average per level, null without solves", () => {

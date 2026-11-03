@@ -39,6 +39,15 @@ export interface Game {
   notes: string;
   /** Digit buttons toggle notes instead of placing digits. */
   noteMode: boolean;
+  /** JSON array of `Snapshot`s before each edit, newest last; `''` means none. */
+  history: string;
+}
+
+/** The board an Undo goes back to. */
+export interface Snapshot {
+  cells: string;
+  notes: string;
+  cursor: number;
 }
 
 export type Direction = "left" | "up" | "down" | "right";

@@ -30,6 +30,7 @@ const blank = (v: Fresh, givens: string, solution: string): Game => ({
   streak: null,
   notes: "",
   noteMode: false,
+  history: "",
 });
 
 /** The day's game for this level: the shared puzzle is generated on first open. */

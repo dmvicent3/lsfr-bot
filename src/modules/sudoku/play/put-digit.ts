@@ -1,5 +1,6 @@
 import type { Game, Step } from "../types.ts";
 import { clearNotes, dropNote, peersOf } from "./notes.ts";
+import { record } from "./history.ts";
 import { blocked, setChar, unchanged } from "./step.ts";
 
 const FULL_WRONG = "Grid is full but something's off.";
@@ -18,9 +19,9 @@ export function putDigit(g: Game, digit: number): Step {
   const notes = dropNote(clearNotes(g.notes, g.cursor), peersOf(g.cursor), digit);
   const full = !cells.includes("0");
 
-  if (full && cells === g.solution) {
-    return { game: { ...g, cells, wrong, notes }, note: null, solved: true };
-  }
+  const game = record(g, { ...g, cells, wrong, notes });
 
-  return unchanged({ ...g, cells, wrong, notes }, full ? FULL_WRONG : null);
+  if (full && cells === g.solution) return { game, note: null, solved: true };
+
+  return unchanged(game, full ? FULL_WRONG : null);
 }

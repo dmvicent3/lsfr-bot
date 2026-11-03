@@ -22,6 +22,7 @@ const game = (userId: string, points: number, solvedAt: number, date = "2026-11-
   streak: 1,
   notes: "",
   noteMode: false,
+  history: "",
 });
 
 test("sums points per player, highest first", () => {

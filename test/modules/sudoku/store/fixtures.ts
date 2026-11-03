@@ -33,5 +33,6 @@ export const game = (over: Partial<Game> = {}): Game => ({
   streak: null,
   notes: "",
   noteMode: false,
+  history: "",
   ...over,
 });

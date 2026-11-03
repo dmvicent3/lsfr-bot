@@ -20,3 +20,16 @@ test("notes columns arrive on an existing game with no notes and digit mode", ()
   expect(got?.notes).toBe("");
   expect(got?.noteMode).toBe(false);
 });
+
+test("history arrives on an existing game as none", () => {
+  const db = new Database(":memory:", { strict: true });
+  runMigrations(db, sudokuMigrations.slice(0, 2));
+  db.run(
+    `INSERT INTO sudoku_games (guild_id, user_id, kind, date, slot, level, givens, solution,
+       cells, wrong, cursor, started_at) VALUES ('g', 'u', 'daily', '2026-11-03', 'easy', 'easy',
+       '1', '2', '1', '0', 0, 1)`,
+  );
+  runMigrations(db, sudokuMigrations);
+
+  expect(new SudokuRepo(db).games.get(game())?.history).toBe("");
+});

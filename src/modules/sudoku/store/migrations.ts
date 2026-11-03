@@ -41,4 +41,8 @@ export const sudokuMigrations: Migration[] = [
       ALTER TABLE sudoku_games ADD COLUMN note_mode INTEGER NOT NULL DEFAULT 0;
     `,
   },
+  {
+    id: "sudoku-003-history",
+    sql: `ALTER TABLE sudoku_games ADD COLUMN history TEXT NOT NULL DEFAULT '';`,
+  },
 ];

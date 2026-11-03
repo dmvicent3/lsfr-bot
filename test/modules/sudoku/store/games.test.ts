@@ -85,3 +85,12 @@ test("notes and note mode round-trip through start and save", () => {
   expect(repo.games.save(game({ notes: "", noteMode: false }))).toBe(true);
   expect(repo.games.get(game())).toMatchObject({ notes: "", noteMode: false });
 });
+
+test("history round-trips through start and save", () => {
+  const history = JSON.stringify([{ cells: "1", notes: "", cursor: 4 }]);
+  repo.games.start(game({ history }));
+  expect(repo.games.get(game())?.history).toBe(history);
+
+  expect(repo.games.save(game({ history: "" }))).toBe(true);
+  expect(repo.games.get(game())?.history).toBe("");
+});

@@ -21,4 +21,5 @@ export const GAME: Game = {
   streak: null,
   notes: "",
   noteMode: false,
+  history: "",
 };

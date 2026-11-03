@@ -27,4 +27,5 @@ export interface GameRow {
   streak: number | null;
   notes: string;
   note_mode: number;
+  history: string;
 }

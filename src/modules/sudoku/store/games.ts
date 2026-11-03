@@ -40,7 +40,7 @@ export class GameStore {
       .query(
         `UPDATE sudoku_games
          SET cells = ?, wrong = ?, cursor = ?, checks = ?, solved_at = ?, points = ?, streak = ?,
-             notes = ?, note_mode = ?
+             notes = ?, note_mode = ?, history = ?
          WHERE ${KEY} AND solved_at IS NULL`,
       )
       .run(
@@ -53,6 +53,7 @@ export class GameStore {
         g.streak,
         g.notes,
         g.noteMode ? 1 : 0,
+        g.history,
         g.guildId,
         g.userId,
         g.kind,
