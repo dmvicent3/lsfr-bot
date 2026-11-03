@@ -11,5 +11,5 @@ const OPTIONS = {
   },
 };
 
-/** Rasterises a grid SVG with the bundled DejaVu fonts. */
-export const gridPng = (svg: string): Buffer => new Resvg(svg, OPTIONS).render().asPng();
+/** Rasterises an SVG with the bundled DejaVu fonts. */
+export const svgToPng = (svg: string): Buffer => new Resvg(svg, OPTIONS).render().asPng();
