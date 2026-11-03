@@ -20,6 +20,8 @@ export function makeGame(over: Partial<Game> = {}): Game {
     solvedAt: null,
     points: null,
     streak: null,
+    notes: "",
+    noteMode: false,
     ...over,
   };
 }

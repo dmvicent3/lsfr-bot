@@ -18,11 +18,13 @@ export const toGame = (r: GameRow): Game => ({
   solvedAt: r.solved_at,
   points: r.points,
   streak: r.streak,
+  notes: r.notes,
+  noteMode: r.note_mode === 1,
 });
 
 export const COLUMNS =
-  "guild_id, user_id, kind, date, slot, level, givens, solution, cells, wrong, cursor, checks, started_at, solved_at, points, streak";
-export const MARKS = "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+  "guild_id, user_id, kind, date, slot, level, givens, solution, cells, wrong, cursor, checks, started_at, solved_at, points, streak, notes, note_mode";
+export const MARKS = "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
 export const SOLVED =
   "SELECT * FROM sudoku_games WHERE guild_id = ? AND kind = 'daily' AND solved_at IS NOT NULL";
 export const KEY = "guild_id = ? AND user_id = ? AND kind = ? AND date = ? AND slot = ?";
@@ -44,4 +46,6 @@ export const values = (g: Game) => [
   g.solvedAt,
   g.points,
   g.streak,
+  g.notes,
+  g.noteMode ? 1 : 0,
 ];

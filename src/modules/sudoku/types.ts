@@ -35,6 +35,10 @@ export interface Game {
   solvedAt: number | null;
   points: number | null;
   streak: number | null;
+  /** 81 × 9 flags, cell i digit d at `i*9 + d-1`; `''` means none. */
+  notes: string;
+  /** Digit buttons toggle notes instead of placing digits. */
+  noteMode: boolean;
 }
 
 export type Direction = "left" | "up" | "down" | "right";

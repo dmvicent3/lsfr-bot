@@ -35,32 +35,34 @@ const row = (components: APIButtonComponentWithCustomId[]): Row => ({
   components,
 });
 
-const digits = (from: number, to: number, s: string): APIButtonComponentWithCustomId[] =>
+/** Primary while noting, so the mode shows on the buttons it changes. */
+const modeStyle = (g: Game) => (g.noteMode ? ButtonStyle.Primary : ButtonStyle.Secondary);
+
+const digits = (g: Game, from: number, to: number): APIButtonComponentWithCustomId[] =>
   Array.from({ length: to - from + 1 }, (_, i) =>
-    button(`sudoku:put:${from + i}:${s}`, `${from + i}`),
+    button(`sudoku:put:${from + i}:${suffix(g)}`, `${from + i}`, modeStyle(g)),
   );
 
-const newRow = (s: string): Row => row([button(`sudoku:new:${s}`, "New", ButtonStyle.Success)]);
+const newButton = (s: string) => button(`sudoku:new:${s}`, "New", ButtonStyle.Success);
 
 /**
- * Move and clear, the digits, and check (plus New in its own row for practice).
+ * Move and clear, the digits, check, and the Notes toggle (with New beside it for practice).
  * Once solved only a practice board keeps New; a solved daily has none.
  */
 export function buttons(g: Game): Row[] {
-  if (g.solvedAt !== null) return g.kind === "practice" ? [newRow(suffix(g))] : [];
-
   const s = suffix(g);
+  const fresh = g.kind === "practice" ? [newButton(s)] : [];
+
+  if (g.solvedAt !== null) return fresh.length ? [row(fresh)] : [];
+
   const moves = MOVES.map(([d, label]) => button(`sudoku:move:${d}:${s}`, label));
-  const last = [...digits(6, 9, s), button(`sudoku:check:${s}`, "Check", ButtonStyle.Primary)];
+  const check = button(`sudoku:check:${s}`, "Check", ButtonStyle.Primary);
 
-  const rows = [
+  /** Discord caps an action row at five components, so Notes and New get a row of their own. */
+  return [
     row([...moves, button(`sudoku:clear:${s}`, "Clear")]),
-    row(digits(1, 5, s)),
-    row(last),
+    row(digits(g, 1, 5)),
+    row([...digits(g, 6, 9), check]),
+    row([button(`sudoku:mode:${s}`, "✏️ Notes", modeStyle(g)), ...fresh]),
   ];
-
-  /** Discord caps an action row at five components, so New gets a row of its own. */
-  if (g.kind === "practice") rows.push(newRow(s));
-
-  return rows;
 }

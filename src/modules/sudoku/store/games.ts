@@ -39,7 +39,8 @@ export class GameStore {
     const { changes } = this.db
       .query(
         `UPDATE sudoku_games
-         SET cells = ?, wrong = ?, cursor = ?, checks = ?, solved_at = ?, points = ?, streak = ?
+         SET cells = ?, wrong = ?, cursor = ?, checks = ?, solved_at = ?, points = ?, streak = ?,
+             notes = ?, note_mode = ?
          WHERE ${KEY} AND solved_at IS NULL`,
       )
       .run(
@@ -50,6 +51,8 @@ export class GameStore {
         g.solvedAt,
         g.points,
         g.streak,
+        g.notes,
+        g.noteMode ? 1 : 0,
         g.guildId,
         g.userId,
         g.kind,

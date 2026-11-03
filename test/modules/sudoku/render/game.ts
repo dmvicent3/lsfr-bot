@@ -19,4 +19,6 @@ export const GAME: Game = {
   solvedAt: null,
   points: null,
   streak: null,
+  notes: "",
+  noteMode: false,
 };

@@ -28,6 +28,8 @@ const blank = (v: Fresh, givens: string, solution: string): Game => ({
   solvedAt: null,
   points: null,
   streak: null,
+  notes: "",
+  noteMode: false,
 });
 
 /** The day's game for this level: the shared puzzle is generated on first open. */

@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { notesOf, toggleNote } from "../../../../src/modules/sudoku/play/notes.ts";
 import { put } from "../../../../src/modules/sudoku/play/put.ts";
 import { EASY_SOLUTION } from "../fixtures.ts";
 import { almostSolved, makeGame, setAt } from "./game.ts";
@@ -71,4 +72,48 @@ test("put on a solved game is unchanged", () => {
   expect(step.game).toBe(g);
   expect(step.note).toBeNull();
   expect(step.solved).toBe(false);
+});
+
+const NONE = "0".repeat(729);
+
+test("in note mode put toggles that note and the cursor stays", () => {
+  const g = makeGame({ noteMode: true });
+  const on = put(g, 4);
+
+  expect(notesOf(on.game.notes, 2)).toEqual([4]);
+  expect(on.game.cells).toBe(g.cells);
+  expect(on.game.cursor).toBe(2);
+  expect(on.note).toBeNull();
+  expect(notesOf(put(on.game, 4).game.notes, 2)).toEqual([]);
+});
+
+test("in note mode a given is refused", () => {
+  const g = makeGame({ noteMode: true, cursor: 0 });
+  const step = put(g, 4);
+
+  expect(step.game).toBe(g);
+  expect(step.note).toBe("That's a given.");
+});
+
+test("in note mode a cell holding a digit must be cleared first", () => {
+  const g = makeGame({ noteMode: true, cells: setAt(makeGame().cells, 2, "5") });
+  const step = put(g, 4);
+
+  expect(step.game).toBe(g);
+  expect(step.note).toBe("Clear the cell first to add notes.");
+});
+
+test("in note mode a solved game is unchanged", () => {
+  const g = makeGame({ noteMode: true, solvedAt: 5 });
+
+  expect(put(g, 4).game).toBe(g);
+});
+
+test("placing a digit clears only that cell's notes", () => {
+  const notes = toggleNote(toggleNote(toggleNote(NONE, 2, 1), 2, 7), 3, 1);
+  const step = put(makeGame({ notes }), 4);
+
+  expect(step.game.cells[2]).toBe("4");
+  expect(notesOf(step.game.notes, 2)).toEqual([]);
+  expect(notesOf(step.game.notes, 3)).toEqual([1]);
 });

@@ -3,6 +3,7 @@ import type { Ctx } from "../../../../src/core/types.ts";
 import type { Game } from "../../../../src/modules/sudoku/types.ts";
 import { checkHandler } from "../../../../src/modules/sudoku/components/check.ts";
 import { sudokuComponents } from "../../../../src/modules/sudoku/components/components.ts";
+import { modeHandler } from "../../../../src/modules/sudoku/components/mode.ts";
 import { moveHandler } from "../../../../src/modules/sudoku/components/move.ts";
 import { newHandler } from "../../../../src/modules/sudoku/components/new.ts";
 import { pageArgs } from "../../../../src/modules/sudoku/components/page.ts";
@@ -38,6 +39,25 @@ test("put writes a valid digit", async () => {
   await putHandler.handle(i, ["5", "practice"], ctxOf(db));
 
   expect(repo.games.get(practice())?.cells[2]).toBe("5");
+});
+
+test("mode flips note mode and re-renders; a put then toggles a note", async () => {
+  const { db, repo } = freshDb();
+  repo.games.replace(practice());
+  const { i, calls } = fakeClick("u");
+  await modeHandler.handle(i, ["practice"], ctxOf(db));
+
+  expect(repo.games.get(practice())?.noteMode).toBe(true);
+  expect(calls.update).toHaveLength(1);
+
+  await putHandler.handle(fakeClick("u").i, ["5", "practice"], ctxOf(db));
+  const after = repo.games.get(practice());
+  expect(after?.cells[2]).toBe("0");
+  expect(after?.notes[2 * 9 + 4]).toBe("1");
+  expect(after?.cursor).toBe(2);
+
+  await modeHandler.handle(fakeClick("u").i, ["practice"], ctxOf(db));
+  expect(repo.games.get(practice())?.noteMode).toBe(false);
 });
 
 test("move refuses an unknown direction", async () => {
@@ -102,6 +122,7 @@ test("every handler is registered once", () => {
   expect(ids.toSorted()).toEqual([
     "sudoku:check",
     "sudoku:clear",
+    "sudoku:mode",
     "sudoku:move",
     "sudoku:new",
     "sudoku:page",

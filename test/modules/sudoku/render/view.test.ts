@@ -8,7 +8,7 @@ test("content is the board then the status, with buttons and no mentions", () =>
   const v = view(GAME, 5000);
   expect(v.content.startsWith(renderBoard(GAME))).toBe(true);
   expect(v.content).toContain("\nEasy · #3 · 5s · 0 checks ·");
-  expect(v.components).toHaveLength(3);
+  expect(v.components).toHaveLength(4);
   expect(v.allowedMentions).toEqual({ parse: [] });
 });
 

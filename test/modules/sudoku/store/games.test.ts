@@ -76,3 +76,12 @@ test("solvedOn lists a player's solved dailies on one date", () => {
   repo.games.start(solved({ date: "2026-11-04" }));
   expect(repo.games.solvedOn("g", "u", "2026-11-03").map((g) => g.slot)).toEqual(["easy"]);
 });
+
+test("notes and note mode round-trip through start and save", () => {
+  const notes = `1${"0".repeat(727)}1`;
+  repo.games.start(game({ notes, noteMode: true }));
+  expect(repo.games.get(game())).toEqual(game({ notes, noteMode: true }));
+
+  expect(repo.games.save(game({ notes: "", noteMode: false }))).toBe(true);
+  expect(repo.games.get(game())).toMatchObject({ notes: "", noteMode: false });
+});

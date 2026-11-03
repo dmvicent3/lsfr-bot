@@ -25,4 +25,6 @@ export interface GameRow {
   solved_at: number | null;
   points: number | null;
   streak: number | null;
+  notes: string;
+  note_mode: number;
 }

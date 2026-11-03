@@ -34,4 +34,11 @@ export const sudokuMigrations: Migration[] = [
       CREATE INDEX sudoku_games_by_day ON sudoku_games (guild_id, kind, date);
     `,
   },
+  {
+    id: "sudoku-002-notes",
+    sql: `
+      ALTER TABLE sudoku_games ADD COLUMN notes TEXT NOT NULL DEFAULT '';
+      ALTER TABLE sudoku_games ADD COLUMN note_mode INTEGER NOT NULL DEFAULT 0;
+    `,
+  },
 ];
