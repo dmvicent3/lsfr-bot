@@ -26,7 +26,7 @@ test("a solved clue or a finished game re-renders instead of opening the modal",
   const a = fakeClick("u", { values: [keyOf(row(0))] });
   await pick.handle(a.i, [DATE, "1"], solved.ctx);
   expect(a.calls.modal).toHaveLength(0);
-  expect(a.calls.update[0]?.content).toContain("Crossword #1");
+  expect(a.calls.update[0]?.content).toContain("Crossword #2");
 
   const done = setup(FINISHED);
   const b = fakeClick("u", { values: [keyOf(row(1))] });

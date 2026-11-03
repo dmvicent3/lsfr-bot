@@ -9,11 +9,11 @@ const g = (userId: string, points: number, finishedAt: number, o: Over = {}) =>
   game({ userId, points, finishedAt, solved: o.solved ?? true, date: o.date ?? "2026-11-04" });
 
 test("periods are labelled with the crossword number", () => {
-  expect(FIRST_PUZZLE).toBe("2026-11-04");
+  expect(FIRST_PUZZLE).toBe("2026-11-03");
   expect(periodRange("today", "2026-11-06")).toEqual({
     from: "2026-11-06",
     to: "2026-11-06",
-    label: "Crossword #3",
+    label: "Crossword #4",
   });
   expect(periodRange("week", "2026-11-06").from).toBe("2026-11-02");
 });

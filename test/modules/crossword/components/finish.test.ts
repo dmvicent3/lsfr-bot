@@ -21,7 +21,7 @@ test("the last cell by word finishes, scores and announces once", async () => {
   expect(a.calls.update[0]?.content).toContain("Next crossword in");
   expect(a.calls.send).toHaveLength(1);
   expect(a.calls.send[0]?.content).toStartWith(
-    "<@u> solved Crossword #1 — 95 pts · 1 mistakes · 0 reveals · ",
+    "<@u> solved Crossword #2 — 95 pts · 1 mistakes · 0 reveals · ",
   );
 
   const again = fakeModal("u", "crane");
@@ -38,7 +38,7 @@ test("the last cell by reveal finishes and announces once", async () => {
   expect(stored(repo)?.points).toBe(90);
   expect(a.calls.send).toHaveLength(1);
   expect(a.calls.send[0]?.content).toStartWith(
-    "<@u> solved Crossword #1 — 90 pts · 0 mistakes · 1 reveals",
+    "<@u> solved Crossword #2 — 90 pts · 0 mistakes · 1 reveals",
   );
 
   const again = fakeClick("u");
@@ -54,7 +54,7 @@ test("Give up scores 0, announces once and ignores a second click", async () => 
 
   expect(stored(repo)).toMatchObject({ solved: false, points: 0 });
   expect(a.calls.update[0]?.content).toContain("Gave up");
-  expect(a.calls.send.map((m) => m.content)).toEqual(["<@u> gave up on Crossword #1"]);
+  expect(a.calls.send.map((m) => m.content)).toEqual(["<@u> gave up on Crossword #2"]);
 
   const again = fakeClick("u");
   await giveUp.handle(again.i, [DATE, "1"], ctx);
