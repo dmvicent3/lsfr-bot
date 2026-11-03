@@ -1,14 +1,10 @@
 import { type APIEmbed, ApplicationCommandOptionType, MessageFlags } from "discord.js";
+import { commandMention as mention } from "../../core/mention.ts";
 import type { BotModule } from "../../core/types.ts";
 
 const EMBED_COLOR = 0xe10600;
 /** Discord caps an embed description at 4096 characters and a whole message's embeds at 6000. */
 const PAGE_LIMIT = 4000;
-
-/** A clickable command mention when the ID is known, plain code otherwise. */
-function mention(path: string, id: string | undefined): string {
-  return id ? `</${path}:${id}>` : `\`/${path}\``;
-}
 
 function moduleLines(module: BotModule, commandIds: ReadonlyMap<string, string>): string[] {
   const lines: string[] = [];

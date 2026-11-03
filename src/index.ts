@@ -22,6 +22,7 @@ import { sudokuModule } from "./modules/sudoku/index.ts";
 import { duelModule } from "./modules/duel/index.ts";
 import { llmAsk } from "./modules/crossword/ask.ts";
 import { crosswordModule } from "./modules/crossword/index.ts";
+import { dailiesModule } from "./modules/dailies/index.ts";
 import { gridModule } from "./modules/grid/index.ts";
 import { wordModule } from "./modules/word/index.ts";
 
@@ -41,6 +42,7 @@ const modules: BotModule[] = [
   duelModule(),
   gridModule(),
   crosswordModule(llmAsk(config.llmUrl)),
+  dailiesModule,
   minesweeperModule(),
   triviaModule(),
   cardsModule(),
