@@ -7,17 +7,17 @@ import { GAME } from "./game.ts";
 const labels = (g: Game) => buttons(g).map((r) => r.components.map((c) => c.label));
 const ids = (g: Game) => buttons(g).flatMap((r) => r.components.map((c) => c.custom_id));
 
-test("daily layout is four rows, Notes and Undo in the last", () => {
+test("daily layout is four rows, Notes, Undo and Clear all in the last", () => {
   expect(labels(GAME)).toEqual([
     ["◀", "▲", "▼", "▶", "Clear"],
     ["1", "2", "3", "4", "5"],
     ["6", "7", "8", "9", "Check"],
-    ["✏️ Notes", "↩ Undo"],
+    ["✏️ Notes", "↩ Undo", "Clear all"],
   ]);
 });
 
 test("no action row holds more than five components", () => {
-  expect(labels(GAME).map((r) => r.length)).toEqual([5, 5, 5, 2]);
+  expect(labels(GAME).map((r) => r.length)).toEqual([5, 5, 5, 3]);
 
   for (const g of [GAME, { ...GAME, kind: "practice" as const }]) {
     for (const r of buttons(g)) expect(r.components.length).toBeLessThanOrEqual(5);
@@ -35,13 +35,14 @@ test("daily IDs carry date and level", () => {
     "sudoku:check:daily:2026-11-05:easy",
     "sudoku:mode:daily:2026-11-05:easy",
     "sudoku:undo:daily:2026-11-05:easy",
+    "sudoku:clearall:daily:2026-11-05:easy",
   ]);
 });
 
-test("practice adds New beside Notes and Undo, and uses the practice suffix", () => {
+test("practice adds New beside Notes, Undo and Clear all, and uses the practice suffix", () => {
   const g = { ...GAME, kind: "practice" as const };
-  expect(labels(g).map((r) => r.length)).toEqual([5, 5, 5, 3]);
-  expect(labels(g)[3]).toEqual(["✏️ Notes", "↩ Undo", "New"]);
+  expect(labels(g).map((r) => r.length)).toEqual([5, 5, 5, 4]);
+  expect(labels(g)[3]).toEqual(["✏️ Notes", "↩ Undo", "Clear all", "New"]);
   expect(ids(g)).toContain("sudoku:undo:practice");
   expect(ids(g)).toContain("sudoku:mode:practice");
   expect(labels(g)[2]).toEqual(["6", "7", "8", "9", "Check"]);

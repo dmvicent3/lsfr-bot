@@ -143,6 +143,7 @@ test("every handler is registered once", () => {
   expect(ids.toSorted()).toEqual([
     "sudoku:check",
     "sudoku:clear",
+    "sudoku:clearall",
     "sudoku:mode",
     "sudoku:move",
     "sudoku:new",

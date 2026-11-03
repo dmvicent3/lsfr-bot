@@ -54,7 +54,7 @@ function digits(g: Game, from: number, to: number): APIButtonComponentWithCustom
 const newButton = (s: string) => button(`sudoku:new:${s}`, "New", ButtonStyle.Success);
 
 /**
- * Move and clear, the digits, check, and the Notes toggle with Undo (and New for practice).
+ * Move and clear, the digits, check, and Notes, Undo and Clear all (and New for practice).
  * Once solved only a practice board keeps New; a solved daily has none.
  */
 export function buttons(g: Game): Row[] {
@@ -66,7 +66,7 @@ export function buttons(g: Game): Row[] {
   const moves = MOVES.map(([d, label]) => button(`sudoku:move:${d}:${s}`, label));
   const check = button(`sudoku:check:${s}`, "Check", ButtonStyle.Primary);
 
-  /** Discord caps an action row at five components, so Notes, Undo and New get a row of their own. */
+  /** Discord caps an action row at five components, so the last four get a row of their own. */
   return [
     row([...moves, button(`sudoku:clear:${s}`, "Clear")]),
     row(digits(g, 1, 5)),
@@ -74,6 +74,7 @@ export function buttons(g: Game): Row[] {
     row([
       button(`sudoku:mode:${s}`, "✏️ Notes", modeStyle(g)),
       button(`sudoku:undo:${s}`, "↩ Undo"),
+      button(`sudoku:clearall:${s}`, "Clear all", ButtonStyle.Danger),
       ...fresh,
     ]),
   ];
