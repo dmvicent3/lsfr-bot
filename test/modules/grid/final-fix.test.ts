@@ -14,7 +14,7 @@ import { GameStore } from "../../../src/modules/grid/store/games.ts";
 import { gridMigrations } from "../../../src/modules/grid/store/migrations.ts";
 import { GridRepo } from "../../../src/modules/grid/store/repo.ts";
 import type { Grid } from "../../../src/modules/grid/types.ts";
-import { fakeClick, fakeModal } from "./components/fake.ts";
+import { fakeClick, fakeModal } from "../../core/fake-interaction.ts";
 import { empty, obs, ref, snapshot, state } from "./play/fixtures.ts";
 import { GRID } from "./render/fixtures.ts";
 import { normaliseName } from "../../../src/core/countries/normalise.ts";

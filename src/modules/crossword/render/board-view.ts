@@ -5,7 +5,7 @@ import type { Award, StoredPuzzle } from "../types.ts";
 import type { BoardView } from "./types.ts";
 
 /** Where the round is: its scope, puzzle and, for a daily, the number and time to the next. */
-interface Where {
+export interface Where {
   scope: string;
   number: number | null;
   stored: StoredPuzzle;

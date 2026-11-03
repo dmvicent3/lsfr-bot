@@ -17,7 +17,7 @@ import { GridRepo } from "../../../../src/modules/grid/store/repo.ts";
 import type { Game, Practice } from "../../../../src/modules/grid/types.ts";
 import { GRID, snapshot } from "../render/fixtures.ts";
 import { game, practice } from "../store/fixtures.ts";
-import { fakeClick, fakeModal } from "./fake.ts";
+import { fakeClick, fakeModal } from "../../../core/fake-interaction.ts";
 
 const DATE = "2026-11-03";
 const OUT_OF_DATE = "This grid is out of date. Use /grid play.";
