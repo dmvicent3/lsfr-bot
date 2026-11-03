@@ -1,6 +1,6 @@
 import type { Database } from "bun:sqlite";
 import type { Snapshot } from "../../../core/countries/types.ts";
-import { puzzleNumber, untilNext } from "../../../core/daily.ts";
+import { dailyLookup, dayOf } from "../../../core/daily-guard.ts";
 import { FIRST_PUZZLE } from "../periods.ts";
 import { healed } from "../play/heal.ts";
 import { gridTimeZone } from "../settings.ts";
@@ -9,8 +9,6 @@ import type { Award, Game, Grid, Practice } from "../types.ts";
 
 export const OUT_OF_DATE = "This grid is out of date. Use /grid play.";
 export const PRACTICE = "practice";
-
-const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 /** Where the snapshot comes from; tests inject one. */
 export type Source = () => Snapshot | null;
@@ -58,14 +56,13 @@ export function load(
     return { repo, snap, now, scope, grid: rec.grid, rec: game, award, number: null };
   }
 
-  const puzzle = DATE.test(scope) ? repo.puzzles.get(i.guildId, scope) : null;
-  const stored = repo.games.get(i.guildId, scope, i.user.id);
+  const found = dailyLookup(repo, i.guildId, scope, i.user.id);
 
-  if (!puzzle || !stored) return null;
+  if (!found) return null;
 
-  const { game, award } = healed(repo, stored, now);
-  const number = puzzleNumber(scope, FIRST_PUZZLE);
-  const left = untilNext(now, gridTimeZone(db, i.guildId));
+  const { game, award } = healed(repo, found.game, now);
+  const day = dayOf(scope, FIRST_PUZZLE, now, gridTimeZone(db, i.guildId));
+  const { number, untilNext } = day;
 
-  return { repo, snap, now, scope, grid: puzzle.grid, rec: game, award, number, untilNext: left };
+  return { repo, snap, now, scope, grid: found.puzzle.grid, rec: game, award, number, untilNext };
 }

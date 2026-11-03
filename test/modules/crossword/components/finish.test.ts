@@ -94,3 +94,12 @@ test("a click on a finished board re-renders it and changes nothing", async () =
   expect(b.calls.update).toHaveLength(1);
   expect(a.calls.send.length + b.calls.send.length).toBe(0);
 });
+
+test("a failed board edit still announces the finish once", async () => {
+  const { ctx, repo } = setup({ cells: missing(12) });
+  const a = fakeClick("u", { failUpdate: true });
+  await reveal.handle(a.i, [DATE, "1"], ctx);
+
+  expect(stored(repo)?.solved).toBe(true);
+  expect(a.calls.send).toHaveLength(1);
+});

@@ -1,5 +1,5 @@
 import type { Database } from "bun:sqlite";
-import { puzzleNumber, untilNext } from "../../../core/daily.ts";
+import { dailyLookup, dayOf } from "../../../core/daily-guard.ts";
 import { FIRST_PUZZLE } from "../periods.ts";
 import type { Turn } from "../play/turn.ts";
 import type { Rec } from "../play/types.ts";
@@ -9,8 +9,6 @@ import { CrosswordRepo } from "../store/repo.ts";
 
 export const STALE = "This puzzle has changed. Use /crossword play.";
 export const PRACTICE = "practice";
-
-const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 /** One player's round as a handler sees it. */
 export interface Round {
@@ -41,12 +39,16 @@ function find(
     return rec ? { rec, where: { scope, number: null, stored: rec } } : null;
   }
 
-  const stored = DATE.test(scope) ? repo.puzzles.get(guildId, scope) : null;
-  const rec = repo.games.get(guildId, scope, userId);
+  const found = dailyLookup(repo, guildId, scope, userId);
 
-  if (!stored || !rec) return null;
+  return found ? { rec: found.game, where: { scope, number: null, stored: found.puzzle } } : null;
+}
 
-  return { rec, where: { scope, number: puzzleNumber(scope, FIRST_PUZZLE), stored } };
+/** A daily's board knows its number and the time to the next puzzle; practice has neither. */
+function timed(where: Where, now: number, tz: string): Where {
+  if (where.scope === PRACTICE) return where;
+
+  return { ...where, ...dayOf(where.scope, FIRST_PUZZLE, now, tz) };
 }
 
 /**
@@ -70,8 +72,12 @@ export function load(
   if (!found) return null;
 
   const { rec, where } = found;
-  const tz = crosswordTimeZone(db, i.guildId);
-  const timed = where.number === null ? where : { ...where, untilNext: untilNext(now, tz) };
 
-  return { repo, rec, now, where: timed, stale: rec.startedAt.toString(36) !== stamp };
+  return {
+    repo,
+    rec,
+    now,
+    where: timed(where, now, crosswordTimeZone(db, i.guildId)),
+    stale: rec.startedAt.toString(36) !== stamp,
+  };
 }

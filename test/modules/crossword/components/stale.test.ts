@@ -8,7 +8,7 @@ import { pickHandler } from "../../../../src/modules/crossword/components/pick.t
 import { revealHandler } from "../../../../src/modules/crossword/components/reveal.ts";
 import { crosswordModals } from "../../../../src/modules/crossword/modals.ts";
 import { row } from "../play/fixtures.ts";
-import { DATE, STALE, keyOf, setup, stored } from "./setup.ts";
+import { DATE, STALE, keyOf, missing, setup, stored } from "./setup.ts";
 
 const answer = answerHandler;
 const slot = keyOf(row(0));
@@ -74,4 +74,29 @@ test("the factories list every handler id", () => {
     "crossword:new",
   ]);
   expect(crosswordModals().map((h) => h.id)).toEqual(["crossword:answer"]);
+});
+
+test("a non-select click on the pick id still gets an answer", async () => {
+  const { ctx } = setup();
+  const a = fakeClick("u", { notSelect: true });
+  await pickHandler.handle(a.i, [DATE, "1"], ctx);
+
+  expect(a.calls.reply[0]?.content).toBe(STALE);
+});
+
+test("a daily modal after midnight still applies to that date's stored game", async () => {
+  const { ctx, repo } = setup({ cells: missing(0), startedAt: 1 });
+  const realNow = Date.now;
+  Date.now = () => Date.UTC(2026, 10, 5, 0, 30);
+
+  try {
+    const a = fakeModal("u", "crane");
+    await answer.handle(a.i, [DATE, "1", slot], ctx);
+
+    expect(stored(repo)?.solved).toBe(true);
+    expect(a.calls.update).toHaveLength(1);
+    expect(a.calls.update[0]?.content).toContain("Next crossword in 23h");
+  } finally {
+    Date.now = realNow;
+  }
 });

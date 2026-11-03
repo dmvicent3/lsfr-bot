@@ -1,15 +1,16 @@
+import { tell } from "../../../core/replies.ts";
 import type { ComponentHandler } from "../../../core/types.ts";
 import { solvedSlots } from "../play/cells.ts";
 import { slotIndexOf } from "../render/ids.ts";
 import { clueModal } from "../render/modal.ts";
-import { load } from "./guard.ts";
+import { STALE, load } from "./guard.ts";
 import { refresh } from "./show.ts";
 
 /** `crossword:pick:<date|practice>:<stamp>`: the answer modal for the chosen unsolved clue. */
 export const pickHandler: ComponentHandler = {
   id: "crossword:pick",
   async handle(i, args, ctx) {
-    if (!i.isStringSelectMenu()) return;
+    if (!i.isStringSelectMenu()) return tell(i, STALE);
 
     const r = load(i, ctx.db, args);
 

@@ -1,6 +1,6 @@
 import type { Database } from "bun:sqlite";
 import type { MessageComponentInteraction } from "discord.js";
-import { puzzleNumber, untilNext } from "../../../core/daily.ts";
+import { dailyLookup, dayOf } from "../../../core/daily-guard.ts";
 import { FIRST_PUZZLE } from "../periods.ts";
 import { healed } from "../play/heal.ts";
 import type { ViewContext } from "../render/view.ts";
@@ -9,8 +9,6 @@ import { DuelRepo } from "../store/repo.ts";
 import type { Award, Game, Puzzle } from "../types.ts";
 
 export const OUT_OF_DATE = "This question is out of date. Use /duel play.";
-
-const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 export interface Session {
   repo: DuelRepo;
@@ -32,20 +30,17 @@ export function load(
   db: Database,
   date: string | undefined,
 ): Session | null {
-  if (!i.guildId || !date || !DATE.test(date)) return null;
+  if (!i.guildId || !date) return null;
 
   const repo = new DuelRepo(db);
-  const puzzle = repo.puzzles.get(i.guildId, date);
-  const stored = repo.games.get(i.guildId, date, i.user.id);
+  const found = dailyLookup(repo, i.guildId, date, i.user.id);
 
-  if (!puzzle || !stored) return null;
+  if (!found) return null;
 
   const now = Date.now();
-  const { game, award } = healed(repo, puzzle, stored, now);
-  const view = {
-    number: puzzleNumber(date, FIRST_PUZZLE),
-    untilNext: untilNext(now, duelTimeZone(db, i.guildId)),
-  };
+  const { puzzle } = found;
+  const { game, award } = healed(repo, puzzle, found.game, now);
+  const view = dayOf(date, FIRST_PUZZLE, now, duelTimeZone(db, i.guildId));
 
   return { repo, puzzle, game, award, now, view };
 }

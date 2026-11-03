@@ -2,6 +2,7 @@ import type { Database } from "bun:sqlite";
 import { Database as Db } from "bun:sqlite";
 import { runMigrations } from "../../../../src/core/db.ts";
 import { coreMigrations } from "../../../../src/core/settings.ts";
+import { STALE } from "../../../../src/modules/crossword/components/guard.ts";
 import type { Ctx } from "../../../../src/core/types.ts";
 import { emptyCells, solutionOf } from "../../../../src/modules/crossword/play/cells.ts";
 import { crosswordMigrations } from "../../../../src/modules/crossword/store/migrations.ts";
@@ -12,7 +13,7 @@ import { game, practice } from "../store/fixtures.ts";
 import { square, storedSquare } from "../play/fixtures.ts";
 
 export const DATE = "2026-11-04";
-export const STALE = "This puzzle has changed. Use /crossword play.";
+export { STALE };
 
 /** The square's cells with the given indices left empty. */
 export function missing(...empty: number[]): string {

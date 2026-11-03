@@ -24,6 +24,10 @@ interface Opts {
   noChannel?: boolean;
   noGuild?: boolean;
   notFromMessage?: boolean;
+  /** The edit of the clicked message throws, as with an expired token. */
+  failUpdate?: boolean;
+  /** The click is not a string select. */
+  notSelect?: boolean;
   /** The picked option values of a select. */
   values?: string[];
 }
@@ -51,7 +55,11 @@ function parts(opts: Opts) {
     base: {
       guildId: opts.noGuild ? null : "g",
       channel: opts.noChannel ? null : channel,
-      update: async (m: Sent) => void calls.update.push(m),
+      update: async (m: Sent) => {
+        if (opts.failUpdate) throw new Error("token expired");
+
+        calls.update.push(m);
+      },
       reply: async (m: Sent) => void calls.reply.push(m),
       followUp: async (m: Sent) => void calls.followUp.push(m),
       deferUpdate: async () => void calls.order.push("deferUpdate"),
@@ -73,7 +81,7 @@ export function fakeClick(userId: string, opts: Opts = {}) {
     user: { id: userId },
     showModal,
     values: opts.values ?? [],
-    isStringSelectMenu: () => true,
+    isStringSelectMenu: () => !opts.notSelect,
   } as unknown as MessageComponentInteraction;
 
   return { i, calls };
