@@ -23,6 +23,8 @@ import { duelModule } from "./modules/duel/index.ts";
 import { llmAsk } from "./modules/crossword/ask.ts";
 import { crosswordModule } from "./modules/crossword/index.ts";
 import { dailiesModule } from "./modules/dailies/index.ts";
+import { feedbackModule } from "./modules/feedback/index.ts";
+import { feedbackTopics } from "./modules/feedback/topics.ts";
 import { gridModule } from "./modules/grid/index.ts";
 import { wordModule } from "./modules/word/index.ts";
 
@@ -34,7 +36,7 @@ const config = loadConfig(process.env);
  * other way round; accepted, since jev failing for one caller means the Pi is struggling for all.
  */
 const jev = config.jevUrl ? createJev({ url: config.jevUrl }) : null;
-const modules: BotModule[] = [
+const features: BotModule[] = [
   motorsportModule,
   remindersModule,
   wordModule(),
@@ -55,6 +57,7 @@ const modules: BotModule[] = [
     ? [rssModule(jev, config.embedUrl), tictactoeModule(jev), fourModule(jev), fleetModule(jev)]
     : []),
 ];
+const modules = [...features, feedbackModule(feedbackTopics(features))];
 const db = openDatabase(config.databasePath);
 runMigrations(db, [...coreMigrations, ...modules.flatMap((m) => m.migrations ?? [])]);
 await startBot([...modules, helpModule(modules)], config, db);
