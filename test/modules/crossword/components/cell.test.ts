@@ -72,12 +72,12 @@ test("submit writes both words in one go; down wins the shared square", async ()
   expect(viewText(calls.update[0])).toContain("Words 2/10");
 });
 
-test("`.` keeps a square and an empty input skips its slot", async () => {
+test("`.` blanks a square and an empty input skips its slot", async () => {
   const { ctx, repo } = setup({ cells: `crane${".".repeat(20)}` });
   const { i } = fakeModal("u", { "1a": "", "1d": ".OUPS" });
   await cellWordHandler.handle(i, [DATE, "1", "0"], ctx);
 
-  expect(stored(repo)?.cells).toBe("craneo....u....p....s....");
+  expect(stored(repo)?.cells).toBe(".raneo....u....p....s....");
 });
 
 test("an invalid input is free and stores nothing", async () => {
@@ -85,7 +85,9 @@ test("an invalid input is free and stores nothing", async () => {
   const { i, calls } = fakeModal("u", { "1a": "crane", "1d": "co" });
   await cellWordHandler.handle(i, [DATE, "1", "0"], ctx);
 
-  expect(calls.reply[0]?.content).toBe("Use 5 letters A–Z, . for a blank — no points lost.");
+  expect(calls.reply[0]?.content).toBe(
+    "Use 5 letters A–Z, . or a space to blank a square — no points lost.",
+  );
   expect(calls.reply[0]?.flags).toBeDefined();
   expect(stored(repo)?.cells).toBe(".".repeat(25));
   expect(stored(repo)?.wrong).toBe(0);

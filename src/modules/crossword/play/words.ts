@@ -15,7 +15,7 @@ export function enterWords(state: PlayState, typed: Typed[]): Entry {
   for (const t of typed) {
     if (t.text.trim() === "") continue;
 
-    const entry = enter({ ...state, cells }, t.slot, t.text);
+    const entry = enter({ ...state, cells }, t.slot, t.text, state.cells);
 
     if (entry.kind !== "entered") return entry;
 

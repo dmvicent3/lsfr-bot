@@ -8,7 +8,7 @@ import { present, refresh } from "./show.ts";
 
 /**
  * `crossword:cellword:<date|practice>:<stamp>:<i>`: writes the words typed for a square's slots,
- * unjudged; `.` keeps a cell, an empty input skips its slot.
+ * unjudged; `.` blanks a cell, an empty input skips its slot.
  */
 export const cellWordHandler: ModalHandler = {
   id: "crossword:cellword",
@@ -29,7 +29,10 @@ export const cellWordHandler: ModalHandler = {
     const { entry, landed } = answerCell(turnOf(r), typed);
 
     if (entry.kind === "bad") {
-      return tell(i, `Use ${entry.len} letters A–Z, . for a blank — no points lost.`);
+      return tell(
+        i,
+        `Use ${entry.len} letters A–Z, . or a space to blank a square — no points lost.`,
+      );
     }
 
     await present(i, r, landed ?? { game: r.rec, award: null });

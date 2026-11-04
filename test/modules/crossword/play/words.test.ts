@@ -21,7 +21,7 @@ test("both words go in, across first, down wins the shared cell", () => {
   expect(out.line).toBeNull();
 });
 
-test("an empty input skips its slot; `.` keeps cells", () => {
+test("an empty input skips its slot; `.` blanks cells", () => {
   const cells = `crane${".".repeat(20)}`;
   const out = enterWords(state({ cells }), [
     { slot: row(0), text: "   " },
@@ -30,9 +30,23 @@ test("an empty input skips its slot; `.` keeps cells", () => {
 
   expect(out).toEqual({
     kind: "entered",
-    cells: "craneo....u....p....s....",
+    cells: ".raneo....u....p....s....",
     line: null,
   });
+});
+
+test("a square's other word, left as shown, doesn't undo this one's edit", () => {
+  const cells = `crane${".".repeat(20)}`;
+  const typed = (across: string, down: string) =>
+    enterWords(state({ cells }), [
+      { slot: row(0), text: across },
+      { slot: col(0), text: down },
+    ]);
+
+  // The modal showed CRANE and C.... ; one word changes the shared C, the other leaves it.
+  expect(typed(".RANE", "C....")).toMatchObject({ cells: `.rane${".".repeat(20)}` });
+  expect(typed("CRANE", "Z....")).toMatchObject({ cells: `zrane${".".repeat(20)}` });
+  expect(typed("BRANE", "C....")).toMatchObject({ cells: `brane${".".repeat(20)}` });
 });
 
 test("nothing typed stores the cells unchanged and clears the line", () => {

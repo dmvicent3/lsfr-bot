@@ -48,7 +48,7 @@ test("revealed letters stay; a clash says so", () => {
 });
 
 test("non-letters or a wrong length are bad", () => {
-  for (const text of ["cran", "cr4ne", "cr ne", "", "   ", "cranes"]) {
+  for (const text of ["cran", "cr4ne", "cr-ne", "", "   ", "cranes"]) {
     expect(enter(state(), row(0), text)).toEqual({ kind: "bad", len: 5 });
   }
 });
@@ -65,11 +65,13 @@ test("a finished round or an unknown clue is stale", () => {
   expect(enter(state(), 99, "crane")).toEqual({ kind: "stale" });
 });
 
-test("`.` leaves a cell as it is: empty stays empty, a letter stays", () => {
+test("`.` or a space blanks a cell; a letter typed as shown stays", () => {
   const cells = `cr...${".".repeat(20)}`;
 
-  expect(entered(cells, row(0), "..ANE").cells.slice(0, 5)).toBe("crane");
-  expect(entered(cells, row(0), "z.n..").cells.slice(0, 5)).toBe("zrn..");
+  expect(entered(cells, row(0), "..ANE").cells.slice(0, 5)).toBe("..ane");
+  expect(entered(cells, row(0), "CR.NE").cells.slice(0, 5)).toBe("cr.ne");
+  expect(entered(cells, row(0), "c ane").cells.slice(0, 5)).toBe("c.ane");
+  expect(entered(cells, row(0), " r   ").cells.slice(0, 5)).toBe(".r...");
 });
 
 test("`.` over a revealed letter keeps it without a clash", () => {

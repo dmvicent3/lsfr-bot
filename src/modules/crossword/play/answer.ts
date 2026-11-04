@@ -19,23 +19,30 @@ const clashes = (old: string, typed: string): boolean =>
   isRevealed(old) && typed !== EMPTY_CELL && old.toLowerCase() !== typed;
 
 /**
- * Writes a typed word into a slot, unjudged: lowercase, except cells holding a revealed
- * (uppercase) letter, which stay, and `.` cells, which keep what they hold. The line notes when a
+ * Writes a typed word into a slot, unjudged: lowercase letters, `.` or a space to blank a cell.
+ * Only cells typed differently from what the player was `shown` change, so the other word through
+ * a square can't undo this one; revealed (uppercase) letters always stay. The line notes when a
  * revealed letter was kept over a typed one.
  */
-export function enter(state: PlayState, slotIndex: number, text: string): Entry {
+export function enter(
+  state: PlayState,
+  slotIndex: number,
+  text: string,
+  shown: string = state.cells,
+): Entry {
   const { puzzle, cells } = state;
   const slot = puzzle.slots[slotIndex];
 
   if (state.finished || !slot) return { kind: "stale" };
 
-  const word = text.trim().toLowerCase();
+  const word = typedWord(text, slot.cells.length);
 
   if (!/^[a-z.]+$/.test(word) || word.length !== slot.cells.length)
     return { kind: "bad", len: slot.cells.length };
 
   const old = slot.cells.map((cell) => cells[cell]!);
-  const keep = (ch: string, k: number) => isRevealed(ch) || word[k] === EMPTY_CELL;
+  const untouched = (k: number) => word[k] === shown[slot.cells[k]!]!.toLowerCase();
+  const keep = (ch: string, k: number) => isRevealed(ch) || untouched(k);
   const kept = old.map((ch, k) => (keep(ch, k) ? ch : word[k]!));
   const clash = old.some((ch, k) => clashes(ch, word[k]!));
 
@@ -44,4 +51,11 @@ export function enter(state: PlayState, slotIndex: number, text: string): Entry 
     cells: fill(cells, slot.cells, kept.join("")),
     line: keptLine(clash ? [slot] : []),
   };
+}
+
+/** The typed text, lowercase, spaces as blanks; outer spaces dropped unless they fill the slot. */
+function typedWord(text: string, len: number): string {
+  const lower = text.toLowerCase();
+
+  return (lower.length === len ? lower : lower.trim()).replaceAll(" ", EMPTY_CELL);
 }
