@@ -24,20 +24,25 @@ const button = (id: string, label: string, style: Button["style"], disabled = fa
   disabled,
 });
 
-function menu(id: string, picked: number, label: (n: number) => string): Row {
-  const options = Array.from({ length: SIZE }, (_, n) => ({
-    label: label(n),
-    value: String(n),
-    default: n === picked,
-  }));
+const HALF = SIZE / 2;
 
-  return row([{ type: ComponentType.StringSelect, custom_id: id, options }]);
+/** One axis as two rows of five buttons, `fleet:<axis>:<n>`; the picked one lit. */
+function axisRows(axis: "row" | "col", picked: number, label: (n: number) => string): Row[] {
+  const key = (n: number) =>
+    button(
+      `fleet:${axis}:${n}`,
+      label(n),
+      n === picked ? ButtonStyle.Primary : ButtonStyle.Secondary,
+    );
+  const half = (from: number) => row(Array.from({ length: HALF }, (_, k) => key(from + k)));
+
+  return [half(0), half(HALF)];
 }
 
-/** The row and column selects that move the cursor. */
-const cursorMenus = (g: Game): Row[] => [
-  menu("fleet:row", rowOf(g.cursor), (n) => `Row ${n + 1}`),
-  menu("fleet:col", colOf(g.cursor), (n) => `Column ${cellName(n).slice(0, 1)}`),
+/** The cursor's controls: letters A–J (columns), then numbers 1–10 (rows). */
+const cursorButtons = (g: Game): Row[] => [
+  ...axisRows("col", colOf(g.cursor), (n) => cellName(n).slice(0, 1)),
+  ...axisRows("row", rowOf(g.cursor), (n) => String(n + 1)),
 ];
 
 const RESIGN = button("fleet:resign", "Resign", ButtonStyle.Danger);
@@ -48,7 +53,7 @@ export function placingControls(g: Game): Row[] {
     g.dir === dir ? ButtonStyle.Primary : ButtonStyle.Secondary;
 
   return [
-    ...cursorMenus(g),
+    ...cursorButtons(g),
     row([
       button("fleet:dir:across", "Across", facing("across")),
       button("fleet:dir:down", "Down", facing("down")),
@@ -61,6 +66,6 @@ export function placingControls(g: Game): Row[] {
 }
 
 export const firingControls = (g: Game): Row[] => [
-  ...cursorMenus(g),
+  ...cursorButtons(g),
   row([button("fleet:fire", "Fire", ButtonStyle.Primary), RESIGN]),
 ];

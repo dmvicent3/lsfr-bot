@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { ComponentType } from "discord.js";
+import { ButtonStyle, ComponentType } from "discord.js";
 import { FLEET_FILE, renderGame } from "../../../src/modules/fleet/render/board.ts";
 import { renderStats } from "../../../src/modules/fleet/render/boards.ts";
 import { battleSvg, fleetSvg } from "../../../src/modules/fleet/render/grids-svg.ts";
@@ -27,6 +27,11 @@ const ids = (v: GameView): string[] =>
 
 const text = (v: GameView): string => viewText(renderGame(v));
 
+const AXES = [
+  ...Array.from({ length: 10 }, (_, n) => `fleet:col:${n}`),
+  ...Array.from({ length: 10 }, (_, n) => `fleet:row:${n}`),
+];
+
 const GRID_EMOJI = /[🟦⬜💥⚪🟥🟨]|\p{Regional_Indicator}|⃣/u;
 
 test("every board shows fleet.png in its gallery and no grid emoji", () => {
@@ -48,7 +53,7 @@ test("placing draws your grid with the preview and names the next ship", () => {
   const v = view({ game: placing });
   expect(renderGame(v).svg).toBe(fleetSvg(placing, { preview: true }));
   expect(text(v)).toContain("Place your Flagship (5)");
-  expect(ids(v)).toEqual(expect.arrayContaining(["fleet:row", "fleet:col", "fleet:place"]));
+  expect(ids(v)).toEqual(expect.arrayContaining([...AXES, "fleet:place"]));
   expect(ids(v)).not.toContain("fleet:ready");
   const full = { ...placing, player: { ships: rowsFleet(), shots: [] } };
   expect(text(view({ game: full }))).toContain("Fleet ready: press Ready.");
@@ -68,14 +73,14 @@ test("playing: both grids in one picture, both fleets afloat and the last shots 
   expect(t).toContain("jevos fired at A1: hit!");
   expect(t).toContain("Your shot.");
   expect(t).not.toContain("couldn't be shown");
-  expect(ids(view({ game: g }))).toEqual(["fleet:row", "fleet:col", "fleet:fire", "fleet:resign"]);
+  expect(ids(view({ game: g }))).toEqual([...AXES, "fleet:fire", "fleet:resign"]);
 });
 
 test("aiming keeps the controls, so a board stuck by a restart can still be clicked", () => {
   const g = playing({ player: { ships: rowsFleet(), shots: [42] } });
   const v = view({ game: g, aiming: true });
   expect(text(v)).toContain("jevos is aiming…");
-  expect(ids(v)).toEqual(["fleet:row", "fleet:col", "fleet:fire", "fleet:resign"]);
+  expect(ids(v)).toEqual([...AXES, "fleet:fire", "fleet:resign"]);
 });
 
 test("a won game reveals jevos's fleet and accuracy", () => {
@@ -108,4 +113,25 @@ test("stats show each level, accuracy and how games ended", () => {
   expect(s).toContain("Hard: **0** W · **0** L · best win: —");
   expect(s).toContain("Accuracy: 38/90 hits (42%)");
   expect(s).toContain("Resigned: 1 · Abandoned: 0");
+});
+
+const buttons = (v: GameView) =>
+  renderGame(v).components.flatMap((r) =>
+    r.type === ComponentType.ActionRow ? r.components.filter((c) => "label" in c) : [],
+  );
+
+test("the cursor moves with two rows of letters, then two rows of numbers, the picked ones lit", () => {
+  const v = view({ game: playing({ cursor: 42 }) });
+  const axis = buttons(v).slice(0, 20);
+  expect(axis.map((b) => ("label" in b ? b.label : ""))).toEqual([
+    ..."ABCDEFGHIJ".split(""),
+    ...Array.from({ length: 10 }, (_, n) => String(n + 1)),
+  ]);
+  const lit = axis.filter((b) => "style" in b && b.style === ButtonStyle.Primary);
+  expect(lit.map((b) => ("custom_id" in b ? b.custom_id : ""))).toEqual([
+    "fleet:col:2",
+    "fleet:row:4",
+  ]);
+  const rows = renderGame(v).components.filter((r) => r.type === ComponentType.ActionRow);
+  expect(rows.slice(0, 4).map((r) => r.components.length)).toEqual([5, 5, 5, 5]);
 });

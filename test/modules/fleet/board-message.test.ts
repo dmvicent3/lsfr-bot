@@ -41,11 +41,7 @@ test("a container with the title, the text and the picture, then the controls", 
       },
     ],
   });
-  expect(rows.map((r) => r.type)).toEqual([
-    ComponentType.ActionRow,
-    ComponentType.ActionRow,
-    ComponentType.ActionRow,
-  ]);
+  expect(rows.map((r) => r.type)).toEqual(Array(5).fill(ComponentType.ActionRow));
   expect(viewText(boardMessage(v))).toContain("<@u> vs jevos · normal");
 });
 
@@ -54,7 +50,7 @@ test("every board fits Discord's 40 components", () => {
   const counts = [{ ...v, game: placing }, v, { ...v, outcome: { kind: "resigned" } } as const].map(
     (b) => flatComponents(boardMessage(b).components).length,
   );
-  expect(counts).toEqual([16, 11, 4]);
+  expect(counts).toEqual([36, 31, 4]);
 
   for (const n of counts) expect(n).toBeLessThanOrEqual(40);
 });

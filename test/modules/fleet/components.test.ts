@@ -153,7 +153,7 @@ test("a second click while jevos aims is refused", async () => {
 test("after a restart mid-turn the next click fires jevos first", async () => {
   const s = setup();
   s.r.games.put(fresh({ player: { ships: rowsFleet(), shots: [11] } }));
-  const seen = await click(s, "fleet:row", { values: ["5"] });
+  const seen = await click(s, "fleet:row:5");
   expect(live(s.r)?.jevos.shots).toHaveLength(1);
   expect(seen.edits).toHaveLength(1);
 });
@@ -263,7 +263,7 @@ test("every board update and edit replaces the picture", async () => {
   const turn = await click(s, "fleet:fire");
   expect(picture(turn.updates[0])).toEqual(FLEET_PNG);
   expect(picture(turn.edits[0])).toEqual(FLEET_PNG);
-  const move = await click(s, "fleet:col", { values: ["4"] });
+  const move = await click(s, "fleet:col:4");
   expect(picture(move.updates[0])).toEqual(FLEET_PNG);
   const end = await click(s, "fleet:resign");
   expect(picture(end.updates[0])).toEqual(FLEET_PNG);
@@ -273,9 +273,9 @@ test("every board update and edit replaces the picture", async () => {
 test("a game from before the picture deletes its old fleet message once", async () => {
   const s = setup();
   s.r.games.put(fresh({ fleetMessageId: "f" }));
-  expect((await click(s, "fleet:row", { values: ["3"] })).deletes).toEqual(["f"]);
+  expect((await click(s, "fleet:row:3")).deletes).toEqual(["f"]);
   expect(live(s.r)?.fleetMessageId).toBeNull();
-  expect((await click(s, "fleet:row", { values: ["4"] })).deletes).toEqual([]);
+  expect((await click(s, "fleet:row:4")).deletes).toEqual([]);
 });
 
 test("an old fleet message that can't be deleted is still forgotten", async () => {
@@ -292,4 +292,15 @@ test("a V2 board whose game is gone loses only its controls, keeping the card", 
   const seen = await click(s, "fleet:fire", { board });
   expect(seen.updates).toEqual([{ components: [{ type: ComponentType.Container }] }]);
   expect(seen.replies).toEqual(["This game is over."]);
+});
+
+test("a letter or number button moves the cursor; an old board's select still does", async () => {
+  const s = setup();
+  s.r.games.put(fresh({ cursor: 0 }));
+  await click(s, "fleet:col:4");
+  expect(live(s.r)?.cursor).toBe(4);
+  await click(s, "fleet:row:6");
+  expect(live(s.r)?.cursor).toBe(64);
+  await click(s, "fleet:row", { values: ["2"] });
+  expect(live(s.r)?.cursor).toBe(24);
 });

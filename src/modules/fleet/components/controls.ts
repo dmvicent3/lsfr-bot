@@ -18,8 +18,13 @@ function control(
   });
 }
 
+/** `fleet:<axis>:<n>` from the buttons; a board sent before them still carries the select's value. */
 const cursor = (axis: "row" | "col") =>
-  control(axis, (_d, _a, values) => (g, now) => moveCursor(g, axis, Number(values[0] ?? 0), now));
+  control(axis, (_d, args, values) => (g, now) => {
+    const to = Number(args[0] ?? values[0] ?? 0);
+
+    return moveCursor(g, axis, to, now);
+  });
 
 /** Every board control, given the jev deps. */
 export const controls: ((d: PlayDeps) => ComponentHandler)[] = [
