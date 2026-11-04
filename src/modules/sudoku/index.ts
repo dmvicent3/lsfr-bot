@@ -8,7 +8,7 @@ export function sudokuModule(random: () => number = Math.random): BotModule {
     name: "sudoku",
     title: "🔢 Sudoku",
     helpNote:
-      "One medium puzzle a day, the same for everyone in the server, plus practice puzzles (easy, medium or hard); boards are private.",
+      "One puzzle a day, the same for everyone in the server: pick easy (50), medium (100) or hard (150) on your first open, locked for the day. Practice puzzles at any level; boards are private.",
     commands: [sudokuCommand(random)],
     components: sudokuComponents(random),
     migrations: sudokuMigrations,

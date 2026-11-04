@@ -2,7 +2,7 @@ export const LEVELS = ["easy", "medium", "hard"] as const;
 
 export type Level = (typeof LEVELS)[number];
 
-/** The one daily puzzle's difficulty (practice still offers every level). */
+/** The daily's difficulty when the player names none (one daily a day, picked on first open). */
 export const DAILY_LEVEL: Level = "medium";
 
 export type Kind = "daily" | "practice";

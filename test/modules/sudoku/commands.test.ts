@@ -29,11 +29,18 @@ describe("/sudoku", () => {
     ]);
   });
 
-  test("practice needs a difficulty; daily has none (always medium)", () => {
+  test("practice needs a difficulty; daily's is optional and shows the points", () => {
     const o = optionsOf("practice").find((x) => x.name === "difficulty");
     expect(o?.required).toBe(true);
     expect(o?.choices?.map((c) => c.value)).toEqual(["easy", "medium", "hard"]);
-    expect(optionsOf("daily")).toEqual([]);
+
+    const d = optionsOf("daily").find((x) => x.name === "difficulty");
+    expect(d?.required).toBeFalsy();
+    expect(d?.choices?.map((c) => c.name)).toEqual([
+      "Easy (50 pts)",
+      "Medium (100 pts)",
+      "Hard (150 pts)",
+    ]);
   });
 
   test("leaderboard has the four periods", () => {

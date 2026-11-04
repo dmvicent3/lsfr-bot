@@ -1,11 +1,19 @@
 import { InteractionContextType, SlashCommandBuilder } from "discord.js";
 import { PERIOD_CHOICES } from "../../../core/periods.ts";
+import { BASE } from "../scoring.ts";
+import type { Level } from "../types.ts";
 
-export const LEVEL_CHOICES = [
+export const LEVEL_CHOICES: { name: string; value: Level }[] = [
   { name: "Easy", value: "easy" },
   { name: "Medium", value: "medium" },
   { name: "Hard", value: "hard" },
 ];
+
+/** The daily's choices show what each level pays (scoring.ts BASE). */
+const DAILY_CHOICES = LEVEL_CHOICES.map((c) => ({
+  ...c,
+  name: `${c.name} (${BASE[c.value]} pts)`,
+}));
 
 export const data = new SlashCommandBuilder()
   .setName("sudoku")
@@ -14,7 +22,13 @@ export const data = new SlashCommandBuilder()
   .addSubcommand((sub) =>
     sub
       .setName("daily")
-      .setDescription("Today's medium puzzle, the same for everyone in the server"),
+      .setDescription("Today's puzzle, the same for everyone; one a day, harder pays more")
+      .addStringOption((o) =>
+        o
+          .setName("difficulty")
+          .setDescription("Your pick for today (default medium); locked once you open it")
+          .addChoices(...DAILY_CHOICES),
+      ),
   )
   .addSubcommand((sub) =>
     sub

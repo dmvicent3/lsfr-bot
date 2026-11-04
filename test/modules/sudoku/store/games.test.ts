@@ -94,3 +94,12 @@ test("history round-trips through start and save", () => {
   expect(repo.games.save(game({ history: "" }))).toBe(true);
   expect(repo.games.get(game())?.history).toBe("");
 });
+
+test("dailyOn finds the player's daily of a date at any level, the first started", () => {
+  repo.games.start(game({ slot: "hard", level: "hard", startedAt: 9 }));
+  repo.games.start(game({ slot: "medium", level: "medium", startedAt: 3 }));
+  repo.games.start(game({ kind: "practice", date: "", slot: "", startedAt: 1 }));
+
+  expect(repo.games.dailyOn("g", "u", "2026-11-03")?.level).toBe("medium");
+  expect(repo.games.dailyOn("g", "u", "2026-11-04")).toBeNull();
+});

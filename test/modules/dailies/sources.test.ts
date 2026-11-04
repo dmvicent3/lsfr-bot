@@ -46,7 +46,9 @@ describe("todayEntries", () => {
     new DuelRepo(db).games.start(duel({ correct: 5, points: 150, finishedAt: 2 }));
     new GridRepo(db).games.start(grid());
     new CrosswordRepo(db).games.start(crossword({ solved: false, points: 0, finishedAt: 2 }));
-    const states = todayEntries(db, who, NOW).map((e) => `${e.state}:${e.result ?? ""}`);
+    const list = todayEntries(db, who, NOW);
+    expect(list[1]?.label).toBe("Sudoku medium #1");
+    const states = list.map((e) => `${e.state}:${e.result ?? ""}`);
     expect(states).toEqual([
       "done:130 pts",
       "started:",

@@ -85,6 +85,18 @@ export class GameStore {
       .map(toGame);
   }
 
+  /** The player's daily of a date, whatever its level (the first started, for days before the one-a-day rule). */
+  dailyOn(guildId: string, userId: string, date: string): Game | null {
+    const row = this.db
+      .query<GameRow, [string, string, string]>(
+        `SELECT * FROM sudoku_games WHERE guild_id = ? AND user_id = ? AND kind = 'daily' AND date = ?
+         ORDER BY started_at LIMIT 1`,
+      )
+      .get(guildId, userId, date);
+
+    return row ? toGame(row) : null;
+  }
+
   lastSolvedBefore(guildId: string, userId: string, date: string): Game | null {
     const row = this.db
       .query<GameRow, [string, string, string]>(
