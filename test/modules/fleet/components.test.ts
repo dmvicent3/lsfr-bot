@@ -151,6 +151,34 @@ test("a second click while jevos aims is refused", async () => {
   expect(calls).toBe(1);
 });
 
+test("a cursor move while jevos aims is kept for the next shot; Fire still waits", async () => {
+  const asked = Promise.withResolvers<void>();
+  const answers = Promise.withResolvers<Map<string, number>>();
+  const jev: Jev = {
+    yesNo: () => {
+      asked.resolve();
+
+      return answers.promise;
+    },
+  };
+  const s = setup(jev);
+  s.r.games.put(fresh({ cursor: 11, fleetMessageId: "f" }));
+  const first = click(s, "fleet:fire");
+  await asked.promise;
+  const col = await click(s, "fleet:col:4");
+  const row = await click(s, "fleet:row:6");
+  expect([col.deferred, row.deferred, col.replies, row.replies]).toEqual([1, 1, [], []]);
+  expect((await click(s, "fleet:fire")).replies).toEqual(["jevos is still aiming."]);
+  answers.resolve(new Map());
+  const seen = await first;
+  expect(live(s.r)?.cursor).toBe(64);
+  expect(live(s.r)?.jevos.shots).toHaveLength(1);
+  expect(live(s.r)?.player.shots).toEqual([11]);
+  expect(JSON.stringify(seen.edits[0]?.components)).toContain(
+    '"custom_id":"fleet:col:4","label":"E","style":1',
+  );
+});
+
 test("after a restart mid-turn the next click fires jevos first", async () => {
   const s = setup();
   s.r.games.put(fresh({ player: { ships: rowsFleet(), shots: [11] } }));

@@ -29,7 +29,10 @@ export async function answer(t: Turn, mine: Moved): Promise<void> {
   const { i, repo, d } = t;
   repo.games.put(mine.game);
   await i.update(boardMessage({ ...mine, aiming: true }));
-  const moved = await jevosTurn(d.jev, mine.game, d.random, Date.now());
+  const shot = await jevosTurn(d.jev, mine.game, d.random, Date.now());
+  // A cursor move queued while jevos aimed is in the stored game; it goes on the board with the shot.
+  const queued = repo.games.get(mine.game.guildId, mine.game.playerId)?.cursor ?? shot.game.cursor;
+  const moved = { ...shot, game: { ...shot.game, cursor: queued } };
   settle(repo, moved, Date.now());
 
   const board = boardMessage({ ...moved, aiming: false });

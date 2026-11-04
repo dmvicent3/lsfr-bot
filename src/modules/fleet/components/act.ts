@@ -55,10 +55,17 @@ async function apply(t: Turn, game: Game, change: Change): Promise<void> {
   await followBoard(t, moved, false);
 }
 
-/** Runs one control on the clicker's live game, under their lock. */
+/** A cursor move made while jevos aims: stored, and the board shows it with jevos's shot. */
+export type Queued = (g: Game, now: number) => Game;
+
+/**
+ * Runs one control on the clicker's live game, under their lock. A `queued` control (the cursor)
+ * still goes through while jevos aims, without the lock: jevos's turn reads it back before its
+ * shot is stored, so the move lands on the board jevos's shot brings.
+ */
 export async function act(
   i: MessageComponentInteraction,
-  c: { ctx: Ctx; d: PlayDeps },
+  c: { ctx: Ctx; d: PlayDeps; queued?: Queued },
   change: Change,
 ): Promise<void> {
   const repo = new FleetRepo(c.ctx.db);
@@ -69,7 +76,17 @@ export async function act(
   const key = fleetKey(game.guildId, game.playerId);
 
   if (!startThinking(key)) {
-    return tell(i, touch(game, Date.now()) === "jevos" ? "jevos is still aiming." : "One moment…");
+    const now = Date.now();
+    const aiming = touch(game, now) === "jevos";
+
+    if (aiming && c.queued) {
+      repo.games.put(c.queued(game, now));
+      await i.deferUpdate();
+
+      return;
+    }
+
+    return tell(i, aiming ? "jevos is still aiming." : "One moment…");
   }
 
   try {
