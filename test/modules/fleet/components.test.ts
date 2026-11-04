@@ -26,7 +26,8 @@ interface Seen {
   edits: Sent[];
   messageEdits: Sent[];
   posts: Sent[];
-  deletes: string[];
+  /** Edits of other messages in the channel (the fleet message), by id. */
+  channelEdits: { id: string; m: Sent }[];
   replies: string[];
   deferred: number;
 }
@@ -48,7 +49,7 @@ interface ClickOpts {
   userId?: string;
   values?: string[];
   editFails?: boolean;
-  deleteFails?: boolean;
+  sendFails?: boolean;
   /** The board message's components as Discord holds them. */
   board?: { type: ComponentType }[];
 }
@@ -56,14 +57,14 @@ interface ClickOpts {
 function fakeChannel(seen: Seen, p: ClickOpts) {
   return {
     isSendable: () => true,
-    send: async (m: Sent) => (seen.posts.push(m), { id: "f1" }),
-    messages: {
-      delete: async (id: string) => {
-        if (p.deleteFails) throw new Error("Unknown Message");
+    send: async (m: Sent) => {
+      if (p.sendFails) throw new Error("Missing Permissions");
 
-        seen.deletes.push(id);
-      },
+      seen.posts.push(m);
+
+      return { id: "f1" };
     },
+    messages: { edit: async (id: string, m: Sent) => void seen.channelEdits.push({ id, m }) },
   };
 }
 
@@ -98,7 +99,7 @@ const newSeen = (): Seen => ({
   edits: [],
   messageEdits: [],
   posts: [],
-  deletes: [],
+  channelEdits: [],
   replies: [],
   deferred: 0,
 });
@@ -247,19 +248,32 @@ const picture = (m: Sent | undefined) => ({
 
 const FLEET_PNG = { files: ["fleet.png"], all: [], v2: true, content: null, embeds: [] };
 
-test("Ready shows both grids on the board itself: no second message", async () => {
+test("Ready posts your fleet under the board once; jevos's shots edit it", async () => {
   const s = setup();
   s.r.games.put(placed());
   const seen = await click(s, "fleet:ready");
   expect(live(s.r)?.phase).toBe("playing");
-  expect(seen.posts).toEqual([]);
   expect(picture(seen.updates[0])).toEqual(FLEET_PNG);
-  expect(live(s.r)?.fleetMessageId).toBeNull();
+  expect(viewText(seen.posts[0])).toContain("your fleet");
+  expect(seen.posts[0]?.files?.map((f) => f.name)).toEqual(["fleet.png"]);
+  expect(seen.posts[0]?.flags).toBe(MessageFlags.IsComponentsV2);
+  expect(live(s.r)?.fleetMessageId).toBe("f1");
+  const turn = await click(s, "fleet:fire");
+  expect(turn.posts).toEqual([]);
+  expect(turn.channelEdits.map((e) => [e.id, e.m.attachments])).toEqual([["f1", []]]);
+  expect(viewText(turn.edits[0])).toContain("jevos fired at");
+});
+
+test("moving the cursor leaves your fleet message alone", async () => {
+  const s = setup();
+  s.r.games.put(fresh({ fleetMessageId: "f" }));
+  const seen = await click(s, "fleet:col:4");
+  expect([seen.posts, seen.channelEdits]).toEqual([[], []]);
 });
 
 test("every board update and edit replaces the picture", async () => {
   const s = setup();
-  s.r.games.put(fresh({ cursor: 11 }));
+  s.r.games.put(fresh({ cursor: 11, fleetMessageId: "f" }));
   const turn = await click(s, "fleet:fire");
   expect(picture(turn.updates[0])).toEqual(FLEET_PNG);
   expect(picture(turn.edits[0])).toEqual(FLEET_PNG);
@@ -270,20 +284,21 @@ test("every board update and edit replaces the picture", async () => {
   expect([...turn.posts, ...move.posts, ...end.posts]).toEqual([]);
 });
 
-test("a game from before the picture deletes its old fleet message once", async () => {
+test("a game from before the second message gets one on its next click", async () => {
   const s = setup();
-  s.r.games.put(fresh({ fleetMessageId: "f" }));
-  expect((await click(s, "fleet:row:3")).deletes).toEqual(["f"]);
-  expect(live(s.r)?.fleetMessageId).toBeNull();
-  expect((await click(s, "fleet:row:4")).deletes).toEqual([]);
+  s.r.games.put(fresh());
+  expect((await click(s, "fleet:row:3")).posts).toHaveLength(1);
+  expect(live(s.r)?.fleetMessageId).toBe("f1");
+  expect((await click(s, "fleet:row:4")).posts).toEqual([]);
 });
 
-test("an old fleet message that can't be deleted is still forgotten", async () => {
+test("a fleet message that can't be posted leaves the board playable and is tried again", async () => {
   const s = setup();
-  s.r.games.put(fresh({ fleetMessageId: "f" }));
-  const seen = await click(s, "fleet:place", { deleteFails: true });
-  expect(seen.deferred).toBe(1);
+  s.r.games.put(placed());
+  const seen = await click(s, "fleet:ready", { sendFails: true });
+  expect(picture(seen.updates[0])).toEqual(FLEET_PNG);
   expect(live(s.r)?.fleetMessageId).toBeNull();
+  expect((await click(s, "fleet:row:3")).posts).toHaveLength(1);
 });
 
 test("a V2 board whose game is gone loses only its controls, keeping the card", async () => {

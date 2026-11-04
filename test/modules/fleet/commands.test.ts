@@ -98,7 +98,7 @@ interface Edit {
   embeds?: unknown[];
 }
 
-test("/fleet play marks the old board abandoned with its picture and deletes an old fleet message", async () => {
+test("/fleet play marks the old board abandoned with its picture and keeps its fleet message", async () => {
   const { repo: r } = repo();
   r.games.put({ ...playing({ fleetMessageId: "f", updatedAt: Date.now() }), messageId: "old" });
   const edits: Edit[] = [];
@@ -125,5 +125,5 @@ test("/fleet play marks the old board abandoned with its picture and deletes an 
   expect(edits.map(shown)).toEqual([
     ["old", ["fleet.png"], [], MessageFlags.IsComponentsV2, null, []],
   ]);
-  expect(deletes).toEqual(["f"]);
+  expect(deletes).toEqual([]);
 });

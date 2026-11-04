@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { ButtonStyle, ComponentType } from "discord.js";
 import { FLEET_FILE, renderGame } from "../../../src/modules/fleet/render/board.ts";
 import { renderStats } from "../../../src/modules/fleet/render/boards.ts";
-import { battleSvg, fleetSvg } from "../../../src/modules/fleet/render/grids-svg.ts";
+import { fleetSvg, watersSvg } from "../../../src/modules/fleet/render/grids-svg.ts";
 import type { GameView } from "../../../src/modules/fleet/render/types.ts";
 import { viewText } from "../crossword/view-text.ts";
 import { playing, rowsFleet } from "./fixtures.ts";
@@ -60,13 +60,13 @@ test("placing draws your grid with the preview and names the next ship", () => {
   expect(ids(view({ game: full }))).toContain("fleet:ready");
 });
 
-test("playing: both grids in one picture, both fleets afloat and the last shots in text", () => {
+test("playing: jevos's waters in the picture, both fleets afloat and the last shots in text", () => {
   const g = playing({
     player: { ships: rowsFleet(), shots: [42] },
     jevos: { ships: rowsFleet(), shots: [0] },
   });
   const t = text(view({ game: g }));
-  expect(renderGame(view({ game: g })).svg).toBe(battleSvg(g, { reveal: false }));
+  expect(renderGame(view({ game: g })).svg).toBe(watersSvg(g, { reveal: false }));
   expect(t).toContain("jevos's ships afloat:");
   expect(t).toContain("Your ships afloat:");
   expect(t).toContain("You fired at C5: hit!");
@@ -93,7 +93,7 @@ test("a won game reveals jevos's fleet and accuracy", () => {
   expect(text(v)).toContain("17/17 hits (100%)");
   expect(ids(v)).toEqual([]);
   expect(renderGame(v).components.map((c) => c.type)).toEqual([ComponentType.Container]);
-  expect(renderGame(v).svg).toBe(battleSvg(g, { reveal: true }));
+  expect(renderGame(v).svg).toBe(watersSvg(g, { reveal: true }));
 });
 
 test("a resigned game says so", () => {

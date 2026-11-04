@@ -1,7 +1,6 @@
 import type { Client } from "discord.js";
 import { log } from "../../core/log.ts";
 import { boardMessage } from "./board-message.ts";
-import { dropOldFleet } from "./old-fleet.ts";
 import { outcomeFinish } from "./store/finish.ts";
 import type { FleetRepo } from "./store/repo.ts";
 import type { Game, Moved } from "./types.ts";
@@ -31,7 +30,6 @@ export async function markOld(client: Client, game: Game): Promise<void> {
 
     const view = { game, outcome: { kind: "abandoned" }, aiming: false } as const;
     await channel.messages.edit(game.messageId, boardMessage(view));
-    await dropOldFleet(channel, game);
   } catch (err) {
     log.error("fleet", `could not mark ${gameLink(game)} abandoned`, err);
   }

@@ -7,12 +7,11 @@ import type { PlayDeps } from "../commands/types.ts";
 import { jevosToMove, outcomeOf, touch } from "../game.ts";
 import { cellName } from "../grid.ts";
 import { boardMessage } from "../board-message.ts";
-import { dropOldFleet } from "../old-fleet.ts";
 import { settle } from "../settle.ts";
 import { FleetRepo } from "../store/repo.ts";
 import type { Game, Moved } from "../types.ts";
 import { liveGameFor } from "./guard.ts";
-import { type Turn, answer } from "./turn.ts";
+import { type Turn, answer, followBoard } from "./turn.ts";
 
 /** A control's effect on the game: the next game, a move with its outcome, or why not. */
 export type Change = (g: Game, now: number) => Game | Moved | { error: string };
@@ -52,6 +51,8 @@ async function apply(t: Turn, game: Game, change: Change): Promise<void> {
 
   settle(t.repo, moved, now);
   await t.i.update(boardMessage({ ...moved, aiming: false }));
+  // The player's own shot leaves their fleet as it was: only posted if it isn't there yet.
+  await followBoard(t, moved, false);
 }
 
 /** Runs one control on the clicker's live game, under their lock. */
@@ -72,11 +73,7 @@ export async function act(
   }
 
   try {
-    const current = await dropOldFleet(i.channel, game);
-
-    if (current !== game) repo.games.put(current);
-
-    await apply({ i, repo, d: c.d }, current, change);
+    await apply({ i, repo, d: c.d }, game, change);
   } finally {
     stopThinking(key);
   }

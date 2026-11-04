@@ -7,7 +7,7 @@ import {
 import { nextKind } from "../place.ts";
 import { FLEET, type Game, type Outcome } from "../types.ts";
 import { firingControls, placingControls } from "./controls.ts";
-import { battleSvg, fleetSvg } from "./grids-svg.ts";
+import { fleetSvg, ownSvg, watersSvg } from "./grids-svg.ts";
 import { accuracyLines, jevosAfloat, lastShots, resultLine, yourAfloat } from "./lines.ts";
 import type { BoardMessage, GameView } from "./types.ts";
 
@@ -58,7 +58,7 @@ function playing(g: Game, aiming: boolean): BoardMessage {
   return {
     // Kept while aiming: a restart or failed edit mid-turn leaves this board, and a click resumes.
     components: [card(TITLE, lines), ...firingControls(g)],
-    svg: battleSvg(g, { reveal: false }),
+    svg: watersSvg(g, { reveal: false }),
   };
 }
 
@@ -67,9 +67,15 @@ function over(g: Game, o: Exclude<Outcome, { kind: "playing" }>): BoardMessage {
 
   return {
     components: [card(TITLE, lines)],
-    svg: battleSvg(g, { reveal: true }),
+    svg: watersSvg(g, { reveal: true }),
   };
 }
+
+/** The second message once firing starts: the player's fleet under jevos's shots. */
+export const renderFleet = (g: Game): BoardMessage => ({
+  components: [card(`${TITLE} — your fleet`, [players(g)])],
+  svg: ownSvg(g),
+});
 
 /** The board message for a game as it stands; the adapter turns `svg` into the attached picture. */
 export function renderGame(v: GameView): BoardMessage {

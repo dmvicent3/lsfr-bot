@@ -1,10 +1,10 @@
 import { expect, test } from "bun:test";
 import {
-  BOTTOM_AT,
   PLACING_AT,
   TOP_AT,
-  battleSvg,
   fleetSvg,
+  ownSvg,
+  watersSvg,
 } from "../../../../src/modules/fleet/render/grids-svg.ts";
 import { CELL, COLOURS } from "../../../../src/modules/fleet/render/svg-grid.ts";
 import type { Point } from "../../../../src/modules/fleet/render/types.ts";
@@ -82,41 +82,30 @@ const PREVIEW = 'fill="#f5c211" fill-opacity="1"';
 const placing = (over: Partial<Game> = {}): Game =>
   playing({ phase: "placing", player: { ships: [], shots: [] }, ...over });
 
-test("battle: jevos's waters stacked over your fleet, white background, DejaVu Sans", () => {
-  const svg = battleSvg(playing(), { reveal: false });
+test("firing: jevos's waters and your fleet are one titled grid each, white, DejaVu Sans", () => {
+  const g = playing();
 
-  expect(svg).toStartWith('<svg xmlns="http://www.w3.org/2000/svg" width="404" height="856"');
-  expect(svg).toContain('font-family="DejaVu Sans"');
-  expect(svg).toContain('<rect width="404" height="856" fill="#fff"/>');
+  for (const [svg, name] of [
+    [watersSvg(g, { reveal: false }), "jevos's waters"],
+    [ownSvg(g), "your fleet"],
+  ] as const) {
+    expect(svg).toStartWith('<svg xmlns="http://www.w3.org/2000/svg" width="404" height="426"');
+    expect(svg).toContain('font-family="DejaVu Sans"');
+    expect(svg).toContain('<rect width="404" height="426" fill="#fff"/>');
+    const titles = texts(svg).filter((t) => t.size === 16);
+    expect(titles).toEqual([
+      { x: TOP_AT.x + 180, y: 28, size: 16, bold: true, fill: "#111", text: name },
+    ]);
+    const labels = texts(svg).filter((t) => t.size === 13);
+    expect(labels.map((t) => t.text).join("")).toBe(LABELS);
+    expect(labels.every((t) => t.fill === "#555" && !t.bold)).toBe(true);
+    expect(labels[0]).toMatchObject({ x: TOP_AT.x + 18, y: TOP_AT.y - 6 });
+    expect(labels[10]).toMatchObject({ x: TOP_AT.x - 10, y: TOP_AT.y + 23 });
+    expect(allTexts(svg)).toBe(20 + 1);
+    expect(svg.match(/stroke="#0b3d5c" stroke-width="1"/g)).toHaveLength(22);
+  }
+
   expect(CELL).toBe(36);
-  expect(BOTTOM_AT.x).toBe(TOP_AT.x);
-  // The bottom grid's title band starts 28 px under the top grid.
-  expect(BOTTOM_AT.y - (TOP_AT.y + 10 * CELL)).toBe(28 + 42);
-  const titles = texts(svg).filter((t) => t.size === 16);
-  expect(titles).toEqual([
-    { x: TOP_AT.x + 180, y: 28, size: 16, bold: true, fill: "#111", text: "jevos's waters" },
-    { x: BOTTOM_AT.x + 180, y: 458, size: 16, bold: true, fill: "#111", text: "your fleet" },
-  ]);
-  expect(titles[1]!.y).toBeGreaterThan(TOP_AT.y + 10 * CELL);
-  expect(titles[1]!.y).toBeLessThan(BOTTOM_AT.y);
-});
-
-test("labels: A–J over each grid and 1–10 down its left, 13 px grey; nothing else is text", () => {
-  const svg = battleSvg(playing(), { reveal: false });
-  const labels = texts(svg).filter((t) => t.size === 13);
-
-  expect(labels.map((t) => t.text).join("")).toBe(LABELS + LABELS);
-  expect(labels.every((t) => t.fill === "#555" && !t.bold)).toBe(true);
-  expect(labels[0]).toMatchObject({ x: TOP_AT.x + 18, y: TOP_AT.y - 6 });
-  expect(labels[10]).toMatchObject({ x: TOP_AT.x - 10, y: TOP_AT.y + 23 });
-  expect(labels[20]).toMatchObject({ x: BOTTOM_AT.x + 18, y: BOTTOM_AT.y - 6 });
-  expect(allTexts(svg)).toBe(40 + 2);
-});
-
-test("grid lines are 1 px dark blue, 11 each way per grid", () => {
-  const svg = battleSvg(playing(), { reveal: false });
-
-  expect(svg.match(/stroke="#0b3d5c" stroke-width="1"/g)).toHaveLength(44);
 });
 
 test("placing: your grid only, no titles", () => {
@@ -156,21 +145,22 @@ test("placing: a ship that won't fit previews just the cursor; a full fleet none
 });
 
 test("the firing cursor is a yellow outline on jevos's waters, only on your shot", () => {
-  const svg = battleSvg(playing({ cursor: 57 }), { reveal: false });
+  const svg = watersSvg(playing({ cursor: 57 }), { reveal: false });
   expect(outlines(svg)).toBe(1);
   expect(has(svg, TOP_AT, 57, 'fill="none" stroke="#f5c211" stroke-width="3"')).toBe(true);
   const aiming = playing({ cursor: 57, player: { ships: rowsFleet(), shots: [11] } });
-  expect(outlines(battleSvg(aiming, { reveal: false }))).toBe(0);
-  expect(outlines(battleSvg(playing(), { reveal: true }))).toBe(0);
+  expect(outlines(watersSvg(aiming, { reveal: false }))).toBe(0);
+  expect(outlines(watersSvg(playing(), { reveal: true }))).toBe(0);
   expect(previews(svg)).toBe(0);
 });
 
-test("misses, hits and sunk ships at their cells on both grids", () => {
+test("misses, hits and sunk ships at their cells on both pictures", () => {
   const g = playing({
     player: { ships: rowsFleet(), shots: [11, 42, 80, 81] },
     jevos: { ships: rowsFleet(), shots: [0, 99, 3] },
   });
-  const svg = battleSvg(g, { reveal: false });
+  const svg = watersSvg(g, { reveal: false });
+  const own = ownSvg(g);
 
   expect(fillAt(svg, TOP_AT, 11)).toBe(COLOURS.water);
   expect(svg).toContain(dot(TOP_AT, 11));
@@ -179,19 +169,22 @@ test("misses, hits and sunk ships at their cells on both grids", () => {
   expect(fillAt(svg, TOP_AT, 80)).toBe(COLOURS.sunk);
   expect(cross(svg, TOP_AT, 81, "#fff")).toBe(2);
   expect(fillAt(svg, TOP_AT, 40)).toBe(COLOURS.water);
-  expect(fillAt(svg, BOTTOM_AT, 0)).toBe(COLOURS.hit);
-  expect(fillAt(svg, BOTTOM_AT, 1)).toBe(COLOURS.ship);
-  expect(svg).toContain(dot(BOTTOM_AT, 99));
-  expect(svg.match(/<circle /g)).toHaveLength(2);
-  expect(svg.match(/stroke-width="2.5"/g)).toHaveLength(2 * 5);
+  expect(fillAt(own, TOP_AT, 0)).toBe(COLOURS.hit);
+  expect(fillAt(own, TOP_AT, 1)).toBe(COLOURS.ship);
+  expect(own).toContain(dot(TOP_AT, 99));
+  expect(svg.match(/<circle /g)).toHaveLength(1);
+  expect(own.match(/<circle /g)).toHaveLength(1);
+  expect(svg.match(/stroke-width="2.5"/g)).toHaveLength(2 * 3);
+  expect(own.match(/stroke-width="2.5"/g)).toHaveLength(2 * 2);
+  expect(outlines(own)).toBe(0);
 });
 
 test("reveal shows jevos's unhit ships, only when the game is over", () => {
   const g = playing({ player: { ships: rowsFleet(), shots: [42] } });
 
-  expect(fillAt(battleSvg(g, { reveal: false }), TOP_AT, 20)).toBe(COLOURS.water);
-  expect(fillAt(battleSvg(g, { reveal: true }), TOP_AT, 20)).toBe(COLOURS.ship);
-  expect(fillAt(battleSvg(g, { reveal: true }), TOP_AT, 42)).toBe(COLOURS.hit);
+  expect(fillAt(watersSvg(g, { reveal: false }), TOP_AT, 20)).toBe(COLOURS.water);
+  expect(fillAt(watersSvg(g, { reveal: true }), TOP_AT, 20)).toBe(COLOURS.ship);
+  expect(fillAt(watersSvg(g, { reveal: true }), TOP_AT, 42)).toBe(COLOURS.hit);
 });
 
 test("colours", () => {

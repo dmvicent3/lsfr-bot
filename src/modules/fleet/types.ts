@@ -32,7 +32,7 @@ export interface Game {
   channelId: string;
   /** The board message; null until it is sent. */
   messageId: string | null;
-  /** A "Your fleet" message from before the board drew both grids; deleted on its next move. */
+  /** The "your fleet" message under the board while firing; null until it is posted. */
   fleetMessageId: string | null;
   difficulty: Difficulty;
   phase: "placing" | "playing";
