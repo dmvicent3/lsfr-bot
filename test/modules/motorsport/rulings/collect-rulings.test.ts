@@ -92,6 +92,8 @@ async function deps(overrides: Partial<RulingDeps> = {}): Promise<RulingDeps> {
     summarize: async () => "Pit lane start for parc fermé changes.",
     post: async (target, message) => {
       posts.push({ target, message });
+
+      return `m${posts.length}`;
     },
     ...overrides,
   };

@@ -289,3 +289,22 @@ test("handled rulings are remembered per series, posted or not", () => {
   expect(repo.rulings.handled("f1")).toEqual(new Set(["https://fia/a.pdf", "https://fia/b.pdf"]));
   expect(repo.rulings.handled("motogp")).toEqual(new Set());
 });
+
+test("closed threads drop out of the open ones", () => {
+  repo.threads.set("f1", "usa", "t1");
+  repo.threads.set("f1", "mexico", "t2");
+  repo.threads.set("wrc", "japan", "t3");
+  repo.threads.close("f1", "usa");
+  expect(repo.threads.open("f1")).toEqual([{ eventId: "mexico", threadId: "t2" }]);
+  expect(repo.threads.get("f1", "usa")).toBe("t1");
+});
+
+test("channel posts are listed per weekend and removed one by one", () => {
+  repo.channelPosts.add("f1", "mexico", "m1");
+  repo.channelPosts.add("f1", "mexico", "m1");
+  repo.channelPosts.add("f1", "mexico", "m2");
+  repo.channelPosts.add("f1", "usa", "m3");
+  expect(repo.channelPosts.list("f1", "mexico").toSorted()).toEqual(["m1", "m2"]);
+  repo.channelPosts.remove("m1");
+  expect(repo.channelPosts.list("f1", "mexico")).toEqual(["m2"]);
+});

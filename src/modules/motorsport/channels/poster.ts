@@ -10,20 +10,22 @@ export function poster(ctx: Ctx, repo: MotorsportRepo): Post {
   return async (target, message) => {
     const f = repo.followed.get(target.series);
 
-    if (!f) return;
+    if (!f) return null;
 
     const channel = await fetchSeriesChannel(await guildOf(ctx), f);
 
-    if (!channel) return;
+    if (!channel) return null;
 
     const destination =
       target.place === "thread" ? await eventThread(channel, repo, target) : channel;
-    await destination.send({
+    const sent = await destination.send({
       content: message.content,
       files: (message.files ?? []).map(
         (file) => new AttachmentBuilder(Buffer.from(file.data), { name: file.name }),
       ),
       allowedMentions: { parse: [] },
     });
+
+    return sent.id;
   };
 }

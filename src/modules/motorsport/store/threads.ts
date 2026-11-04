@@ -1,4 +1,4 @@
-import type { SeriesKey } from "../types.ts";
+import type { OpenThread, SeriesKey } from "../types.ts";
 import type { Database } from "bun:sqlite";
 
 /** motorsport_threads: each weekend's results thread. */
@@ -21,5 +21,22 @@ export class ThreadStore {
       "INSERT OR REPLACE INTO motorsport_threads (series, event_id, thread_id) VALUES (?, ?, ?)",
       [s, eventId, threadId],
     );
+  }
+
+  /** Weekends whose thread hasn't been wrapped up yet. */
+  open(s: SeriesKey): OpenThread[] {
+    return this.db
+      .query<{ event_id: string; thread_id: string }, [string]>(
+        "SELECT event_id, thread_id FROM motorsport_threads WHERE series = ? AND closed = 0",
+      )
+      .all(s)
+      .map((row) => ({ eventId: row.event_id, threadId: row.thread_id }));
+  }
+
+  close(s: SeriesKey, eventId: string): void {
+    this.db.run("UPDATE motorsport_threads SET closed = 1 WHERE series = ? AND event_id = ?", [
+      s,
+      eventId,
+    ]);
   }
 }

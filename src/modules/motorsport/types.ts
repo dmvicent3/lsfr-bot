@@ -43,7 +43,14 @@ export interface PostMessage {
   files?: { name: string; data: string }[];
 }
 
-export type Post = (target: PostTarget, message: PostMessage) => Promise<void>;
+/** Sends a weekend post; the sent message's id, or null when the series isn't followed. */
+export type Post = (target: PostTarget, message: PostMessage) => Promise<string | null>;
+
+/** A weekend whose results thread is still open. */
+export interface OpenThread {
+  eventId: string;
+  threadId: string;
+}
 
 /** A session's classification, kept once posted (also the record F4 predictions score against). */
 export interface StoredResult {

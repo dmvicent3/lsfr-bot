@@ -1,6 +1,6 @@
 import type { Guild } from "discord.js";
 import { safely } from "../../../core/scheduler.ts";
-import { pingDeleteIsHopeless } from "../errors.ts";
+import { deleteIsHopeless } from "../errors.ts";
 import type { MotorsportRepo } from "../repo.ts";
 import type { DuePing } from "../types.ts";
 
@@ -27,7 +27,7 @@ async function deletePing(guild: Guild, repo: MotorsportRepo, ping: DuePing): Pr
 
     if (channel?.isTextBased()) await channel.messages.delete(ping.messageId);
   } catch (err) {
-    if (!pingDeleteIsHopeless(err)) throw err;
+    if (!deleteIsHopeless(err)) throw err;
   }
 
   repo.pings.markDeleted(ping.series, ping.eventId, ping.sessionId);

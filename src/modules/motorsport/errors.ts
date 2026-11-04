@@ -16,10 +16,10 @@ const HOPELESS_DELETE = new Set<number>([
 ]);
 
 /**
- * Deleting an old ping failed in a way retrying won't fix (it's gone, or the bot lost
- * access), so cleanup should stop trying instead of failing every minute.
+ * Deleting an old bot message (or closing a thread) failed in a way retrying won't fix (it's
+ * gone, or the bot lost access), so cleanup should stop trying instead of failing every run.
  */
-export function pingDeleteIsHopeless(err: unknown): boolean {
+export function deleteIsHopeless(err: unknown): boolean {
   return (
     err instanceof DiscordAPIError && typeof err.code === "number" && HOPELESS_DELETE.has(err.code)
   );

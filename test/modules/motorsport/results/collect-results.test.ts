@@ -45,8 +45,10 @@ async function openf1(published: boolean): Promise<FetchFn> {
   };
 }
 
-const post = async (target: PostTarget, message: PostMessage): Promise<void> => {
+const post = async (target: PostTarget, message: PostMessage): Promise<string> => {
   posts.push({ place: target.place, text: message.content });
+
+  return `m${posts.length}`;
 };
 
 beforeEach(() => {
@@ -83,6 +85,7 @@ test("predictions are scored in a second post, in the channel", async () => {
   expect(posts[1]?.text).toStartWith("### 🔮 Predictions\n||<@u1> Verstappen · ");
   expect(posts[1]?.text).not.toContain("u2");
   expect(posts[1]?.place).toBe("channel");
+  expect(repo.channelPosts.list("f1", race.eventId)).toEqual(["m2"]);
 });
 
 test("no predictions, no second post", async () => {

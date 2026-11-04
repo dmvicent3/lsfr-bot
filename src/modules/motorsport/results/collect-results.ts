@@ -79,10 +79,12 @@ async function postPredictions(
 
   if (predictions.length === 0) return;
 
-  await post(
+  const messageId = await post(
     { series, eventId, eventName, place: "channel" },
     { content: renderPredictionResults(predictions, result.rows) },
   );
+
+  if (messageId) repo.channelPosts.add(series, eventId, messageId);
 }
 
 function raceOf(sessions: Session[], session: Session): Session {

@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { DiscordAPIError, PermissionFlagsBits, RESTJSONErrorCodes } from "discord.js";
 import { BOT_CHANNEL_PERMISSIONS } from "../../../src/modules/motorsport/channels/setup.ts";
-import { followErrorText, pingDeleteIsHopeless } from "../../../src/modules/motorsport/errors.ts";
+import { followErrorText, deleteIsHopeless } from "../../../src/modules/motorsport/errors.ts";
 
 function apiError(code: number): DiscordAPIError {
   return new DiscordAPIError({ code, message: "x" }, code, 403, "POST", "/x", {
@@ -31,11 +31,9 @@ test("a ping that can't be deleted, ever, is given up on", () => {
     RESTJSONErrorCodes.MissingAccess,
     RESTJSONErrorCodes.MissingPermissions,
   ]) {
-    expect(pingDeleteIsHopeless(apiError(code))).toBe(true);
+    expect(deleteIsHopeless(apiError(code))).toBe(true);
   }
 
-  expect(pingDeleteIsHopeless(apiError(RESTJSONErrorCodes.InvalidFormBodyOrContentType))).toBe(
-    false,
-  );
-  expect(pingDeleteIsHopeless(new Error("network"))).toBe(false);
+  expect(deleteIsHopeless(apiError(RESTJSONErrorCodes.InvalidFormBodyOrContentType))).toBe(false);
+  expect(deleteIsHopeless(new Error("network"))).toBe(false);
 });

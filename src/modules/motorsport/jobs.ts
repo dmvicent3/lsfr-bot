@@ -4,6 +4,7 @@ import type { Job } from "../../core/types.ts";
 import { safely } from "../../core/scheduler.ts";
 import { fetchSeriesChannel, guildOf } from "./channels/lookup.ts";
 import { updatePinned } from "./channels/pinned.ts";
+import { wrapUpWeekends } from "./channels/wrap-up-weekend.ts";
 import { poster } from "./channels/poster.ts";
 import { ensureThreadPermissions } from "./channels/setup.ts";
 import { tickSeries } from "./channels/tick.ts";
@@ -71,6 +72,16 @@ const cleanup: Job = {
   },
 };
 
+/** Three days after a weekend: its channel posts go, its results thread is archived and locked. */
+const wrapUp: Job = {
+  name: "wrapup",
+  cron: "*/10 * * * *",
+  async run(ctx) {
+    const repo = new MotorsportRepo(ctx.db);
+    await wrapUpWeekends(repo, await guildOf(ctx), Date.now());
+  },
+};
+
 /** Posts session results (spoilered) into the weekend threads as they get published. */
 const results: Job = {
   name: "results",
@@ -105,4 +116,4 @@ const rulings: Job = {
   },
 };
 
-export const motorsportJobs: Job[] = [refresh, tick, cleanup, results, rulings];
+export const motorsportJobs: Job[] = [refresh, tick, cleanup, wrapUp, results, rulings];

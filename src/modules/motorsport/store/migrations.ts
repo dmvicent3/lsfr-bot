@@ -67,4 +67,15 @@ export const motorsportMigrations: Migration[] = [
       );
     `,
   },
+  {
+    id: "motorsport-006-wrap-up",
+    sql: `
+      CREATE TABLE motorsport_channel_posts (
+        message_id TEXT PRIMARY KEY,
+        series TEXT NOT NULL,
+        event_id TEXT NOT NULL
+      );
+      ALTER TABLE motorsport_threads ADD COLUMN closed INTEGER NOT NULL DEFAULT 0;
+    `,
+  },
 ];
