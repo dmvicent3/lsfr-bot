@@ -14,14 +14,7 @@ export const data = new SlashCommandBuilder()
   .addSubcommand((sub) =>
     sub
       .setName("daily")
-      .setDescription("Today's puzzle, the same for everyone in the server")
-      .addStringOption((o) =>
-        o
-          .setName("difficulty")
-          .setDescription("How hard")
-          .setRequired(true)
-          .addChoices(...LEVEL_CHOICES),
-      ),
+      .setDescription("Today's medium puzzle, the same for everyone in the server"),
   )
   .addSubcommand((sub) =>
     sub

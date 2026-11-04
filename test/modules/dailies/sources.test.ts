@@ -18,21 +18,17 @@ const NOW = Date.UTC(2026, 10, 3, 12);
 const who = { guildId: "g", userId: "u" };
 
 describe("todayEntries", () => {
-  test("seven dailies in order, all todo on a fresh day", () => {
+  test("five dailies in order, all todo on a fresh day", () => {
     const list = todayEntries(freshDailiesDb(), who, NOW);
     expect(list.map((e) => e.label)).toEqual([
       "Word #7",
-      "Sudoku easy #1",
-      "Sudoku medium #1",
-      "Sudoku hard #1",
+      "Sudoku #1",
       "Stat duel #1",
       "Country grid #1",
       "Crossword #1",
     ]);
     expect(list.map((e) => e.command)).toEqual([
       "word play",
-      "sudoku daily",
-      "sudoku daily",
       "sudoku daily",
       "duel play",
       "grid play",
@@ -53,9 +49,7 @@ describe("todayEntries", () => {
     const states = todayEntries(db, who, NOW).map((e) => `${e.state}:${e.result ?? ""}`);
     expect(states).toEqual([
       "done:130 pts",
-      "todo:",
       "started:",
-      "todo:",
       "done:5/5 · 150 pts",
       "started:",
       "done:gave up",
