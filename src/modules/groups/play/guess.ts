@@ -23,13 +23,25 @@ function bestGroup(picked: number[]): { group: number; count: number } {
   return { group: groupOf(picked[at] ?? 0), count: counts[at] ?? 0 };
 }
 
+/** With three groups found, the last four words are the fourth: it is added at once. */
+function withLast(found: string): string {
+  if (found.length !== 3) return found;
+
+  const last = [0, 1, 2, 3].find((g) => !found.includes(g.toString(16))) ?? 0;
+
+  return found + last.toString(16);
+}
+
 const wrongLine = (oneAway: boolean, daily: boolean): string => {
   const base = oneAway ? ONE_AWAY : NOT_A_GROUP;
 
   return daily ? `${base} (−${PER_MISTAKE})` : base;
 };
 
-/** Judges the four picked words; null when four are not picked. A repeated wrong guess is free. */
+/**
+ * Judges the four picked words; null when four are not picked. A repeated wrong guess is free, and
+ * finding the third group also finds the fourth.
+ */
 export function guess<P extends Progress>(p: P, daily: boolean): Guessed<P> | null {
   const picked = fromHex(p.picked);
 
@@ -38,7 +50,7 @@ export function guess<P extends Progress>(p: P, daily: boolean): Guessed<P> | nu
   const { group, count } = bestGroup(picked);
 
   if (count === GROUP_SIZE) {
-    const found = p.found + group.toString(16);
+    const found = withLast(p.found + group.toString(16));
 
     return {
       progress: { ...p, picked: "", found, lastLine: null },

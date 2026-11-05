@@ -17,6 +17,13 @@ test("the fourth group solves", () => {
   expect(guess(progress({ found: "012", picked: "cdef" }), true)?.end).toBe("solved");
 });
 
+test("the third group also solves the last four words", () => {
+  const g = guess(progress({ found: "20", picked: "4567" }), true)!;
+
+  expect(g.progress.found).toBe("2013");
+  expect(g.end).toBe("solved");
+});
+
 test("three of one group is one away and costs a mistake; the picks stay", () => {
   const g = guess(progress({ picked: "0124" }), true)!;
 

@@ -36,14 +36,15 @@ test("clear and shuffle are stored", () => {
   expect(storedGame(repo).order).not.toBe("0123456789abcdef");
 });
 
-test("a right guess is stored; the last one solves and scores", () => {
-  const { repo, turn } = daily({ found: "01", picked: "89ab" });
+test("a right guess is stored; the third one also finds the last and scores", () => {
+  const { repo, turn } = daily({ found: "0", picked: "4567" });
   submit(turn());
 
-  expect(storedGame(repo).found).toBe("012");
+  expect(storedGame(repo).found).toBe("01");
 
-  const last = submit(turn({ ...storedGame(repo), picked: "cdef" }));
+  const last = submit(turn({ ...storedGame(repo), picked: "89ab" }));
 
+  expect(storedGame(repo).found).toBe("0123");
   expect(last.award).toEqual({ points: 100, parts: ["Solved: 100"] });
   expect(storedGame(repo)).toMatchObject({ solved: true, points: 100, streak: 1, finishedAt: 50 });
 });
