@@ -15,6 +15,10 @@ export const puzzleNumber = (date: string, firstDate: string): number =>
 
 export const previousDate = (date: string): string => dateOfMs(dayMs(date) - DAY_MS);
 
+/** The date `days` days before `date`. */
+export const daysBefore = (date: string, days: number): string =>
+  dateOfMs(dayMs(date) - days * DAY_MS);
+
 /** Time to the next puzzle, as "5h 12m" or "12m". */
 export function untilNext(now: number, tz: string): string {
   const minutes = Math.floor((nextMidnight(now, tz) - now) / 60_000);

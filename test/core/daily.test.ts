@@ -4,6 +4,7 @@ import {
   dailyStreak,
   streakOf,
   nextStreak,
+  daysBefore,
   previousDate,
   periodRanks,
   puzzleNumber,
@@ -41,6 +42,12 @@ test("puzzle numbers count from launch", () => {
   expect(puzzleNumber("2026-10-28", "2026-10-28")).toBe(1);
   expect(puzzleNumber("2026-11-01", "2026-10-28")).toBe(5);
   expect(puzzleNumber("2027-10-28", "2026-10-28")).toBe(366);
+});
+
+test("daysBefore counts back whole days across months and years", () => {
+  expect(daysBefore("2026-11-05", 0)).toBe("2026-11-05");
+  expect(daysBefore("2026-11-05", 30)).toBe("2026-10-06");
+  expect(daysBefore("2027-03-01", 365)).toBe("2026-03-01");
 });
 
 test("previousDate crosses months and years", () => {

@@ -1,4 +1,4 @@
-import { previousDate } from "../../../core/daily.ts";
+import { daysBefore } from "../../../core/daily.ts";
 import { seedFor } from "../../../core/seed.ts";
 import { writeClues } from "../clues/write.ts";
 import { generate } from "../generate/generate.ts";
@@ -33,9 +33,6 @@ export async function build(o: Build, ask: Ask | null): Promise<StoredPuzzle | n
 
 /** Days back whose answers a daily puzzle avoids. */
 const AVOID_DAYS = 30;
-
-const daysBefore = (date: string, days: number): string =>
-  Array.from({ length: days }).reduce<string>((d) => previousDate(d), date);
 
 /** The server's puzzle of a date: seeded by guild and date, avoiding the last 30 days' answers. */
 export function dailyMake(
