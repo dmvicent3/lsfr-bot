@@ -47,7 +47,7 @@ test("a guess redraws the board in place", async () => {
   const calls = await submit(ctx, "slate");
 
   expect(stored()?.guesses).toEqual(["slate"]);
-  expect(calls.update[0]?.content).toContain("**Board 2** ✅ attempt 1");
+  expect(calls.update[0]?.content).toContain("**Board 1** │ **Board 2** ✅");
   expect(calls.update[0]?.content).toContain("attempts left 6");
 });
 

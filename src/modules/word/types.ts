@@ -108,3 +108,9 @@ export interface LetterNotes {
   /** The hit letter at each position, or null. */
   pattern: (string | null)[];
 }
+
+/** Letter notes as text lines: the status groups, and the pattern line (null before a hit). */
+export interface NoteLines {
+  groups: string[];
+  pattern: string | null;
+}

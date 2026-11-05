@@ -49,5 +49,5 @@ test("/word duo shows the player's own game", async () => {
   });
   await multiPlay("duo")(c);
 
-  expect(sent[1]?.content).toContain("**Board 1** ✅ attempt 1");
+  expect(sent[1]?.content).toContain("**Board 1** ✅ │ **Board 2**");
 });

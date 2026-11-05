@@ -26,18 +26,16 @@ test("before a guess: heading and how to play", () => {
   );
 });
 
-test("a solved board stops at its word and shows the attempt", () => {
+test("both boards on one line per guess; a solved board's column empties", () => {
   expect(view({ guesses: ["slate", "bumpy"] })).toBe(
     [
       "**Word Duo #2** · attempts left 5",
-      "**Board 1**",
-      "`S L A T E` ⬛⬛🟩⬛🟩",
-      "`B U M P Y` ⬛⬛⬛⬛⬛",
-      "",
-      "**Board 2** ✅ attempt 1",
-      "`S L A T E` 🟩🟩🟩🟩🟩",
+      "**Board 1** │ **Board 2** ✅",
+      "`SLATE` ⬛⬛🟩⬛🟩 │ 🟩🟩🟩🟩🟩",
+      "`BUMPY` ⬛⬛⬛⬛⬛",
     ].join("\n"),
   );
+  expect(view({ guesses: ["crane", "bumpy"] })).toContain("`BUMPY` │ ⬛⬛⬛⬛⬛");
 });
 
 test("a win shows the award and the wait", () => {
@@ -57,13 +55,13 @@ test("a win shows the award and the wait", () => {
       "Next puzzle in 12h 0m.",
     ].join("\n"),
   );
-  expect(view(won)).toStartWith("**Word Duo #2** · 2/2 solved\n**Board 1** ✅ attempt 2");
+  expect(view(won)).toStartWith("**Word Duo #2** · 2/2 solved\n**Board 1** ✅ │ **Board 2** ✅");
 });
 
 test("a loss reveals the unsolved words", () => {
   const seven = ["slate", "bumpy", "fjord", "glyph", "jumpy", "nymph", "vixen"];
   const t = view({ guesses: seven, won: false, found: 1, points: 50, streak: 0, finishedAt: 1 });
-  expect(t).toContain("**Board 1** ❌ **CRANE**");
+  expect(t).toContain("**Board 1** ❌ **CRANE** │ **Board 2** ✅");
   expect(t).toContain("Out of attempts.\n+50 pts (50 for 1 word)");
 });
 
@@ -100,7 +98,23 @@ test("Quad's longest board fits a Discord message", () => {
     WORST,
   );
   expect(playing).not.toContain("⬛");
-  expect(lost.split("\n").filter((l) => l.startsWith("`"))).toHaveLength(36);
+  expect(lost.split("\n").filter((l) => l.startsWith("`"))).toHaveLength(18);
+  expect(lost).toContain("**Board 3** ❌ **CDEFGAB** │ **Board 4** ❌ **DEFGABC**");
   expect(lost.length).toBeLessThan(2000);
   expect(playing.length).toBeLessThan(2000);
+});
+
+test("Quad is two blocks of two, each guess once per block", () => {
+  expect(view({ guesses: ANAGRAMS.slice(0, 2) }, WORST)).toBe(
+    [
+      "**Word Quad #2** · attempts left 7",
+      "**Board 1** │ **Board 2**",
+      "`GFEDCBA` 🟨🟨🟨🟩🟨🟨🟨 │ 🟨🟨🟨🟨🟨🟨🟩",
+      "`FEDCBAG` 🟨🟨🟨🟨🟨🟨🟩 │ 🟨🟨🟩🟨🟨🟨🟨",
+      "",
+      "**Board 3** │ **Board 4**",
+      "`GFEDCBA` 🟨🟨🟩🟨🟨🟨🟨 │ 🟨🟨🟨🟨🟨🟩🟨",
+      "`FEDCBAG` 🟨🟨🟨🟨🟨🟩🟨 │ 🟨🟩🟨🟨🟨🟨🟨",
+    ].join("\n"),
+  );
 });

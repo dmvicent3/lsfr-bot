@@ -1,7 +1,7 @@
 import { puzzleNumber, untilNext } from "../../../core/daily.ts";
 import { FIRST_MULTI_PUZZLE } from "../puzzle-date.ts";
-import { boardLines } from "../render/board.ts";
 import { boardStates } from "./boards.ts";
+import { blocks, gridRows } from "./grid.ts";
 import { MODES } from "./modes.ts";
 import { recap } from "./scoring.ts";
 import type { BoardState, MultiGame, MultiPuzzle } from "./types.ts";
@@ -16,22 +16,44 @@ export interface MultiTextView {
 
 const HINT = "Every guess counts on every board. Press **Guess** to play.";
 
-/** One board: its number, ✅ and the solving attempt, or ❌ and the word once lost; its guesses. */
-function boardBlock(b: BoardState, k: number, finished: boolean): string {
-  const mark = b.solvedAt === null ? "" : ` ✅ attempt ${b.solvedAt}`;
-  const lost = finished && b.solvedAt === null ? ` ❌ **${b.word.toUpperCase()}**` : "";
-  const lines = b.guesses.length > 0 ? [boardLines(b.guesses, b.word)] : [];
+/** The guess as unspaced capitals: the squares beside it take the width. */
+const label = (g: string): string => `\`${g.toUpperCase()}\``;
 
-  return [`**Board ${k + 1}**${mark}${lost}`, ...lines].join("\n");
+/** A board's column heading: its number, ✅ once solved, ❌ and the word once lost. */
+function title(b: BoardState, k: number, finished: boolean): string {
+  const mark = b.solvedAt === null ? "" : " ✅";
+  const lost = finished && b.solvedAt === null ? ` ❌ **${b.word.toUpperCase()}**` : "";
+
+  return `**Board ${k + 1}**${mark}${lost}`;
+}
+
+/** The boards two by two: a heading line naming the columns, then each guess once. */
+function grid(boards: BoardState[], guesses: string[], finished: boolean): string {
+  const titled = boards.map((b, k) => ({ b, t: title(b, k, finished) }));
+
+  return blocks(titled)
+    .map((pair) => {
+      const head = pair.map((x) => x.t).join(" │ ");
+
+      return [
+        head,
+        ...gridRows(
+          pair.map((x) => x.b),
+          guesses,
+          label,
+        ),
+      ].join("\n");
+    })
+    .join("\n\n");
 }
 
 function heading(v: MultiTextView, guesses: string[]): string {
   const spec = MODES[v.puzzle.mode];
-  const title = `**${spec.name} #${puzzleNumber(v.puzzle.date, FIRST_MULTI_PUZZLE)}**`;
+  const name = `**${spec.name} #${puzzleNumber(v.puzzle.date, FIRST_MULTI_PUZZLE)}**`;
 
-  if (v.game?.finishedAt) return `${title} · ${v.game.found ?? 0}/${spec.boards} solved`;
+  if (v.game?.finishedAt) return `${name} · ${v.game.found ?? 0}/${spec.boards} solved`;
 
-  return `${title} · attempts left ${spec.attempts - guesses.length}`;
+  return `${name} · attempts left ${spec.attempts - guesses.length}`;
 }
 
 /** The result once finished: how it ended, the points with their parts, the wait. */
@@ -47,12 +69,12 @@ function resultLines(game: MultiGame, v: MultiTextView): string[] {
   ];
 }
 
-/** The player's private board message: every board stacked, then the result once finished. */
+/** The player's private board message: the boards side by side, then the result once finished. */
 export function multiText(v: MultiTextView): string {
   const guesses = v.game?.guesses ?? [];
   const finished = Boolean(v.game?.finishedAt);
-  const boards = boardStates(v.puzzle.words, guesses).map((b, k) => boardBlock(b, k, finished));
-  const body = guesses.length > 0 || finished ? boards.join("\n\n") : HINT;
+  const boards = boardStates(v.puzzle.words, guesses);
+  const body = guesses.length > 0 || finished ? grid(boards, guesses, finished) : HINT;
   const tail = v.game?.finishedAt ? ["", ...resultLines(v.game, v)] : [];
 
   return [heading(v, guesses), body, ...tail].join("\n");
