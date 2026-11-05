@@ -1,5 +1,7 @@
 import { plural, winBonus } from "../scoring.ts";
 import type { Award } from "../types.ts";
+import { MODES } from "./modes.ts";
+import type { MultiGame } from "./types.ts";
 
 export const PER_WORD = 50;
 
@@ -22,3 +24,12 @@ export function multiAward(g: {
 
   return { points: base + extra.points, parts: [...parts, ...extra.parts] };
 }
+
+/** A finished game's award, worked out again from what it stored. */
+export const recap = (g: MultiGame): Award =>
+  multiAward({
+    found: g.found ?? 0,
+    won: g.won ?? false,
+    unused: MODES[g.mode].attempts - g.guesses.length,
+    streak: g.streak ?? 0,
+  });
