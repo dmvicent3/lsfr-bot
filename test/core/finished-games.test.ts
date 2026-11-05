@@ -46,3 +46,15 @@ test("lastBefore: latest finished game strictly before the date, else null", () 
   expect(q.lastBefore("g", "u", "2026-11-01")).toBeNull();
   expect(q.lastBefore("g", "v", "2026-11-04")).toBe("v@2026-11-03");
 });
+
+test("a filter keeps one game's rows of a shared table", () => {
+  const db = new Database(":memory:", { strict: true });
+  db.run("CREATE TABLE m (guild_id TEXT, mode TEXT, date TEXT, user_id TEXT, finished_at INTEGER)");
+  db.run(
+    "INSERT INTO m VALUES ('g', 'duo', '2026-11-01', 'u', 1), ('g', 'quad', '2026-11-02', 'u', 2)",
+  );
+  const q = new FinishedGames(db, "m", (r: Row) => r.date, "mode = 'duo'");
+  expect(q.by("g", "u")).toEqual(["2026-11-01"]);
+  expect(q.in("g", { label: "x", from: "2026-11-01", to: "2026-11-30" })).toEqual(["2026-11-01"]);
+  expect(q.lastBefore("g", "u", "2026-11-30")).toBe("2026-11-01");
+});

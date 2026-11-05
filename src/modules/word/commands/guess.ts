@@ -43,7 +43,12 @@ export async function guess({ i, guildId, db, repo, random }: CommandCtx): Promi
 
     return reply(
       i,
-      refusalText(result.reason, { ...puzzle, number: puzzleNumber(puzzle.date), wait }),
+      refusalText(result.reason, {
+        ...puzzle,
+        name: "Word",
+        number: puzzleNumber(puzzle.date),
+        wait,
+      }),
     );
   }
 

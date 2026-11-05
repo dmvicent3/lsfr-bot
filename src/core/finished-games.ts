@@ -3,7 +3,8 @@ import type { DateRange } from "./types.ts";
 
 /**
  * The finished-game queries every daily store shares. `table` must be a code constant with
- * guild_id, date, user_id and finished_at columns, never user input.
+ * guild_id, date, user_id and finished_at columns, never user input; so must `filter`, an extra
+ * condition for a table that holds several games (`mode = 'duo'`).
  */
 export class FinishedGames<R, G> {
   private readonly base: string;
@@ -12,8 +13,10 @@ export class FinishedGames<R, G> {
     private readonly db: Database,
     table: string,
     private readonly toGame: (row: R) => G,
+    filter = "",
   ) {
-    this.base = `SELECT * FROM ${table} WHERE guild_id = ? AND finished_at IS NOT NULL`;
+    const extra = filter ? ` AND ${filter}` : "";
+    this.base = `SELECT * FROM ${table} WHERE guild_id = ? AND finished_at IS NOT NULL${extra}`;
   }
 
   in(guildId: string, range: DateRange): G[] {

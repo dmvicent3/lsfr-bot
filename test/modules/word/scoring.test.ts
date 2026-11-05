@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { award } from "../../../src/modules/word/scoring.ts";
+import { award, winBonus } from "../../../src/modules/word/scoring.ts";
 
 test("first win in 4: 100 + 20, no streak bonus", () => {
   expect(award(true, 4, 1)).toEqual({
@@ -26,3 +26,11 @@ test("bonus caps at 50 from an 11-day streak", () => {
 
 test("a loss is 5", () =>
   expect(award(false, 6, 0)).toEqual({ points: 5, parts: ["5 for finishing"] }));
+
+test("a win's bonus: unused attempts and streak, lines only when earned", () => {
+  expect(winBonus(3, 2)).toEqual({
+    points: 35,
+    parts: ["30 for 3 unused attempts", "5 streak bonus"],
+  });
+  expect(winBonus(0, 1)).toEqual({ points: 0, parts: [] });
+});

@@ -23,20 +23,22 @@ export function checkGuess(c: {
   return c.guesses.includes(word) ? refuse("repeat") : { ok: true, word };
 }
 
-const TEXTS: Record<
-  RefusedReason,
-  (c: { length: number; number: number; wait: string }) => string
-> = {
-  finished: (c) => `You've finished Word #${c.number}, next puzzle in ${c.wait}.`,
+/** What a refusal can quote: the game's name ("Word", "Word Duo"), its number and length. */
+interface RefusalCtx {
+  name: string;
+  length: number;
+  number: number;
+  wait: string;
+}
+
+const TEXTS: Record<RefusedReason, (c: RefusalCtx) => string> = {
+  finished: (c) => `You've finished ${c.name} #${c.number}, next puzzle in ${c.wait}.`,
   letters: () => "Letters only.",
   length: (c) => `Guesses are ${c.length} letters.`,
   unknown: () => "That's not in the word list. No attempt used.",
   repeat: () => "You already tried that.",
 };
 
-export function refusalText(
-  reason: RefusedReason,
-  c: { length: number; number: number; wait: string },
-): string {
+export function refusalText(reason: RefusedReason, c: RefusalCtx): string {
   return TEXTS[reason](c);
 }

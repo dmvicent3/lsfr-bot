@@ -26,8 +26,11 @@ test.each<[Partial<typeof base>, RefusedReason]>([
 });
 
 test("refusal texts", () => {
-  const c = { length: 5, number: 4, wait: "3h 2m" };
+  const c = { name: "Word", length: 5, number: 4, wait: "3h 2m" };
   expect(refusalText("finished", c)).toBe("You've finished Word #4, next puzzle in 3h 2m.");
+  expect(refusalText("finished", { ...c, name: "Word Duo" })).toStartWith(
+    "You've finished Word Duo #4",
+  );
   expect(refusalText("letters", c)).toBe("Letters only.");
   expect(refusalText("length", c)).toBe("Guesses are 5 letters.");
   expect(refusalText("unknown", c)).toBe("That's not in the word list. No attempt used.");

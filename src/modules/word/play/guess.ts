@@ -5,6 +5,7 @@ import type { WordRepo } from "../store/repo.ts";
 import { nextStreak } from "../../../core/daily.ts";
 import type { Game, GuessResult, Puzzle } from "../types.ts";
 import { checkGuess } from "../validate.ts";
+import { AlreadyFinished, once } from "./once.ts";
 
 interface GuessInput {
   puzzle: Puzzle;
@@ -13,9 +14,6 @@ interface GuessInput {
   accepted: ReadonlySet<string>;
   now: number;
 }
-
-/** Thrown inside the transaction when another call finished the game first. */
-class AlreadyFinished extends Error {}
 
 const openGame = (g: GuessInput): Game => ({
   guildId: g.puzzle.guildId,
@@ -60,11 +58,9 @@ function apply(repo: WordRepo, g: GuessInput): GuessResult {
 
 /** One guess, read to write in one transaction, so a game finishes (and scores) once. */
 export function submitGuess(db: Database, repo: WordRepo, g: GuessInput): GuessResult {
-  try {
-    return db.transaction(() => apply(repo, g))();
-  } catch (err) {
-    if (err instanceof AlreadyFinished) return { kind: "refused", reason: "finished" };
-
-    throw err;
-  }
+  return once(
+    db,
+    () => apply(repo, g),
+    () => ({ kind: "refused", reason: "finished" }),
+  );
 }
