@@ -2,6 +2,7 @@ import { Database } from "bun:sqlite";
 import { runMigrations } from "../../../src/core/db.ts";
 import { WordRepo } from "../../../src/modules/word/store/repo.ts";
 import { wordMigrations } from "../../../src/modules/word/store/migrations.ts";
+import type { MultiGame } from "../../../src/modules/word/multi/types.ts";
 import type { Game } from "../../../src/modules/word/types.ts";
 
 export function freshDb(): { db: Database; repo: WordRepo } {
@@ -28,3 +29,18 @@ export const game = (userId: string, date: string, over: Partial<Game> = {}): Ga
 export function seed(repo: WordRepo, g: Game): void {
   repo.games.finish(g);
 }
+
+/** An open Duo game with no guesses unless overridden. */
+export const multiGame = (over: Partial<MultiGame> = {}): MultiGame => ({
+  guildId: "g",
+  mode: "duo",
+  date: "2026-11-05",
+  userId: "u",
+  guesses: [],
+  won: null,
+  found: null,
+  points: null,
+  streak: null,
+  finishedAt: null,
+  ...over,
+});

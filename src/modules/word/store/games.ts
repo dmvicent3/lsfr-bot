@@ -4,7 +4,7 @@ import type { LastGame } from "../../../core/daily.ts";
 import type { DateRange, Game } from "../types.ts";
 import type { GameRow } from "./types.ts";
 
-const toGame = (r: GameRow): Game => ({
+export const toGame = (r: GameRow): Game => ({
   guildId: r.guild_id,
   date: r.date,
   userId: r.user_id,
@@ -15,7 +15,7 @@ const toGame = (r: GameRow): Game => ({
   finishedAt: r.finished_at,
 });
 
-const toLast = (r: GameRow): LastGame => ({
+export const toLast = (r: GameRow): LastGame => ({
   date: r.date,
   won: r.won === 1,
   streak: r.streak ?? 0,

@@ -16,3 +16,17 @@ export interface GameRow {
   streak: number | null;
   finished_at: number | null;
 }
+
+export interface MultiPuzzleRow {
+  guild_id: string;
+  mode: string;
+  date: string;
+  /** Comma-separated, board order. */
+  words: string;
+  length: number;
+}
+
+export interface MultiGameRow extends GameRow {
+  mode: string;
+  found: number | null;
+}

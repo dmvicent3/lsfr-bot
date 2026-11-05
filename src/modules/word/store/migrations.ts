@@ -25,4 +25,31 @@ export const wordMigrations: Migration[] = [
       CREATE INDEX word_games_by_user ON word_games (guild_id, user_id, date);
     `,
   },
+  {
+    id: "word-002-multi",
+    sql: `
+      CREATE TABLE word_multi_puzzles (
+        guild_id TEXT NOT NULL,
+        mode TEXT NOT NULL,
+        date TEXT NOT NULL,
+        words TEXT NOT NULL,
+        length INTEGER NOT NULL,
+        PRIMARY KEY (guild_id, mode, date)
+      );
+      CREATE TABLE word_multi_games (
+        guild_id TEXT NOT NULL,
+        mode TEXT NOT NULL,
+        date TEXT NOT NULL,
+        user_id TEXT NOT NULL,
+        guesses TEXT NOT NULL,
+        won INTEGER,
+        found INTEGER,
+        points INTEGER,
+        streak INTEGER,
+        finished_at INTEGER,
+        PRIMARY KEY (guild_id, mode, date, user_id)
+      );
+      CREATE INDEX word_multi_games_by_user ON word_multi_games (guild_id, mode, user_id, date);
+    `,
+  },
 ];
