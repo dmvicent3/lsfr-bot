@@ -19,13 +19,14 @@ function* every(g: string, a: string, from = 0, after = -1): Generator<Link[]> {
   }
 }
 
-/** The rule as written, applied to a whole matching. */
-const rank = (l: Link[], n: number): number[] => [
+/** The rule as written, applied to a whole matching of a `g`-letter guess to an `n`-letter answer. */
+const rank = (l: Link[], g: number, n: number): number[] => [
   l.length,
   l.filter((x, k) => l[k + 1]?.g === x.g + 1 && l[k + 1]?.a === x.a + 1).length,
-  l.filter((x) => x.a === 0).length + (n > 1 ? l.filter((x) => x.a === n - 1).length : 0),
-  ...l.map((x) => -x.g),
+  l.filter((x) => x.g === 0 && x.a === 0).length +
+    l.filter((x) => x.g === g - 1 && x.a === n - 1).length,
   ...l.map((x) => -x.a),
+  ...l.map((x) => -x.g),
 ];
 
 const better = (x: number[], y: number[]): boolean => {
@@ -37,7 +38,8 @@ const better = (x: number[], y: number[]): boolean => {
 function reference(g: string, a: string): Link[] {
   let best: Link[] = [];
 
-  for (const m of every(g, a)) if (better(rank(m, a.length), rank(best, a.length))) best = m;
+  for (const m of every(g, a))
+    if (better(rank(m, g.length, a.length), rank(best, g.length, a.length))) best = m;
 
   return best;
 }

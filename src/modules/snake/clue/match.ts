@@ -1,4 +1,4 @@
-import type { Link, MatchState as State } from "../types.ts";
+import type { Ends, Link, MatchState as State } from "../types.ts";
 
 /** The link before `links[k]`: the one before it in the list, or the state's own for the first. */
 function previous(links: Link[], k: number, s: State): Link | undefined {
@@ -15,21 +15,22 @@ const pairsOf = (links: Link[], s: State): number =>
     return prev !== undefined && l.g === prev.g + 1 && l.a === prev.a + 1;
   }).length;
 
-/** How many of the answer's first and last letters are matched. */
-const capsOf = (links: Link[], length: number): number =>
-  new Set(links.flatMap((l) => (l.a === 0 || l.a === length - 1 ? [l.a] : []))).size;
+/** Edge-to-edge matches: the guess's first letter on the answer's first, its last on the last. */
+const capsOf = (links: Link[], ends: Ends): number =>
+  links.filter((l) => l.g === 0 && l.a === 0).length +
+  links.filter((l) => l.g === ends.guess - 1 && l.a === ends.answer - 1).length;
 
 /**
- * A matching's rank, compared item by item, higher first: matched letters, joined pairs, ends
- * matched, then the earliest guess letters, then the earliest answer letters. Every term adds up
- * over a split, so the best whole is the best first link plus the best rest.
+ * A matching's rank, compared item by item, higher first: matched letters, joined pairs,
+ * edge-to-edge matches, then the earliest answer letters, then the earliest guess letters. Every
+ * term adds up over a split, so the best whole is the best first link plus the best rest.
  */
-const rankOf = (links: Link[], s: State, length: number): number[] => [
+const rankOf = (links: Link[], s: State, ends: Ends): number[] => [
   links.length,
   pairsOf(links, s),
-  capsOf(links, length),
-  ...links.map((l) => -l.g),
+  capsOf(links, ends),
   ...links.map((l) => -l.a),
+  ...links.map((l) => -l.g),
 ];
 
 /** Positive when `x` ranks above `y`. */
@@ -49,6 +50,7 @@ function compare(x: number[], y: number[]): number {
  */
 export function bestMatch(guess: string, answer: string): Link[] {
   const memo = new Map<string, Link[]>();
+  const ends = { guess: guess.length, answer: answer.length };
 
   function best(s: State): Link[] {
     const key = `${s.from}:${s.after}:${s.joined}`;
@@ -64,7 +66,7 @@ export function bestMatch(guess: string, answer: string): Link[] {
 
       const links = [{ g: s.from, a }, ...best({ from: s.from + 1, after: a, joined: true })];
 
-      if (compare(rankOf(links, s, answer.length), rankOf(top, s, answer.length)) > 0) top = links;
+      if (compare(rankOf(links, s, ends), rankOf(top, s, ends)) > 0) top = links;
     }
 
     memo.set(key, top);

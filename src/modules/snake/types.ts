@@ -12,9 +12,9 @@ export interface Tile {
   colour: Colour;
   /** Drawn as one bar with the next tile: both green, on neighbouring answer letters. */
   joinNext: boolean;
-  /** Green on the answer's first letter: the word starts here. */
+  /** The guess's first letter, green on the answer's first: the guess starts as the word does. */
   capStart: boolean;
-  /** Green on the answer's last letter: the word ends here. */
+  /** The guess's last letter, green on the answer's last: the guess ends as the word does. */
   capEnd: boolean;
 }
 
@@ -56,4 +56,10 @@ export interface MatchState {
   from: number;
   after: number;
   joined: boolean;
+}
+
+/** The lengths of the guess and the answer, for telling their first and last letters. */
+export interface Ends {
+  guess: number;
+  answer: number;
 }
