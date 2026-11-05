@@ -6,12 +6,22 @@ import { data } from "./data.ts";
 import { guess } from "./guess.ts";
 import { leaderboard } from "./leaderboard.ts";
 import { letters } from "./letters.ts";
+import { multiPlay } from "./multi.ts";
 import { play } from "./play.ts";
 import { settings } from "./settings.ts";
 import { stats } from "./stats.ts";
 import type { Handler } from "./types.ts";
 
-const HANDLERS: Record<string, Handler> = { play, guess, letters, stats, leaderboard, settings };
+const HANDLERS: Record<string, Handler> = {
+  play,
+  guess,
+  letters,
+  duo: multiPlay("duo"),
+  quad: multiPlay("quad"),
+  stats,
+  leaderboard,
+  settings,
+};
 
 export function wordCommand(random: () => number): SlashCommand {
   async function execute(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
