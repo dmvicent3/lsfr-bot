@@ -36,7 +36,7 @@ describe("todayEntries", () => {
       // Groups launches after this date; FIRST_PUZZLE moves to the launch day.
       "Groups #-1",
       // Snake launches after this date; FIRST_PUZZLE moves to the launch day.
-      "Snake #-2",
+      "Snake #-1",
     ]);
     expect(list.map((e) => e.command)).toEqual([
       "word play",
