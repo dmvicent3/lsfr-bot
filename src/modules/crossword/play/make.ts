@@ -49,8 +49,11 @@ export function dailyMake(
   };
 }
 
+/** Sizes whose clues the LLM writes; 15×15's ~85 clues are the plain definitions. */
+const LLM_CLUES: Record<Size, boolean> = { 5: true, 7: true, 15: false };
+
 /** A practice puzzle of a size from the given random. */
 export const practiceMake =
   (size: Size, random: () => number, ask: Ask | null): Make =>
   () =>
-    build({ bank: loadBank(), size, random, avoid: new Set() }, ask);
+    build({ bank: loadBank(), size, random, avoid: new Set() }, LLM_CLUES[size] ? ask : null);

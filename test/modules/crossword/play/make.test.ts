@@ -65,3 +65,31 @@ test("60 daily puzzles in a row: no answer within 30 days, no two days alike", a
   });
   expect(new Set(days.map((d) => d.toSorted().join())).size).toBe(60);
 }, 60_000);
+
+test("15×15 practice never asks the LLM: its clues are the definitions", async () => {
+  let asked = 0;
+
+  const counting = async () => {
+    asked++;
+
+    return "";
+  };
+
+  const built = await practiceMake(15, lcg(2), counting)();
+
+  expect(asked).toBe(0);
+  expect(built?.puzzle.size).toBe(15);
+  expect(built?.clues).toHaveLength(built?.puzzle.slots.length ?? -1);
+  expect(built?.clues.every((c) => c.length > 0 && c.length <= 90)).toBe(true);
+});
+
+test("7×7 practice still asks the LLM", async () => {
+  let asked = 0;
+  await practiceMake(7, lcg(2), async () => {
+    asked++;
+
+    return "";
+  })();
+
+  expect(asked).toBe(1);
+});
