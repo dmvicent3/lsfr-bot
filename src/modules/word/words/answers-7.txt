@@ -160,7 +160,6 @@ balloon
 baloney
 bandage
 banging
-bangkok
 banking
 banning
 banquet
@@ -221,7 +220,6 @@ betting
 between
 bicycle
 bidding
-bigfoot
 biggest
 billing
 billion
@@ -314,7 +312,6 @@ briefed
 briefly
 brigade
 brisket
-bristol
 brittle
 broaden
 broader
@@ -424,15 +421,12 @@ changed
 changer
 channel
 chaotic
-chapman
 chapter
 charade
 charged
 charger
 chariot
 charity
-charley
-charlie
 charmed
 charmer
 charred
@@ -468,7 +462,6 @@ cholera
 chopped
 chopper
 chowder
-christy
 chronic
 chucked
 chuckle
@@ -531,7 +524,6 @@ collect
 college
 collide
 collier
-collins
 cologne
 colonel
 colored
@@ -745,7 +737,6 @@ deposit
 depress
 deprive
 derived
-derrick
 descend
 descent
 deserve
@@ -768,7 +759,6 @@ dialect
 dialing
 diamond
 diaries
-dickens
 dictate
 dieting
 diffuse
@@ -910,7 +900,6 @@ endured
 enemies
 enforce
 engaged
-english
 enhance
 enjoyed
 enlarge
@@ -1033,7 +1022,6 @@ finesse
 firearm
 firefly
 fireman
-firemen
 firstly
 fishing
 fitness
@@ -1162,7 +1150,6 @@ getting
 ghastly
 ghostly
 giddyup
-gilbert
 gimmick
 ginseng
 giraffe
@@ -1186,7 +1173,6 @@ godsend
 golfing
 gondola
 goodbye
-goodman
 goofing
 gorilla
 goulash
@@ -1198,7 +1184,6 @@ grammar
 grandad
 grandma
 grandpa
-granger
 granite
 granola
 granted
@@ -1214,7 +1199,6 @@ greatly
 greener
 greeted
 grenade
-griffin
 grilled
 grinder
 gripped
@@ -1251,7 +1235,6 @@ hairpin
 halfway
 halibut
 hallway
-hamburg
 hammock
 hamster
 handbag
@@ -1333,7 +1316,6 @@ hobbies
 hogging
 holding
 holiday
-holland
 holster
 homeboy
 honesty
@@ -1501,9 +1483,7 @@ laborer
 lacking
 lactose
 ladybug
-lambert
 landing
-langley
 lantern
 lapping
 larceny
@@ -1536,7 +1516,6 @@ lengthy
 lenient
 leopard
 leprosy
-lesbian
 letting
 lettuce
 leveled
@@ -1587,7 +1566,6 @@ lowdown
 lowered
 lowlife
 loyalty
-lucifer
 luckier
 luckily
 luggage
@@ -1600,7 +1578,6 @@ macabre
 machete
 machine
 madness
-madonna
 maestro
 magical
 magnate
@@ -1649,7 +1626,6 @@ matches
 matinee
 matured
 maximum
-maxwell
 meanest
 meaning
 measure
@@ -1716,7 +1692,6 @@ moonlit
 mopping
 morally
 morning
-morocco
 moronic
 morphin
 mounted
@@ -2304,7 +2279,6 @@ scatter
 scenery
 scented
 scepter
-schmuck
 scholar
 science
 scissor
@@ -2434,7 +2408,6 @@ skeeter
 sketchy
 skilled
 skinned
-skinner
 skipped
 skipper
 skyline
@@ -2517,7 +2490,6 @@ special
 specify
 specter
 spelled
-spencer
 spender
 spewing
 spilled
@@ -2728,7 +2700,6 @@ tighten
 tighter
 tightly
 tigress
-timothy
 tiniest
 tipping
 titanic
@@ -2943,7 +2914,6 @@ wealthy
 wearing
 weather
 weaving
-webster
 wedding
 wedlock
 weekend
@@ -2960,7 +2930,6 @@ whacked
 whaling
 whatnot
 wheeled
-wheeler
 whereas
 whereby
 wherein

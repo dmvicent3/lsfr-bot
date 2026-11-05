@@ -9,13 +9,10 @@ acre
 afar
 aged
 agha
-ahem
 ahoy
 aide
 akin
-alan
 alba
-alec
 alfa
 ally
 alms
@@ -48,7 +45,6 @@ avid
 away
 awol
 awry
-axel
 axis
 axle
 baal
@@ -56,7 +52,6 @@ baba
 babe
 babu
 baby
-bach
 back
 baht
 bail
@@ -144,13 +139,11 @@ both
 bout
 bowl
 bozo
-brad
 brag
 bran
 brat
 bray
 bred
-bree
 brew
 brie
 brig
@@ -175,7 +168,6 @@ buzz
 cade
 cafe
 cage
-cain
 cake
 calf
 call
@@ -187,9 +179,7 @@ cant
 cape
 card
 care
-carl
 carp
-carr
 cart
 casa
 case
@@ -198,7 +188,6 @@ cast
 cave
 cell
 cent
-chad
 chao
 chap
 char
@@ -231,7 +220,6 @@ clue
 coal
 coat
 coax
-cobb
 coca
 coco
 code
@@ -240,7 +228,6 @@ coin
 coke
 cola
 cold
-cole
 colt
 coma
 comb
@@ -298,7 +285,6 @@ dart
 dash
 data
 date
-davy
 dawn
 daze
 dead
@@ -331,7 +317,6 @@ dine
 ding
 dink
 dire
-dirk
 dirt
 disc
 dish
@@ -435,7 +420,6 @@ fear
 feat
 feed
 feel
-feet
 fell
 felt
 fend
@@ -579,7 +563,6 @@ gulp
 guru
 gust
 hack
-haha
 hail
 hair
 haji
@@ -590,7 +573,6 @@ halo
 halt
 hand
 hang
-hank
 hard
 hare
 hark
@@ -614,7 +596,6 @@ heat
 heck
 heed
 heel
-heil
 heir
 held
 hell
@@ -646,7 +627,6 @@ holt
 holy
 home
 hone
-hong
 honk
 hood
 hoof
@@ -660,7 +640,6 @@ host
 hour
 howe
 howl
-huck
 huff
 huge
 hula
@@ -694,7 +673,6 @@ item
 jack
 jade
 jail
-jake
 java
 jazz
 jean
@@ -702,13 +680,11 @@ jeep
 jeez
 jefe
 jerk
-jess
 jest
 jinn
 jinx
 jive
 jock
-john
 join
 joke
 jolt
@@ -722,14 +698,12 @@ jury
 just
 kale
 kana
-kane
 kayo
 keel
 keen
 keep
 kelp
 kemp
-kent
 kept
 kern
 khan
@@ -739,7 +713,6 @@ kilo
 kilt
 kind
 king
-kirk
 kiss
 kite
 kiwi
@@ -760,14 +733,12 @@ laid
 lain
 lair
 lake
-lakh
 lama
 lamb
 lame
 lamp
 land
 lane
-lang
 lard
 lark
 lash
@@ -792,7 +763,6 @@ lest
 levy
 lewd
 liar
-lice
 lick
 lido
 lied
@@ -850,7 +820,6 @@ lube
 luck
 lull
 lump
-luna
 lung
 lure
 lurk
@@ -859,7 +828,6 @@ lute
 lutz
 mace
 mach
-mack
 made
 maid
 mail
@@ -874,7 +842,6 @@ mana
 mane
 mano
 many
-marc
 mare
 mark
 mart
@@ -883,9 +850,7 @@ mask
 mast
 mate
 math
-matt
 maxi
-maya
 mayo
 maze
 mead
@@ -903,15 +868,10 @@ mere
 mesa
 mesh
 mess
-meth
-mice
-mick
-mike
 mild
 mile
 milk
 mill
-milo
 milt
 mime
 mind
@@ -942,7 +902,6 @@ moot
 mope
 more
 morn
-mort
 most
 moth
 mott
@@ -970,7 +929,6 @@ neck
 need
 neon
 nerd
-ness
 nest
 newt
 next
@@ -979,13 +937,11 @@ nick
 nigh
 nine
 node
-noel
 noir
 nome
 none
 nook
 noon
-nope
 norm
 nose
 nosy
@@ -1014,8 +970,6 @@ opal
 open
 opus
 oral
-orgy
-otto
 ouch
 oval
 oven
@@ -1058,7 +1012,6 @@ peri
 perk
 perm
 pest
-pfft
 phew
 pick
 pied
@@ -1147,7 +1100,6 @@ raja
 rake
 rami
 ramp
-rand
 rang
 rani
 rank
@@ -1235,7 +1187,6 @@ sari
 sark
 sash
 sass
-saul
 save
 scab
 scam
@@ -1262,8 +1213,6 @@ sewn
 shah
 sham
 shat
-shaw
-shay
 shea
 shed
 shim
@@ -1335,7 +1284,6 @@ sook
 soon
 soot
 soph
-sora
 sore
 sort
 soul
@@ -1406,7 +1354,6 @@ taro
 tarp
 tart
 task
-tate
 taxi
 teal
 team
@@ -1448,7 +1395,6 @@ ting
 tiny
 tire
 toad
-toby
 tofu
 toga
 toil
@@ -1458,7 +1404,6 @@ tomb
 tome
 tone
 tong
-tony
 took
 tool
 toot
@@ -1466,7 +1411,6 @@ tora
 tore
 torn
 toro
-tory
 tosh
 toss
 tote
@@ -1478,12 +1422,10 @@ trap
 tray
 tree
 trek
-trey
 trim
 trio
 trip
 trot
-troy
 true
 tsar
 tuba
@@ -1491,9 +1433,7 @@ tube
 tuck
 tuna
 tune
-tung
 turf
-turk
 turn
 tush
 tusk
@@ -1524,7 +1464,6 @@ veer
 veil
 vein
 vent
-vera
 verb
 very
 vest
@@ -1619,7 +1558,6 @@ worn
 wrap
 wren
 writ
-yang
 yank
 yard
 yarn
@@ -1634,7 +1572,6 @@ yogi
 yoke
 yolk
 your
-yuan
 yuck
 zeal
 zero

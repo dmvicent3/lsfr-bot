@@ -87,7 +87,6 @@ arbor
 arena
 argue
 argus
-ariel
 arise
 armed
 armor
@@ -154,7 +153,6 @@ belle
 belly
 below
 bench
-benny
 beret
 berry
 berth
@@ -164,7 +162,6 @@ bible
 bigot
 biker
 bilbo
-billy
 binge
 bingo
 birch
@@ -209,7 +206,6 @@ bonny
 bonus
 boost
 booth
-booty
 booze
 bored
 borne
@@ -234,7 +230,6 @@ brawn
 bread
 break
 breed
-brent
 briar
 bribe
 brick
@@ -244,7 +239,6 @@ bring
 brink
 brisk
 broad
-brock
 broke
 brood
 brook
@@ -256,7 +250,6 @@ brush
 brute
 buddy
 budge
-buffy
 buggy
 bugle
 build
@@ -267,7 +260,6 @@ bully
 bumpy
 bunch
 bunny
-burke
 burnt
 burst
 buses
@@ -304,7 +296,6 @@ chain
 chair
 chalk
 champ
-chang
 chant
 charm
 chart
@@ -318,10 +309,8 @@ cheer
 chemo
 chess
 chest
-chevy
 chewy
 chick
-chico
 chief
 child
 chile
@@ -383,7 +372,6 @@ cobra
 cocoa
 coded
 codex
-colin
 colon
 color
 combo
@@ -395,12 +383,10 @@ comma
 condo
 coney
 conga
-congo
 coral
 corky
 corny
 corps
-costa
 couch
 cough
 could
@@ -498,7 +484,6 @@ deter
 detox
 deuce
 devil
-devon
 diary
 dicey
 didst
@@ -585,7 +570,6 @@ elder
 elect
 elite
 elope
-elves
 ember
 emcee
 emery
@@ -599,7 +583,6 @@ entry
 envoy
 equal
 erase
-erica
 error
 erupt
 essay
@@ -627,7 +610,6 @@ faked
 false
 famed
 fancy
-fanny
 farce
 fatal
 fated
@@ -732,7 +714,6 @@ friar
 fried
 fries
 frisk
-fritz
 frock
 front
 frost
@@ -753,7 +734,6 @@ gabby
 gable
 gamer
 gamma
-garth
 gases
 gator
 gauge
@@ -761,8 +741,6 @@ gauze
 gavel
 gazed
 gecko
-geese
-gemma
 genie
 genoa
 genre
@@ -819,7 +797,6 @@ gravy
 graze
 great
 greed
-greek
 green
 greet
 grief
@@ -860,7 +837,6 @@ hanky
 happy
 hardy
 harem
-harry
 harsh
 haste
 hasty
@@ -883,7 +859,6 @@ helix
 hello
 hence
 henna
-henry
 heron
 hilly
 hinge
@@ -893,7 +868,6 @@ hired
 hitch
 hoard
 hobby
-hogan
 hoist
 holed
 holla
@@ -946,12 +920,9 @@ issue
 itchy
 ivory
 jaded
-japan
 jazzy
 jelly
 jerky
-jerry
-jesse
 jewel
 jiffy
 jimmy
@@ -959,7 +930,6 @@ joint
 joked
 joker
 jolly
-jones
 judge
 juice
 juicy
@@ -1008,7 +978,6 @@ later
 latex
 latte
 laugh
-laura
 layer
 lazar
 leach
@@ -1032,8 +1001,6 @@ leper
 level
 lever
 levin
-lewis
-liang
 libel
 liege
 light
@@ -1056,7 +1023,6 @@ lobby
 local
 lodge
 lofty
-logan
 logic
 lolly
 loner
@@ -1066,7 +1032,6 @@ lorry
 loser
 lotto
 lotus
-louie
 louis
 louse
 lousy
@@ -1080,7 +1045,6 @@ lucky
 lumpy
 lunar
 lunch
-lupin
 lupus
 lurch
 lured
@@ -1158,13 +1122,11 @@ modem
 mogul
 moist
 moldy
-molly
 momma
 mommy
 mondo
 money
 mongo
-monte
 month
 moody
 moose
@@ -1286,7 +1248,6 @@ panty
 papal
 paper
 pappy
-paris
 parry
 party
 pasha
@@ -1303,18 +1264,15 @@ peach
 pearl
 pecan
 pedal
-pedro
 penal
 pence
 penny
 perch
 peril
 perky
-perry
 pesky
 pesto
 petal
-peter
 petit
 petty
 phase
@@ -1438,9 +1396,7 @@ raged
 rainy
 raise
 rally
-ralph
 ranch
-randy
 range
 rapid
 raspy
@@ -1483,7 +1439,6 @@ right
 rigid
 rigor
 riled
-riley
 rinse
 risen
 rishi
@@ -1499,7 +1454,6 @@ rodeo
 roger
 rogue
 roman
-romeo
 roost
 roped
 roper
@@ -1529,7 +1483,6 @@ sable
 sabre
 sadly
 safer
-sahib
 saint
 salad
 sally
@@ -1540,7 +1493,6 @@ salve
 salvo
 samba
 sandy
-santo
 sappy
 saree
 sarge
@@ -1587,7 +1539,6 @@ seize
 senna
 senor
 sense
-serge
 serum
 serve
 setup
@@ -1613,7 +1564,6 @@ shark
 sharp
 shave
 shawl
-shawn
 sheen
 sheep
 sheer
@@ -1625,7 +1575,6 @@ shift
 shine
 shiny
 shirt
-shiva
 shock
 shone
 shook
@@ -1723,7 +1672,6 @@ sound
 south
 space
 spade
-spank
 spare
 spark
 spasm
@@ -1784,7 +1732,6 @@ steed
 steel
 steep
 steer
-stein
 stern
 stick
 stiff
@@ -1850,7 +1797,6 @@ swing
 swipe
 swirl
 swish
-swiss
 swoon
 swoop
 sword
@@ -1867,7 +1813,6 @@ taffy
 taint
 taken
 taker
-takin
 tally
 talon
 tamed
@@ -1884,7 +1829,6 @@ teach
 tease
 teddy
 teeny
-teeth
 telly
 tempo
 tempt
@@ -1892,9 +1836,6 @@ tenor
 tense
 tenth
 terra
-terry
-tesla
-texas
 thane
 thank
 theft
@@ -2072,7 +2013,6 @@ wager
 wagon
 waist
 waive
-wally
 waltz
 waste
 watch
@@ -2087,7 +2027,6 @@ wedge
 weigh
 weird
 welch
-welsh
 whack
 whale
 wharf
@@ -2110,7 +2049,6 @@ wider
 widow
 width
 wield
-willy
 wimpy
 winch
 windy
@@ -2121,7 +2059,6 @@ witch
 witty
 woken
 woman
-women
 woody
 woozy
 wordy
@@ -2149,7 +2086,6 @@ yeast
 yield
 yikes
 young
-youse
 youth
 yummy
 zebra

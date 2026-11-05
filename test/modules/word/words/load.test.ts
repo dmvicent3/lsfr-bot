@@ -1,5 +1,9 @@
 import { describe, expect, test } from "bun:test";
-import { SUPPORTED_LENGTHS, wordLists } from "../../../../src/modules/word/words/load.ts";
+import {
+  SUPPORTED_LENGTHS,
+  acceptedWords,
+  wordLists,
+} from "../../../../src/modules/word/words/load.ts";
 
 describe("wordLists", () => {
   test("lengths 4 to 7", () => expect(SUPPORTED_LENGTHS).toEqual([4, 5, 6, 7]));
@@ -34,4 +38,28 @@ describe("wordLists", () => {
 test("everyday words outside ENABLE are accepted guesses", () => {
   for (const w of ["admin", "cyber", "blogs", "bling"])
     expect(wordLists(5)?.accepted.has(w)).toBe(true);
+});
+
+describe("acceptedWords", () => {
+  test.each([2, 3, 8, 9, 10])("length %i: a list of words of that length", (n) => {
+    const words = acceptedWords(n);
+    expect(words?.size).toBeGreaterThan(50);
+    const shape = new RegExp(`^[a-z]{${n}}$`);
+
+    for (const w of words ?? []) expect(w).toMatch(shape);
+  });
+
+  test("short lists are the dictionary's, not frequency noise", () => {
+    expect(acceptedWords(2)?.has("ox")).toBe(true);
+    expect(acceptedWords(2)?.has("ll")).toBe(false);
+  });
+
+  test("long words and a length with no list", () => {
+    expect(acceptedWords(10)?.has("everything")).toBe(true);
+    expect(acceptedWords(1)).toBeNull();
+    expect(acceptedWords(11)).toBeNull();
+  });
+
+  test("the word game's lists share the accepted set", () =>
+    expect(wordLists(5)?.accepted).toBe(acceptedWords(5) ?? undefined));
 });

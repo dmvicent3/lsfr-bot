@@ -36,7 +36,6 @@ affair
 affect
 affirm
 afford
-afghan
 afloat
 afraid
 afresh
@@ -79,13 +78,10 @@ anyhow
 anyone
 anyway
 aortic
-apache
 apathy
 apiece
-apollo
 appeal
 appear
-arabic
 arcade
 archer
 arches
@@ -151,7 +147,6 @@ backup
 badger
 bagged
 bailed
-bailey
 bakery
 baking
 balboa
@@ -176,7 +171,6 @@ barely
 barged
 barker
 barley
-barlow
 barman
 barred
 barrel
@@ -189,7 +183,6 @@ basing
 basket
 basque
 bathed
-batman
 batter
 battle
 bazaar
@@ -221,8 +214,6 @@ belief
 belong
 bender
 benign
-bennet
-berlin
 beside
 bestow
 betray
@@ -283,7 +274,6 @@ border
 boring
 borrow
 bosses
-boston
 botany
 bother
 bottle
@@ -304,7 +294,6 @@ branch
 brandy
 braver
 brazen
-brazil
 breach
 breath
 breech
@@ -352,7 +341,6 @@ buries
 burned
 burner
 burrow
-burton
 busboy
 bushes
 busier
@@ -370,7 +358,6 @@ bypass
 cabana
 cabbie
 cactus
-caesar
 caliph
 called
 caller
@@ -400,13 +387,11 @@ capped
 carbon
 career
 caring
-carmen
 carnal
 carney
 carpet
 carrot
 cartel
-carter
 carton
 carved
 carver
@@ -526,7 +511,6 @@ condor
 confer
 congee
 conned
-conner
 consul
 convey
 convoy
@@ -587,7 +571,6 @@ crises
 crisis
 crispy
 critic
-crotch
 crouch
 cruise
 crummy
@@ -615,7 +598,6 @@ dagger
 dahlia
 daimon
 dainty
-dalton
 damage
 damsel
 danced
@@ -623,7 +605,6 @@ dancer
 danger
 dangle
 danish
-daphne
 daring
 darken
 darker
@@ -696,7 +677,6 @@ devoid
 devote
 devour
 devout
-dexter
 dharma
 dialed
 diaper
@@ -775,7 +755,6 @@ dynamo
 earned
 easier
 easily
-easter
 eating
 echoed
 echoes
@@ -824,7 +803,6 @@ enzyme
 equity
 erased
 eraser
-erotic
 errand
 escape
 escort
@@ -979,7 +957,6 @@ frayed
 freaky
 freely
 freeze
-french
 frenzy
 fresco
 fridge
@@ -995,7 +972,6 @@ frozen
 fruity
 frying
 fueled
-fuhrer
 fulfil
 fuller
 fumble
@@ -1041,9 +1017,7 @@ gentle
 gently
 gentry
 gerbil
-german
 ghetto
-gibson
 gifted
 giggle
 gigolo
@@ -1059,7 +1033,6 @@ glider
 glitch
 global
 gloomy
-gloria
 glover
 gluten
 gnarly
@@ -1079,7 +1052,6 @@ gothic
 gotten
 govern
 grader
-graham
 grange
 granny
 grassy
@@ -1178,7 +1150,6 @@ hermit
 hernia
 heroes
 heroic
-heroin
 hiccup
 hickey
 hidden
@@ -1197,7 +1168,6 @@ hitter
 hoarse
 hobbit
 hockey
-holden
 holder
 holdup
 holler
@@ -1214,7 +1184,6 @@ hooked
 hookup
 hooper
 hooray
-hooves
 hoping
 hopped
 hopper
@@ -1325,7 +1294,6 @@ jammed
 jammer
 jangle
 jargon
-jasper
 jerked
 jersey
 jester
@@ -1336,10 +1304,8 @@ jiminy
 jingle
 jinxed
 jockey
-johnny
 joined
 joking
-joseph
 joyful
 joyous
 judged
@@ -1374,7 +1340,6 @@ kisses
 kitten
 klaxon
 knight
-knives
 kosher
 kroner
 labour
@@ -1521,7 +1486,6 @@ manual
 manure
 mapped
 marble
-marcel
 margin
 marina
 marine
@@ -1564,18 +1528,15 @@ menace
 mended
 mental
 mentor
-mercer
 merely
 merged
 merger
-merlin
 merlot
 messed
 messes
 meteor
 method
 metric
-mickey
 midday
 middle
 midway
@@ -1618,9 +1579,7 @@ mooing
 moping
 morale
 morbid
-morgan
 morgue
-morris
 morrow
 morsel
 mortal
@@ -1645,7 +1604,6 @@ mullet
 mumble
 murder
 murmur
-murphy
 muscle
 museum
 musket
@@ -1679,12 +1637,10 @@ nebula
 nectar
 needed
 needle
-nelson
 nephew
 nestor
 neural
 newest
-newton
 nibble
 nicely
 nicest
@@ -1754,7 +1710,6 @@ outset
 overdo
 overly
 owning
-oxford
 oxygen
 oyster
 pacify
@@ -1774,7 +1729,6 @@ palace
 palate
 palmer
 pamper
-panama
 pandit
 pantry
 panzer
@@ -1793,7 +1747,6 @@ parrot
 parson
 parted
 partly
-pascal
 passed
 pastor
 pastry
@@ -1975,7 +1928,6 @@ rabies
 racial
 racing
 racism
-racist
 racked
 racket
 radish
@@ -2132,7 +2084,6 @@ rookie
 roomie
 rooted
 rosary
-roscoe
 roster
 rotary
 rotate
@@ -2191,7 +2142,6 @@ saving
 savior
 savory
 sawing
-sawyer
 saying
 scarce
 scared
@@ -2319,7 +2269,6 @@ skater
 sketch
 skiing
 skinny
-slater
 slayer
 sleazy
 sledge
@@ -2383,14 +2332,12 @@ sorrow
 sorted
 sought
 source
-soviet
 sowing
 spaced
 spared
 sparky
 speech
 speedy
-spence
 sphere
 sphinx
 spider
@@ -2446,7 +2393,6 @@ status
 stayed
 steady
 steamy
-stella
 stench
 steppe
 stereo
@@ -2553,7 +2499,6 @@ tapped
 target
 tarmac
 tartar
-tarzan
 tasked
 tasted
 tattoo
@@ -2670,7 +2615,6 @@ tunnel
 turban
 turkey
 turned
-turner
 turnip
 turret
 turtle
@@ -2815,10 +2759,8 @@ warmer
 warmly
 warmth
 warned
-warner
 warped
 warren
-warsaw
 wasabi
 washed
 washer
@@ -2846,14 +2788,12 @@ whence
 whilst
 whisky
 whiter
-whitey
 wholly
 whoosh
 wicked
 wicker
 wicket
 widely
-wiener
 wiggle
 wilder
 wildly
@@ -2878,7 +2818,6 @@ within
 wizard
 wobble
 wobbly
-wolves
 wonder
 wooden
 wooing
@@ -2890,7 +2829,6 @@ wraith
 wreath
 wrench
 wretch
-wright
 writer
 yanked
 yearly
