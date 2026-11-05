@@ -6,10 +6,13 @@ import { gridToday } from "./grid.ts";
 import { groupsToday } from "./groups.ts";
 import { sudokuToday } from "./sudoku.ts";
 import { wordToday } from "./word.ts";
+import { wordMultiToday } from "./word-multi.ts";
 
 /** Every daily for the player, each on its own game's today; read-only. */
 export const todayEntries = (db: Database, who: Who, now: number): DailyEntry[] => [
   wordToday(db, who, now),
+  wordMultiToday(db, who, now, "duo"),
+  wordMultiToday(db, who, now, "quad"),
   ...sudokuToday(db, who, now),
   duelToday(db, who, now),
   gridToday(db, who, now),

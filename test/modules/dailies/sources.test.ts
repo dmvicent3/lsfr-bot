@@ -12,7 +12,7 @@ import { game as duel } from "../duel/store/fixtures.ts";
 import { game as grid } from "../grid/store/fixtures.ts";
 import { game as groups } from "../groups/store/fixtures.ts";
 import { game as sudoku } from "../sudoku/store/fixtures.ts";
-import { game as word } from "../word/fixtures.ts";
+import { multiGame, game as word } from "../word/fixtures.ts";
 import { freshDailiesDb } from "./fixtures.ts";
 
 /** 2026-11-03 12:00 UTC: the 3rd in Lisbon, the 4th in Kiritimati (UTC+14). */
@@ -20,10 +20,13 @@ const NOW = Date.UTC(2026, 10, 3, 12);
 const who = { guildId: "g", userId: "u" };
 
 describe("todayEntries", () => {
-  test("six dailies in order, all todo on a fresh day", () => {
+  test("eight dailies in order, all todo on a fresh day", () => {
     const list = todayEntries(freshDailiesDb(), who, NOW);
     expect(list.map((e) => e.label)).toEqual([
       "Word #7",
+      // Duo and Quad launch after this date; FIRST_MULTI_PUZZLE moves to the launch day.
+      "Word Duo #-1",
+      "Word Quad #-1",
       "Sudoku #1",
       "Stat duel #1",
       "Country grid #1",
@@ -33,6 +36,8 @@ describe("todayEntries", () => {
     ]);
     expect(list.map((e) => e.command)).toEqual([
       "word play",
+      "word duo",
+      "word quad",
       "sudoku daily",
       "duel play",
       "grid play",
@@ -47,16 +52,30 @@ describe("todayEntries", () => {
     const words = new WordRepo(db).games;
     words.saveGuesses(word("u", "2026-11-03", { won: null, points: null, finishedAt: null }));
     words.finish(word("u", "2026-11-03"));
+    const multi = new WordRepo(db).multiGames;
+    multi.saveGuesses(multiGame({ date: "2026-11-03", guesses: ["crane"] }));
+    multi.finish(
+      multiGame({
+        mode: "quad",
+        date: "2026-11-03",
+        won: false,
+        found: 3,
+        points: 150,
+        finishedAt: 2,
+      }),
+    );
     new SudokuRepo(db).games.start(sudoku({ slot: "medium", level: "medium" }));
     new DuelRepo(db).games.start(duel({ correct: 5, points: 150, finishedAt: 2 }));
     new GridRepo(db).games.start(grid());
     new CrosswordRepo(db).games.start(crossword({ solved: false, points: 0, finishedAt: 2 }));
     new GroupsRepo(db).games.start(groups({ date: "2026-11-03" }));
     const list = todayEntries(db, who, NOW);
-    expect(list[1]?.label).toBe("Sudoku medium #1");
+    expect(list[3]?.label).toBe("Sudoku medium #1");
     const states = list.map((e) => `${e.state}:${e.result ?? ""}`);
     expect(states).toEqual([
       "done:130 pts",
+      "started:",
+      "done:3/4 · 150 pts",
       "started:",
       "done:5/5 · 150 pts",
       "started:",

@@ -5,12 +5,13 @@ import { duelEntry } from "../../../src/modules/dailies/status/duel.ts";
 import { gridEntry } from "../../../src/modules/dailies/status/grid.ts";
 import { sudokuEntry } from "../../../src/modules/dailies/status/sudoku.ts";
 import { wordEntry } from "../../../src/modules/dailies/status/word.ts";
+import { wordMultiEntry } from "../../../src/modules/dailies/status/word-multi.ts";
 import { game as crossword } from "../crossword/store/fixtures.ts";
 import { game as groups } from "../groups/store/fixtures.ts";
 import { game as duel } from "../duel/store/fixtures.ts";
 import { game as grid } from "../grid/store/fixtures.ts";
 import { game as sudoku } from "../sudoku/store/fixtures.ts";
-import { game as word } from "../word/fixtures.ts";
+import { multiGame, game as word } from "../word/fixtures.ts";
 
 const base = { label: "Game #1", command: "game play", tz: "Europe/Lisbon" };
 
@@ -31,6 +32,17 @@ describe("word", () => {
       result: "130 pts",
     });
     expect(wordEntry(word("u", "2026-11-03", { won: false, points: 5 }), base).result).toBe("lost");
+  });
+});
+
+describe("word duo and quad", () => {
+  test("todo, started, then words found and points", () => {
+    expect(wordMultiEntry(null, base).state).toBe("todo");
+    expect(wordMultiEntry(multiGame({ guesses: ["crane"] }), base).state).toBe("started");
+    const lost = multiGame({ mode: "quad", won: false, found: 1, points: 50, finishedAt: 2 });
+    expect(wordMultiEntry(lost, base).result).toBe("1/4 · 50 pts");
+    const won = multiGame({ won: true, found: 2, points: 160, finishedAt: 2 });
+    expect(wordMultiEntry(won, base).result).toBe("2/2 · 160 pts");
   });
 });
 
