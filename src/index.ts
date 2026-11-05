@@ -27,6 +27,7 @@ import { feedbackModule } from "./modules/feedback/index.ts";
 import { feedbackTopics } from "./modules/feedback/topics.ts";
 import { gridModule } from "./modules/grid/index.ts";
 import { groupsModule } from "./modules/groups/index.ts";
+import { snakeModule } from "./modules/snake/index.ts";
 import { wordModule } from "./modules/word/index.ts";
 
 guardProcess();
@@ -46,6 +47,7 @@ const features: BotModule[] = [
   gridModule(),
   crosswordModule(llmAsk(config.llmUrl)),
   groupsModule(),
+  snakeModule(),
   dailiesModule,
   minesweeperModule(),
   triviaModule(),

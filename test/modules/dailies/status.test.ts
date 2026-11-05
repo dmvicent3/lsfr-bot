@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { crosswordEntry } from "../../../src/modules/dailies/status/crossword.ts";
 import { groupsEntry } from "../../../src/modules/dailies/status/groups.ts";
+import { snakeEntry } from "../../../src/modules/dailies/status/snake.ts";
 import { duelEntry } from "../../../src/modules/dailies/status/duel.ts";
 import { gridEntry } from "../../../src/modules/dailies/status/grid.ts";
 import { sudokuEntry } from "../../../src/modules/dailies/status/sudoku.ts";
@@ -8,6 +9,7 @@ import { wordEntry } from "../../../src/modules/dailies/status/word.ts";
 import { wordMultiEntry } from "../../../src/modules/dailies/status/word-multi.ts";
 import { game as crossword } from "../crossword/store/fixtures.ts";
 import { game as groups } from "../groups/store/fixtures.ts";
+import { game as snake } from "../snake/store/fixtures.ts";
 import { game as duel } from "../duel/store/fixtures.ts";
 import { game as grid } from "../grid/store/fixtures.ts";
 import { game as sudoku } from "../sudoku/store/fixtures.ts";
@@ -100,6 +102,19 @@ describe("groups", () => {
     );
     expect(groupsEntry(groups({ solved: false, points: 0, finishedAt: 2 }), base).result).toBe(
       "lost",
+    );
+  });
+});
+
+describe("snake", () => {
+  test("solved shows points, a give-up says so", () => {
+    expect(snakeEntry(null, base).state).toBe("todo");
+    expect(snakeEntry(snake(), base).state).toBe("started");
+    expect(snakeEntry(snake({ solved: true, points: 70, finishedAt: 2 }), base).result).toBe(
+      "70 pts",
+    );
+    expect(snakeEntry(snake({ solved: false, points: 0, finishedAt: 2 }), base).result).toBe(
+      "gave up",
     );
   });
 });

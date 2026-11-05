@@ -5,12 +5,14 @@ import { todayEntries } from "../../../src/modules/dailies/sources/today.ts";
 import { DuelRepo } from "../../../src/modules/duel/store/repo.ts";
 import { GridRepo } from "../../../src/modules/grid/store/repo.ts";
 import { GroupsRepo } from "../../../src/modules/groups/store/repo.ts";
+import { SnakeRepo } from "../../../src/modules/snake/store/repo.ts";
 import { SudokuRepo } from "../../../src/modules/sudoku/store/repo.ts";
 import { WordRepo } from "../../../src/modules/word/store/repo.ts";
 import { game as crossword } from "../crossword/store/fixtures.ts";
 import { game as duel } from "../duel/store/fixtures.ts";
 import { game as grid } from "../grid/store/fixtures.ts";
 import { game as groups } from "../groups/store/fixtures.ts";
+import { game as snake } from "../snake/store/fixtures.ts";
 import { game as sudoku } from "../sudoku/store/fixtures.ts";
 import { multiGame, game as word } from "../word/fixtures.ts";
 import { freshDailiesDb } from "./fixtures.ts";
@@ -20,7 +22,7 @@ const NOW = Date.UTC(2026, 10, 3, 12);
 const who = { guildId: "g", userId: "u" };
 
 describe("todayEntries", () => {
-  test("eight dailies in order, all todo on a fresh day", () => {
+  test("nine dailies in order, all todo on a fresh day", () => {
     const list = todayEntries(freshDailiesDb(), who, NOW);
     expect(list.map((e) => e.label)).toEqual([
       "Word #7",
@@ -33,6 +35,8 @@ describe("todayEntries", () => {
       "Crossword #1",
       // Groups launches after this date; FIRST_PUZZLE moves to the launch day.
       "Groups #-1",
+      // Snake launches after this date; FIRST_PUZZLE moves to the launch day.
+      "Snake #-2",
     ]);
     expect(list.map((e) => e.command)).toEqual([
       "word play",
@@ -43,6 +47,7 @@ describe("todayEntries", () => {
       "grid play",
       "crossword play",
       "groups play",
+      "snake play",
     ]);
     expect(list.every((e) => e.state === "todo" && e.tz === "Europe/Lisbon")).toBe(true);
   });
@@ -69,6 +74,11 @@ describe("todayEntries", () => {
     new GridRepo(db).games.start(grid());
     new CrosswordRepo(db).games.start(crossword({ solved: false, points: 0, finishedAt: 2 }));
     new GroupsRepo(db).games.start(groups({ date: "2026-11-03" }));
+    const snakes = new SnakeRepo(db).games;
+    snakes.start(snake({ date: "2026-11-03" }));
+    snakes.finish(
+      snake({ date: "2026-11-03", solved: true, points: 70, streak: 1, finishedAt: 2 }),
+    );
     const list = todayEntries(db, who, NOW);
     expect(list[3]?.label).toBe("Sudoku medium #1");
     const states = list.map((e) => `${e.state}:${e.result ?? ""}`);
@@ -81,6 +91,7 @@ describe("todayEntries", () => {
       "started:",
       "done:gave up",
       "started:",
+      "done:70 pts",
     ]);
   });
 
