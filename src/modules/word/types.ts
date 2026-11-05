@@ -78,3 +78,16 @@ export interface WordSettings {
   length: number;
   timeZone: string;
 }
+
+/** What a player's guesses say about each letter (lowercase, positions 0-based). */
+export interface LetterNotes {
+  /** Hit letters with their hit positions, by first position. */
+  placed: { letter: string; positions: number[] }[];
+  /** In the word but never hit, alphabetical, with every spot tried. */
+  near: { letter: string; notAt: number[] }[];
+  untried: string[];
+  /** Guessed, never hit or near. */
+  out: string[];
+  /** The hit letter at each position, or null. */
+  pattern: (string | null)[];
+}

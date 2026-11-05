@@ -1,13 +1,9 @@
+import { ordinal } from "../../../core/ordinal.ts";
 import type { Standing } from "../store/types.ts";
 
 export const num = (n: number): string => n.toLocaleString("en-US");
 
 export const secs = (ms: number, digits: number): string => `${(ms / 1000).toFixed(digits)}s`;
-
-const SUFFIX: Record<string, string> = { one: "st", two: "nd", few: "rd", other: "th" };
-const rules = new Intl.PluralRules("en-US", { type: "ordinal" });
-
-export const ordinal = (n: number): string => `${n}${SUFFIX[rules.select(n)] ?? "th"}`;
 
 /** Rank shared by equal points (1 + players ahead), and the gap to the leader. */
 export function rankAndGap(list: Standing[], userId: string): { rank: number; gap: number } {

@@ -4,13 +4,14 @@ import { data } from "../../../src/modules/word/commands/data.ts";
 import { wordModule } from "../../../src/modules/word/index.ts";
 
 describe("/word", () => {
-  test("five subcommands in a server", () => {
+  test("six subcommands in a server", () => {
     expect(data.name).toBe("word");
     expect(data.description).toBe("Daily word game");
     expect(data.contexts).toEqual([InteractionContextType.Guild]);
     expect(data.options?.map((o) => o.name)).toEqual([
       "play",
       "guess",
+      "letters",
       "stats",
       "leaderboard",
       "settings",

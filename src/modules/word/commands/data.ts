@@ -13,6 +13,9 @@ export const data = new SlashCommandBuilder()
       .addStringOption((o) => o.setName("word").setDescription("Your guess").setRequired(true)),
   )
   .addSubcommand((sub) =>
+    sub.setName("letters").setDescription("Which letters are placed, in the word or ruled out"),
+  )
+  .addSubcommand((sub) =>
     sub
       .setName("stats")
       .setDescription("Points, wins and streaks")
