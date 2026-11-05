@@ -80,7 +80,7 @@ export type { LeaderboardPage } from "../../core/leaderboard-page.ts";
 export interface Track {
   /** "Word", "Word Duo" */
   name: string;
-  /** The command that plays it, "/word duo". */
+  /** The command that plays it, "/duo play". */
   play: string;
   firstPuzzle: string;
   maxAttempts: number;

@@ -1,8 +1,8 @@
 import type { Mode, ModeSpec } from "./types.ts";
 
 export const MODES: Record<Mode, ModeSpec> = {
-  duo: { name: "Word Duo", boards: 2, attempts: 7 },
-  quad: { name: "Word Quad", boards: 4, attempts: 9 },
+  duo: { name: "Word Duo", blurb: "two words", boards: 2, attempts: 7 },
+  quad: { name: "Word Quad", blurb: "four words", boards: 4, attempts: 9 },
 };
 
 export const MODE_LIST: readonly Mode[] = ["duo", "quad"];

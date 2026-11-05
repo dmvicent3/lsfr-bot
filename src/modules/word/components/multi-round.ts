@@ -12,7 +12,7 @@ import { multiView } from "../multi/view.ts";
 import { wordSettings } from "../settings.ts";
 import { WordRepo } from "../store/repo.ts";
 
-export const GONE = "This button doesn't work any more. Use `/word duo` or `/word quad`.";
+export const GONE = "This button doesn't work any more. Use `/duo play` or `/quad play`.";
 
 /** The clicker's Duo or Quad round, as a button or the guess modal sees it. */
 export interface MultiRound {
@@ -43,7 +43,7 @@ export function loadRound(
   const puzzle =
     date === dateIn(now, timeZone) ? repo.multiPuzzles.get(i.guildId, mode, date) : null;
 
-  if (!puzzle) return `That ${MODES[mode].name} is over. Use \`/word ${mode}\` for today's.`;
+  if (!puzzle) return `That ${MODES[mode].name} is over. Use \`/${mode} play\` for today's.`;
 
   const game = repo.multiGames.get({ ...puzzle, userId: i.user.id });
 

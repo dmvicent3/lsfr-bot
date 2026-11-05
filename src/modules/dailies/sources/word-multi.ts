@@ -16,5 +16,5 @@ export function wordMultiToday(db: Database, who: Who, now: number, mode: Mode):
   const game = new WordRepo(db).multiGames.get({ ...who, mode, date });
   const label = `${MODES[mode].name} #${puzzleNumber(date, FIRST_MULTI_PUZZLE)}`;
 
-  return wordMultiEntry(game, { label, command: `word ${mode}`, tz });
+  return wordMultiEntry(game, { label, command: `${mode} play`, tz });
 }

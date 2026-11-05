@@ -1,12 +1,15 @@
 import { expect, test } from "bun:test";
-import { TRACKS, trackOf } from "../../../src/modules/word/tracks.ts";
+import { TRACKS } from "../../../src/modules/word/tracks.ts";
 import { freshDb, game, multiGame, seed } from "./fixtures.ts";
 
-test("the mode option picks the track; anything else is classic", () => {
-  expect(trackOf("duo")).toBe(TRACKS.duo);
-  expect(trackOf("quad").maxAttempts).toBe(9);
-  expect(trackOf("classic")).toBe(TRACKS.classic);
-  expect(trackOf(null)).toBe(TRACKS.classic);
+test("each track points at its own command and page buttons", () => {
+  expect([TRACKS.classic.play, TRACKS.duo.play, TRACKS.quad.play]).toEqual([
+    "/word guess",
+    "/duo play",
+    "/quad play",
+  ]);
+  expect(TRACKS.duo.pagePrefix).toBe("word:duopage");
+  expect(TRACKS.quad.maxAttempts).toBe(9);
 });
 
 test("each track reads only its own games", () => {

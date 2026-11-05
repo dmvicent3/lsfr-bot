@@ -2,7 +2,7 @@ import type { Database } from "bun:sqlite";
 import type { ChatInputCommandInteraction } from "discord.js";
 import type { WordRepo } from "../store/repo.ts";
 
-/** What every /word subcommand gets: the interaction (in a server), the tables and randomness. */
+/** What every /word, /duo and /quad subcommand gets: the interaction (in a server), the tables and randomness. */
 export interface CommandCtx {
   i: ChatInputCommandInteraction;
   guildId: string;

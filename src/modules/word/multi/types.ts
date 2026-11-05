@@ -7,6 +7,8 @@ export type Mode = "duo" | "quad";
 export interface ModeSpec {
   /** "Word Duo" */
   name: string;
+  /** "two words", as the command description says it. */
+  blurb: string;
   boards: number;
   attempts: number;
 }

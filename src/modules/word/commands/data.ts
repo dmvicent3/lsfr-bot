@@ -1,11 +1,5 @@
 import { InteractionContextType, SlashCommandBuilder } from "discord.js";
-import { PERIOD_CHOICES } from "../../../core/periods.ts";
-
-const MODE_CHOICES = [
-  { name: "Classic", value: "classic" },
-  { name: "Duo", value: "duo" },
-  { name: "Quad", value: "quad" },
-];
+import { leaderboardSub, statsSub } from "./options.ts";
 
 export const data = new SlashCommandBuilder()
   .setName("word")
@@ -21,42 +15,8 @@ export const data = new SlashCommandBuilder()
   .addSubcommand((sub) =>
     sub.setName("letters").setDescription("Which letters are placed, in the word or ruled out"),
   )
-  .addSubcommand((sub) =>
-    sub.setName("duo").setDescription("Word Duo: two words at once in 7 attempts"),
-  )
-  .addSubcommand((sub) =>
-    sub.setName("quad").setDescription("Word Quad: four words at once in 9 attempts"),
-  )
-  .addSubcommand((sub) =>
-    sub
-      .setName("stats")
-      .setDescription("Points, wins and streaks")
-      .addUserOption((o) => o.setName("user").setDescription("Whose stats (default: yours)"))
-      .addStringOption((o) =>
-        o
-          .setName("mode")
-          .setDescription("Default: classic")
-          .addChoices(...MODE_CHOICES),
-      ),
-  )
-  .addSubcommand((sub) =>
-    sub
-      .setName("leaderboard")
-      .setDescription("Rankings for today, the week, the month or all time")
-      .addStringOption((o) =>
-        o
-          .setName("period")
-          .setDescription("Default: today")
-          .addChoices(...PERIOD_CHOICES),
-      )
-      .addIntegerOption((o) => o.setName("page").setDescription("Page").setMinValue(1))
-      .addStringOption((o) =>
-        o
-          .setName("mode")
-          .setDescription("Default: classic")
-          .addChoices(...MODE_CHOICES),
-      ),
-  )
+  .addSubcommand(statsSub)
+  .addSubcommand(leaderboardSub)
   .addSubcommand((sub) =>
     sub
       .setName("settings")

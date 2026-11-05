@@ -59,5 +59,5 @@ test("a page past the end clamps", () => {
 
 test("a Duo board is named and points at its command", () => {
   const p = renderLeaderboard({ ...V, track: TRACKS.duo, list: [] });
-  expect(p.content).toBe("## 🟩 Word Duo — all time\nNo games yet. Play with `/word duo`.");
+  expect(p.content).toBe("## 🟩 Word Duo — all time\nNo games yet. Play with `/duo play`.");
 });

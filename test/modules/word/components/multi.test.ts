@@ -98,7 +98,7 @@ test("Guess on a finished board just redraws it", async () => {
 test("an earlier day's board or a bad ID is refused", async () => {
   const { ctx } = setup();
   const old = await submit(ctx, "slate", ["duo", "2026-01-01"]);
-  expect(old.reply[0]?.content).toBe("That Word Duo is over. Use `/word duo` for today's.");
+  expect(old.reply[0]?.content).toBe("That Word Duo is over. Use `/duo play` for today's.");
 
   const bad = fakeClick("u");
   await multiGuessHandler.handle(bad.i, ["trio", TODAY], ctx);
@@ -112,4 +112,30 @@ test("a modal sent from elsewhere gets the board as a private reply", async () =
 
   expect(m.calls.update).toHaveLength(0);
   expect(m.calls.reply[0]?.content).toContain("**Word Duo #");
+});
+
+test("a finish posts the squares publicly; an open guess posts nothing", async () => {
+  const { ctx } = setup();
+  const open = await submit(ctx, "slate");
+  expect(open.followUp).toHaveLength(0);
+
+  const won = await submit(ctx, "crane");
+  expect(won.followUp[0]?.content).toMatch(/^<@u> solved Word Duo #\d+ in 2\/7\n/);
+  expect(won.followUp[0]?.content).toEndWith("\n⬛⬛🟩⬛🟩 │ 🟩🟩🟩🟩🟩\n🟩🟩🟩🟩🟩");
+  expect(won.followUp[0]?.flags).toBeUndefined();
+  expect(won.followUp[0]?.allowedMentions).toEqual({ parse: [] });
+});
+
+test("giving up posts the squares once, without the words", async () => {
+  const { ctx } = setup();
+  await submit(ctx, "slate");
+  const c = fakeClick("u");
+  await multiGiveUpHandler.handle(c.i, ARGS, ctx);
+
+  expect(c.calls.followUp[0]?.content).toMatch(/^<@u> missed Word Duo #\d+ — X\/7 · 1\/2 found\n/);
+  expect(c.calls.followUp[0]?.content?.toLowerCase()).not.toMatch(/crane|slate/);
+
+  const again = fakeClick("u");
+  await multiGiveUpHandler.handle(again.i, ARGS, ctx);
+  expect(again.calls.followUp).toHaveLength(0);
 });

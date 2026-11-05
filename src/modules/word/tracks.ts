@@ -1,4 +1,4 @@
-import { MODES, modeOf } from "./multi/modes.ts";
+import { MODES } from "./multi/modes.ts";
 import type { Mode } from "./multi/types.ts";
 import { FIRST_MULTI_PUZZLE, FIRST_PUZZLE } from "./puzzle-date.ts";
 import { MAX_ATTEMPTS } from "./scoring.ts";
@@ -6,7 +6,7 @@ import type { Track } from "./types.ts";
 
 const multi = (mode: Mode): Track => ({
   name: MODES[mode].name,
-  play: `/word ${mode}`,
+  play: `/${mode} play`,
   firstPuzzle: FIRST_MULTI_PUZZLE,
   maxAttempts: MODES[mode].attempts,
   pagePrefix: `word:${mode}page`,
@@ -27,10 +27,3 @@ export const TRACKS = {
   duo: multi("duo"),
   quad: multi("quad"),
 } satisfies Record<"classic" | Mode, Track>;
-
-/** The track a `mode` option names; classic when it names none. */
-export const trackOf = (mode: string | null): Track => {
-  const m = modeOf(mode);
-
-  return m ? TRACKS[m] : TRACKS.classic;
-};

@@ -40,8 +40,8 @@ describe("todayEntries", () => {
     ]);
     expect(list.map((e) => e.command)).toEqual([
       "word play",
-      "word duo",
-      "word quad",
+      "duo play",
+      "quad play",
       "sudoku daily",
       "duel play",
       "grid play",

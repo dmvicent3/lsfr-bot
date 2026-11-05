@@ -1,10 +1,16 @@
 import { describe, expect, test } from "bun:test";
-import { InteractionContextType } from "discord.js";
+import { type APIApplicationCommandOption, InteractionContextType } from "discord.js";
 import { data } from "../../../src/modules/word/commands/data.ts";
+import { modeData } from "../../../src/modules/word/commands/mode-data.ts";
 import { wordModule } from "../../../src/modules/word/index.ts";
 
+const optionNames = (sub: APIApplicationCommandOption | undefined): string[] =>
+  sub && "options" in sub ? (sub.options ?? []).map((o) => o.name) : [];
+
+const subOf = (name: string) => data.options?.find((o) => o.name === name);
+
 describe("/word", () => {
-  test("eight subcommands in a server", () => {
+  test("six subcommands in a server, classic only", () => {
     expect(data.name).toBe("word");
     expect(data.description).toBe("Daily word game");
     expect(data.contexts).toEqual([InteractionContextType.Guild]);
@@ -12,18 +18,21 @@ describe("/word", () => {
       "play",
       "guess",
       "letters",
-      "duo",
-      "quad",
       "stats",
       "leaderboard",
       "settings",
     ]);
   });
 
-  test("the module owns its button and table", () => {
+  test("stats and leaderboard no longer pick a game", () => {
+    expect(optionNames(subOf("stats"))).toEqual(["user"]);
+    expect(optionNames(subOf("leaderboard"))).toEqual(["period", "page"]);
+  });
+
+  test("the module owns its commands, buttons and tables", () => {
     const m = wordModule();
     expect(m.name).toBe("word");
-    expect(m.commands?.map((c) => c.data.name)).toEqual(["word"]);
+    expect(m.commands?.map((c) => c.data.name)).toEqual(["word", "duo", "quad"]);
     expect(m.components?.map((c) => c.id)).toEqual([
       "word:page",
       "word:duopage",
@@ -36,10 +45,17 @@ describe("/word", () => {
   });
 });
 
-test("stats and leaderboard pick a game, classic by default", () => {
-  for (const name of ["stats", "leaderboard"]) {
-    const sub = data.options?.find((o) => o.name === name);
-    const mode = JSON.stringify(sub).includes('"name":"mode"');
-    expect(mode).toBe(true);
-  }
+describe("/duo and /quad", () => {
+  test("play, letters, stats and leaderboard in a server", () => {
+    for (const mode of ["duo", "quad"] as const) {
+      const d = modeData(mode);
+      expect(d.name).toBe(mode);
+      expect(d.contexts).toEqual([InteractionContextType.Guild]);
+      expect(d.options?.map((o) => o.name)).toEqual(["play", "letters", "stats", "leaderboard"]);
+      expect(optionNames(d.options?.[3])).toEqual(["period", "page"]);
+    }
+
+    expect(modeData("duo").description).toBe("Word Duo: two words at once in 7 attempts");
+    expect(modeData("quad").description).toBe("Word Quad: four words at once in 9 attempts");
+  });
 });
