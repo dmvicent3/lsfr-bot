@@ -20,4 +20,5 @@ export function toggle<P extends Progress>(p: P, word: number): P | null {
 }
 
 /** Nothing selected; null when nothing was. */
-export const clear = <P extends Progress>(p: P): P | null => (p.picked ? { ...p, picked: "" } : null);
+export const clear = <P extends Progress>(p: P): P | null =>
+  p.picked ? { ...p, picked: "" } : null;

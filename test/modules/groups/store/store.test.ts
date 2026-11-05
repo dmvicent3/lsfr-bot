@@ -36,7 +36,9 @@ test("finished games by range, by player, and the last before a date", () => {
 
   repo.games.start(game({ date: "2026-11-07" }));
 
-  expect(repo.games.finishedIn("g", { from: "2026-11-06", to: "2026-11-07", label: "" })).toHaveLength(1);
+  expect(
+    repo.games.finishedIn("g", { from: "2026-11-06", to: "2026-11-07", label: "" }),
+  ).toHaveLength(1);
   expect(repo.games.finishedBy("g", "u").map((g) => g.date)).toEqual(["2026-11-05", "2026-11-06"]);
   expect(repo.games.lastFinishedBefore("g", "u", "2026-11-07")?.date).toBe("2026-11-06");
 });

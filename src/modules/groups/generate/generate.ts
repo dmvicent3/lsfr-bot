@@ -36,7 +36,12 @@ function fill(chosen: Category[], random: () => number): Group[] | null {
 
   for (const [i, c] of chosen.entries()) {
     const others = members.filter((_, j) => j !== i);
-    const words = pickWords(c, others, groups.flatMap((g) => g.words), random);
+    const words = pickWords(
+      c,
+      others,
+      groups.flatMap((g) => g.words),
+      random,
+    );
 
     if (!words) return null;
 

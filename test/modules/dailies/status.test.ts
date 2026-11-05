@@ -1,10 +1,12 @@
 import { describe, expect, test } from "bun:test";
 import { crosswordEntry } from "../../../src/modules/dailies/status/crossword.ts";
+import { groupsEntry } from "../../../src/modules/dailies/status/groups.ts";
 import { duelEntry } from "../../../src/modules/dailies/status/duel.ts";
 import { gridEntry } from "../../../src/modules/dailies/status/grid.ts";
 import { sudokuEntry } from "../../../src/modules/dailies/status/sudoku.ts";
 import { wordEntry } from "../../../src/modules/dailies/status/word.ts";
 import { game as crossword } from "../crossword/store/fixtures.ts";
+import { game as groups } from "../groups/store/fixtures.ts";
 import { game as duel } from "../duel/store/fixtures.ts";
 import { game as grid } from "../grid/store/fixtures.ts";
 import { game as sudoku } from "../sudoku/store/fixtures.ts";
@@ -74,5 +76,18 @@ describe("crossword", () => {
     expect(
       crosswordEntry(crossword({ solved: false, points: 0, finishedAt: 2 }), base).result,
     ).toBe("gave up");
+  });
+});
+
+describe("groups", () => {
+  test("solved shows points, a loss says lost", () => {
+    expect(groupsEntry(null, base).state).toBe("todo");
+    expect(groupsEntry(groups(), base).state).toBe("started");
+    expect(groupsEntry(groups({ solved: true, points: 85, finishedAt: 2 }), base).result).toBe(
+      "85 pts",
+    );
+    expect(groupsEntry(groups({ solved: false, points: 0, finishedAt: 2 }), base).result).toBe(
+      "lost",
+    );
   });
 });

@@ -16,7 +16,6 @@ test("four groups, one per level, sorted, with a shuffled order of all sixteen",
 const seeded = () => ({ bank: BANK, random: lcg(3), avoid: new Set<string>() });
 
 test("the same seed builds the same puzzle", () => {
-
   expect(generate(seeded())).toEqual(generate(seeded()));
 });
 

@@ -34,4 +34,5 @@ export function submit(t: Turn): Landed {
 }
 
 /** Ends the round as a loss (0 points); a finished one stays as it is. */
-export const giveUp = (t: Turn): Landed => (open(t) ? end(t.repo, t.rec, false, t.now) : unchanged(t));
+export const giveUp = (t: Turn): Landed =>
+  open(t) ? end(t.repo, t.rec, false, t.now) : unchanged(t);

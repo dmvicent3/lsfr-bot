@@ -1,6 +1,11 @@
 import type { Category, Level } from "../../../../src/modules/groups/types.ts";
 
-export const cat = (name: string, level: Level, words: string[], also: string[] = []): Category => ({
+export const cat = (
+  name: string,
+  level: Level,
+  words: string[],
+  also: string[] = [],
+): Category => ({
   name,
   level,
   words,

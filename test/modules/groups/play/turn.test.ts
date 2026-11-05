@@ -59,7 +59,9 @@ test("the fourth mistake loses: 0 points, streak reset", () => {
 test("a solve the day after a solve extends the streak; after a loss it starts over", () => {
   const { repo } = freshDb();
   repo.games.start(game({ date: "2026-11-04" }));
-  repo.games.finish(game({ date: "2026-11-04", solved: true, points: 100, streak: 4, finishedAt: 1 }));
+  repo.games.finish(
+    game({ date: "2026-11-04", solved: true, points: 100, streak: 4, finishedAt: 1 }),
+  );
   const rec = repo.games.start(game({ found: "012", picked: "cdef" }));
 
   expect(submit({ repo, rec, now: 9 }).award?.points).toBe(120);
@@ -67,7 +69,9 @@ test("a solve the day after a solve extends the streak; after a loss it starts o
 
   const other = freshDb().repo;
   other.games.start(game({ date: "2026-11-04" }));
-  other.games.finish(game({ date: "2026-11-04", solved: false, points: 0, streak: 0, finishedAt: 1 }));
+  other.games.finish(
+    game({ date: "2026-11-04", solved: false, points: 0, streak: 0, finishedAt: 1 }),
+  );
   const next = other.games.start(game({ found: "012", picked: "cdef" }));
 
   expect(submit({ repo: other, rec: next, now: 9 }).game).toMatchObject({ streak: 1 });

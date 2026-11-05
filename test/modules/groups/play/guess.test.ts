@@ -1,10 +1,5 @@
 import { expect, test } from "bun:test";
-import {
-  NOT_A_GROUP,
-  ONE_AWAY,
-  REPEAT,
-  guess,
-} from "../../../../src/modules/groups/play/guess.ts";
+import { NOT_A_GROUP, ONE_AWAY, REPEAT, guess } from "../../../../src/modules/groups/play/guess.ts";
 import { progress } from "./fixtures.ts";
 
 test("fewer than four picked is no guess", () => {

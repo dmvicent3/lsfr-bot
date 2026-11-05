@@ -3,6 +3,7 @@ import type { DailyEntry, Who } from "../types.ts";
 import { crosswordToday } from "./crossword.ts";
 import { duelToday } from "./duel.ts";
 import { gridToday } from "./grid.ts";
+import { groupsToday } from "./groups.ts";
 import { sudokuToday } from "./sudoku.ts";
 import { wordToday } from "./word.ts";
 
@@ -13,4 +14,5 @@ export const todayEntries = (db: Database, who: Who, now: number): DailyEntry[] 
   duelToday(db, who, now),
   gridToday(db, who, now),
   crosswordToday(db, who, now),
+  groupsToday(db, who, now),
 ];

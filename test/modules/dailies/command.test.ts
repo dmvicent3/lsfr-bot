@@ -38,7 +38,7 @@ describe("/dailies", () => {
     await done;
     const [r] = replies;
     expect(r?.flags).toBeUndefined();
-    expect(r?.embeds?.[0]?.title).toStartWith("Dan's dailies · 0/5 done");
+    expect(r?.embeds?.[0]?.title).toStartWith("Dan's dailies · 0/6 done");
     expect(r?.embeds?.[0]?.description).toContain("</duel play:42>");
   });
 

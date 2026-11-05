@@ -6,7 +6,9 @@ import type { Award, Game } from "../types.ts";
 /** The streak after `g`: a solve extends a solve from the day before, a loss resets it. */
 function streakAfter(repo: GroupsRepo, g: Game, solved: boolean): number {
   const last = repo.games.lastFinishedBefore(g.guildId, g.userId, g.date);
-  const prev = last ? { date: last.date, won: last.solved === true, streak: last.streak ?? 0 } : null;
+  const prev = last
+    ? { date: last.date, won: last.solved === true, streak: last.streak ?? 0 }
+    : null;
 
   return nextStreak(prev, g.date, solved);
 }

@@ -22,7 +22,8 @@ const isCategory = (v: unknown): v is Category =>
 export function loadBankFile(path: string | URL): Category[] {
   const raw: unknown = JSON.parse(readFileSync(path, "utf8"));
 
-  if (!Array.isArray(raw) || !raw.every(isCategory)) throw new Error(`bad groups bank: ${String(path)}`);
+  if (!Array.isArray(raw) || !raw.every(isCategory))
+    throw new Error(`bad groups bank: ${String(path)}`);
 
   return raw;
 }
