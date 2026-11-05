@@ -33,7 +33,7 @@ export async function present(i: Click, r: Round, landed: Landed): Promise<void>
     log.error("snake", "could not show the board", err);
   }
 
-  if (landed.award && isGame(landed.game)) await announce(i, landed.game, r.where.number ?? 0);
+  if (landed.award && isGame(landed.game)) await announce(i, landed.game, r.where);
 }
 
 /** The answer for a round that is missing or belongs to an earlier one: the current board, if any. */

@@ -76,7 +76,7 @@ describe("/snake play", () => {
     expect(sent[0]?.flags).toEqual(PRIVATE);
     expect(viewText(sent[0])).toContain("**Snake #");
     expect(viewText(sent[0])).toContain("Find the hidden word");
-    expect(sent[0]?.files).toEqual([]);
+    expect(sent[0]?.files).toBeUndefined();
     expect(loadAnswers()).toContain(r.repo.puzzles.get("g", date) ?? "");
     expect(r.repo.games.get("g", date, "u")?.guesses).toEqual([]);
   });

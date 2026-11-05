@@ -1,4 +1,4 @@
-import type { Award, Colour } from "../types.ts";
+import type { Award } from "../types.ts";
 
 /** Where a round is: its scope, answer and, for a daily, the number and time to the next. */
 export interface Where {
@@ -26,29 +26,8 @@ export interface BoardView {
   untilNext?: string;
 }
 
-/** A run of tiles drawn as one shape: one tile, or a joined green bar. */
-export interface Bar {
-  /** Index of the first and last tile in the guess. */
-  from: number;
-  to: number;
-  colour: Colour;
-  capStart: boolean;
-  capEnd: boolean;
-}
-
-/** One guess row of the picture: its number and its tiles' letters and bars. */
-export interface Line {
-  n: number;
-  letters: string;
-  bars: Bar[];
-}
-
-/** A box to draw, with the corner radius of its left and right ends. */
-export interface Box {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-  left: number;
-  right: number;
+/** The newest rows that fit, oldest first, and how many earlier ones are left out. */
+export interface Shown {
+  shown: string[];
+  earlier: number;
 }

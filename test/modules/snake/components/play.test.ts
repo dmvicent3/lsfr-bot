@@ -62,12 +62,14 @@ describe("Guess", () => {
 });
 
 describe("the guess modal", () => {
-  test("a word is added and the board redrawn with the picture", async () => {
+  test("a word is added and the board redrawn as emoji rows", async () => {
     const { ctx, repo } = setup();
     const calls = await submit("Permit", [DATE, STAMP], ctx);
     expect(stored(repo)?.guesses).toEqual(["permit"]);
     expect(viewText(calls.update[0])).toContain("**Snake #4** · 1 guess");
-    expect(calls.update[0]?.files?.[0]?.name).toBe("snake.png");
+    expect(viewText(calls.update[0])).toContain("`P E R M I T` 🟨🟩⬛🟩⬛⬛");
+    expect(calls.update[0]?.files).toBeUndefined();
+    expect(calls.update[0]?.attachments).toEqual([]);
   });
 
   test("a refused word is told privately and not counted", async () => {
@@ -89,8 +91,10 @@ describe("the guess modal", () => {
     const calls = await submit("example", [DATE, STAMP], ctx);
     expect(stored(repo)).toMatchObject({ solved: true, points: 80, streak: 1 });
     expect(viewText(calls.update[0])).toContain("**80 points**");
-    expect(calls.send[0]?.content).toBe("<@u> solved Snake #4 in 3 guesses — 80 pts");
-    expect(calls.send[0]?.content).not.toContain("example");
+    expect(calls.send[0]?.content).toBe(
+      "<@u> solved Snake #4 in 3 guesses — 80 pts\n🟨🟩⬛🟩⬛⬛\n⬛💚💚💚⬛\n🟢💚💚💚💚💚🟢",
+    );
+    expect(calls.send[0]?.content).not.toMatch(/example|permit|imply/i);
   });
 
   test("a submit from outside the board gets the board as a private reply", async () => {
@@ -114,7 +118,7 @@ describe("Give up and New", () => {
     const calls = await click("giveup", [DATE, STAMP], ctx);
     expect(stored(repo)).toMatchObject({ solved: false, points: 0, streak: 0 });
     expect(viewText(calls.update[0])).toContain("the word was **EXAMPLE**");
-    expect(calls.send[0]?.content).toBe("<@u> gave up on Snake #4 after 1 guess");
+    expect(calls.send[0]?.content).toBe("<@u> gave up on Snake #4 after 1 guess\n🟨🟩⬛🟩⬛⬛");
   });
 
   test("another player's click finds their own round, not the owner's", async () => {

@@ -1,12 +1,20 @@
 import { MAX_GUESS, MIN_GUESS } from "../play/validate.ts";
+import { earlierLine, guessRow, latest } from "./lines.ts";
 import { guessCount, resultLines } from "./result.ts";
+import { CAP, JOINED, SQUARE } from "./squares.ts";
 import type { BoardView } from "./types.ts";
+
+/** Discord's limit on a message's text; the board keeps under it however many guesses. */
+export const LIMIT = 2000;
+
+/** Room kept for the line counting the guesses left out. */
+const EARLIER_ROOM = 40;
 
 /** How to read the board, shown until the first guess. */
 export const HOW_TO = [
   `Find the hidden word: 4–10 letters, its length kept secret. Guess any word of ${MIN_GUESS}–${MAX_GUESS} letters, as often as you like.`,
-  "🟩 in the word, in the same order as your other greens · 🟨 in the word, elsewhere · ⬛ not in the word (or no copy left)",
-  "Greens next to each other in the word join into one bar. A rounded left end: the word starts with that letter. A rounded right end: it ends with it.",
+  `${SQUARE.green} in the word, in the same order as your other greens · ${SQUARE.yellow} in the word, elsewhere · ${SQUARE.dark} not in the word (or no copy left)`,
+  `${JOINED} greens side by side in the word too · ${CAP} your guess starts or ends with the word's first or last letter`,
 ].join("\n");
 
 /** "Snake #3", or "Practice snake". */
@@ -17,13 +25,22 @@ export const roundName = (number: number | null): string =>
 export const header = (v: BoardView): string =>
   `**${roundName(v.number)}** · ${guessCount(v.guesses.length)}`;
 
-const earlierLine = (n: number): string =>
-  `_${n} earlier ${n === 1 ? "guess" : "guesses"} not shown_`;
-
-/** What follows the picture: the guesses left out of it, then the result once finished. */
-export function body(v: BoardView, earlier: number): string {
-  const head = earlier > 0 ? [earlierLine(earlier)] : [];
+/** What follows the rows: the how-to until the first guess, then the result once finished. */
+export function body(v: BoardView): string {
   const intro = v.guesses.length === 0 && !v.finished ? [HOW_TO] : [];
 
-  return [...intro, ...head, ...resultLines(v)].join("\n");
+  return [...intro, ...resultLines(v)].join("\n");
+}
+
+/** Everything under the header: the newest rows that fit the limit, the rest counted, then the body. */
+export function boardText(v: BoardView): string {
+  const under = body(v);
+  const room = LIMIT - header(v).length - under.length - EARLIER_ROOM - 2;
+  const { shown, earlier } = latest(
+    v.guesses.map((g) => guessRow(g, v.answer)),
+    room,
+  );
+  const head = earlier > 0 ? [earlierLine(earlier)] : [];
+
+  return [...head, ...shown, ...(under ? [under] : [])].join("\n");
 }

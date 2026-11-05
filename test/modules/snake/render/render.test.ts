@@ -1,17 +1,19 @@
 import { describe, expect, test } from "bun:test";
-import { ButtonStyle, ComponentType } from "discord.js";
+import { ButtonStyle } from "discord.js";
 import { clue } from "../../../../src/modules/snake/clue/clue.ts";
-import { barsOf } from "../../../../src/modules/snake/render/bars.ts";
-import { HOW_TO, body, header } from "../../../../src/modules/snake/render/board.ts";
-import { FILL, TILE, boardSvg } from "../../../../src/modules/snake/render/board-svg.ts";
+import { HOW_TO, LIMIT, body, header } from "../../../../src/modules/snake/render/board.ts";
 import { boardView } from "../../../../src/modules/snake/render/board-view.ts";
 import { controlRow } from "../../../../src/modules/snake/render/buttons.ts";
-import { SHOWN, boardLines } from "../../../../src/modules/snake/render/lines.ts";
+import { guessRow, latest } from "../../../../src/modules/snake/render/lines.ts";
 import { guessModal } from "../../../../src/modules/snake/render/modal.ts";
-import { resultLine, resultLines } from "../../../../src/modules/snake/render/result.ts";
-import { roundedPath } from "../../../../src/modules/snake/render/shape.ts";
+import {
+  SHARE_ROWS,
+  resultLine,
+  resultLines,
+} from "../../../../src/modules/snake/render/result.ts";
 import type { BoardView } from "../../../../src/modules/snake/render/types.ts";
-import { BOARD_FILE, snakeView } from "../../../../src/modules/snake/render/view.ts";
+import { squares } from "../../../../src/modules/snake/render/squares.ts";
+import { snakeView } from "../../../../src/modules/snake/render/view.ts";
 import { viewText } from "../../crossword/view-text.ts";
 import { ANSWER, game, practice } from "../store/fixtures.ts";
 
@@ -23,56 +25,31 @@ const view = (over: Partial<BoardView> = {}): BoardView => ({
   ...over,
 });
 
-const width = (g: string) =>
-  Number(/width="(\d+)"/.exec(boardSvg(boardLines([g], ANSWER).lines))?.[1]);
-
 const labels = (v: BoardView) => controlRow(v).flatMap((r) => r.components.map((b) => b.label));
 
-describe("barsOf", () => {
-  test("EXCUSE against EXAMPLE: a capped E=X bar, loose letters, a capped last E", () =>
-    expect(barsOf(clue("excuse", "example"))).toEqual([
-      { from: 0, to: 1, colour: "green", capStart: true, capEnd: false },
-      { from: 2, to: 2, colour: "dark", capStart: false, capEnd: false },
-      { from: 3, to: 3, colour: "dark", capStart: false, capEnd: false },
-      { from: 4, to: 4, colour: "dark", capStart: false, capEnd: false },
-      { from: 5, to: 5, colour: "green", capStart: false, capEnd: true },
+const COLLEGE = ["daily", "molest", "prolapse", "colgate", "collage", "college"];
+
+describe("emoji rows", () => {
+  test("the player's COLLEGE board", () =>
+    expect(COLLEGE.map((g) => guessRow(g, "college"))).toEqual([
+      "`D A I L Y` ⬛⬛⬛🟩⬛",
+      "`M O L E S T` ⬛💚💚🟩⬛⬛",
+      "`P R O L A P S E` ⬛⬛💚💚⬛⬛⬛🟢",
+      "`C O L G A T E` 🟢💚💚🟩⬛⬛🟢",
+      "`C O L L A G E` 🟢💚💚💚⬛💚🟢",
+      "`C O L L E G E` 🟢💚💚💚💚💚🟢",
     ]));
 
-  test("the answer is one bar with both caps", () =>
-    expect(barsOf(clue("example", "example"))).toEqual([
-      { from: 0, to: 6, colour: "green", capStart: true, capEnd: true },
-    ]));
-});
+  test("yellow for a letter in the word elsewhere", () =>
+    expect(squares(clue("permit", "example"))).toBe("🟨🟩⬛🟩⬛⬛"));
 
-test("roundedPath: the corner radii of each end", () => {
-  const path = roundedPath({ x: 0, y: 0, w: 100, h: 50, left: 25, right: 8 });
-  expect(path).toStartWith("M25,0 H92 A8,8");
-  expect(path).toContain("A25,25 0 0 1 0,25");
-});
+  test("a cap wins over the joined marker", () =>
+    expect(squares(clue("excuse", "example"))).toBe("🟢💚⬛⬛⬛🟢"));
 
-describe("boardLines and boardSvg", () => {
-  test("only the latest guesses, numbered from the first", () => {
-    const guesses = Array.from({ length: SHOWN + 3 }, (_, k) => `w${k}`);
-    const { lines, earlier } = boardLines(guesses, ANSWER);
-    expect(earlier).toBe(3);
-    expect(lines).toHaveLength(SHOWN);
-    expect(lines[0]?.n).toBe(4);
-    expect(lines.at(-1)?.letters).toBe(`w${SHOWN + 2}`);
-  });
-
-  test("one shape per bar, one letter per tile, a number per row", () => {
-    const { lines } = boardLines(["excuse", "example"], ANSWER);
-    const svg = boardSvg(lines);
-    expect(svg.match(/<path /g)).toHaveLength(6);
-    expect(svg.match(/font-size="28"/g)).toHaveLength(13);
-    expect(svg).toContain(`>2</text>`);
-    expect(svg).toContain(FILL.green);
-    expect(svg).toContain(`A${TILE / 2},${TILE / 2}`);
-  });
-
-  test("the width follows the longest guess, at least five tiles", () => {
-    expect(width("ox")).toBe(width("plane"));
-    expect(width("everything")).toBeGreaterThan(width("plane"));
+  test("latest keeps the newest rows that fit and counts the rest", () => {
+    expect(latest(["aa", "bb", "cc"], 6)).toEqual({ shown: ["bb", "cc"], earlier: 1 });
+    expect(latest(["aa", "bb"], 100)).toEqual({ shown: ["aa", "bb"], earlier: 0 });
+    expect(latest(["aa"], 1)).toEqual({ shown: [], earlier: 1 });
   });
 });
 
@@ -85,9 +62,8 @@ describe("text", () => {
   });
 
   test("the how-to shows until the first guess", () => {
-    expect(body(view({ guesses: [] }), 0)).toBe(HOW_TO);
-    expect(body(view(), 0)).toBe("");
-    expect(body(view(), 4)).toBe("_4 earlier guesses not shown_");
+    expect(body(view({ guesses: [] }))).toBe(HOW_TO);
+    expect(body(view())).toBe("");
   });
 
   test("a solved daily shows its points and the time to the next", () => {
@@ -112,14 +88,26 @@ describe("text", () => {
     expect(resultLines(lost)[0]).toBe("Gave up — 0 points, the word was **EXAMPLE**");
     const practiced = boardView(PRACTICE, practice({ finishedAt: 5 }));
     expect(resultLines(practiced)).toEqual(["Gave up — the word was **EXAMPLE**"]);
-    expect(body(practiced, 0)).not.toContain(HOW_TO);
+    expect(body(practiced)).not.toContain(HOW_TO);
   });
 
-  test("the public line never names the word", () => {
+  test("the public post: the emoji grid, never the letters or the word", () => {
     const won = game({ guesses: ["imply", "example"], solved: true, points: 90, finishedAt: 5 });
-    expect(resultLine(3, won)).toBe("<@u> solved Snake #3 in 2 guesses — 90 pts");
+    expect(resultLine(3, won, ANSWER)).toBe(
+      "<@u> solved Snake #3 in 2 guesses — 90 pts\n⬛💚💚💚⬛\n🟢💚💚💚💚💚🟢",
+    );
     const lost = game({ guesses: ["imply"], solved: false, points: 0, finishedAt: 5 });
-    expect(resultLine(3, lost)).toBe("<@u> gave up on Snake #3 after 1 guess");
+    expect(resultLine(3, lost, ANSWER)).toBe("<@u> gave up on Snake #3 after 1 guess\n⬛💚💚💚⬛");
+  });
+
+  test("a long public post shows the latest rows and counts the rest", () => {
+    const guesses = [...Array.from({ length: SHARE_ROWS + 4 }, () => "imply"), "example"];
+    const won = game({ guesses, solved: true, points: 10, finishedAt: 5 });
+    const lines = resultLine(3, won, ANSWER).split("\n");
+    expect(lines).toHaveLength(SHARE_ROWS + 2);
+    expect(lines[1]).toBe("_5 earlier guesses not shown_");
+    expect(lines.at(-1)).toBe("🟢💚💚💚💚💚🟢");
+    expect(lines.join("\n")).not.toMatch(/imply|example/i);
   });
 });
 
@@ -142,13 +130,31 @@ describe("buttons, modal and message", () => {
     expect(JSON.stringify(m.components)).toContain('"min_length":2,"max_length":10');
   });
 
-  test("no picture before the first guess, one after", () => {
+  test("the board is text: no picture, and an edit clears an old one", () => {
     const empty = snakeView(view({ guesses: [] }));
-    expect(empty.files).toEqual([]);
     expect(viewText(empty)).toContain("Find the hidden word");
     const played = snakeView(view());
-    expect(played.files[0]?.name).toBe(BOARD_FILE);
+    expect(played).not.toHaveProperty("files");
     expect(played.attachments).toEqual([]);
-    expect(played.components.some((c) => c.type === ComponentType.MediaGallery)).toBe(true);
+    expect(JSON.stringify(played)).not.toContain("attachment://");
+    expect(viewText(played)).toBe(
+      "**Snake #3** · 2 guesses\n`P E R M I T` 🟨🟩⬛🟩⬛⬛\n`I M P L Y` ⬛💚💚💚⬛",
+    );
+  });
+
+  test("many long guesses: the latest rows within the limit, the rest counted", () => {
+    const guesses = Array.from({ length: 100 }, () => "everything");
+    const text = viewText(snakeView(view({ guesses })));
+    expect(text.length).toBeLessThanOrEqual(LIMIT);
+    expect(text).toMatch(/\n_\d+ earlier guesses not shown_\n`E V E R Y T H I N G`/);
+    const shown = text.split("\n").filter((l) => l.startsWith("`")).length;
+    expect(text).toContain(`_${100 - shown} earlier guesses not shown_`);
+    expect(shown).toBeGreaterThan(30);
+  });
+
+  test("a finished daily within the limit too", () => {
+    const guesses = Array.from({ length: 100 }, () => "everything");
+    const done = view({ guesses, finished: true, award: { points: 5, parts: ["x"] } });
+    expect(viewText(snakeView(done)).length).toBeLessThanOrEqual(LIMIT);
   });
 });

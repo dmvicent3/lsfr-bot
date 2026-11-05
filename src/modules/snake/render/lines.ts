@@ -1,18 +1,25 @@
+import { spacedCaps } from "../../../core/spaced.ts";
 import { clue } from "../clue/clue.ts";
-import { barsOf } from "./bars.ts";
-import type { Line } from "./types.ts";
+import { squares } from "./squares.ts";
+import type { Shown } from "./types.ts";
 
-/** How many of the latest guesses the picture shows. */
-export const SHOWN = 12;
+/** A guess as the board shows it: spaced capitals, then its emoji. */
+export const guessRow = (guess: string, answer: string): string =>
+  `${spacedCaps(guess)} ${squares(clue(guess, answer))}`;
 
-/** The latest guesses as picture rows, numbered from the first guess, and how many are left out. */
-export function boardLines(guesses: string[], answer: string): { lines: Line[]; earlier: number } {
-  const earlier = Math.max(0, guesses.length - SHOWN);
-  const lines = guesses.slice(earlier).map((g, k) => ({
-    n: earlier + k + 1,
-    letters: g,
-    bars: barsOf(clue(g, answer)),
-  }));
+/** `_4 earlier guesses not shown_`. */
+export const earlierLine = (n: number): string =>
+  `_${n} earlier ${n === 1 ? "guess" : "guesses"} not shown_`;
 
-  return { lines, earlier };
+/** The newest `rows` whose lines (each with its line break) fit in `room` characters. */
+export function latest(rows: string[], room: number): Shown {
+  let used = 0;
+  let k = rows.length;
+
+  while (k > 0 && used + rows[k - 1]!.length + 1 <= room) {
+    used += rows[k - 1]!.length + 1;
+    k--;
+  }
+
+  return { shown: rows.slice(k), earlier: k };
 }
