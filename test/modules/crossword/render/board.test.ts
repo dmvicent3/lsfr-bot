@@ -1,9 +1,10 @@
-import { expect, test } from "bun:test";
+import { describe, expect, test } from "bun:test";
 import { solutionOf } from "../../../../src/modules/crossword/play/cells.ts";
+import { fill } from "../../../../src/modules/crossword/play/cells.ts";
 import { square } from "../play/fixtures.ts";
 import { boardText as parts } from "../../../../src/modules/crossword/render/board.ts";
 import type { BoardView } from "../../../../src/modules/crossword/render/types.ts";
-import { bigView, V } from "./fixtures.ts";
+import { big15View, bigView, V } from "./fixtures.ts";
 
 const SHAPE = [
   "Crossword #3 · Words 1/10 · 95 pts · 2:14",
@@ -124,4 +125,51 @@ test("a finished 7×7 with answers also fits, deterministically", () => {
 
 test("short clues are never cut", () => {
   expect(boardText(V)).not.toContain("…");
+});
+
+describe("15×15", () => {
+  const B = big15View();
+  const { puzzle } = B.stored;
+
+  test("lists only the direction its menu shows", () => {
+    const across = boardText(B);
+    const down = boardText(big15View({ menu: { dir: "d", page: 1 } }));
+
+    expect(across).toContain("**Across**");
+    expect(across).not.toContain("**Down**");
+    expect(down).toContain("**Down**");
+    expect(down).not.toContain("**Across**");
+  });
+
+  test("a solved clue is struck through; a wrong one is not", () => {
+    const [first, second] = puzzle.slots.flatMap((s, i) => (s.dir === "a" ? [i] : []));
+    const right = fill(B.cells, puzzle.slots[first!]!.cells, puzzle.answers[first!]!);
+    const cells = fill(right, puzzle.slots[second!]!.cells, "z".repeat(7));
+    const lines = parts({ ...B, cells }).body.split("\n");
+
+    expect(lines[1]).toStartWith(`~~${puzzle.slots[first!]!.n}. `);
+    expect(lines[1]).toEndWith("~~");
+    expect(lines[2]).not.toContain("~~");
+  });
+
+  test("the longest direction with 90-character clues fits, cut evenly and kept readable", () => {
+    const solvedHalf = puzzle.slots.reduce(
+      (c, s, i) => (i % 2 ? fill(c, s.cells, puzzle.answers[i]!) : c),
+      B.cells,
+    );
+
+    for (const v of [
+      B,
+      big15View({ menu: { dir: "d", page: 0 } }),
+      { ...B, cells: solvedHalf, lastLine: "❌ Not quite — some letters are wrong" },
+      big15View({ finished: true, award: { points: 0, parts: [] } }),
+    ]) {
+      const { header, body } = parts(v);
+      const clue = body.split("\n").filter((l) => /^(~~)?\d+\. /.test(l));
+
+      expect(header.length + body.length).toBeLessThanOrEqual(4000);
+      expect(clue.length).toBeGreaterThanOrEqual(43);
+      expect(Math.min(...clue.map((l) => l.length))).toBeGreaterThanOrEqual(60);
+    }
+  });
 });

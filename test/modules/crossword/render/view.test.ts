@@ -7,7 +7,7 @@ import { crosswordView } from "../../../../src/modules/crossword/render/view.ts"
 import type { BoardView } from "../../../../src/modules/crossword/render/types.ts";
 import type { Game, Practice } from "../../../../src/modules/crossword/types.ts";
 import { flatComponents, viewText } from "../view-text.ts";
-import { bigView, SQUARE, V } from "./fixtures.ts";
+import { big15View, bigView, SQUARE, V } from "./fixtures.ts";
 
 type View = ReturnType<typeof crosswordView>;
 
@@ -85,6 +85,33 @@ test("a 5×5 practice fits Discord's limits: 38 components, unique ids, 5 button
   expect(new Set(custom).size).toBe(custom.length);
 
   for (const r of rows(v)) expect(r.components.length).toBeLessThanOrEqual(5);
+});
+
+test("15×15 in progress: clue rows above the controls, carrying the menu", () => {
+  const r = ids(crosswordView(big15View({ menu: { dir: "d", page: 1 } })));
+
+  expect(r).toHaveLength(3);
+  expect(r[1]).toEqual(["crossword:pick:practice:mh1x:d1"]);
+  expect(r[2]).toEqual([
+    "crossword:check:practice:mh1x:d1",
+    "crossword:reveal:practice:mh1x:d1",
+    "crossword:giveup:practice:mh1x:d1",
+    "crossword:new:15",
+  ]);
+});
+
+test("a 15×15 practice fits Discord's limits in play and finished", () => {
+  for (const b of [big15View(), big15View({ finished: true })]) {
+    const v = crosswordView(b);
+    const all = flatComponents(v.components);
+    const custom = all.flatMap((c) => (typeof c.custom_id === "string" ? [c.custom_id] : []));
+
+    expect(all.length).toBeLessThanOrEqual(40);
+    expect(new Set(custom).size).toBe(custom.length);
+    expect(viewText(v).length).toBeLessThanOrEqual(4000);
+
+    for (const r of rows(v)) expect(r.components.length).toBeLessThanOrEqual(5);
+  }
 });
 
 test("Check is enabled once the grid is full, right or wrong", () => {

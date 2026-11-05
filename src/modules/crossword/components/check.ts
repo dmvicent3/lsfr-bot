@@ -3,7 +3,7 @@ import { checkGrid } from "../play/turn.ts";
 import { load, turnOf } from "./guard.ts";
 import { present, refresh } from "./show.ts";
 
-/** `crossword:check:<date|practice>:<stamp>`: judges a full grid; right finishes, wrong costs 10. */
+/** `crossword:check:<date|practice>:<stamp>[:<menu>]`: judges a full grid; right finishes, wrong costs 10. */
 export const checkHandler: ComponentHandler = {
   id: "crossword:check",
   async handle(i, args, ctx) {

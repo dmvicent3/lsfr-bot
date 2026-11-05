@@ -3,6 +3,7 @@ import { dailyLookup, dayOf } from "../../../core/daily-guard.ts";
 import { FIRST_PUZZLE } from "../periods.ts";
 import type { Rec, Turn } from "../play/types.ts";
 import type { Where } from "../render/board-view.ts";
+import { menuIn } from "../render/menu.ts";
 import { crosswordTimeZone } from "../settings.ts";
 import { CrosswordRepo } from "../store/repo.ts";
 
@@ -51,7 +52,8 @@ function timed(where: Where, now: number, tz: string): Where {
 }
 
 /**
- * The clicker's own round for `[scope, stamp]` of a custom ID; null when there is none (no game,
+ * The clicker's own round for `[scope, stamp, ...]` of a custom ID, with the clue menu a paged
+ * board's component carried after them; null when there is none (no game,
  * or a date with no puzzle). Reads only: the caller judges and stores in the same tick, with no
  * await between, so two clicks can't both pass the same check.
  */
@@ -76,7 +78,7 @@ export function load(
     repo,
     rec,
     now,
-    where: timed(where, now, crosswordTimeZone(db, i.guildId)),
+    where: { ...timed(where, now, crosswordTimeZone(db, i.guildId)), menu: menuIn(args.slice(2)) },
     stale: rec.startedAt.toString(36) !== stamp,
   };
 }

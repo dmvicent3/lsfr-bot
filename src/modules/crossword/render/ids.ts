@@ -1,15 +1,28 @@
 import type { Puzzle, Size, Slot } from "../types.ts";
+import { menuKey } from "./menu.ts";
+import type { Menu } from "./types.ts";
 
 type SlotRef = Pick<Slot, "n" | "dir">;
 
 /** `6a` / `12d`: a slot as it appears in ids and select values. */
 export const slotKey = (s: SlotRef): string => `${s.n}${s.dir}`;
 
-/** Custom ids; `scope` is the puzzle date or "practice", `stamp` the game's startedAt in base 36. */
-export const pickId = (scope: string, stamp: string): string => `crossword:pick:${scope}:${stamp}`;
+/** A paged board's menu as a last id part, so the next render keeps it; nothing otherwise. */
+const tail = (menu?: Menu | null): string => (menu ? `:${menuKey(menu)}` : "");
 
-export const answerId = (scope: string, stamp: string, slot: SlotRef): string =>
-  `crossword:answer:${scope}:${stamp}:${slotKey(slot)}`;
+/**
+ * Custom ids; `scope` is the puzzle date or "practice", `stamp` the game's startedAt in base 36,
+ * and on a paged board the menu (`a0`) rides along.
+ */
+export const pickId = (scope: string, stamp: string, menu?: Menu | null): string =>
+  `crossword:pick:${scope}:${stamp}${tail(menu)}`;
+
+export const answerId = (scope: string, stamp: string, slot: SlotRef, menu?: Menu | null): string =>
+  `crossword:answer:${scope}:${stamp}:${slotKey(slot)}${tail(menu)}`;
+
+/** A paged board's Across/Down and page buttons; `tag` keeps two buttons to one menu apart. */
+export const cluesId = (scope: string, stamp: string, menu: Menu, tag: string): string =>
+  `crossword:clues:${scope}:${stamp}:${menuKey(menu)}:${tag}`;
 
 /** A square's button; a block's carries `x` so its id stays unique without opening anything. */
 export const cellId = (scope: string, stamp: string, cell: number, block = false): string =>
@@ -18,14 +31,14 @@ export const cellId = (scope: string, stamp: string, cell: number, block = false
 export const cellWordId = (scope: string, stamp: string, cell: number): string =>
   `crossword:cellword:${scope}:${stamp}:${cell}`;
 
-export const revealId = (scope: string, stamp: string): string =>
-  `crossword:reveal:${scope}:${stamp}`;
+export const revealId = (scope: string, stamp: string, menu?: Menu | null): string =>
+  `crossword:reveal:${scope}:${stamp}${tail(menu)}`;
 
-export const checkId = (scope: string, stamp: string): string =>
-  `crossword:check:${scope}:${stamp}`;
+export const checkId = (scope: string, stamp: string, menu?: Menu | null): string =>
+  `crossword:check:${scope}:${stamp}${tail(menu)}`;
 
-export const giveUpId = (scope: string, stamp: string): string =>
-  `crossword:giveup:${scope}:${stamp}`;
+export const giveUpId = (scope: string, stamp: string, menu?: Menu | null): string =>
+  `crossword:giveup:${scope}:${stamp}${tail(menu)}`;
 
 export const newId = (size: number): string => `crossword:new:${size}`;
 

@@ -6,7 +6,10 @@ import { clueModal } from "../render/modal.ts";
 import { STALE, load } from "./guard.ts";
 import { refresh } from "./show.ts";
 
-/** `crossword:pick:<date|practice>:<stamp>`: the answer modal for the chosen clue, prefilled when filled. */
+/**
+ * `crossword:pick:<date|practice>:<stamp>[:<menu>]`: the answer modal for the chosen clue,
+ * prefilled when filled; a paged board's menu rides through the modal back to the board.
+ */
 export const pickHandler: ComponentHandler = {
   id: "crossword:pick",
   async handle(i, args, ctx) {
@@ -25,6 +28,8 @@ export const pickHandler: ComponentHandler = {
     const value = filledSlots(puzzle, r.rec.cells)[at] ? slotText(r.rec.cells, slot) : undefined;
     const stamp = r.rec.startedAt.toString(36);
 
-    await i.showModal(clueModal({ scope: r.where.scope, stamp, slot, clue: clues[at]!, value }));
+    const { scope, menu } = r.where;
+
+    await i.showModal(clueModal({ scope, stamp, slot, clue: clues[at]!, value, menu }));
   },
 };

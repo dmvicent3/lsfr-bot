@@ -2,7 +2,8 @@ import { isCorrect } from "../play/cells.ts";
 import { isGame, type Rec } from "../play/types.ts";
 import { award, basePoints } from "../scoring.ts";
 import type { Award, StoredPuzzle } from "../types.ts";
-import type { BoardView } from "./types.ts";
+import { menuFor } from "./menu.ts";
+import type { BoardView, Menu } from "./types.ts";
 
 /** Where the round is: its scope, puzzle and, for a daily, the number and time to the next. */
 export interface Where {
@@ -10,6 +11,8 @@ export interface Where {
   number: number | null;
   stored: StoredPuzzle;
   untilNext?: string | undefined;
+  /** The clue menu a paged board was showing, from the clicked component's id. */
+  menu?: Menu | null | undefined;
 }
 
 /** A finished daily's award, rebuilt from the stored game when the finishing move is past. */
@@ -47,6 +50,7 @@ export function boardView(
     solved: solvedOf(where, rec),
     elapsedMs: (rec.finishedAt ?? now) - rec.startedAt,
     award: won ?? recap(rec),
+    menu: menuFor(where.stored.puzzle, rec.cells, where.menu),
     ...(where.untilNext === undefined ? {} : { untilNext: where.untilNext }),
   };
 }

@@ -9,11 +9,12 @@ import type { BoardView } from "./types.ts";
  * practice crossword, also once finished.
  */
 export function controlRow(v: BoardView): Row[] {
-  const check = button(checkId(v.scope, v.stamp), "Check", ButtonStyle.Primary);
+  const { scope, stamp, menu } = v;
+  const check = button(checkId(scope, stamp, menu), "Check", ButtonStyle.Primary);
   const play = [
     { ...check, disabled: !isFull(v.cells) },
-    button(revealId(v.scope, v.stamp), "Reveal letter", ButtonStyle.Secondary),
-    button(giveUpId(v.scope, v.stamp), "Give up", ButtonStyle.Danger),
+    button(revealId(scope, stamp, menu), "Reveal letter", ButtonStyle.Secondary),
+    button(giveUpId(scope, stamp, menu), "Give up", ButtonStyle.Danger),
   ];
   const fresh = button(newId(v.stored.puzzle.size), "New", ButtonStyle.Success);
   const parts = [...(v.finished ? [] : play), ...(v.number === null ? [fresh] : [])];

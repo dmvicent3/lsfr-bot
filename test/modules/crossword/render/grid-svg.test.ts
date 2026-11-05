@@ -1,8 +1,8 @@
 import { expect, test } from "bun:test";
-import { solutionOf } from "../../../../src/modules/crossword/play/cells.ts";
-import { COLOURS, gridSvg } from "../../../../src/modules/crossword/render/grid-svg.ts";
+import { emptyCells, fill, solutionOf } from "../../../../src/modules/crossword/play/cells.ts";
+import { COLOURS, gridSvg, TYPE } from "../../../../src/modules/crossword/render/grid-svg.ts";
 import { square } from "../play/fixtures.ts";
-import { bigStored } from "./fixtures.ts";
+import { big15Stored, bigStored } from "./fixtures.ts";
 
 const P = square();
 const SOL = solutionOf(P);
@@ -89,4 +89,17 @@ test("text content is only A–Z and digits, so nothing needs escaping", () => {
 
     for (const c of contents) expect(c).toMatch(/^[A-Z0-9]+$/);
   }
+});
+
+test("15×15: 968 px, bigger numbers and lower letters, since Discord shrinks it the most", () => {
+  const big = big15Stored().puzzle;
+  const first = big.slots[0]!;
+  const svg = gridSvg(big, fill(emptyCells(big), first.cells, "ab"), false);
+  const x = 4 + (first.cells[0]! % 15) * 64;
+
+  expect(svg).toContain('width="968" height="968"');
+  expect(svg).toContain('font-size="22"');
+  expect(numbers(svg)[0]).toMatchObject({ x: x + 5, y: 4 + 24, text: "1" });
+  expect(letters(svg)[0]).toMatchObject({ x: x + 32, y: 4 + 0.86 * 64, text: "A" });
+  expect(TYPE[15].number).toBeGreaterThan(TYPE[7].number);
 });

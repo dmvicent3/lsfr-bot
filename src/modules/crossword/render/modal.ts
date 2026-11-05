@@ -20,7 +20,7 @@ export function clueModal(m: ClueModal): ModalBuilder {
   if (m.value) input.setValue(m.value);
 
   return new ModalBuilder()
-    .setCustomId(answerId(m.scope, m.stamp, m.slot))
+    .setCustomId(answerId(m.scope, m.stamp, m.slot, m.menu))
     .setTitle(slotLabel(m.slot))
     .addComponents(new ActionRowBuilder<TextInputBuilder>().addComponents(input));
 }

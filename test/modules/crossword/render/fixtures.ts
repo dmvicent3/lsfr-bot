@@ -22,6 +22,7 @@ export const V: BoardView = {
   solved: false,
   elapsedMs: 134_000,
   award: null,
+  menu: null,
 };
 
 /** The densest 7×7 pattern with every clue 90 characters long. */
@@ -44,4 +45,43 @@ export const bigView = (over: Partial<BoardView> = {}): BoardView => {
   const stored = bigStored();
 
   return { ...V, stored, cells: emptyCells(stored.puzzle), ...over };
+};
+
+const letterAt = (i: number) => String.fromCharCode(97 + (i % 26));
+
+/** The most clues a 15×15 pattern has in one direction. */
+const most = (b: number[]) =>
+  Math.max(...(["a", "d"] as const).map((d) => slotsOf(15, b).filter((s) => s.dir === d).length));
+
+/**
+ * The 15×15 pattern with the most clues in one direction, every clue 90 characters long:
+ * the longest clue list a board can show; cell i holds `a` + i mod 26.
+ */
+export function big15Stored(): StoredPuzzle {
+  const blocks = PATTERNS[15].toSorted((a, b) => most(b) - most(a))[0]!;
+  const slots = slotsOf(15, blocks);
+
+  return {
+    puzzle: {
+      size: 15,
+      blocks,
+      slots,
+      answers: slots.map((s) => s.cells.map(letterAt).join("")),
+    },
+    clues: slots.map((s) => `${s.n}${s.dir}`.padEnd(90, "x")),
+  };
+}
+
+export const big15View = (over: Partial<BoardView> = {}): BoardView => {
+  const stored = big15Stored();
+
+  return {
+    ...V,
+    scope: "practice",
+    number: null,
+    stored,
+    cells: emptyCells(stored.puzzle),
+    menu: { dir: "a", page: 0 },
+    ...over,
+  };
 };

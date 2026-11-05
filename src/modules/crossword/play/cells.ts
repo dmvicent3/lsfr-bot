@@ -45,6 +45,12 @@ export const isCorrect = (p: Puzzle, cells: string): boolean => wrongOrEmpty(p, 
 export const filledSlots = (p: Puzzle, cells: string): boolean[] =>
   p.slots.map((slot) => slot.cells.every((i) => cells[i] !== EMPTY_CELL));
 
+/** Per slot: every cell holds its answer's letter, typed or revealed. */
+export const solvedSlots = (p: Puzzle, cells: string): boolean[] =>
+  p.slots.map((slot, s) =>
+    slot.cells.every((i, k) => cells[i]!.toLowerCase() === p.answers[s]![k]),
+  );
+
 /** The slot's letters uppercased, `.` kept. */
 export const slotText = (cells: string, slot: Slot): string =>
   slot.cells.map((i) => cells[i]!.toUpperCase()).join("");

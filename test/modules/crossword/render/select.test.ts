@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { clueSelect } from "../../../../src/modules/crossword/render/select.ts";
+import { allClues as clueSelect } from "../../../../src/modules/crossword/render/select.ts";
 import { bigView, V } from "./fixtures.ts";
 import type { BoardView } from "../../../../src/modules/crossword/render/types.ts";
 

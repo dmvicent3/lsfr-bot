@@ -1,6 +1,6 @@
 import { clip } from "../../../core/clip.ts";
 import { CLUE_MAX } from "../clues/write.ts";
-import { filledSlots } from "../play/cells.ts";
+import { filledSlots, solvedSlots } from "../play/cells.ts";
 import type { Dir } from "../types.ts";
 import { clock, DIR_NAME } from "./labels.ts";
 import { resultLines } from "./result.ts";
@@ -30,20 +30,27 @@ function clueLine(v: BoardView, i: number, cap: number): string {
   return `${puzzle.slots[i]!.n}. ${clip(clues[i]!, cap)}${tail}`;
 }
 
+const strike = (line: string, on: boolean | undefined): string => (on ? `~~${line}~~` : line);
+
+/** A direction's clues; a paged board in play strikes the solved ones (they left its menu). */
 function list(v: BoardView, dir: Dir, cap: number): string[] {
-  const lines = v.stored.puzzle.slots.flatMap((s, i) =>
-    s.dir === dir ? [clueLine(v, i, cap)] : [],
+  const { puzzle } = v.stored;
+  const solved = v.menu && !v.finished ? solvedSlots(puzzle, v.cells) : [];
+  const lines = puzzle.slots.flatMap((s, i) =>
+    s.dir === dir ? [strike(clueLine(v, i, cap), solved[i])] : [],
   );
 
   return [`**${DIR_NAME[dir]}**`, ...lines];
 }
 
+/** The directions listed: a paged board lists the one its menu shows, as both won't fit. */
+const dirsOf = (v: BoardView): Dir[] => (v.menu ? [v.menu.dir] : ["a", "d"]);
+
 function build(v: BoardView, cap: number): string {
   const tail = resultLines(v);
 
   return [
-    ...list(v, "a", cap),
-    ...list(v, "d", cap),
+    ...dirsOf(v).flatMap((dir) => list(v, dir, cap)),
     ...(v.lastLine ? [v.lastLine] : []),
     ...(tail.length > 0 ? ["", ...tail] : []),
   ].join("\n");

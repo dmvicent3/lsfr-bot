@@ -5,7 +5,7 @@ import { slotIndexOf } from "../render/ids.ts";
 import { load, turnOf } from "./guard.ts";
 import { present, refresh } from "./show.ts";
 
-/** `crossword:answer:<date|practice>:<stamp>:<n><a|d>`: writes the typed word into a clue, unjudged. */
+/** `crossword:answer:<date|practice>:<stamp>:<n><a|d>[:<menu>]`: writes the typed word into a clue, unjudged. */
 export const answerHandler: ModalHandler = {
   id: "crossword:answer",
   async handle(i, args, ctx) {

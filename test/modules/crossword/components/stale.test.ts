@@ -72,6 +72,7 @@ test("a click with an old stamp or without a game is stale", async () => {
 test("the factories list every handler id", () => {
   expect(crosswordComponents(null, Math.random).map((h) => h.id)).toEqual([
     "crossword:pick",
+    "crossword:clues",
     "crossword:cell",
     "crossword:check",
     "crossword:reveal",

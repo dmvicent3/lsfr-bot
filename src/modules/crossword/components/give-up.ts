@@ -3,7 +3,7 @@ import { giveUp } from "../play/give-up.ts";
 import { load } from "./guard.ts";
 import { present, refresh } from "./show.ts";
 
-/** `crossword:giveup:<date|practice>:<stamp>`: ends the round unsolved, 0 points. */
+/** `crossword:giveup:<date|practice>:<stamp>[:<menu>]`: ends the round unsolved, 0 points. */
 export const giveUpHandler: ComponentHandler = {
   id: "crossword:giveup",
   async handle(i, args, ctx) {

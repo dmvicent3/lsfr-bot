@@ -1,3 +1,4 @@
+import { PATTERNS } from "../../../../src/modules/crossword/generate/patterns.ts";
 import { slotsOf } from "../../../../src/modules/crossword/generate/slots.ts";
 import { emptyCells } from "../../../../src/modules/crossword/play/cells.ts";
 import type { PlayState } from "../../../../src/modules/crossword/play/types.ts";
@@ -36,4 +37,19 @@ export const state = (over: Partial<PlayState> = {}): PlayState => ({
   reveals: 0,
   finished: false,
   ...over,
+});
+
+const letterAt = (i: number) => String.fromCharCode(97 + (i % 26));
+
+/** A 15×15 from the first pattern: cell i holds letter `a` + i mod 26, so crossings agree. */
+export const grid15 = (): Puzzle => {
+  const blocks = PATTERNS[15][0]!;
+  const slots = slotsOf(15, blocks);
+
+  return { size: 15, blocks, slots, answers: slots.map((s) => s.cells.map(letterAt).join("")) };
+};
+
+export const storedGrid15 = (): StoredPuzzle => ({
+  puzzle: grid15(),
+  clues: grid15().slots.map((s) => `clue ${s.n}${s.dir}`),
 });

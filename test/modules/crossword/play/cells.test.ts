@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import {
   filledSlots,
+  solvedSlots,
   isCorrect,
   isFull,
   isRevealed,
@@ -41,6 +42,14 @@ test("filledSlots: a slot with no empty cell is filled, right or wrong", () => {
 
   expect(filled[row(0)]).toBe(true);
   expect(filled.filter(Boolean)).toHaveLength(1);
+});
+
+test("solvedSlots: every letter right, typed or revealed; a wrong or empty cell is not", () => {
+  const solved = solvedSlots(square(), at(at(SOL, 0, "C"), 6, "z"));
+
+  expect(solved[row(0)]).toBe(true);
+  expect(solved[row(1)]).toBe(false);
+  expect(solvedSlots(square(), `crane${".".repeat(20)}`).filter(Boolean)).toHaveLength(1);
 });
 
 test("slotText: uppercase letters, dots kept", () => {

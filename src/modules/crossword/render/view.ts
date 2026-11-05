@@ -11,7 +11,8 @@ import { boardText } from "./board.ts";
 import { controlRow } from "./buttons.ts";
 import { cellRows } from "./cell-buttons.ts";
 import { gridSvg } from "./grid-svg.ts";
-import { clueSelect, type SelectRow } from "./select.ts";
+import { pagedRows } from "./paged.ts";
+import { allClues, type SelectRow } from "./select.ts";
 import type { Size } from "../types.ts";
 import type { BoardView } from "./types.ts";
 
@@ -27,11 +28,14 @@ const gallery: APIMediaGalleryComponent = {
   items: [{ media: { url: `attachment://${GRID_FILE}` } }],
 };
 
-/** How a size is played: a button per square on 5×5, the clue select on 7×7 (49 won't fit). */
+/**
+ * How a size is played: a button per square on 5×5, the clue select on 7×7 (49 won't fit), the
+ * paged clue select on 15×15 (85 clues won't fit one select).
+ */
 const PLAY_ROWS: Record<Size, (v: BoardView) => (Row | SelectRow)[]> = {
-  5: cellRows,
-  7: (v) => [clueSelect(v)],
-  15: (v) => [clueSelect(v)],
+  5: (v) => (v.finished ? [] : cellRows(v)),
+  7: (v) => (v.finished ? [] : [allClues(v)]),
+  15: pagedRows,
 };
 
 /**
@@ -41,7 +45,7 @@ const PLAY_ROWS: Record<Size, (v: BoardView) => (Row | SelectRow)[]> = {
  */
 export function crosswordView(v: BoardView) {
   const { header, body } = boardText(v);
-  const play = v.finished ? [] : PLAY_ROWS[v.stored.puzzle.size](v);
+  const play = PLAY_ROWS[v.stored.puzzle.size](v);
   const components: APIMessageTopLevelComponent[] = [
     text(header),
     gallery,

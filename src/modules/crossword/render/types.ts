@@ -1,4 +1,10 @@
-import type { Award, Slot, StoredPuzzle } from "../types.ts";
+import type { Award, Dir, Slot, StoredPuzzle } from "../types.ts";
+
+/** Which clues a paged board offers: a direction and a page of its open clues, from 0. */
+export interface Menu {
+  dir: Dir;
+  page: number;
+}
 
 /** What the board, result and components need; `scope` is the puzzle date or "practice". */
 export interface BoardView {
@@ -23,6 +29,8 @@ export interface BoardView {
   award: Award | null;
   /** Time to the next crossword, from core `untilNext`; daily only. */
   untilNext?: string;
+  /** The clue menu of a paged (15×15) board, page clamped; null on smaller boards. */
+  menu: Menu | null;
 }
 
 /** One clue's answer modal; `value` prefills the input with the slot's current letters. */
@@ -32,4 +40,6 @@ export interface ClueModal {
   slot: Slot;
   clue: string;
   value?: string | undefined;
+  /** The paged board's menu, carried through the answer back to the board. */
+  menu?: Menu | null | undefined;
 }
