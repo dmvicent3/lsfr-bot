@@ -1,3 +1,4 @@
+import { spacedCaps } from "../../../core/spaced.ts";
 import { feedback } from "../feedback.ts";
 import type { Mark } from "../types.ts";
 
@@ -7,7 +8,5 @@ export const squares = (marks: Mark[]): string => marks.map((m) => SQUARE[m]).jo
 
 /** Each guess as spaced capitals, then its squares. */
 export function boardLines(guesses: string[], answer: string): string {
-  return guesses
-    .map((g) => `\`${g.toUpperCase().split("").join(" ")}\` ${squares(feedback(g, answer))}`)
-    .join("\n");
+  return guesses.map((g) => `${spacedCaps(g)} ${squares(feedback(g, answer))}`).join("\n");
 }
