@@ -1,14 +1,13 @@
 import { sum } from "../../core/sum.ts";
-import { MAX_ATTEMPTS } from "./scoring.ts";
 import { currentStreak } from "../../core/daily.ts";
 import type { Game, PlayerStats } from "./types.ts";
 
-/** Totals over one player's finished games, oldest first. */
-export function playerStats(games: Game[], today: string): PlayerStats {
+/** Totals over one player's finished games, oldest first; wins spread over `maxAttempts`. */
+export function playerStats(games: Game[], today: string, maxAttempts: number): PlayerStats {
   const wins = games.filter((g) => g.won);
   const attempts = wins.map((g) => g.guesses.length);
   const distribution = Array.from(
-    { length: MAX_ATTEMPTS },
+    { length: maxAttempts },
     (_, i) => attempts.filter((n) => n === i + 1).length,
   );
   const last = games.at(-1);

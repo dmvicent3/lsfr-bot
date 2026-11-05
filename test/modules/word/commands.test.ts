@@ -22,7 +22,7 @@ describe("/word", () => {
     const m = wordModule();
     expect(m.name).toBe("word");
     expect(m.commands?.map((c) => c.data.name)).toEqual(["word"]);
-    expect(m.components?.map((c) => c.id)).toEqual(["word:page"]);
+    expect(m.components?.map((c) => c.id)).toEqual(["word:page", "word:duopage", "word:quadpage"]);
     expect(m.migrations?.map((x) => x.id)).toEqual(["word-001-init", "word-002-multi"]);
   });
 });

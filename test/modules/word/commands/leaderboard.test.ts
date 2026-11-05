@@ -3,6 +3,7 @@ import { beforeEach, expect, test } from "bun:test";
 import { runMigrations } from "../../../../src/core/db.ts";
 import { coreMigrations } from "../../../../src/core/settings.ts";
 import { leaderboardView } from "../../../../src/modules/word/commands/leaderboard.ts";
+import { TRACKS } from "../../../../src/modules/word/tracks.ts";
 import type { WordRepo } from "../../../../src/modules/word/store/repo.ts";
 import { freshDb, game, seed } from "../fixtures.ts";
 
@@ -17,7 +18,13 @@ beforeEach(() => {
 });
 
 const view = (page: number, now: number) =>
-  leaderboardView(db, repo, { guildId: "g", period: "week", page, viewerId: "u1", now });
+  leaderboardView(TRACKS.classic)(db, repo, {
+    guildId: "g",
+    period: "week",
+    page,
+    viewerId: "u1",
+    now,
+  });
 
 test("page 2 of the week while it is current", () => {
   const v = view(2, Date.UTC(2026, 9, 29, 12));

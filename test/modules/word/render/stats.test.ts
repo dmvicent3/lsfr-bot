@@ -21,7 +21,7 @@ const RANKS = {
 };
 
 test("every stat line", () => {
-  const t = renderStats({ userId: "u1", stats: STATS, ranks: RANKS });
+  const t = renderStats({ name: "Word", userId: "u1", stats: STATS, ranks: RANKS });
   expect(t).toContain("<@u1>");
   expect(t).toContain("270 points");
   expect(t).toContain("2 W · 1 L · 67%");
@@ -31,7 +31,7 @@ test("every stat line", () => {
 });
 
 test("distribution bars scale to the biggest, at least one block when not zero", () => {
-  const t = renderStats({ userId: "u1", stats: STATS, ranks: RANKS });
+  const t = renderStats({ name: "Word", userId: "u1", stats: STATS, ranks: RANKS });
   expect(t).toContain("`2` ███ 1");
   expect(t).toContain("`4` ██████████ 4");
   expect(t).toContain("`1`  0");
@@ -39,10 +39,16 @@ test("distribution bars scale to the biggest, at least one block when not zero",
 
 test("no wins shows dashes", () => {
   const t = renderStats({
+    name: "Word",
     userId: "u1",
     stats: { ...STATS, wins: 0, losses: 0, winRate: null, avgAttempts: null },
     ranks: RANKS,
   });
   expect(t).toContain("0 W · 0 L · –");
   expect(t).toContain("per win –");
+});
+
+test("the heading names the game", () => {
+  const t = renderStats({ name: "Word Quad", userId: "u1", stats: STATS, ranks: RANKS });
+  expect(t).toStartWith("## 🟩 Word Quad stats — <@u1>");
 });

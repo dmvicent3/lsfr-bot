@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import { periodRange } from "../../../../src/modules/word/periods.ts";
 import { renderLeaderboard } from "../../../../src/modules/word/render/leaderboard.ts";
+import { TRACKS } from "../../../../src/modules/word/tracks.ts";
 import type { Standing } from "../../../../src/modules/word/types.ts";
 
 /** u1 first with the most points, down to u23. */
@@ -13,8 +14,9 @@ const LIST23: Standing[] = Array.from({ length: 23 }, (_, i) => ({
   lastFinishedAt: 1,
 }));
 const V = {
+  track: TRACKS.classic,
   period: "all" as const,
-  range: periodRange("all", "2026-10-28"),
+  range: periodRange("all", "2026-10-28", TRACKS.classic),
   list: LIST23,
   page: 1,
   viewerId: "u3",
@@ -53,4 +55,9 @@ test("an empty period says so", () => {
 test("a page past the end clamps", () => {
   expect(renderLeaderboard({ ...V, page: 9 }).page).toBe(3);
   expect(renderLeaderboard({ ...V, page: 0 }).page).toBe(1);
+});
+
+test("a Duo board is named and points at its command", () => {
+  const p = renderLeaderboard({ ...V, track: TRACKS.duo, list: [] });
+  expect(p.content).toBe("## 🟩 Word Duo — all time\nNo games yet. Play with `/word duo`.");
 });

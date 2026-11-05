@@ -1,6 +1,12 @@
 import { InteractionContextType, SlashCommandBuilder } from "discord.js";
 import { PERIOD_CHOICES } from "../../../core/periods.ts";
 
+const MODE_CHOICES = [
+  { name: "Classic", value: "classic" },
+  { name: "Duo", value: "duo" },
+  { name: "Quad", value: "quad" },
+];
+
 export const data = new SlashCommandBuilder()
   .setName("word")
   .setDescription("Daily word game")
@@ -19,7 +25,13 @@ export const data = new SlashCommandBuilder()
     sub
       .setName("stats")
       .setDescription("Points, wins and streaks")
-      .addUserOption((o) => o.setName("user").setDescription("Whose stats (default: yours)")),
+      .addUserOption((o) => o.setName("user").setDescription("Whose stats (default: yours)"))
+      .addStringOption((o) =>
+        o
+          .setName("mode")
+          .setDescription("Default: classic")
+          .addChoices(...MODE_CHOICES),
+      ),
   )
   .addSubcommand((sub) =>
     sub
@@ -31,7 +43,13 @@ export const data = new SlashCommandBuilder()
           .setDescription("Default: today")
           .addChoices(...PERIOD_CHOICES),
       )
-      .addIntegerOption((o) => o.setName("page").setDescription("Page").setMinValue(1)),
+      .addIntegerOption((o) => o.setName("page").setDescription("Page").setMinValue(1))
+      .addStringOption((o) =>
+        o
+          .setName("mode")
+          .setDescription("Default: classic")
+          .addChoices(...MODE_CHOICES),
+      ),
   )
   .addSubcommand((sub) =>
     sub

@@ -23,13 +23,19 @@ const rankText = (ranks: Ranks): string =>
     return `${p} ${r ? `#${r.rank} of ${r.of}` : "unranked"}`;
   }).join(" · ");
 
-export function renderStats(v: { userId: string; stats: PlayerStats; ranks: Ranks }): string {
+/** `name`: the game's, "Word" or "Word Duo". */
+export function renderStats(v: {
+  name: string;
+  userId: string;
+  stats: PlayerStats;
+  ranks: Ranks;
+}): string {
   const s = v.stats;
   const rate = s.winRate === null ? "–" : `${Math.round(s.winRate * 100)}%`;
   const perWin = s.avgAttempts === null ? "per win –" : `${s.avgAttempts.toFixed(1)} per win`;
 
   return [
-    `## 🟩 Word stats — <@${v.userId}>`,
+    `## 🟩 ${v.name} stats — <@${v.userId}>`,
     `**${s.points} points** · ${s.wins} W · ${s.losses} L · ${rate}`,
     `Streak ${s.currentStreak} · best ${s.longestStreak}`,
     `${s.totalGuesses} guesses · ${perWin}`,

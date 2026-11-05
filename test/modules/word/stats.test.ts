@@ -12,6 +12,7 @@ test("stats over wins and losses", () => {
       game("u", "2026-10-29", { guesses: SIX, won: false, points: 5, streak: 0 }),
     ],
     "2026-10-29",
+    6,
   );
   expect(s).toMatchObject({
     points: 270,
@@ -27,12 +28,12 @@ test("stats over wins and losses", () => {
 });
 
 test("current streak is the latest game's while alive", () => {
-  const s = playerStats([game("u", "2026-10-28", { streak: 4 })], "2026-10-29");
+  const s = playerStats([game("u", "2026-10-28", { streak: 4 })], "2026-10-29", 6);
   expect(s.currentStreak).toBe(4);
 });
 
 test("no games", () => {
-  expect(playerStats([], "2026-10-29")).toEqual({
+  expect(playerStats([], "2026-10-29", 6)).toEqual({
     points: 0,
     wins: 0,
     losses: 0,
@@ -43,4 +44,8 @@ test("no games", () => {
     avgAttempts: null,
     distribution: [0, 0, 0, 0, 0, 0],
   });
+});
+
+test("the distribution spans the track's attempts", () => {
+  expect(playerStats([], "2026-10-29", 9).distribution).toHaveLength(9);
 });

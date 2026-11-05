@@ -1,3 +1,6 @@
+import type { DateRange } from "../../core/types.ts";
+import type { WordRepo } from "./store/repo.ts";
+
 /** One length's words: answers to pick from, and every word a guess may be. */
 export interface WordLists {
   answers: readonly string[];
@@ -72,6 +75,20 @@ export interface Standing {
 }
 
 export type { LeaderboardPage } from "../../core/leaderboard-page.ts";
+
+/** One word game's history (classic, Duo or Quad), as stats and leaderboards read it. */
+export interface Track {
+  /** "Word", "Word Duo" */
+  name: string;
+  /** The command that plays it, "/word duo". */
+  play: string;
+  firstPuzzle: string;
+  maxAttempts: number;
+  /** The leaderboard page button ID prefix, "word:page". */
+  pagePrefix: string;
+  finishedIn(repo: WordRepo, guildId: string, range: DateRange): Game[];
+  finishedBy(repo: WordRepo, guildId: string, userId: string): Game[];
+}
 
 /** Per-server options; changes apply from the next puzzle. */
 export interface WordSettings {
