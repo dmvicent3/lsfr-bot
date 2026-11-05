@@ -12,6 +12,7 @@ import { controlRow } from "./buttons.ts";
 import { cellRows } from "./cell-buttons.ts";
 import { gridSvg } from "./grid-svg.ts";
 import { clueSelect, type SelectRow } from "./select.ts";
+import type { Size } from "../types.ts";
 import type { BoardView } from "./types.ts";
 
 export const GRID_FILE = "crossword.png";
@@ -27,9 +28,10 @@ const gallery: APIMediaGalleryComponent = {
 };
 
 /** How a size is played: a button per square on 5×5, the clue select on 7×7 (49 won't fit). */
-const PLAY_ROWS: Record<5 | 7, (v: BoardView) => (Row | SelectRow)[]> = {
+const PLAY_ROWS: Record<Size, (v: BoardView) => (Row | SelectRow)[]> = {
   5: cellRows,
   7: (v) => [clueSelect(v)],
+  15: (v) => [clueSelect(v)],
 };
 
 /**

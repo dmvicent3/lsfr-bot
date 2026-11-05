@@ -1,5 +1,5 @@
 import type { CrosswordRepo } from "../store/repo.ts";
-import type { Practice } from "../types.ts";
+import type { Practice, Size } from "../types.ts";
 import { emptyCells } from "./cells.ts";
 import type { Make } from "./make.ts";
 
@@ -40,7 +40,7 @@ export async function newPractice(
 export async function openPractice(
   repo: CrosswordRepo,
   v: Opening,
-  size: 5 | 7,
+  size: Size,
   make: Make,
 ): Promise<Practice | null> {
   const kept = repo.practice.get(v.guildId, v.userId);

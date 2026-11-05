@@ -1,13 +1,14 @@
 import { expect, test } from "bun:test";
 import { lcg } from "../../../../src/core/random.ts";
 import { generate } from "../../../../src/modules/crossword/generate/generate.ts";
+import type { Size } from "../../../../src/modules/crossword/types.ts";
 import { loadBankFile } from "../../../../src/modules/crossword/words/load.ts";
 
 const bank = loadBankFile(
   new URL("../../../../src/modules/crossword/words/bank.json", import.meta.url),
 );
 
-function probe(size: 5 | 7, seeds: number): { ok: number; median: number; max: number } {
+function probe(size: Size, seeds: number): { ok: number; median: number; max: number } {
   const times: number[] = [];
   let ok = 0;
 
@@ -38,3 +39,13 @@ test("7x7 succeeds for at least 198 of 200 seeds", () => {
   console.log(`7x7: ${r.ok}/200 ok, median ${r.median.toFixed(1)} ms, max ${r.max.toFixed(0)} ms`);
   expect(r.ok).toBeGreaterThanOrEqual(198);
 }, 120_000);
+
+test("15x15 succeeds for every one of 300 seeds, median under 60 ms", () => {
+  const r = probe(15, 300);
+
+  console.log(
+    `15x15: ${r.ok}/300 ok, median ${r.median.toFixed(1)} ms, max ${r.max.toFixed(0)} ms`,
+  );
+  expect(r.ok).toBe(300);
+  expect(r.median).toBeLessThan(60);
+}, 300_000);

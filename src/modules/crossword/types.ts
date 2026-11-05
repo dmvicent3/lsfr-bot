@@ -1,5 +1,8 @@
 export type Dir = "a" | "d";
 
+/** Grid sizes: the daily is 5; practice is 5, 7 or 15. */
+export type Size = 5 | 7 | 15;
+
 export interface Slot {
   n: number;
   dir: Dir;
@@ -7,7 +10,7 @@ export interface Slot {
 }
 
 export interface Puzzle {
-  size: 5 | 7;
+  size: Size;
   blocks: number[];
   slots: Slot[];
   /** Lowercase answers, parallel to `slots`. */

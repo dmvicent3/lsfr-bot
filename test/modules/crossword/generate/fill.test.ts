@@ -42,25 +42,28 @@ describe("fill on a fixture bank", () => {
 describe("real bank", () => {
   const byWord = new Map(real.map((w) => [w.word, w]));
 
-  test("answers are in the bank, agree at crossings, are unique", () => {
-    const puzzle = generate({ bank: real, size: 7, random: lcg(3), avoid: new Set() });
+  test.each([7, 15] as const)(
+    "%dx%d: answers are in the bank, agree at crossings, are unique",
+    (size) => {
+      const puzzle = generate({ bank: real, size, random: lcg(3), avoid: new Set() });
 
-    expect(puzzle).not.toBeNull();
-    const grid: Record<number, string> = {};
+      expect(puzzle).not.toBeNull();
+      const grid: Record<number, string> = {};
 
-    puzzle!.slots.forEach((s, k) => {
-      const a = puzzle!.answers[k]!;
+      puzzle!.slots.forEach((s, k) => {
+        const a = puzzle!.answers[k]!;
 
-      expect(byWord.has(a)).toBe(true);
-      expect(a.length).toBe(s.cells.length);
-      s.cells.forEach((c, pos) => {
-        expect(grid[c] ?? a[pos]).toBe(a[pos]);
-        grid[c] = a[pos]!;
+        expect(byWord.has(a)).toBe(true);
+        expect(a.length).toBe(s.cells.length);
+        s.cells.forEach((c, pos) => {
+          expect(grid[c] ?? a[pos]).toBe(a[pos]);
+          grid[c] = a[pos]!;
+        });
       });
-    });
-    expect(new Set(puzzle!.answers).size).toBe(puzzle!.answers.length);
-    expect(puzzle!.slots).toEqual(slotsOf(7, puzzle!.blocks));
-  });
+      expect(new Set(puzzle!.answers).size).toBe(puzzle!.answers.length);
+      expect(puzzle!.slots).toEqual(slotsOf(size, puzzle!.blocks));
+    },
+  );
 
   test("avoided words are never used", () => {
     const first = generate({ bank: real, size: 5, random: lcg(4), avoid: new Set() });
@@ -71,10 +74,19 @@ describe("real bank", () => {
     expect(second!.answers.some((a) => avoid.has(a))).toBe(false);
   });
 
-  test("same seed gives the same puzzle", () => {
-    const a = generate({ bank: real, size: 5, random: lcg(9), avoid: new Set() });
-    const b = generate({ bank: real, size: 5, random: lcg(9), avoid: new Set() });
+  test.each([5, 15] as const)("%d: same seed gives the same puzzle", (size) => {
+    const a = generate({ bank: real, size, random: lcg(9), avoid: new Set() });
+    const b = generate({ bank: real, size, random: lcg(9), avoid: new Set() });
 
     expect(a).toEqual(b);
+  });
+
+  test("15x15 avoided words are never used", () => {
+    const first = generate({ bank: real, size: 15, random: lcg(4), avoid: new Set() });
+    const avoid = new Set(first!.answers);
+    const second = generate({ bank: real, size: 15, random: lcg(5), avoid });
+
+    expect(second).not.toBeNull();
+    expect(second!.answers.some((a) => avoid.has(a))).toBe(false);
   });
 });

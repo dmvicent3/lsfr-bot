@@ -2,7 +2,9 @@ import { describe, expect, test } from "bun:test";
 import { PATTERNS } from "../../../../src/modules/crossword/generate/patterns.ts";
 import { slotsOf } from "../../../../src/modules/crossword/generate/slots.ts";
 
-const cases = ([5, 7] as const).flatMap((size) => PATTERNS[size].map((b) => ({ size, blocks: b })));
+const cases = ([5, 7, 15] as const).flatMap((size) =>
+  PATTERNS[size].map((b) => ({ size, blocks: b })),
+);
 
 function connected(size: number, blocks: number[]): boolean {
   const white = Array.from({ length: size * size }, (_, i) => i).filter((i) => !blocks.includes(i));
@@ -27,6 +29,7 @@ describe("patterns", () => {
   test("about six per size", () => {
     expect(PATTERNS[5].length).toBeGreaterThanOrEqual(5);
     expect(PATTERNS[7].length).toBeGreaterThanOrEqual(5);
+    expect(PATTERNS[15].length).toBeGreaterThanOrEqual(8);
   });
 
   for (const { size, blocks } of cases) {
@@ -56,9 +59,15 @@ describe("patterns", () => {
         expect(connected(size, blocks)).toBe(true);
       });
 
-      test("at most 25 slots", () => {
-        expect(slots.length).toBeLessThanOrEqual(25);
+      test("at most 7 long, the bank's longest words", () => {
+        expect(slots.every((s) => s.cells.length <= 7)).toBe(true);
       });
+
+      if (size < 15) {
+        test("at most 25 slots, one select", () => {
+          expect(slots.length).toBeLessThanOrEqual(25);
+        });
+      }
     });
   }
 });

@@ -6,10 +6,11 @@ import { openPractice } from "../play/practice.ts";
 import { boardView } from "../render/board-view.ts";
 import { sizeOf } from "../render/ids.ts";
 import { crosswordView } from "../render/view.ts";
+import type { Size } from "../types.ts";
 import type { CommandCtx } from "./types.ts";
 
 /** The asked size; else the kept puzzle's, else 5. */
-function wantedSize(c: CommandCtx): 5 | 7 {
+function wantedSize(c: CommandCtx): Size {
   const given = c.i.options.getInteger("size");
   const kept = c.repo.practice.get(c.guildId, c.i.user.id);
 

@@ -3,7 +3,7 @@ import { seedFor } from "../../../core/seed.ts";
 import { writeClues } from "../clues/write.ts";
 import { generate } from "../generate/generate.ts";
 import type { CrosswordRepo } from "../store/repo.ts";
-import type { StoredPuzzle } from "../types.ts";
+import type { Size, StoredPuzzle } from "../types.ts";
 import { type BankWord, loadBank } from "../words/load.ts";
 
 /** The LLM call that writes clues; null falls back to the definitions. */
@@ -14,7 +14,7 @@ export type Make = () => Promise<StoredPuzzle | null>;
 
 interface Build {
   bank: BankWord[];
-  size: 5 | 7;
+  size: Size;
   random: () => number;
   avoid: Set<string>;
 }
@@ -51,6 +51,6 @@ export function dailyMake(
 
 /** A practice puzzle of a size from the given random. */
 export const practiceMake =
-  (size: 5 | 7, random: () => number, ask: Ask | null): Make =>
+  (size: Size, random: () => number, ask: Ask | null): Make =>
   () =>
     build({ bank: loadBank(), size, random, avoid: new Set() }, ask);

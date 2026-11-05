@@ -1,4 +1,5 @@
 import { candidates, type Fixed, type WordIndex } from "./index.ts";
+import { byRank } from "./order.ts";
 import type { BankWord } from "../words/load.ts";
 import type { Slot } from "../types.ts";
 
@@ -48,13 +49,6 @@ function mostConstrained(state: FillState): { i: number; options: BankWord[] } |
   return best;
 }
 
-/** Common words first, but softly: the key is the square root of the rank times a draw. */
-function ordered(state: FillState, options: BankWord[]): BankWord[] {
-  const keyed = options.map((w) => ({ w, k: Math.sqrt(w.rank + 1) * state.random() }));
-
-  return keyed.toSorted((a, b) => a.k - b.k).map((e) => e.w);
-}
-
 function place(state: FillState, i: number, word: string): number[] {
   const written: number[] = [];
 
@@ -83,7 +77,7 @@ export function solve(state: FillState): boolean {
 
   if (!pick) return state.answers.every(Boolean);
 
-  for (const w of ordered(state, pick.options)) {
+  for (const w of byRank(pick.options, state.random)) {
     if (++state.nodes > state.cap) return false;
 
     const written = place(state, pick.i, w.word);
