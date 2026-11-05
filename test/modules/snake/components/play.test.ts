@@ -43,7 +43,7 @@ describe("Guess", () => {
     const calls = await click("guess", [DATE, STAMP], ctx);
     expect(calls.modal[0]).toMatchObject({
       custom_id: `snake:answer:${DATE}:${STAMP}`,
-      title: "Snake #3",
+      title: "Snake #4",
     });
   });
 
@@ -51,7 +51,7 @@ describe("Guess", () => {
     const { ctx } = setup();
     const calls = await click("guess", [DATE, "zz"], ctx);
     expect(calls.modal).toHaveLength(0);
-    expect(viewText(calls.update[0])).toContain("Snake #3");
+    expect(viewText(calls.update[0])).toContain("Snake #4");
   });
 
   test("a player with no round is told to start one", async () => {
@@ -66,7 +66,7 @@ describe("the guess modal", () => {
     const { ctx, repo } = setup();
     const calls = await submit("Permit", [DATE, STAMP], ctx);
     expect(stored(repo)?.guesses).toEqual(["permit"]);
-    expect(viewText(calls.update[0])).toContain("**Snake #3** · 1 guess");
+    expect(viewText(calls.update[0])).toContain("**Snake #4** · 1 guess");
     expect(calls.update[0]?.files?.[0]?.name).toBe("snake.png");
   });
 
@@ -89,7 +89,7 @@ describe("the guess modal", () => {
     const calls = await submit("example", [DATE, STAMP], ctx);
     expect(stored(repo)).toMatchObject({ solved: true, points: 80, streak: 1 });
     expect(viewText(calls.update[0])).toContain("**80 points**");
-    expect(calls.send[0]?.content).toBe("<@u> solved Snake #3 in 3 guesses — 80 pts");
+    expect(calls.send[0]?.content).toBe("<@u> solved Snake #4 in 3 guesses — 80 pts");
     expect(calls.send[0]?.content).not.toContain("example");
   });
 
@@ -114,7 +114,7 @@ describe("Give up and New", () => {
     const calls = await click("giveup", [DATE, STAMP], ctx);
     expect(stored(repo)).toMatchObject({ solved: false, points: 0, streak: 0 });
     expect(viewText(calls.update[0])).toContain("the word was **EXAMPLE**");
-    expect(calls.send[0]?.content).toBe("<@u> gave up on Snake #3 after 1 guess");
+    expect(calls.send[0]?.content).toBe("<@u> gave up on Snake #4 after 1 guess");
   });
 
   test("another player's click finds their own round, not the owner's", async () => {
