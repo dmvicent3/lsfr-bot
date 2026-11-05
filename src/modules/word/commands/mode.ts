@@ -4,6 +4,7 @@ import { TRACKS } from "../tracks.ts";
 import { dispatch } from "./dispatch.ts";
 import { leaderboardFor } from "./leaderboard.ts";
 import { modeData } from "./mode-data.ts";
+import { multiGuess } from "./multi-guess.ts";
 import { multiLetters } from "./multi-letters.ts";
 import { multiPlay } from "./multi.ts";
 import { statsFor } from "./stats.ts";
@@ -14,6 +15,7 @@ export const modeCommand = (mode: Mode, random: () => number): SlashCommand =>
     modeData(mode),
     {
       play: multiPlay(mode),
+      guess: multiGuess(mode),
       letters: multiLetters(mode),
       stats: statsFor(TRACKS[mode]),
       leaderboard: leaderboardFor(TRACKS[mode]),

@@ -22,7 +22,7 @@ const view = (over = {}, puzzle = DUO) =>
 
 test("before a guess: heading and how to play", () => {
   expect(multiText({ puzzle: DUO, game: null, now: NOW, timeZone: "Europe/Lisbon" })).toBe(
-    "**Word Duo #2** · attempts left 7\nEvery guess counts on every board. Press **Guess** to play.",
+    "**Word Duo #2** · attempts left 7\nEvery guess counts on every board. Guess with `/duo guess`.",
   );
 });
 

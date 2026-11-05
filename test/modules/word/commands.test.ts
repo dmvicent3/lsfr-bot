@@ -51,8 +51,15 @@ describe("/duo and /quad", () => {
       const d = modeData(mode);
       expect(d.name).toBe(mode);
       expect(d.contexts).toEqual([InteractionContextType.Guild]);
-      expect(d.options?.map((o) => o.name)).toEqual(["play", "letters", "stats", "leaderboard"]);
-      expect(optionNames(d.options?.[3])).toEqual(["period", "page"]);
+      expect(d.options?.map((o) => o.name)).toEqual([
+        "play",
+        "guess",
+        "letters",
+        "stats",
+        "leaderboard",
+      ]);
+      expect(optionNames(d.options?.[1])).toEqual(["word"]);
+      expect(optionNames(d.options?.[4])).toEqual(["period", "page"]);
     }
 
     expect(modeData("duo").description).toBe("Word Duo: two words at once in 7 attempts");

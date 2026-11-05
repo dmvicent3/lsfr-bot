@@ -14,7 +14,8 @@ export interface MultiTextView {
   timeZone: string;
 }
 
-const HINT = "Every guess counts on every board. Press **Guess** to play.";
+const hint = (mode: string): string =>
+  `Every guess counts on every board. Guess with \`/${mode} guess\`.`;
 
 /** The guess as unspaced capitals: the squares beside it take the width. */
 const label = (g: string): string => `\`${g.toUpperCase()}\``;
@@ -74,7 +75,8 @@ export function multiText(v: MultiTextView): string {
   const guesses = v.game?.guesses ?? [];
   const finished = Boolean(v.game?.finishedAt);
   const boards = boardStates(v.puzzle.words, guesses);
-  const body = guesses.length > 0 || finished ? grid(boards, guesses, finished) : HINT;
+  const body =
+    guesses.length > 0 || finished ? grid(boards, guesses, finished) : hint(v.puzzle.mode);
   const tail = v.game?.finishedAt ? ["", ...resultLines(v.game, v)] : [];
 
   return [heading(v, guesses), body, ...tail].join("\n");

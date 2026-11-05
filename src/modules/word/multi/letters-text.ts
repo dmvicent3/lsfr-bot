@@ -21,7 +21,7 @@ export function multiLettersText(v: { puzzle: MultiPuzzle; guesses: string[] }):
   const { mode, date, words } = v.puzzle;
   const heading = `**${MODES[mode].name} #${puzzleNumber(date, FIRST_MULTI_PUZZLE)}** · letters`;
 
-  if (v.guesses.length === 0) return `${heading}\nNo guesses yet. Play with \`/${mode} play\`.`;
+  if (v.guesses.length === 0) return `${heading}\nNo guesses yet. Guess with \`/${mode} guess\`.`;
 
   const boards = boardStates(words, v.guesses).map(boardNotes);
 

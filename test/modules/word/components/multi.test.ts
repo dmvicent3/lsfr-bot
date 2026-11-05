@@ -34,12 +34,13 @@ async function submit(ctx: Ctx, text: string, args = ARGS) {
   return m.calls;
 }
 
-test("Guess opens the modal for the board", async () => {
+test("an old board's Guess button points to /duo guess", async () => {
   const { ctx } = setup();
   const c = fakeClick("u");
   await multiGuessHandler.handle(c.i, ARGS, ctx);
 
-  expect(c.calls.modal[0]?.custom_id).toBe(`word:answer:duo:${TODAY}`);
+  expect(c.calls.modal).toHaveLength(0);
+  expect(c.calls.reply[0]?.content).toBe("Guess with `/duo guess` now.");
 });
 
 test("a guess redraws the board in place", async () => {
@@ -83,16 +84,6 @@ test("Give up ends it as a loss and reveals the words", async () => {
   const again = fakeClick("u");
   await multiGiveUpHandler.handle(again.i, ARGS, ctx);
   expect(again.calls.update[0]?.content).toContain("You gave up.");
-});
-
-test("Guess on a finished board just redraws it", async () => {
-  const { ctx } = setup();
-  await multiGiveUpHandler.handle(fakeClick("u").i, ARGS, ctx);
-  const c = fakeClick("u");
-  await multiGuessHandler.handle(c.i, ARGS, ctx);
-
-  expect(c.calls.modal).toHaveLength(0);
-  expect(c.calls.update[0]?.components).toEqual([]);
 });
 
 test("an earlier day's board or a bad ID is refused", async () => {

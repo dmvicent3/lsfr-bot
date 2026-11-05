@@ -10,9 +10,9 @@ const DUO: MultiPuzzle = {
   length: 5,
 };
 
-test("no guesses point to the mode's play command", () => {
+test("no guesses point to the mode's guess command", () => {
   expect(multiLettersText({ puzzle: DUO, guesses: [] })).toBe(
-    "**Word Duo #2** · letters\nNo guesses yet. Play with `/duo play`.",
+    "**Word Duo #2** · letters\nNo guesses yet. Guess with `/duo guess`.",
   );
 });
 
