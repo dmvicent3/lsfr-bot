@@ -1,6 +1,6 @@
 import { end, keep } from "./round.ts";
-import type { Landed, Played, Turn } from "./types.ts";
-import { type CheckCtx, checkGuess } from "./validate.ts";
+import type { CheckCtx, Landed, Played, Turn } from "./types.ts";
+import { checkGuess } from "./validate.ts";
 
 const open = (t: Turn): boolean => t.rec.finishedAt === null;
 

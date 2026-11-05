@@ -1,12 +1,4 @@
-/** A box to draw, with the corner radius of its left and right ends. */
-export interface Box {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-  left: number;
-  right: number;
-}
+import type { Box } from "./types.ts";
 
 /** An SVG path for a rectangle whose left and right corners can be rounded differently. */
 export function roundedPath(b: Box): string {

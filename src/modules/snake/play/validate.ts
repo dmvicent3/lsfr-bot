@@ -1,16 +1,10 @@
 import type { GuessCheck, Refusal } from "../types.ts";
+import type { CheckCtx } from "./types.ts";
 
 export const MIN_GUESS = 2;
 export const MAX_GUESS = 10;
 
 const refuse = (reason: Refusal): GuessCheck => ({ ok: false, reason });
-
-/** What a guess is checked against: the accepted words of a length, the round so far. */
-export interface CheckCtx {
-  accepted: (length: number) => ReadonlySet<string> | null;
-  guesses: readonly string[];
-  finished: boolean;
-}
 
 /** Checked in order: round over, letters only, 2–10 letters, a known word, not tried yet. */
 export function checkGuess(text: string, c: CheckCtx): GuessCheck {

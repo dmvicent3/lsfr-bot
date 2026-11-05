@@ -13,7 +13,7 @@ function stemsOf(stem: string): string[] {
   return out;
 }
 
-/** `words` ends in `-s`, `-es`, `-ed` or `-ing` on another dictionary word: walks, wishes, tried, running. */
+/** `word` ends in `-s`, `-es`, `-ed` or `-ing` on another dictionary word: walks, wishes, tried, running. */
 export function isInflection(word: string, enable: ReadonlySet<string>): boolean {
   return ENDINGS.some((end) => {
     if (!word.endsWith(end) || (end === "s" && word.endsWith("ss"))) return false;

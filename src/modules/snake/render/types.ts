@@ -42,3 +42,13 @@ export interface Line {
   letters: string;
   bars: Bar[];
 }
+
+/** A box to draw, with the corner radius of its left and right ends. */
+export interface Box {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  left: number;
+  right: number;
+}

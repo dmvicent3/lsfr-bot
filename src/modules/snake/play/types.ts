@@ -24,3 +24,10 @@ export type Played = { kind: "refused"; reason: Refusal } | { kind: "played"; la
 export type Make = () => string | null;
 
 export const isGame = (rec: Rec): rec is Game => "date" in rec;
+
+/** What a guess is checked against: the accepted words of a length, the round so far. */
+export interface CheckCtx {
+  accepted: (length: number) => ReadonlySet<string> | null;
+  guesses: readonly string[];
+  finished: boolean;
+}

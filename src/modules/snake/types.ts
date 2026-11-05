@@ -50,3 +50,10 @@ export interface Award {
 export type Refusal = "finished" | "letters" | "length" | "unknown" | "repeat";
 
 export type GuessCheck = { ok: true; word: string } | { ok: false; reason: Refusal };
+
+/** Where a search stands: the next guess letter, the last matched answer letter, and whether the previous guess letter was matched there. */
+export interface MatchState {
+  from: number;
+  after: number;
+  joined: boolean;
+}

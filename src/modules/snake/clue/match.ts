@@ -1,11 +1,4 @@
-import type { Link } from "../types.ts";
-
-/** Where a search stands: the next guess letter, the last matched answer letter, and whether the previous guess letter was matched there. */
-interface State {
-  from: number;
-  after: number;
-  joined: boolean;
-}
+import type { Link, MatchState as State } from "../types.ts";
 
 /** The link before `links[k]`: the one before it in the list, or the state's own for the first. */
 function previous(links: Link[], k: number, s: State): Link | undefined {
