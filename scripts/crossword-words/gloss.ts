@@ -7,8 +7,11 @@ const SHORT = 90;
 /** What a clue shows of a gloss: no leading "(…) " note. */
 const shown = (gloss: string): string => gloss.replace(/^\([^)]*\)\s*/, "");
 
+/** A sense WordNet marks as offensive, vulgar or disparaging. */
+export const isOffensive = (gloss: string): boolean => OFFENSIVE.test(gloss);
+
 const usable = (gloss: string): boolean =>
-  gloss !== "" && !/^[`'"]/.test(gloss) && !OFFENSIVE.test(gloss);
+  gloss !== "" && !/^[`'"]/.test(gloss) && !isOffensive(gloss);
 
 /** The first clean sense of at most 90 characters, else the first clean one; none when all are unfit. */
 export function pickGloss(glosses: string[]): string | undefined {

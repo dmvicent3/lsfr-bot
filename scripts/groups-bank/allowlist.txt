@@ -1,0 +1,231 @@
+# Groups categories: WordNet noun synset (lemma.n.N) | display name | words to drop, +word to add, !N fixed level
+# Members come from the synset's hyponyms; drops remove wrong senses, names and obscure words.
+
+# Animals
+fish.n.1 | Fish | molly permit mademoiselle ling grunt sierra liza chum tinker whiff hind  cisco mako coney argentine grubby char dolphin smelt +bass +pike poacher pout
+bird.n.1 | Birds | tom chat hobby brent weaver redhead merlin dominique nandu guan ruff stint snowflake merle diver poultry
+bird_of_prey.n.1 | Birds of prey | hobby merlin
+seabird.n.1 | Seabirds | diver loon
+waterfowl.n.1 | Waterfowl | brent teal redhead brant
+oscine.n.1 | Songbirds | chat weaver merle snowflake
+insect.n.1 | Insects | queen soldier emperor worker admiral sawyer drone peacock emmet viceroy comma !0
+lepidopterous_insect.n.1 | Butterflies and moths | emperor butterfly moth
+reptile.n.1 | Reptiles | ridley
+big_cat.n.1 | Big cats | ounce !0
+dog.n.1 | Dogs | barker cardigan springer watchdog doggy doggie puppy pooch mutt mongrel hound
+horse.n.1 | Horses | entire assault poster arab dun mount charger trotter steed
+cattle.n.1 | Cattle | devon welsh springer durham beef
+deer.n.1 | Deer | hind
+rodent.n.1 | Rodents | mara whistler hedgehog
+young_mammal.n.1 | Baby animals | hog kitty kit piggy bullock maverick
+musteline_mammal.n.1 | Weasel family | fisher
+mollusk.n.1 | Molluscs
+mythical_monster.n.1 | Mythical monsters | python
+fairy.n.1 | Fairy folk
+evil_spirit.n.1 | Evil spirits | bogey daimon
+fur.n.1 | Furs
+
+# Plants and food
+tree.n.1 | Trees | coffee apple bay orange lemon cassie mei coco mandarin tung blackjack samba snag peach plum mango pear coconut cherry olive cinnamon fuji avocado peppermint clementine inga papaya pistachio apricot tangerine grapefruit almond walnut fig myrtle linden rowan rosewood
+edible_fruit.n.1 | Fruits | delicious emperor jonathan cling baldwin bartlett prima berry !0
+berry.n.1 | Berries | !0
+citrus.n.2 | Citrus fruits | !0
+vegetable.n.1 | Vegetables | cos snap chips cole murphy fries chilly chile chilli greens iceberg chou swede truffle savoy mustard chili taro gumbo spud sprout
+herb.n.2 | Herbs | rue angelica !1
+edible_nut.n.1 | Nuts | !1
+cereal.n.1 | Grains | milo popcorn
+flower.n.1 | Flowers | mum pink veronica vanilla cosmos marguerite everlasting rosita composite goldilocks
+bulbous_plant.n.1 | Bulbs | glad flag ramp saffron
+shrub.n.1 | Shrubs | may tea cheese cotton pepper erica daphne ling marijuana marguerite bennet ti andromeda kali cannabis coca pixie caper hemp haw blueberry cranberry elder broom heath myrtle
+bread.n.1 | Breads | dodger meatloaf !0
+cake.n.3 | Cakes and bakes | kiss baba twister donut !0
+pastry.n.2 | Pastries | patty napoleon chou
+candy.n.1 | Sweets | kiss patty divinity brittle !0
+dessert.n.1 | Desserts | charlotte whip snowball duff dumpling lolly lollipop !0
+pasta.n.2 | Pasta | dumplings dumpling !0
+sandwich.n.1 | Sandwiches | western bomber torpedo wedge grinder submarine
+condiment.n.1 | Condiments | mole blanc caper miso sauce mayo
+cut.n.6 | Cuts of meat | neck saddle shin
+sausage.n.1 | Sausages | brat weenie
+dairy_product.n.1 | Dairy | quark cheddar brie yoghurt
+cheese.n.1 | Cheeses | quark +camembert +ricotta !0
+cocktail.n.1 | Cocktails | sour stinger
+wine.n.1 | Wines | bishop vintage bubbly generic hock
+beer.n.1 | Beers | burton guinness
+liquor.n.1 | Spirits | irish marc whisky applejack
+coffee.n.1 | Coffees | !0
+soft_drink.n.1 | Soft drinks | dope pepsi
+meal.n.1 | Meals | refreshment barbeque
+
+# Clothes and things
+headdress.n.1 | Headwear | sailor lid tam cowl nightcap
+footwear.n.2 | Footwear | arctic sling spectator flipper flats shoe
+trouser.n.1 | Trousers | jean flannel tweed chino denim
+undergarment.n.1 | Underwear | stays teddy gown nightgown shimmy underwear panty lingerie undies
+overgarment.n.1 | Coats and cloaks | cope mack mink wrap domino wrapper waterproof lumberjack
+jewelry.n.1 | Jewellery | ice strand bugle bling jewel diamond ruby emerald sapphire
+gem.n.2 | Gemstones | plasma adamant sardine coral
+hairdo.n.1 | Hairstyles | bang marcel queue roach permanent haircut !0
+natural_fiber.n.1 | Natural fibres | staple straw fleece
+leather.n.1 | Leathers | crush upper grain buff fleece mocha vamp
+seat.n.3 | Seats | settle convertible davenport lounge
+home_appliance.n.1 | Appliances | cooler
+kitchen_utensil.n.1 | Kitchen utensils | spider boiler dixie urn steamer poacher cooker
+tableware.n.1 | Tableware | boat grail casserole chalice silverware cutlery
+hand_tool.n.1 | Hand tools | beetle gavel opener sledge toothpick spud corkscrew
+edge_tool.n.1 | Cutting tools | drove lance bolo
+bag.n.1 | Bags | poke bladder pocket
+case.n.5 | Cases | shoe kit grip imperial luggage baggage locker sleeve portfolio compact gladstone locket !3
+bottle.n.1 | Bottles and flasks | gourd
+lamp.n.1 | Lamps and lights | limelight
+plumbing_fixture.n.1 | Bathroom fixtures | pot throne potty lavatory
+toiletry.n.1 | Toiletries | paint cosmetic mousse
+plaything.n.1 | Toys | hobby sling trapeze dolly swing catapult
+formulation.n.1 | Cleaning products | nebula starch cleaner
+firearm.n.1 | Firearms | automatic colt winchester
+knife.n.2 | Knives
+explosive_device.n.1 | Explosives | cap bombshell blockbuster
+warship.n.1 | Warships | sub
+aircraft.n.1 | Aircraft | sausage bogey kamikaze aeroplane
+boat.n.1 | Boats | tower lighter gig jolly scooter launch
+car.n.1 | Cars | electric berlin heap racer compact
+horse-drawn_vehicle.n.1 | Carriages | clarence shay
+truck.n.1 | Trucks | technical transporter minivan wagon
+electronic_equipment.n.1 | Electronics | transmitter detector mixer ipod mainframe keypad processor sender playback jammer scanner receiver wireless telly !2
+optical_instrument.n.1 | Things to look through | sights projector !3
+measuring_instrument.n.1 | Measuring instruments | bomb graduate gage ticker !3
+building_material.n.1 | Building materials | shake pale cope fin board puddle render plank coping fencing tombstone skid louvre lag springer siding splat cornerstone insulation toothpick header !3
+
+# Places
+dwelling.n.1 | Homes | hogan convent monastery vatican abbey versailles hearth residence guesthouse homestead
+place_of_worship.n.1 | Places of worship | kirk oracle
+shop.n.1 | Shops | garage stall canteen cleaners bodega
+restaurant.n.1 | Places to eat
+hotel.n.1 | Places to stay | khan ritz
+defensive_structure.n.1 | Fortifications | dungeon kremlin bastille !3
+penal_institution.n.1 | Prisons | auschwitz bastille nick
+road.n.1 | Roads | broadway whitehall artery pike shortcut detour alleyway
+lake.n.1 | Lakes and ponds | chad michigan constance eyre nasser mere
+valley.n.1 | Valleys | draw holler canon
+biome.n.1 | Wild landscapes | bent lea sahara silva commons
+island.n.1 | Islands | wake china mona erin zealand isle okinawa hokkaido maui galapagos rhodes
+landmass.n.1 | Continents | continent !0
+african_country.n.1 | African countries
+asian_country.n.1 | Asian countries | aram tibet persia
+european_country.n.1 | European countries | flanders yugoslavia
+south_american_country.n.1 | South American countries
+national_capital.n.1 | Capital cities | male edo roma peking sana mecca vila
+state_capital.n.1 | US state capitals | sydney melbourne adelaide
+american_state.n.1 | US states
+county.n.1 | English counties | avon leicester
+university.n.2 | Universities | pennsylvania penn
+sign_of_the_zodiac.n.1 | Star signs | twins ram archer scorpion +aquarius +virgo +capricorn +aries +sagittarius +pisces +libra +taurus +cancer !1
+planet.n.1 | Planets | globe lucifer !0
+outbuilding.n.1 | Outbuildings | privy
+floor.n.2 | Lofts and cellars | mow
+stairway.n.1 | Stairs and ladders | flight
+medical_building.n.1 | Hospitals | madhouse sanitarium
+educational_institution.n.1 | Schools | tech gymnasium seminary
+farm.n.1 | Farms | spread
+passageway.n.1 | Passages | heading subway arcade stairwell !3
+entrance.n.1 | Entrances | arch !3
+stream.n.1 | Rivers | red darling milk snake mobile forth cam murray chang lena creek salmon river brook nan ping republican canadian magdalena flint mackenzie savannah
+
+# People and beliefs
+male_aristocrat.n.1 | Noblemen | sir noble sire bachelor milord mortimer peer nobleman templar cavalier thane chevalier !2
+policeman.n.1 | Police officers | captain investigator tracer policewoman !2
+servant.n.1 | Servants | gentleman familiar domestic !2
+guard.n.1 | Guards | scout porter picket watcher !3
+sailor.n.1 | Sailors | hawkins cox gob jack steward !2
+novice.n.2 | Beginners | !3
+occultist.n.1 | Magic users | sensitive exorcist sorceress
+greek_deity.n.1 | Greek gods | here ate chaos cynthia doris cora titan thea pluto ge muse nemesis gaia uranus atlas prometheus
+roman_deity.n.1 | Roman gods | victoria ops sol luna dis amor jove
+norse_deity.n.1 | Norse gods | hel
+hindu_deity.n.1 | Hindu gods | mara avatar dharma chandi devi aditya parvati gauri uma surya
+apostle.n.3 | Apostles | levi
+book.n.10 | Books of the Bible | apocalypse susanna judith
+president_of_the_united_states.n.1 | US presidents | ike
+old_master.n.1 | Painters
+rock_star.n.1 | Rock stars | lewis holly haley berry morrison
+roman_emperor.n.1 | Roman emperors | julian adrian gaius
+fictional_character.n.1 | Fictional characters | arthur todd beatrice tristan emile marlowe yahoo protagonist isolde pierrot guinevere
+house.n.6 | Royal houses | royalty
+dynasty.n.1 | Chinese dynasties | york stuart chow wei sung windsor lancaster ottoman tudor hanover chou
+italic.n.2 | Romance languages | romance
+germanic.n.1 | Germanic languages | american northern scottish scots gothic geordie norse scandinavian
+american.n.3 | Nationalities of the Americas | latino
+asian.n.1 | Asian nationalities | boxer tai hindu shogun oriental samaritan geisha trojan roma ottoman miao bohemian telugu punjabi tamil siamese mongol
+european.n.1 | European nationalities | same frank roman angle frog lesbian tory sahib dorian hermann burgess berserk socrates parisian sami sicilian spartan saxon norman viking fleming englishman frenchman venetian goth bohemian gaul geordie prussian norse lombard scandinavian armin
+mortal_sin.n.1 | Deadly sins | ira arrogance superiority !1
+
+# Culture, sport and time
+athletic_game.n.1 | Sports | steal singles doubles hoops fives paintball !0
+board_game.n.1 | Board games | bingo darts lotto !1
+card_game.n.1 | Card games | contract stops chicago auction parliament rum napoleon monte michigan cinch bolivia casino +bridge +blackjack +gin +solitaire +baccarat !1
+dancing.n.1 | Dances | skank choreography stomp promenade clog shimmy
+popular_music.n.1 | Music genres | bop scat bebop
+stringed_instrument.n.1 | String instruments | grand string upright piano
+brass.n.2 | Brass instruments | trump serpent +horn !1
+woodwind.n.1 | Woodwinds | !1
+percussion_instrument.n.1 | Percussion | grand bones upright vibes piano !1
+story.n.2 | Stories | plot !3
+man.n.10 | Chess pieces | tile +king +queen
+punctuation.n.2 | Punctuation marks | +colon +period +dash
+tense.n.1 | Verb tenses | !3
+mathematics.n.1 | Branches of maths | decomposition
+political_system.n.1 | Political systems | shogunate !3
+calendar_month.n.1 | Months | jan mar pus !0
+day_of_the_week.n.1 | Days of the week | sabbath sat mon wed !0
+season.n.2 | Seasons | monsoon springtime summertime !0
+day.n.3 | Special days | holiday millennium
+hour.n.2 | Times of day | none prime aurora dinnertime lunchtime bedtime
+meeting.n.1 | Meetings | !3
+party.n.4 | Parties | hop formal jolly brawl promenade
+
+# Body, feelings and words
+internal_organ.n.1 | Organs | pump tum ticker tummy gut
+bone.n.1 | Bones | hammer chop chopper costa grinder atlas nasal canine pearly anterior fang tooth forehead +tibia +sternum +clavicle +cranium +vertebra +kneecap
+joint.n.1 | Joints | suture hock
+feature.n.2 | Facial features
+facial_hair.n.1 | Facial hair | imperial toothbrush beaver moustache +goatee +stubble !0
+infectious_disease.n.1 | Infectious diseases | pest consumption mono pestilence
+fear.n.1 | Fear | thrill chill suspense creeps shiver gloom premonition intimidation foreboding shudder shyness tingle !3
+sadness.n.1 | Sorrow | rue oppression penance brooding helplessness repentance !3
+facial_expression.n.1 | Facial expressions | smiling grinning smiley laugh
+gait.n.3 | Ways of walking | pacing
+cry.n.5 | Animal sounds | growling bay peep clucking yelping
+smell.n.1 | Smells
+farewell.n.1 | Goodbyes | morning afternoon !2
+greeting.n.1 | Greetings | morning wish afternoon reception regard compliments hospitality !2
+nonsense.n.1 | Nonsense | cant babbling rhetoric drool crock !3
+money.n.1 | Slang for money | pork budget fund savings !3
+victory.n.1 | Wins | pin independence waltz runaway win !3
+blow.n.1 | Blows | kicking pounding lick swing thrust hammering lash biff smacking parry kayo whiplash spank !3
+larceny.n.1 | Thefts | rolling petty raid rustling !3
+homicide.n.1 | Killings | alamo shooting !3
+punishment.n.1 | Punishments | licking executing whacking tanning penance !3
+injury.n.1 | Injuries | mouse slice pinch !2
+
+# Colours, matter and measures
+chromatic_color.n.1 | Colours | wine chocolate lemon blonde ruby straw blond jade cardinal wheat coral emerald canary burgundy caramel sapphire dun fawn carmine !0
+red.n.1 | Shades of red | carmine
+brown.n.1 | Shades of brown | dun
+yellow.n.1 | Shades of yellow
+metallic_element.n.1 | Metals
+gas.n.2 | Gases | sky breath mace exhaust fumes
+rock.n.2 | Rocks | matrix grit ballast
+fuel.n.1 | Fuels | punk jet lighter
+storm.n.1 | Storms | duster
+precipitation.n.3 | Rain and snow | monsoon sprinkle rainfall
+wave.n.1 | Waves | breakers wake !3
+monetary_unit.n.1 | Currencies | sent bob ban kip mil para ore colon sen heller leone hao kwai lev balboa
+coin.n.1 | Coins | real eagle copper tanner slug medallion sou
+paper_money.n.1 | Banknotes | dollar nickel clam
+linear_unit.n.1 | Units of length | finger nail palm dam lea mil cicero mesh
+mass_unit.n.1 | Units of weight | mole slug dag
+volume_unit.n.1 | Units of volume | standard homer cord gal fifth fathom dal
+common_fraction.n.1 | Fractions
+large_integer.n.1 | Big numbers | thou ten twenty meg lakh crore tenner teens !2
+compass_point.n.1 | Compass points | !0
+letter.n.2 | Greek letters | initial nun shin zee zed
