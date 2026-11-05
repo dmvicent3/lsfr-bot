@@ -43,11 +43,11 @@ describe("/crossword data and module", () => {
     ]);
   });
 
-  test("practice takes an optional size of 5 or 7", () => {
+  test("practice takes an optional size of 5, 7 or 15", () => {
     const o = optionsOf("practice");
     expect(o.map((x) => x.name)).toEqual(["size"]);
     expect(o[0]?.required).toBeFalsy();
-    expect(o[0]?.choices?.map((c) => c.value)).toEqual([5, 7]);
+    expect(o[0]?.choices?.map((c) => c.value)).toEqual([5, 7, 15]);
   });
 
   test("leaderboard has the four periods, stats an optional user, settings a timezone", () => {

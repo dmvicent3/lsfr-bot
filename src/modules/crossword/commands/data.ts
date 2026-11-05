@@ -18,7 +18,11 @@ export const data = new SlashCommandBuilder()
         o
           .setName("size")
           .setDescription("Grid size (default: 5)")
-          .addChoices({ name: "5×5", value: 5 }, { name: "7×7", value: 7 }),
+          .addChoices(
+            { name: "5×5", value: 5 },
+            { name: "7×7", value: 7 },
+            { name: "15×15", value: 15 },
+          ),
       ),
   )
   .addSubcommand((sub) =>
