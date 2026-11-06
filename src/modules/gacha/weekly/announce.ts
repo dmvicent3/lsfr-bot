@@ -21,12 +21,12 @@ export function featuredDrivers(roster: Roster, b: Banner): { five: Driver; four
   return { five: get(b.featured.five), fours: b.featured.fours.map(get) };
 }
 
+/** "9 Nov 2026" with the year, "Mon 16 Nov" without. */
 const dayMonth = (ms: number, tz: string, year = false): string =>
   new Date(ms).toLocaleDateString("en-GB", {
-    weekday: "short",
     day: "numeric",
     month: "short",
-    ...(year ? { year: "numeric" } : {}),
+    ...(year ? { year: "numeric" } : { weekday: "short" }),
     timeZone: tz,
   });
 
