@@ -65,6 +65,19 @@ export interface Landed extends Roll {
   refund: number;
 }
 
+/** How one limited ★5 50/50 went. */
+export type Coin = "won" | "lost";
+
+/** A player's limited ★5 50/50 record. */
+export interface FiftyFifty {
+  /** The latest result and how many in a row ended that way; null before the first 50/50. */
+  current: { coin: Coin; run: number } | null;
+  /** The longest run of each result. */
+  best: Record<Coin, number>;
+  /** How many of each, ever. */
+  count: Record<Coin, number>;
+}
+
 /** What a player's balance is made of. */
 export interface Ledger {
   /** Points earned across every game, ever. */

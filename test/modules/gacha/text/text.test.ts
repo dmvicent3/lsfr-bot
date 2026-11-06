@@ -87,7 +87,12 @@ const five = (o: { featured: boolean; lost: boolean; guaranteed: boolean }) => (
 describe("fiveNews", () => {
   test("a won 50/50 with the pulls it took", () => {
     expect(
-      fiveNews("u", SENNA, five({ featured: true, lost: false, guaranteed: false }), "limited"),
+      fiveNews({
+        userId: "u",
+        driver: SENNA,
+        landed: five({ featured: true, lost: false, guaranteed: false }),
+        kind: "limited",
+      }),
     ).toBe(
       "🏆 <@u> pulled ★5 Ayrton Senna (C0) on the limited banner after 76 pulls · won the 50/50!",
     );
@@ -95,19 +100,55 @@ describe("fiveNews", () => {
 
   test("a lost 50/50 says the next is guaranteed", () => {
     expect(
-      fiveNews("u", SENNA, five({ featured: false, lost: true, guaranteed: false }), "limited"),
+      fiveNews({
+        userId: "u",
+        driver: SENNA,
+        landed: five({ featured: false, lost: true, guaranteed: false }),
+        kind: "limited",
+      }),
     ).toContain("after 76 pulls · lost the 50/50, so the next ★5 is guaranteed!");
+  });
+
+  test("a streak of 2+ is shown", () => {
+    expect(
+      fiveNews({
+        userId: "u",
+        driver: SENNA,
+        landed: five({ featured: true, lost: false, guaranteed: false }),
+        kind: "limited",
+        run: 3,
+      }),
+    ).toContain("won the 50/50 (3 in a row)!");
+    expect(
+      fiveNews({
+        userId: "u",
+        driver: SENNA,
+        landed: five({ featured: false, lost: true, guaranteed: false }),
+        kind: "limited",
+        run: 2,
+      }),
+    ).toContain("lost the 50/50 (2 in a row), so the next ★5 is guaranteed!");
   });
 
   test("a guaranteed ★5 says so", () => {
     expect(
-      fiveNews("u", SENNA, five({ featured: true, lost: false, guaranteed: true }), "limited"),
+      fiveNews({
+        userId: "u",
+        driver: SENNA,
+        landed: five({ featured: true, lost: false, guaranteed: true }),
+        kind: "limited",
+      }),
     ).toContain("after 76 pulls · guaranteed after a lost 50/50!");
   });
 
   test("the standard banner has no 50/50", () => {
     expect(
-      fiveNews("u", SENNA, five({ featured: false, lost: false, guaranteed: false }), "standard"),
+      fiveNews({
+        userId: "u",
+        driver: SENNA,
+        landed: five({ featured: false, lost: false, guaranteed: false }),
+        kind: "standard",
+      }),
     ).toBe("🏆 <@u> pulled ★5 Ayrton Senna (C0) on the standard banner after 76 pulls!");
   });
 });
@@ -124,11 +165,30 @@ describe("balanceText", () => {
       price: 140,
       limited: FRESH,
       standard: FRESH,
+      fifty: { current: null, best: { won: 0, lost: 0 }, count: { won: 0, lost: 0 } },
     });
 
     expect(out).toContain("**Balance: 1,790** · 12 pulls at 140");
     expect(out).toContain("Word 1,500 · Snake 500");
     expect(out).not.toContain("Trivia");
+    expect(out).not.toContain("**50/50:**");
+  });
+
+  test("the 50/50 record under the limited counters", () => {
+    const out = balanceText({
+      ledger: { earned: 0, refunds: 0, spent: 0 },
+      games: [],
+      price: 140,
+      limited: FRESH,
+      standard: FRESH,
+      fifty: {
+        current: { coin: "won", run: 3 },
+        best: { won: 3, lost: 2 },
+        count: { won: 5, lost: 2 },
+      },
+    });
+
+    expect(out).toContain("**50/50:** won 3 in a row · best 3 won, 2 lost · 5W–2L");
   });
 });
 

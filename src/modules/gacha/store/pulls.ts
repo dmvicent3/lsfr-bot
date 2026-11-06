@@ -55,6 +55,16 @@ export class PullStore {
       .map(toPull);
   }
 
+  /** Whether each limited ★5 was a featured one, oldest first: the 50/50 history. */
+  limitedFives(who: PlayerRef): boolean[] {
+    return this.db
+      .query<{ featured: number }, [string, string]>(
+        `SELECT featured ${MINE} AND banner = 'limited' AND tier = 5 ORDER BY id`,
+      )
+      .all(who.guildId, who.userId)
+      .map((r) => r.featured === 1);
+  }
+
   count(who: PlayerRef): number {
     const row = this.db
       .query<{ n: number }, [string, string]>(`SELECT COUNT(*) AS n ${MINE}`)

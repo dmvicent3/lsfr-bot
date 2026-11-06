@@ -54,7 +54,33 @@ describe("PollStore", () => {
   });
 });
 
+const land = (tier: 5 | 3, featured: boolean) => ({
+  driverId: "x",
+  tier,
+  featured,
+  lost: !featured,
+  guaranteed: false,
+  pulls: 1,
+  level: 0,
+  isNew: true,
+  refund: 0,
+});
+
 describe("PullStore", () => {
+  test("limitedFives: only limited ★5s, oldest first, featured or not", () => {
+    const { repo } = setup();
+    repo.pulls.add(ME, {
+      banner: "limited",
+      landed: [land(5, true), land(3, false)],
+      price: 1,
+      now: 1,
+    });
+    repo.pulls.add(ME, { banner: "standard", landed: [land(5, false)], price: 1, now: 2 });
+    repo.pulls.add(ME, { banner: "limited", landed: [land(5, false)], price: 1, now: 3 });
+
+    expect(repo.pulls.limitedFives(ME)).toEqual([true, false]);
+  });
+
   test("history newest first, paged", () => {
     const { repo } = setup();
     const landed = ["a", "b", "c"].map((driverId) => ({

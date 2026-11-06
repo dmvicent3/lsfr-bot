@@ -2,6 +2,7 @@ import { MessageFlags } from "discord.js";
 import { log } from "../../../core/log.ts";
 import type { BannerKind } from "../engine/types.ts";
 import { runPull } from "../pull/run.ts";
+import { newFiveRuns } from "../pull/streaks.ts";
 import { gachaPrice } from "../settings.ts";
 import { shortText } from "../text/pull.ts";
 import { ensureBanner } from "../weekly/ensure.ts";
@@ -31,7 +32,9 @@ export async function pull(c: CommandCtx): Promise<void> {
     return;
   }
 
-  const { reply, news } = pullMessages({ roster, userId: who.userId, kind, out });
+  const runs =
+    kind === "limited" ? newFiveRuns(repo.pulls.limitedFives(who), out.landed) : new Map();
+  const { reply, news } = pullMessages({ roster, userId: who.userId, kind, out, runs });
   await i.editReply(reply);
 
   for (const message of news) {

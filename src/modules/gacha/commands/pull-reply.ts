@@ -44,13 +44,15 @@ export function pullMessages(v: {
   userId: string;
   kind: BannerKind;
   out: { landed: Landed[]; pity: Pity; balance: number; cost: number };
+  /** Each new limited ★5's 50/50 streak. */
+  runs?: ReadonlyMap<Landed, number>;
 }): { reply: InteractionEditReplyOptions; news: InteractionReplyOptions[] } {
   const shown = shownOf(v.roster, v.out.landed);
   const content = pullText({ kind: v.kind, shown, ...v.out });
   const news = shown
     .filter((s) => s.landed.tier === 5)
     .map((s) => ({
-      content: fiveNews(v.userId, s.driver, s.landed, v.kind),
+      content: fiveNews({ ...s, userId: v.userId, kind: v.kind, run: v.runs?.get(s.landed) }),
       files: [{ attachment: cardPng(s.driver, s.landed), name: "gacha-five.png" }],
       allowedMentions: { parse: [] },
     }));
