@@ -7,11 +7,15 @@ import type { PointsSource } from "../../core/points-types.ts";
  */
 export const TRIVIA_DAILY_CAP = 150;
 
-/** Each UTC day's trivia points, capped, summed; UTC days are within an hour of Lisbon's. */
-const CAPPED = `SELECT COALESCE(SUM(MIN(day, ${TRIVIA_DAILY_CAP})), 0) AS n FROM (
-    SELECT SUM(points) AS day FROM trivia_scores
+/** The gacha's launch day (UTC): trivia from before it counts in full, so no one starts lower. */
+export const CAP_FROM = "2026-11-06";
+
+/** Each UTC day's trivia points, capped from launch day on, summed. */
+const CAPPED = `SELECT COALESCE(SUM(CASE WHEN d < '${CAP_FROM}' THEN day
+    ELSE MIN(day, ${TRIVIA_DAILY_CAP}) END), 0) AS n FROM (
+    SELECT date(at / 1000, 'unixepoch') AS d, SUM(points) AS day FROM trivia_scores
     WHERE guild_id = ? AND user_id = ?
-    GROUP BY date(at / 1000, 'unixepoch'))`;
+    GROUP BY d)`;
 
 export const triviaPoints: PointsSource[] = [
   {

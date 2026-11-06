@@ -6,6 +6,7 @@ import { triviaMigrations } from "../../../src/modules/trivia/store/migrations.t
 
 const DAY = 86_400_000;
 const NOV_1 = Date.UTC(2026, 10, 1, 12);
+const LAUNCH = Date.UTC(2026, 10, 6, 12);
 
 function setup(): Database {
   const db = new Database(":memory:", { strict: true });
@@ -30,18 +31,28 @@ test("no trivia is no currency", () => {
 
 test("a day under the cap counts in full", () => {
   const db = setup();
-  score(db, "u", 7, NOV_1);
-  score(db, "u", 6, NOV_1 + 60_000);
+  score(db, "u", 7, LAUNCH);
+  score(db, "u", 6, LAUNCH + 60_000);
   expect(earned(db)).toBe(13);
 });
 
-test("each day is capped on its own, then summed", () => {
+test("from launch day each day is capped on its own, then summed", () => {
+  const db = setup();
+
+  for (let k = 0; k < 40; k++) score(db, "u", 7, LAUNCH + k * 1000);
+
+  score(db, "u", 20, LAUNCH + DAY);
+  expect(earned(db)).toBe(TRIVIA_DAILY_CAP + 20);
+});
+
+test("trivia from before launch counts in full, so no one starts lower", () => {
   const db = setup();
 
   for (let k = 0; k < 40; k++) score(db, "u", 7, NOV_1 + k * 1000);
 
-  score(db, "u", 20, NOV_1 + DAY);
-  expect(earned(db)).toBe(TRIVIA_DAILY_CAP + 20);
+  for (let k = 0; k < 40; k++) score(db, "u", 7, LAUNCH + k * 1000);
+
+  expect(earned(db)).toBe(280 + TRIVIA_DAILY_CAP);
 });
 
 test("only the player's own points in that server count", () => {
