@@ -5,11 +5,11 @@ import { data } from "../../../src/modules/minesweeper/commands/data.ts";
 const sub = (name: string) => data.options?.find((o) => o.name === name);
 
 describe("/minesweeper", () => {
-  test("a server command with play and stats", () => {
+  test("a server command with daily, play, leaderboard and stats", () => {
     expect(data.name).toBe("minesweeper");
     expect(data.description).toBe("Play Minesweeper");
     expect(data.contexts).toEqual([InteractionContextType.Guild]);
-    expect(data.options?.map((o) => o.name)).toEqual(["play", "stats"]);
+    expect(data.options?.map((o) => o.name)).toEqual(["daily", "play", "leaderboard", "stats"]);
   });
 
   test("play takes a difficulty, a size within 5-20 and a mine count", () => {

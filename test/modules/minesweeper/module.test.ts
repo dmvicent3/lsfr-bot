@@ -13,6 +13,7 @@ describe("minesweeperModule", () => {
       "minesweeper:flag",
       "minesweeper:giveup",
       "minesweeper:move",
+      "minesweeper:page",
     ]);
     expect(m.commands?.map((c) => c.data.name)).toEqual(["minesweeper"]);
     expect(m.migrations?.map((x) => x.id)).toEqual([

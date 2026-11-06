@@ -12,6 +12,9 @@ const live = (opts: Partial<Game> = {}): NewGame => {
   return rest;
 };
 
+const daily = (opts: Partial<Game> = {}): NewGame =>
+  live({ kind: "daily", date: "2026-11-07", level: "expert", bbbv: 30, ...opts });
+
 let store: GameStore;
 
 beforeEach(() => {
@@ -84,13 +87,10 @@ describe("GameStore", () => {
 });
 
 describe("daily rows", () => {
-  const daily = (opts: Partial<Game> = {}): NewGame =>
-    live({ kind: "daily", date: "2026-11-07", level: "expert", bbbv: 30, ...opts });
-
   test("a daily round-trips with its daily fields", () => {
     const saved = store.insert(daily({ clicks: 4 }));
-    expect(store.dailyOn("g", "u", "2026-11-07")).toEqual(saved);
-    expect(store.dailyOn("g", "u", "2026-11-08")).toBeNull();
+    expect(store.dailies.on("g", "u", "2026-11-07")).toEqual(saved);
+    expect(store.dailies.on("g", "u", "2026-11-08")).toBeNull();
   });
 
   test("practice live and finished never see dailies", () => {
@@ -103,7 +103,11 @@ describe("daily rows", () => {
   test("a save writes clicks, points and streak", () => {
     const d = store.insert(daily());
     store.save({ ...d, clicks: 9, result: "won", finishedAt: 3_000, points: 140, streak: 2 });
-    expect(store.dailyOn("g", "u", "2026-11-07")).toMatchObject({ clicks: 9, points: 140, streak: 2 });
+    expect(store.dailies.on("g", "u", "2026-11-07")).toMatchObject({
+      clicks: 9,
+      points: 140,
+      streak: 2,
+    });
   });
 
   test("the last finished daily before a date", () => {
@@ -111,18 +115,24 @@ describe("daily rows", () => {
     const b = store.insert(daily({ date: "2026-11-06", messageId: "b" }));
     store.insert(daily({ date: "2026-11-07", messageId: "c" }));
     store.save({ ...a, result: "won", finishedAt: 1, streak: 1, points: 1 });
-    expect(store.lastDailyBefore("g", "u", "2026-11-07")?.id).toBe(a.id);
+    expect(store.dailies.lastBefore("g", "u", "2026-11-07")?.id).toBe(a.id);
     store.save({ ...b, result: "lost", finishedAt: 2, streak: 0, points: 0 });
-    expect(store.lastDailyBefore("g", "u", "2026-11-07")?.id).toBe(b.id);
+    expect(store.dailies.lastBefore("g", "u", "2026-11-07")?.id).toBe(b.id);
   });
 
   test("finished dailies in a date range, and a player's own", () => {
     const a = store.insert(daily({ date: "2026-11-05", messageId: "a" }));
     store.insert(daily({ date: "2026-11-06", messageId: "b" }));
     store.save({ ...a, result: "won", finishedAt: 1, streak: 1, points: 50 });
-    expect(store.dailiesIn("g", { from: "2026-11-01", to: "2026-11-30", label: "" }).map((g) => g.id)).toEqual([a.id]);
-    expect(store.dailiesIn("g", { from: "2026-11-06", to: "2026-11-30", label: "" })).toEqual([]);
-    expect(store.dailyFinished("g", "u").map((g) => g.id)).toEqual([a.id]);
+    expect(
+      store.dailies
+        .inRange("g", { from: "2026-11-01", to: "2026-11-30", label: "" })
+        .map((g) => g.id),
+    ).toEqual([a.id]);
+    expect(store.dailies.inRange("g", { from: "2026-11-06", to: "2026-11-30", label: "" })).toEqual(
+      [],
+    );
+    expect(store.dailies.finished("g", "u").map((g) => g.id)).toEqual([a.id]);
   });
 
   test("setMessage points a reopened daily at its new message", () => {

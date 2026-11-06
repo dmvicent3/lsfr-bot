@@ -1,4 +1,14 @@
-import type { CellState, Controls, FinishedRow, Game, Kind, Preset, Result } from "../types.ts";
+import type { SQLQueryBindings } from "bun:sqlite";
+import type {
+  CellState,
+  Controls,
+  FinishedRow,
+  Game,
+  Kind,
+  NewGame,
+  Preset,
+  Result,
+} from "../types.ts";
 import type { FinishedDbRow, GameRow } from "./types.ts";
 
 const CELLS: Record<string, CellState> = { h: "hidden", o: "open", f: "flag" };
@@ -59,3 +69,30 @@ export const toFinished = (r: FinishedDbRow): FinishedRow => ({
   startedAt: r.started_at,
   finishedAt: r.finished_at,
 });
+
+/** A new game's values in the INSERT's column order. */
+export const insertValues = (g: NewGame): SQLQueryBindings[] => [
+  g.guildId,
+  g.channelId,
+  g.messageId,
+  g.playerId,
+  g.width,
+  g.height,
+  g.mines,
+  fieldText(g.field),
+  cellsText(g.cells),
+  g.cursor,
+  g.hit,
+  g.createdAt,
+  g.startedAt,
+  g.finishedAt,
+  g.result,
+  g.controls,
+  g.kind,
+  g.date,
+  g.level,
+  g.clicks,
+  g.bbbv,
+  g.points,
+  g.streak,
+];

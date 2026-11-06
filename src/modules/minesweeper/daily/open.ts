@@ -38,5 +38,5 @@ export function freshDaily(o: OpenDaily): NewGame {
 
 /** Today's daily for the player: the one already open or finished, else a fresh one. */
 export function openDaily(store: GameStore, o: OpenDaily): Game {
-  return store.dailyOn(o.guildId, o.playerId, o.date) ?? store.insert(freshDaily(o));
+  return store.dailies.on(o.guildId, o.playerId, o.date) ?? store.insert(freshDaily(o));
 }

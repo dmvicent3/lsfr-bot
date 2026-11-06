@@ -3,8 +3,10 @@ import { minesweeperCommand } from "./commands/commands.ts";
 import { flagHandler } from "./components/flag.ts";
 import { giveUpHandler } from "./components/giveup.ts";
 import { moveHandler } from "./components/move.ts";
+import { pageHandler } from "./components/page.ts";
 import { pickHandler } from "./components/pick.ts";
 import { revealHandler } from "./components/reveal.ts";
+import { minesweeperPoints } from "./points.ts";
 import { minesweeperMigrations } from "./store/migrations.ts";
 
 export function minesweeperModule(random: () => number = Math.random): BotModule {
@@ -12,7 +14,7 @@ export function minesweeperModule(random: () => number = Math.random): BotModule
     name: "minesweeper",
     title: "💣 Minesweeper",
     helpNote:
-      "Pick a cell with the menus or arrows (play option controls), then Reveal or Flag. The first reveal is always safe.",
+      "/minesweeper daily: today's shared board (pick a level once a day), scored by clicks over the board's 3BV. /minesweeper play: practice, any size, the first reveal always safe. Pick a cell with the menus or arrows, then Reveal or Flag.",
     commands: [minesweeperCommand()],
     components: [
       pickHandler("col"),
@@ -21,7 +23,9 @@ export function minesweeperModule(random: () => number = Math.random): BotModule
       flagHandler,
       giveUpHandler,
       moveHandler,
+      pageHandler,
     ],
     migrations: minesweeperMigrations,
+    points: minesweeperPoints,
   };
 }

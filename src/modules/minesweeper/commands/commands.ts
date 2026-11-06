@@ -2,12 +2,14 @@ import type { ChatInputCommandInteraction } from "discord.js";
 import { reply } from "../../../core/replies.ts";
 import type { Ctx, SlashCommand } from "../../../core/types.ts";
 import { GameStore } from "../store/games.ts";
+import { daily } from "./daily.ts";
 import { data } from "./data.ts";
+import { leaderboard } from "./leaderboard.ts";
 import { play } from "./play.ts";
 import { stats } from "./stats.ts";
 import type { Handler } from "./types.ts";
 
-const HANDLERS: Record<string, Handler> = { play, stats };
+const HANDLERS: Record<string, Handler> = { daily, play, leaderboard, stats };
 
 async function execute(i: ChatInputCommandInteraction, ctx: Ctx): Promise<void> {
   const handler = HANDLERS[i.options.getSubcommand()];

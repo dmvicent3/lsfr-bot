@@ -1,6 +1,5 @@
 import type { ComponentHandler } from "../../../core/types.ts";
 import { moveCursor } from "../moves.ts";
-import { GameStore } from "../store/games.ts";
 import type { Axis } from "../types.ts";
 import { act } from "./act.ts";
 
@@ -12,7 +11,7 @@ export function pickHandler(axis: Axis): ComponentHandler {
       if (!i.isStringSelectMenu()) return;
 
       const value = Number(i.values[0] ?? 0);
-      await act(i, new GameStore(ctx.db), (game) => ({
+      await act(i, ctx, (game) => ({
         game: moveCursor(game, axis, value),
         hint: null,
       }));

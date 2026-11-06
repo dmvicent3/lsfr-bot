@@ -4,6 +4,7 @@ import {
   type SlashCommandIntegerOption,
   type SlashCommandSubcommandBuilder,
 } from "discord.js";
+import { PERIOD_CHOICES } from "../../../core/periods.ts";
 import { MAX_SIDE, MIN_SIDE } from "../setup.ts";
 
 const DIFFICULTY_CHOICES = [
@@ -41,15 +42,46 @@ const play = (sub: SlashCommandSubcommandBuilder) =>
         .addChoices(...CONTROLS_CHOICES),
     );
 
+const daily = (sub: SlashCommandSubcommandBuilder) =>
+  sub
+    .setName("daily")
+    .setDescription("Today's shared board, scored by clicks: one a day")
+    .addStringOption((o) =>
+      o
+        .setName("difficulty")
+        .setDescription("Locked for the day once picked (default: intermediate)")
+        .addChoices(...DIFFICULTY_CHOICES),
+    )
+    .addStringOption((o) =>
+      o
+        .setName("controls")
+        .setDescription("How to move the cursor (default: menus)")
+        .addChoices(...CONTROLS_CHOICES),
+    );
+
+const leaderboard = (sub: SlashCommandSubcommandBuilder) =>
+  sub
+    .setName("leaderboard")
+    .setDescription("Daily rankings for today, the week, the month or all time")
+    .addStringOption((o) =>
+      o
+        .setName("period")
+        .setDescription("Default: today")
+        .addChoices(...PERIOD_CHOICES),
+    )
+    .addIntegerOption((o) => o.setName("page").setDescription("Page").setMinValue(1));
+
 export const data = new SlashCommandBuilder()
   .setName("minesweeper")
   .setDescription("Play Minesweeper")
   .setContexts(InteractionContextType.Guild)
+  .addSubcommand(daily)
   .addSubcommand(play)
+  .addSubcommand(leaderboard)
   .addSubcommand((sub) =>
     sub
       .setName("stats")
-      .setDescription("Wins and best times")
+      .setDescription("Daily record, wins and best times")
       .addUserOption((o) => o.setName("member").setDescription("Whose stats (default: yours)")),
   )
   .toJSON();

@@ -1,6 +1,5 @@
 import type { ComponentHandler } from "../../../core/types.ts";
 import { stepCursor } from "../cursor.ts";
-import { GameStore } from "../store/games.ts";
 import type { Direction } from "../types.ts";
 import { act } from "./act.ts";
 
@@ -19,6 +18,6 @@ export const moveHandler: ComponentHandler = {
 
     if (!dir) return;
 
-    await act(i, new GameStore(ctx.db), (game) => ({ game: stepCursor(game, dir), hint: null }));
+    await act(i, ctx, (game) => ({ game: stepCursor(game, dir), hint: null }));
   },
 };

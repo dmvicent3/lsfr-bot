@@ -8,7 +8,7 @@ import type { Award } from "./types.ts";
 export function scoreDaily(store: GameStore, g: Game): { game: Game; award: Award | null } {
   const date = g.date ?? "";
   const won = g.result === "won";
-  const last = store.lastDailyBefore(g.guildId, g.playerId, date);
+  const last = store.dailies.lastBefore(g.guildId, g.playerId, date);
   const prev = last?.date
     ? { date: last.date, won: last.result === "won", streak: last.streak ?? 0 }
     : null;
@@ -19,4 +19,11 @@ export function scoreDaily(store: GameStore, g: Game): { game: Game; award: Awar
   const a = award(g.level, g.clicks, g.bbbv ?? 0, streak);
 
   return { game: { ...g, points: a.points, streak }, award: a };
+}
+
+/** A move's game ready to save: a daily that just ended gets its points; anything else as is. */
+export function settle(store: GameStore, g: Game): { game: Game; award: Award | null } {
+  if (g.kind !== "daily" || g.result === null) return { game: g, award: null };
+
+  return scoreDaily(store, g);
 }

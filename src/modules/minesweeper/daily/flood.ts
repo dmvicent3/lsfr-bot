@@ -2,7 +2,12 @@ import { adjacentMines } from "../field.ts";
 import { neighbours } from "../grid.ts";
 
 /** What revealing `start` opens on a fresh board: the zeros it reaches and their numbered border. */
-export function zeroFlood(field: boolean[], start: number, width: number, height: number): number[] {
+export function zeroFlood(
+  field: boolean[],
+  start: number,
+  width: number,
+  height: number,
+): number[] {
   const seen = new Set([start]);
   const queue = [start];
 
