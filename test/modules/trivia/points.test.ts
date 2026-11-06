@@ -1,7 +1,8 @@
 import { Database } from "bun:sqlite";
 import { expect, test } from "bun:test";
 import { runMigrations } from "../../../src/core/db.ts";
-import { TRIVIA_DAILY_CAP, triviaPoints } from "../../../src/modules/trivia/points.ts";
+import { TRIVIA_DAILY_CAP } from "../../../src/modules/trivia/currency.ts";
+import { triviaPoints } from "../../../src/modules/trivia/points.ts";
 import { triviaMigrations } from "../../../src/modules/trivia/store/migrations.ts";
 
 const DAY = 86_400_000;
@@ -61,4 +62,13 @@ test("only the player's own points in that server count", () => {
   score(db, "v", 9, NOV_1);
   expect(earned(db)).toBe(5);
   expect(earned(db, "v")).toBe(9);
+});
+
+test("the cap day follows Lisbon time, like the other dailies", () => {
+  const db = setup();
+  // In summer Lisbon is UTC+1: 21:30 UTC is 1 Jul there, 23:30 UTC is already 2 Jul.
+  const lateJuly1 = Date.UTC(2027, 6, 1, 23, 30);
+  score(db, "u", 100, lateJuly1 - 2 * 3_600_000);
+  score(db, "u", 100, lateJuly1);
+  expect(earned(db)).toBe(200);
 });

@@ -22,7 +22,7 @@ const NOW = Date.UTC(2026, 10, 3, 12);
 const who = { guildId: "g", userId: "u" };
 
 describe("todayEntries", () => {
-  test("nine dailies in order, all todo on a fresh day", () => {
+  test("ten dailies in order, all todo on a fresh day", () => {
     const list = todayEntries(freshDailiesDb(), who, NOW);
     expect(list.map((e) => e.label)).toEqual([
       "Word #7",
@@ -37,6 +37,7 @@ describe("todayEntries", () => {
       "Groups #-1",
       // Snake launches after this date; FIRST_PUZZLE moves to the launch day.
       "Snake #-1",
+      "Trivia",
     ]);
     expect(list.map((e) => e.command)).toEqual([
       "word play",
@@ -48,6 +49,7 @@ describe("todayEntries", () => {
       "crossword play",
       "groups play",
       "snake play",
+      "trivia start",
     ]);
     expect(list.every((e) => e.state === "todo" && e.tz === "Europe/Lisbon")).toBe(true);
   });
@@ -92,6 +94,7 @@ describe("todayEntries", () => {
       "done:gave up",
       "started:",
       "done:70 pts",
+      "todo:",
     ]);
   });
 
@@ -100,6 +103,25 @@ describe("todayEntries", () => {
     new DuelRepo(db).games.start(duel({ userId: "v" }));
     new GridRepo(db).games.start(grid({ date: "2026-11-02" }));
     expect(todayEntries(db, who, NOW).every((e) => e.state === "todo")).toBe(true);
+  });
+
+  test("trivia counts today's points toward the gacha cap", () => {
+    const db = freshDailiesDb();
+    const add = (points: number, at: number) =>
+      db
+        .query(
+          `INSERT INTO trivia_scores (guild_id, user_id, session_id, kind, item_id, points, ms, at)
+           VALUES ('g', 'u', 1, 'typed', 1, ?, 1000, ?)`,
+        )
+        .run(points, at);
+    const trivia = () => todayEntries(db, who, NOW).at(-1);
+
+    add(500, NOW - 86_400_000);
+    expect(trivia()).toMatchObject({ label: "Trivia", state: "todo" });
+    add(90, NOW - 60_000);
+    expect(trivia()).toMatchObject({ label: "Trivia 90/150", state: "started" });
+    add(90, NOW);
+    expect(trivia()).toMatchObject({ state: "done", result: "150/150 for the gacha" });
   });
 
   test("each game's own time zone picks its day", () => {
