@@ -36,7 +36,6 @@ aided
 aimed
 aired
 aisle
-alamo
 alarm
 album
 alert
@@ -548,7 +547,6 @@ dunce
 duped
 durst
 dusty
-dutch
 duvet
 dwarf
 dwell
@@ -742,7 +740,6 @@ gavel
 gazed
 gecko
 genie
-genoa
 genre
 getup
 ghost
@@ -889,7 +886,6 @@ hound
 house
 hover
 howdy
-hoyle
 hubby
 human
 humid
@@ -984,7 +980,6 @@ leach
 leaky
 leapt
 learn
-leary
 lease
 leash
 least
@@ -1032,7 +1027,6 @@ lorry
 loser
 lotto
 lotus
-louis
 louse
 lousy
 loved
@@ -1136,7 +1130,6 @@ moray
 morel
 moron
 morph
-morse
 motel
 motif
 motor
@@ -1537,7 +1530,6 @@ seedy
 seine
 seize
 senna
-senor
 sense
 serum
 serve
@@ -1880,7 +1872,6 @@ token
 tonic
 tooth
 topic
-torah
 torch
 torso
 total
@@ -1980,7 +1971,6 @@ verge
 verse
 vexed
 vicar
-vichy
 video
 vigil
 vigor

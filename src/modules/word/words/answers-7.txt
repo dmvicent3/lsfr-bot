@@ -100,7 +100,6 @@ appoint
 approve
 apricot
 aquatic
-arcadia
 archaic
 archery
 archive
@@ -165,7 +164,6 @@ banning
 banquet
 banshee
 baptism
-baptist
 baptize
 bargain
 barging
@@ -594,7 +592,6 @@ cordoba
 coroner
 correct
 corrupt
-cossack
 costing
 costume
 cottage
@@ -811,7 +808,6 @@ dossier
 doubled
 doubted
 dowager
-downing
 drafted
 dragged
 drained
@@ -980,7 +976,6 @@ fancies
 fanfare
 fanning
 fantasy
-faraday
 faraway
 farming
 farther
@@ -1037,7 +1032,6 @@ flatten
 flatter
 flavour
 fleeing
-flemish
 flicker
 flipped
 flipper
@@ -1119,7 +1113,6 @@ further
 fussing
 gagging
 gaining
-galilee
 gallant
 gallery
 gallows
@@ -1454,7 +1447,6 @@ juniper
 justice
 justify
 karaoke
-kashmir
 keeping
 ketchup
 keyhole
@@ -1822,7 +1814,6 @@ paisley
 paladin
 palette
 pancake
-pandora
 panicky
 panther
 panting
@@ -1894,7 +1885,6 @@ picking
 pickled
 picture
 pierced
-pierrot
 pigment
 pilgrim
 pinball
@@ -2035,7 +2025,6 @@ publish
 pudding
 puffing
 pulling
-pullman
 pulsing
 pumping
 pumpkin
@@ -2118,7 +2107,6 @@ recruit
 rectify
 rectory
 recycle
-redding
 redhead
 reduced
 redwood
@@ -2207,7 +2195,6 @@ ripping
 risking
 risotto
 rivalry
-riviera
 roaches
 roaming
 roaring
@@ -2243,7 +2230,6 @@ rundown
 running
 rupture
 rushing
-sabbath
 saddest
 saddled
 sadness
@@ -2287,7 +2273,6 @@ scooped
 scooter
 scoring
 scorned
-scottie
 scoured
 scourge
 scraped
@@ -2658,7 +2643,6 @@ teeming
 teenage
 telling
 tempest
-templar
 tempted
 tending
 tension

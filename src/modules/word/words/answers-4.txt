@@ -8,7 +8,6 @@ acne
 acre
 afar
 aged
-agha
 ahoy
 aide
 akin
@@ -47,7 +46,6 @@ awol
 awry
 axis
 axle
-baal
 baba
 babe
 babu
@@ -400,7 +398,6 @@ exes
 exit
 expo
 eyed
-eyre
 face
 fact
 fade
@@ -514,7 +511,6 @@ geez
 gene
 gent
 germ
-geum
 gift
 gill
 girl
@@ -638,7 +634,6 @@ horn
 hose
 host
 hour
-howe
 howl
 huff
 huge
@@ -752,7 +747,6 @@ leaf
 leak
 lean
 leap
-lear
 left
 lend
 leno
@@ -772,7 +766,6 @@ life
 lift
 like
 lily
-lima
 limb
 lime
 limo
@@ -827,7 +820,6 @@ lush
 lute
 lutz
 mace
-mach
 made
 maid
 mail
@@ -904,7 +896,6 @@ more
 morn
 most
 moth
-mott
 move
 much
 muck
@@ -938,7 +929,6 @@ nigh
 nine
 node
 noir
-nome
 none
 nook
 noon
@@ -1144,7 +1134,6 @@ robe
 rock
 rode
 role
-rolf
 roll
 roof
 rook
@@ -1167,7 +1156,6 @@ ruse
 rush
 rust
 sack
-sade
 safe
 saga
 sage
@@ -1193,7 +1181,6 @@ scam
 scan
 scar
 scat
-scot
 seal
 seam
 seat

@@ -181,7 +181,6 @@ barter
 bashed
 basing
 basket
-basque
 bathed
 batter
 battle
@@ -288,7 +287,6 @@ bowled
 bowler
 bowman
 boxing
-brahma
 brainy
 branch
 brandy
@@ -444,7 +442,6 @@ choice
 choked
 choose
 choosy
-chopin
 chorus
 chosen
 chrome
@@ -592,7 +589,6 @@ cutest
 cutler
 cutter
 cyborg
-cyprus
 dabble
 dagger
 dahlia
@@ -721,7 +717,6 @@ doodle
 doofus
 doomed
 doping
-dorado
 dosage
 dotted
 double
@@ -1207,7 +1202,6 @@ humbug
 hummer
 hummus
 humour
-humvee
 hunger
 hungry
 hunted
@@ -1286,7 +1280,6 @@ jackal
 jacked
 jacket
 jagged
-jagger
 jaguar
 jailed
 jailer
@@ -1315,7 +1308,6 @@ jumper
 jungle
 junior
 juries
-kaiser
 karate
 keeper
 kelvin
@@ -1365,7 +1357,6 @@ lastly
 lately
 latent
 latest
-latino
 latter
 launch
 laurel
@@ -1573,7 +1564,6 @@ molded
 moloch
 molten
 moment
-mongol
 monkey
 mooing
 moping
@@ -1638,7 +1628,6 @@ nectar
 needed
 needle
 nephew
-nestor
 neural
 newest
 nibble
@@ -1727,7 +1716,6 @@ paired
 pajama
 palace
 palate
-palmer
 pamper
 pandit
 pantry
@@ -1739,7 +1727,6 @@ pardon
 parent
 parish
 parked
-parker
 parlor
 parody
 parole
@@ -1756,7 +1743,6 @@ patron
 pauper
 paving
 pawned
-pawnee
 payday
 paying
 payoff
@@ -2187,7 +2173,6 @@ senate
 sender
 senile
 senior
-senora
 sensed
 sensor
 sentry
@@ -2525,7 +2510,6 @@ theory
 thesis
 thirst
 thirty
-thorpe
 though
 thrash
 thread
@@ -2560,7 +2544,6 @@ tissue
 titled
 toffee
 toilet
-toledo
 tomato
 tomboy
 tomcat
@@ -2722,7 +2705,6 @@ victim
 victor
 viewed
 viewer
-viking
 violet
 violin
 virile
@@ -2795,7 +2777,6 @@ wicker
 wicket
 widely
 wiggle
-wilder
 wildly
 willed
 willow

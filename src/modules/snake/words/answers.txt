@@ -427,7 +427,6 @@ bankruptcy
 banner
 banquet
 baptism
-baptist
 barb
 barbarian
 barbecue
@@ -1860,7 +1859,6 @@ duration
 dusk
 dust
 dusty
-dutch
 duty
 dwarf
 dwell
@@ -3225,7 +3223,6 @@ just
 justice
 justify
 juvenile
-kaiser
 kangaroo
 kappa
 karaoke
@@ -3813,7 +3810,6 @@ morgue
 morn
 moron
 morphine
-morse
 mortal
 mortar
 mortgage
@@ -4170,7 +4166,6 @@ palace
 paladin
 pale
 palm
-palmer
 pancake
 panda
 panel
@@ -4202,7 +4197,6 @@ parent
 parental
 parish
 park
-parker
 parliament
 parlor
 parole
@@ -5240,7 +5234,6 @@ senator
 send
 senile
 senior
-senor
 sensation
 sense
 senseless
@@ -6466,7 +6459,6 @@ video
 videotape
 view
 vigilante
-viking
 vile
 villa
 village
@@ -6639,7 +6631,6 @@ widow
 wife
 wiggle
 wild
-wilder
 wilderness
 wildest
 wildlife
