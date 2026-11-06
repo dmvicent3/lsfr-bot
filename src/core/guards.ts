@@ -17,3 +17,10 @@ export function asText(value: unknown): string {
 export function records(value: unknown): Record<string, unknown>[] {
   return Array.isArray(value) ? (value as unknown[]).filter(isRecord) : [];
 }
+
+/** The strings in a JSON array; anything else as []. */
+export function jsonStrings(json: string): string[] {
+  const value: unknown = JSON.parse(json);
+
+  return Array.isArray(value) ? (value as unknown[]).filter(isString) : [];
+}

@@ -1,5 +1,5 @@
 import type { Database } from "bun:sqlite";
-import { isString } from "../../../core/guards.ts";
+import { jsonStrings } from "../../../core/guards.ts";
 import type { NewPoll, StoredPoll } from "../types.ts";
 
 interface PollRow extends Omit<StoredPoll, "options" | "multi"> {
@@ -10,15 +10,9 @@ interface PollRow extends Omit<StoredPoll, "options" | "multi"> {
 const COLUMNS = `id, guild_id AS guildId, channel_id AS channelId, message_id AS messageId,
   question, options, multi, created_at AS createdAt, ends_at AS endsAt`;
 
-function parseOptions(json: string): string[] {
-  const value: unknown = JSON.parse(json);
-
-  return Array.isArray(value) ? (value as unknown[]).filter(isString) : [];
-}
-
 const toPoll = (r: PollRow): StoredPoll => ({
   ...r,
-  options: parseOptions(r.options),
+  options: jsonStrings(r.options),
   multi: r.multi === 1,
 });
 
