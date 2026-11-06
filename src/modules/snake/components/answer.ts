@@ -7,7 +7,10 @@ import { GUESS_FIELD } from "../render/ids.ts";
 import { load, turnOf } from "./guard.ts";
 import { present, refresh } from "./show.ts";
 
-/** `snake:answer:<date|practice>:<stamp>`: plays the typed guess; a refused one is told privately. */
+/**
+ * `snake:answer:<date|practice>:<stamp>`: a guess modal opened before guessing moved to
+ * `/snake guess`, still taken so it isn't lost; a refused guess is told privately.
+ */
 export const answerHandler: ModalHandler = {
   id: "snake:answer",
   async handle(i, args, ctx) {

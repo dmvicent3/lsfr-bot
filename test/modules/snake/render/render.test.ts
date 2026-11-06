@@ -5,7 +5,6 @@ import { HOW_TO, LIMIT, body, header } from "../../../../src/modules/snake/rende
 import { boardView } from "../../../../src/modules/snake/render/board-view.ts";
 import { controlRow } from "../../../../src/modules/snake/render/buttons.ts";
 import { guessRow, latest } from "../../../../src/modules/snake/render/lines.ts";
-import { guessModal } from "../../../../src/modules/snake/render/modal.ts";
 import {
   SHARE_ROWS,
   resultLine,
@@ -62,7 +61,11 @@ describe("text", () => {
   });
 
   test("the how-to shows until the first guess", () => {
-    expect(body(view({ guesses: [] }))).toBe(HOW_TO);
+    expect(body(view({ guesses: [] }))).toBe(`${HOW_TO}
+Guess with \`/snake guess word:\`.`);
+    expect(body(view({ guesses: [], number: null }))).toEndWith(
+      "Guess with `/snake guess word: practice:True`.",
+    );
     expect(body(view())).toBe("");
   });
 
@@ -112,22 +115,14 @@ describe("text", () => {
 });
 
 describe("buttons, modal and message", () => {
-  test("Guess and Give up while playing; practice adds New, kept once finished", () => {
-    expect(labels(view())).toEqual(["Guess", "Give up"]);
+  test("Give up while playing; practice adds New, kept once finished", () => {
+    expect(labels(view())).toEqual(["Give up"]);
     expect(controlRow(view())[0]?.components[0]).toMatchObject({
-      custom_id: "snake:guess:2026-11-08:1",
-      style: ButtonStyle.Primary,
+      custom_id: "snake:giveup:2026-11-08:1",
+      style: ButtonStyle.Danger,
     });
     expect(labels(view({ finished: true }))).toEqual([]);
     expect(labels(view({ number: null, finished: true }))).toEqual(["New"]);
-  });
-
-  test("the modal has one text input for a 2–10 letter word", () => {
-    const m = guessModal({ scope: "practice", stamp: "1", title: "Practice snake" }).toJSON();
-    expect(m.custom_id).toBe("snake:answer:practice:1");
-    expect(m.title).toBe("Practice snake");
-    expect(JSON.stringify(m.components)).toContain('"label":"Your guess"');
-    expect(JSON.stringify(m.components)).toContain('"min_length":2,"max_length":10');
   });
 
   test("the board is text: no picture, and an edit clears an old one", () => {

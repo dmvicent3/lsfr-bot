@@ -8,6 +8,15 @@ export const data = new SlashCommandBuilder()
   .addSubcommand((sub) =>
     sub.setName("play").setDescription("Today's word, the same for everyone in the server"),
   )
+  .addSubcommand((sub) =>
+    sub
+      .setName("guess")
+      .setDescription("Guess today's word (or your practice word)")
+      .addStringOption((o) => o.setName("word").setDescription("Your guess").setRequired(true))
+      .addBooleanOption((o) =>
+        o.setName("practice").setDescription("Guess your practice word instead of today's"),
+      ),
+  )
   .addSubcommand((sub) => sub.setName("practice").setDescription("A practice word, just for you"))
   .addSubcommand((sub) =>
     sub

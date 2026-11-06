@@ -37,27 +37,18 @@ test("every button and the modal have a handler", () => {
   expect(answer?.id).toBe("snake:answer");
 });
 
-describe("Guess", () => {
-  test("opens the modal for this round", async () => {
+describe("an old board's Guess button", () => {
+  test("points to /snake guess", async () => {
     const { ctx } = setup();
     const calls = await click("guess", [DATE, STAMP], ctx);
-    expect(calls.modal[0]).toMatchObject({
-      custom_id: `snake:answer:${DATE}:${STAMP}`,
-      title: "Snake #4",
-    });
-  });
-
-  test("an earlier round's button gets the current board", async () => {
-    const { ctx } = setup();
-    const calls = await click("guess", [DATE, "zz"], ctx);
     expect(calls.modal).toHaveLength(0);
-    expect(viewText(calls.update[0])).toContain("Snake #4");
+    expect(calls.reply[0]?.content).toBe("Guess with `/snake guess word:`.");
   });
 
-  test("a player with no round is told to start one", async () => {
+  test("on a practice board, with the practice option", async () => {
     const { ctx } = setup(null);
-    const calls = await click("guess", [DATE, STAMP], ctx);
-    expect(calls.reply[0]?.content).toBe(STALE);
+    const calls = await click("guess", ["practice", STAMP], ctx);
+    expect(calls.reply[0]?.content).toBe("Guess with `/snake guess word: practice:True`.");
   });
 });
 

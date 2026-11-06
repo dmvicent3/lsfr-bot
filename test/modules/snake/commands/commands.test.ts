@@ -6,6 +6,7 @@ import { coreMigrations } from "../../../../src/core/settings.ts";
 import { dateIn } from "../../../../src/core/zoned.ts";
 import { snakeCommand } from "../../../../src/modules/snake/commands/commands.ts";
 import { data } from "../../../../src/modules/snake/commands/data.ts";
+import { NO_PRACTICE, guess } from "../../../../src/modules/snake/commands/guess.ts";
 import { play } from "../../../../src/modules/snake/commands/play.ts";
 import { practice } from "../../../../src/modules/snake/commands/practice.ts";
 import type { CommandCtx } from "../../../../src/modules/snake/commands/types.ts";
@@ -28,11 +29,17 @@ function db() {
 
 type Sent = { flags?: unknown; components?: unknown[]; content?: string; files?: unknown[] };
 
-function fake() {
+function fake(word = "", practiceOpt: boolean | null = null) {
   const sent: Sent[] = [];
-  const i = { user: { id: "u" }, reply: async (m: Sent) => void sent.push(m) };
+  const posted: string[] = [];
+  const i = {
+    user: { id: "u" },
+    reply: async (m: Sent) => void sent.push(m),
+    options: { getString: () => word, getBoolean: () => practiceOpt },
+    channel: { send: async (m: { content: string }) => void posted.push(m.content) },
+  };
 
-  return { i, sent };
+  return { i, sent, posted };
 }
 
 function ctx(i: object, r = db()): CommandCtx {
@@ -45,10 +52,11 @@ function ctx(i: object, r = db()): CommandCtx {
 const PRIVATE = [MessageFlags.Ephemeral, MessageFlags.IsComponentsV2];
 
 describe("/snake data and module", () => {
-  test("five subcommands", () => {
+  test("six subcommands", () => {
     expect(data.name).toBe("snake");
     expect(subs.map((s) => s.name)).toEqual([
       "play",
+      "guess",
       "practice",
       "stats",
       "leaderboard",
@@ -106,6 +114,71 @@ describe("/snake practice", () => {
     r.repo.practice.replace(practiceRound({ startedAt: 5 }));
     await practice(ctx(fake().i, r));
     expect(r.repo.practice.get("g", "u")?.startedAt).toBe(5);
+  });
+});
+
+const today = (): string => dateIn(Date.now(), "Europe/Lisbon");
+
+describe("/snake guess", () => {
+  test("plays a word on today's snake, privately", async () => {
+    const r = db();
+    await play(ctx(fake().i, r));
+    const word = r.repo.puzzles.get("g", today()) === "garden" ? "permit" : "garden";
+    const { i, sent, posted } = fake(word);
+    await guess(ctx(i, r));
+
+    expect(r.repo.games.get("g", today(), "u")?.guesses).toEqual([word]);
+    expect(sent[0]?.flags).toEqual(PRIVATE);
+    expect(viewText(sent[0])).toContain("· 1 guess");
+    expect(posted).toHaveLength(0);
+  });
+
+  test("opens today's snake when the first move is a guess", async () => {
+    const r = db();
+    const { i, sent } = fake("garden");
+    await guess(ctx(i, r));
+
+    expect(r.repo.puzzles.get("g", today())).toBeTruthy();
+    expect(viewText(sent[0])).toContain("**Snake #");
+  });
+
+  test("a refused word is told privately and not counted", async () => {
+    const r = db();
+    const { i, sent } = fake("qzxv");
+    await guess(ctx(i, r));
+
+    expect(sent[0]?.content).toBe("That's not in the word list. Not counted.");
+    expect(r.repo.games.get("g", today(), "u")?.guesses).toEqual([]);
+  });
+
+  test("the answer solves the daily and announces it without the word", async () => {
+    const r = db();
+    await play(ctx(fake().i, r));
+    const answer = r.repo.puzzles.get("g", today())!;
+    const { i, posted } = fake(answer);
+    await guess(ctx(i, r));
+
+    expect(r.repo.games.get("g", today(), "u")).toMatchObject({ solved: true, points: 100 });
+    expect(posted[0]).toStartWith("<@u> solved Snake #");
+    expect(posted[0]).not.toMatch(new RegExp(answer, "i"));
+  });
+
+  test("practice:True plays the kept practice round, with no announce", async () => {
+    const r = db();
+    r.repo.practice.replace(practiceRound({ startedAt: 5 }));
+    const { i, sent, posted } = fake("example", true);
+    await guess(ctx(i, r));
+
+    expect(r.repo.practice.get("g", "u")?.finishedAt).not.toBeNull();
+    expect(viewText(sent[0])).toContain("Practice snake");
+    expect(posted).toHaveLength(0);
+  });
+
+  test("practice:True without a practice round says how to start one", async () => {
+    const { i, sent } = fake("example", true);
+    await guess(ctx(i));
+
+    expect(sent[0]?.content).toBe(NO_PRACTICE);
   });
 });
 

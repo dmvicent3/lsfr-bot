@@ -25,9 +25,15 @@ export const roundName = (number: number | null): string =>
 export const header = (v: BoardView): string =>
   `**${roundName(v.number)}** · ${guessCount(v.guesses.length)}`;
 
+/** Where guesses go: the daily's command, or the same with the practice option. */
+export const guessLine = (v: Pick<BoardView, "number">): string =>
+  v.number === null
+    ? "Guess with `/snake guess word: practice:True`."
+    : "Guess with `/snake guess word:`.";
+
 /** What follows the rows: the how-to until the first guess, then the result once finished. */
 export function body(v: BoardView): string {
-  const intro = v.guesses.length === 0 && !v.finished ? [HOW_TO] : [];
+  const intro = v.guesses.length === 0 && !v.finished ? [HOW_TO, guessLine(v)] : [];
 
   return [...intro, ...resultLines(v)].join("\n");
 }
