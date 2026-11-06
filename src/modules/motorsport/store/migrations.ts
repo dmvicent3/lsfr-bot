@@ -78,4 +78,21 @@ export const motorsportMigrations: Migration[] = [
       ALTER TABLE motorsport_threads ADD COLUMN closed INTEGER NOT NULL DEFAULT 0;
     `,
   },
+  {
+    id: "motorsport-007-chips",
+    sql: `
+      CREATE TABLE motorsport_chips (
+        series TEXT NOT NULL,
+        season INTEGER NOT NULL,
+        user_id TEXT NOT NULL,
+        chip TEXT NOT NULL,
+        event_id TEXT NOT NULL,
+        session_id TEXT,
+        position INTEGER,
+        chosen_at INTEGER NOT NULL,
+        PRIMARY KEY (series, event_id, user_id),
+        UNIQUE (series, season, user_id, chip)
+      );
+    `,
+  },
 ];

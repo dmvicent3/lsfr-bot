@@ -1,8 +1,8 @@
 import type { FetchFn } from "../../../core/types.ts";
 import { log } from "../../../core/log.ts";
-import type { CollectDeps, SessionResult } from "./types.ts";
+import type { CollectDeps, ResultKind, SessionResult } from "./types.ts";
 import type { Post } from "../types.ts";
-import { renderPredictionResults } from "../predictions/scoring.ts";
+import { predictionsPost } from "../predictions/leaderboard-actions.ts";
 import type { MotorsportRepo } from "../repo.ts";
 import type { StoredResult } from "../types.ts";
 import { renderResults, resultKind, resultSeries, resultsDue } from "./results.ts";
@@ -67,22 +67,20 @@ async function postResult(deps: CollectDeps, session: Session, race: Session): P
     postedAt: now,
   });
   // After storing: a failure here must not re-post the results.
-  await postPredictions(deps, session, result);
+  await postPredictions(deps, session, { kind, result });
 }
 
 async function postPredictions(
   { repo, post }: CollectDeps,
-  { series, eventId, eventName, sessionId }: Session,
-  result: SessionResult,
+  session: Session,
+  { kind, result }: { kind: ResultKind; result: SessionResult },
 ): Promise<void> {
-  const predictions = repo.predictions.complete(series, eventId, sessionId);
+  const { series, eventId, eventName } = session;
+  const content = predictionsPost(repo, session, kind, result.rows);
 
-  if (predictions.length === 0) return;
+  if (content === null) return;
 
-  const messageId = await post(
-    { series, eventId, eventName, place: "channel" },
-    { content: renderPredictionResults(predictions, result.rows) },
-  );
+  const messageId = await post({ series, eventId, eventName, place: "channel" }, { content });
 
   if (messageId) repo.channelPosts.add(series, eventId, messageId);
 }

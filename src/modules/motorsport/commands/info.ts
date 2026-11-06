@@ -1,7 +1,7 @@
 import type { CommandCtx, Handler } from "./types.ts";
 import { MessageFlags } from "discord.js";
 import { log } from "../../../core/log.ts";
-import { seasonLeaderboard } from "../predictions/predict-actions.ts";
+import { seasonLeaderboard } from "../predictions/leaderboard-actions.ts";
 import { latestResult } from "../results/collect-results.ts";
 import { renderResults } from "../results/results.ts";
 import { renderNext } from "../schedule/next.ts";

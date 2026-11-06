@@ -6,6 +6,7 @@ import { MotorsportRepo } from "../../../src/modules/motorsport/repo.ts";
 import { motorsportMigrations } from "../../../src/modules/motorsport/store/migrations.ts";
 import type { Followed, StoredResult } from "../../../src/modules/motorsport/types.ts";
 import type { Session } from "../../../src/modules/motorsport/types.ts";
+import type { ResultKind } from "../../../src/modules/motorsport/results/types.ts";
 
 let repo: MotorsportRepo;
 
@@ -243,7 +244,7 @@ describe("predictions", () => {
     );
   });
 
-  test("season entries: complete race/sprint predictions with results posted since", () => {
+  test("scored entries: complete predictions of the asked kinds with results posted since", () => {
     repo.predictions.set(
       { userId: "u1", now: 1 },
       { series: "f1", eventId: "e", sessionId: "race" },
@@ -267,9 +268,51 @@ describe("predictions", () => {
     repo.results.insert(stored("race", 100));
     repo.results.insert(stored("qualifying", 100));
     repo.results.insert({ ...stored("race", 5), eventId: "old" });
-    expect(repo.predictions.season("f1", 50)).toEqual([
-      { userId: "u1", picks: ["1", "2", "3"], rows: stored("race", 100).rows },
+    const entry = (sessionId: string, kind: ResultKind) => ({
+      userId: "u1",
+      eventId: "e",
+      sessionId,
+      kind,
+      picks: ["1", "2", "3"] as [string, string, string],
+      rows: stored(sessionId, 100).rows,
+    });
+    expect(repo.predictions.scored("f1", { kinds: ["race", "sprint"], since: 50 })).toEqual([
+      entry("race", "race"),
     ]);
+    expect(repo.predictions.scored("f1", { kinds: ["qualifying", "race"], since: 50 }).length).toBe(
+      2,
+    );
+    expect(repo.predictions.scored("f1", { kinds: ["race"], since: 0, userId: "u2" })).toEqual([
+      { ...entry("race", "race"), userId: "u2", eventId: "old" },
+    ]);
+  });
+});
+
+const weekend = (eventId: string) => ({ series: "f1" as const, season: 2026, eventId });
+
+describe("chips", () => {
+  const double = { kind: "double" as const, sessionId: null, position: null };
+  const triple = { kind: "triple" as const, sessionId: "race", position: 2 };
+
+  test("one per player per weekend, replaced on change, cleared by deleting", () => {
+    expect(repo.chips.get("f1", "e", "u1")).toBeNull();
+    repo.chips.set(weekend("e"), "u1", double, 1);
+    repo.chips.set(weekend("e"), "u1", triple, 2);
+    expect(repo.chips.get("f1", "e", "u1")).toEqual(triple);
+    expect(repo.chips.season("f1", 2026, "u1")).toEqual([
+      { userId: "u1", eventId: "e", chip: triple },
+    ]);
+    repo.chips.clear("f1", "e", "u1");
+    expect(repo.chips.all("f1")).toEqual([]);
+  });
+
+  test("each chip once per season, enforced by the table too", () => {
+    repo.chips.set(weekend("e"), "u1", double, 1);
+    expect(() => repo.chips.set(weekend("f"), "u1", double, 2)).toThrow();
+    repo.chips.set({ ...weekend("g"), season: 2027 }, "u1", double, 3);
+    repo.chips.set(weekend("e"), "u2", double, 4);
+    expect(repo.chips.all("f1", "u1").map((c) => c.eventId)).toEqual(["e", "g"]);
+    expect(repo.chips.season("f1", 2026, "u1")).toHaveLength(1);
   });
 });
 

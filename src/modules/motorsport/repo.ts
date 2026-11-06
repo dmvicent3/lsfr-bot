@@ -1,6 +1,7 @@
 import type { Database } from "bun:sqlite";
 import type { SeriesKey } from "./types.ts";
 import { ChannelPostStore } from "./store/channel-posts.ts";
+import { ChipStore } from "./store/chips.ts";
 import { FollowedStore } from "./store/followed.ts";
 import { PingStore } from "./store/pings.ts";
 import { PredictionStore } from "./store/predictions.ts";
@@ -23,6 +24,7 @@ export class MotorsportRepo {
   readonly threads: ThreadStore;
   readonly rulings: RulingStore;
   readonly channelPosts: ChannelPostStore;
+  readonly chips: ChipStore;
 
   constructor(private readonly db: Database) {
     this.followed = new FollowedStore(db);
@@ -35,6 +37,7 @@ export class MotorsportRepo {
     this.threads = new ThreadStore(db);
     this.rulings = new RulingStore(db);
     this.channelPosts = new ChannelPostStore(db);
+    this.chips = new ChipStore(db);
   }
 
   deleteSeries(s: SeriesKey): void {

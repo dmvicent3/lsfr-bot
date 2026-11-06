@@ -3,13 +3,13 @@ import { log } from "../../../core/log.ts";
 import type { ComponentHandler, Ctx } from "../../../core/types.ts";
 import { fetchSeriesChannel, guildOf } from "../channels/lookup.ts";
 import { updatePinned } from "../channels/pinned.ts";
-import { predictPicker, savePick } from "../predictions/predict-actions.ts";
+import { predictPicker } from "../predictions/picker-actions.ts";
+import { savePick } from "../predictions/predict-actions.ts";
 import { MotorsportRepo } from "../repo.ts";
 import { toSeriesKey } from "../series.ts";
 import type { SeriesKey } from "../types.ts";
 
-const asReply = (picker: Awaited<ReturnType<typeof predictPicker>>) =>
-  typeof picker === "string" ? { content: picker, components: [] } : picker;
+import { asReply } from "./picker-reply.ts";
 
 /** "Predict" on the pinned schedule, or a picker's button to switch to another session. */
 const predictMenu: ComponentHandler = {

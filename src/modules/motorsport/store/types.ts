@@ -1,3 +1,6 @@
+import type { ResultKind } from "../results/types.ts";
+import type { SeriesKey } from "../types.ts";
+
 export interface PicksRow {
   user_id: string;
   p1: string | null;
@@ -32,4 +35,31 @@ export interface DueRow {
   session_id: string;
   channel_id: string;
   message_id: string;
+}
+
+export interface ChipRow {
+  user_id: string;
+  event_id: string;
+  chip: string;
+  session_id: string | null;
+  position: number | null;
+}
+
+/** Where a chip is played: the series weekend and its season (UTC year). */
+export interface ChipWeekend {
+  series: SeriesKey;
+  season: number;
+  eventId: string;
+}
+
+/** A complete prediction joined with its session's result. */
+export interface ScoredRow {
+  user_id: string;
+  event_id: string;
+  session_id: string;
+  kind: ResultKind;
+  p1: string;
+  p2: string;
+  p3: string;
+  rows_json: string;
 }

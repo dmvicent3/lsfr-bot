@@ -1,6 +1,6 @@
-import type { PicksRow } from "./types.ts";
+import type { PicksRow, ScoredRow } from "./types.ts";
 import type { SeriesKey, SessionRef, Viewer } from "../types.ts";
-import type { Picks, Prediction, SeasonEntry } from "../predictions/types.ts";
+import type { Picks, Prediction, ScoredQuery, SeasonEntry } from "../predictions/types.ts";
 import { parseResultRows } from "../results/results.ts";
 import type { Database } from "bun:sqlite";
 
@@ -8,7 +8,7 @@ const picksOf = (r: PicksRow): Picks => [r.p1, r.p2, r.p3];
 
 const COMPLETE = "p1 IS NOT NULL AND p2 IS NOT NULL AND p3 IS NOT NULL";
 
-/** motorsport_predictions: each user's podium picks per race and sprint. */
+/** motorsport_predictions: each user's podium picks per predictable session. */
 export class PredictionStore {
   constructor(private readonly db: Database) {}
 
@@ -56,23 +56,25 @@ export class PredictionStore {
     return new Map(rows.map((r) => [r.session_id, r.n]));
   }
 
-  /** Every complete race/sprint prediction whose result was posted at or after `since`. */
-  season(s: SeriesKey, since: number): SeasonEntry[] {
+  /** Complete predictions of the query's session kinds whose result was posted since. */
+  scored(s: SeriesKey, q: ScoredQuery): SeasonEntry[] {
+    const kinds = q.kinds.map(() => "?").join(", ");
+
     return this.db
-      .query<
-        { user_id: string; p1: string; p2: string; p3: string; rows_json: string },
-        [string, number]
-      >(
-        `SELECT p.user_id, p.p1, p.p2, p.p3, r.rows_json
+      .query<ScoredRow, (string | number | null)[]>(
+        `SELECT p.user_id, p.event_id, p.session_id, r.kind, p.p1, p.p2, p.p3, r.rows_json
          FROM motorsport_predictions p
          JOIN motorsport_results r USING (series, event_id, session_id)
-         WHERE p.series = ? AND r.posted_at >= ? AND r.kind IN ('race', 'sprint')
-           AND ${COMPLETE}
+         WHERE p.series = ? AND r.posted_at >= ? AND (? IS NULL OR p.user_id = ?)
+           AND r.kind IN (${kinds}) AND ${COMPLETE}
          ORDER BY r.posted_at, p.user_id`,
       )
-      .all(s, since)
+      .all(s, q.since, q.userId ?? null, q.userId ?? null, ...q.kinds)
       .map((r) => ({
         userId: r.user_id,
+        eventId: r.event_id,
+        sessionId: r.session_id,
+        kind: r.kind,
         picks: [r.p1, r.p2, r.p3],
         rows: parseResultRows(r.rows_json),
       }));

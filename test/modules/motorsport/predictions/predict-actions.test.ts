@@ -3,12 +3,12 @@ import { beforeEach, describe, expect, test } from "bun:test";
 import { runMigrations } from "../../../../src/core/db.ts";
 import type { FetchFn } from "../../../../src/core/types.ts";
 import { coreMigrations } from "../../../../src/core/settings.ts";
+import { seasonLeaderboard } from "../../../../src/modules/motorsport/predictions/leaderboard-actions.ts";
 import {
   predictionGrid,
   predictPicker,
-  savePick,
-  seasonLeaderboard,
-} from "../../../../src/modules/motorsport/predictions/predict-actions.ts";
+} from "../../../../src/modules/motorsport/predictions/picker-actions.ts";
+import { savePick } from "../../../../src/modules/motorsport/predictions/predict-actions.ts";
 import { MotorsportRepo } from "../../../../src/modules/motorsport/repo.ts";
 import { motorsportMigrations } from "../../../../src/modules/motorsport/store/migrations.ts";
 import type { Session } from "../../../../src/modules/motorsport/types.ts";
@@ -16,9 +16,10 @@ import type { Session } from "../../../../src/modules/motorsport/types.ts";
 const T = Date.parse("2026-03-14T07:00:00Z");
 let repo: MotorsportRepo;
 
+/** A MotoGP weekend: races and sprints, each locking at its own start. */
 function session(sessionId: string, title: string, start: number): Session {
   return {
-    series: "f1",
+    series: "motogp",
     eventId: "e",
     eventName: "Chinese Grand Prix",
     sessionId,
@@ -34,10 +35,10 @@ beforeEach(() => {
   runMigrations(db, [...coreMigrations, ...motorsportMigrations]);
   repo = new MotorsportRepo(db);
   repo.sessions.replace(
-    "f1",
+    "motogp",
     [
-      session("qualifying", "Qualifying", T + 3_600_000),
-      session("sprint-race", "Sprint", T - 3_600_000),
+      session("qualifying2", "Qualifying 2", T + 3_600_000),
+      session("sprint", "Sprint", T - 3_600_000),
       session("race", "Race", T + 86_400_000),
     ],
     T,
@@ -53,10 +54,10 @@ const notFound: FetchFn = async () => new Response("{}", { status: 404 });
 /** A stored qualifying result: the grid to pick from. */
 function stored(): void {
   repo.results.insert({
-    series: "f1",
+    series: "motogp",
     eventId: "e",
     eventName: "E",
-    sessionId: "qualifying",
+    sessionId: "qualifying2",
     kind: "qualifying",
     rows: [{ pos: "1", id: "3", name: "Verstappen", team: "", time: "" }],
     postedAt: 1,
@@ -69,14 +70,14 @@ describe("savePick", () => {
       savePick(
         repo,
         { userId: "u1", now: T },
-        { series: "f1", eventId: "e", sessionId: "race" },
+        { series: "motogp", eventId: "e", sessionId: "race" },
         { index: index, driverId: id },
       );
     expect(pick(0, "3")).toEqual({ ok: true, picks: ["3", null, null], completed: false });
     pick(1, "4");
     expect(pick(2, "16")).toEqual({ ok: true, picks: ["3", "4", "16"], completed: true });
     expect(pick(0, "16")).toEqual({ ok: true, picks: ["16", "4", "3"], completed: false });
-    expect(repo.predictions.get("u1", "f1", "e", "race")).toEqual(["16", "4", "3"]);
+    expect(repo.predictions.get("u1", "motogp", "e", "race")).toEqual(["16", "4", "3"]);
   });
 
   test("locked once the session starts", () => {
@@ -84,14 +85,14 @@ describe("savePick", () => {
       savePick(
         repo,
         { userId: "u1", now: T },
-        { series: "f1", eventId: "e", sessionId: "sprint-race" },
+        { series: "motogp", eventId: "e", sessionId: "sprint" },
         { index: 0, driverId: "3" },
       ),
     ).toEqual({
       ok: false,
       text: "🔒 Predictions for the Chinese Grand Prix Sprint closed at the start.",
     });
-    expect(repo.predictions.get("u1", "f1", "e", "sprint-race")).toEqual([null, null, null]);
+    expect(repo.predictions.get("u1", "motogp", "e", "sprint")).toEqual([null, null, null]);
   });
 
   test("only races and sprints on the schedule, positions 0 to 2", () => {
@@ -100,7 +101,7 @@ describe("savePick", () => {
       savePick(
         repo,
         { userId: "u1", now: T },
-        { series: "f1", eventId: "e", sessionId: "qualifying" },
+        { series: "motogp", eventId: "e", sessionId: "qualifying2" },
         { index: 0, driverId: "3" },
       ),
     ).toEqual(gone);
@@ -108,7 +109,7 @@ describe("savePick", () => {
       savePick(
         repo,
         { userId: "u1", now: T },
-        { series: "f1", eventId: "x", sessionId: "race" },
+        { series: "motogp", eventId: "x", sessionId: "race" },
         { index: 0, driverId: "3" },
       ),
     ).toEqual(gone);
@@ -116,7 +117,7 @@ describe("savePick", () => {
       savePick(
         repo,
         { userId: "u1", now: T },
-        { series: "f1", eventId: "e", sessionId: "race" },
+        { series: "motogp", eventId: "e", sessionId: "race" },
         { index: 3, driverId: "3" },
       ),
     ).toEqual(gone);
@@ -154,11 +155,11 @@ describe("predictPicker", () => {
     const first = await predictPicker(
       repo,
       { userId: "u1", now: T },
-      { series: "f1", eventId: "e", sessionId: undefined },
+      { series: "motogp", eventId: "e", sessionId: undefined },
       notFound,
     );
     expect(typeof first === "string" ? first : first.content).toStartWith(
-      "🔮 **F1 Chinese Grand Prix Race** podium",
+      "🔮 **MotoGP Chinese Grand Prix Race** podium",
     );
   });
 
@@ -167,7 +168,7 @@ describe("predictPicker", () => {
       await predictPicker(
         repo,
         { userId: "u1", now: T + 86_400_000 },
-        { series: "f1", eventId: "e", sessionId: "race" },
+        { series: "motogp", eventId: "e", sessionId: "race" },
         notFound,
       ),
     ).toBe("No races or sprints left to predict this weekend.");
@@ -175,7 +176,7 @@ describe("predictPicker", () => {
       await predictPicker(
         repo,
         { userId: "u1", now: T },
-        { series: "f1", eventId: "e", sessionId: "race" },
+        { series: "motogp", eventId: "e", sessionId: "race" },
         notFound,
       ),
     ).toBe("No driver list yet: predictions open once the first session's results are in.");
@@ -185,7 +186,7 @@ describe("predictPicker", () => {
 test("season leaderboard counts only this year's results", () => {
   const result = (eventId: string, postedAt: number) =>
     repo.results.insert({
-      series: "f1",
+      series: "motogp",
       eventId,
       eventName: "E",
       sessionId: "race",
@@ -201,15 +202,15 @@ test("season leaderboard counts only this year's results", () => {
   result("e", T);
   repo.predictions.set(
     { userId: "u1", now: 0 },
-    { series: "f1", eventId: "last-year", sessionId: "race" },
+    { series: "motogp", eventId: "last-year", sessionId: "race" },
     ["3", "4", "16"],
   );
   repo.predictions.set(
     { userId: "u1", now: 0 },
-    { series: "f1", eventId: "e", sessionId: "race" },
+    { series: "motogp", eventId: "e", sessionId: "race" },
     ["3", "16", "4"],
   );
-  expect(seasonLeaderboard(repo, "f1", T)).toBe(
-    "## 🔮 F1 predictions — 2026 season\n**1.** <@u1> · **9** pts · 1 race",
+  expect(seasonLeaderboard(repo, "motogp", T)).toBe(
+    "## 🔮 MotoGP predictions — 2026 season\n**1.** <@u1> · **9** pts · 1 race",
   );
 });

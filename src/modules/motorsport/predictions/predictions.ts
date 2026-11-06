@@ -1,20 +1,14 @@
 import type { Picks, FullPicks, Driver } from "./types.ts";
 import { resultKind } from "../results/results.ts";
-import type { EventSchedule, SeriesKey, Session } from "../types.ts";
+import type { SeriesKey } from "../types.ts";
+import { rulesOf } from "./rules.ts";
 
 export const isComplete = (picks: Picks): picks is FullPicks => picks.every((p) => p !== null);
 
 export function isPredictable(series: SeriesKey, sessionId: string): boolean {
   const kind = resultKind(series, sessionId);
 
-  return kind === "race" || kind === "sprint";
-}
-
-/** The event's races and sprints that haven't started: predictions lock at the start. */
-export function openPredictions(event: EventSchedule, now: number): Session[] {
-  return event.sessions.filter(
-    (s) => isPredictable(s.series, s.sessionId) && s.start.getTime() > now,
-  );
+  return kind !== null && rulesOf(series).kinds.includes(kind);
 }
 
 /** Sets one position; a driver already placed elsewhere swaps with whoever was here. */

@@ -41,7 +41,7 @@ const config = loadConfig(process.env);
  */
 const jev = config.jevUrl ? createJev({ url: config.jevUrl }) : null;
 const features: BotModule[] = [
-  motorsportModule,
+  motorsportModule(config.guildId),
   remindersModule,
   wordModule(),
   sudokuModule(),
