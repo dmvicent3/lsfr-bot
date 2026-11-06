@@ -5,6 +5,7 @@ import { crosswordMigrations } from "../../../src/modules/crossword/store/migrat
 import { duelMigrations } from "../../../src/modules/duel/store/migrations.ts";
 import { gridMigrations } from "../../../src/modules/grid/store/migrations.ts";
 import { groupsMigrations } from "../../../src/modules/groups/store/migrations.ts";
+import { minesweeperMigrations } from "../../../src/modules/minesweeper/store/migrations.ts";
 import { snakeMigrations } from "../../../src/modules/snake/store/migrations.ts";
 import { sudokuMigrations } from "../../../src/modules/sudoku/store/migrations.ts";
 import { triviaMigrations } from "../../../src/modules/trivia/store/migrations.ts";
@@ -17,6 +18,7 @@ export function freshDailiesDb(): Database {
     ...coreMigrations,
     ...wordMigrations,
     ...sudokuMigrations,
+    ...minesweeperMigrations,
     ...duelMigrations,
     ...gridMigrations,
     ...crosswordMigrations,

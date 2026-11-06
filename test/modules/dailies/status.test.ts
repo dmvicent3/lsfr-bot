@@ -4,6 +4,7 @@ import { groupsEntry } from "../../../src/modules/dailies/status/groups.ts";
 import { snakeEntry } from "../../../src/modules/dailies/status/snake.ts";
 import { duelEntry } from "../../../src/modules/dailies/status/duel.ts";
 import { gridEntry } from "../../../src/modules/dailies/status/grid.ts";
+import { minesweeperEntry } from "../../../src/modules/dailies/status/minesweeper.ts";
 import { sudokuEntry } from "../../../src/modules/dailies/status/sudoku.ts";
 import { wordEntry } from "../../../src/modules/dailies/status/word.ts";
 import { wordMultiEntry } from "../../../src/modules/dailies/status/word-multi.ts";
@@ -12,6 +13,7 @@ import { game as groups } from "../groups/store/fixtures.ts";
 import { game as snake } from "../snake/store/fixtures.ts";
 import { game as duel } from "../duel/store/fixtures.ts";
 import { game as grid } from "../grid/store/fixtures.ts";
+import { game as mines } from "../minesweeper/fixtures.ts";
 import { game as sudoku } from "../sudoku/store/fixtures.ts";
 import { multiGame, game as word } from "../word/fixtures.ts";
 
@@ -57,6 +59,17 @@ describe("sudoku", () => {
       state: "done",
       result: "95 pts",
     });
+  });
+});
+
+describe("minesweeper", () => {
+  test("open is started; a win shows points, a loss says so", () => {
+    expect(minesweeperEntry(null, base).state).toBe("todo");
+    expect(minesweeperEntry(mines(["*.."]), base).state).toBe("started");
+    const won = mines(["*.."], { result: "won", finishedAt: 2, points: 136 });
+    expect(minesweeperEntry(won, base).result).toBe("136 pts");
+    const lost = mines(["*.."], { result: "lost", finishedAt: 2, points: 0 });
+    expect(minesweeperEntry(lost, base).result).toBe("💥 lost");
   });
 });
 

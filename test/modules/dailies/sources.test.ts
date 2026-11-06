@@ -22,7 +22,7 @@ const NOW = Date.UTC(2026, 10, 3, 12);
 const who = { guildId: "g", userId: "u" };
 
 describe("todayEntries", () => {
-  test("ten dailies in order, all todo on a fresh day", () => {
+  test("eleven dailies in order, all todo on a fresh day", () => {
     const list = todayEntries(freshDailiesDb(), who, NOW);
     expect(list.map((e) => e.label)).toEqual([
       "Word #7",
@@ -30,6 +30,8 @@ describe("todayEntries", () => {
       "Word Duo #-1",
       "Word Quad #-1",
       "Sudoku #1",
+      // Minesweeper's daily launches after this date.
+      "Minesweeper #-2",
       "Stat duel #1",
       "Country grid #1",
       "Crossword #1",
@@ -44,6 +46,7 @@ describe("todayEntries", () => {
       "duo play",
       "quad play",
       "sudoku daily",
+      "minesweeper daily",
       "duel play",
       "grid play",
       "crossword play",
@@ -89,6 +92,7 @@ describe("todayEntries", () => {
       "started:",
       "done:3/4 · 150 pts",
       "started:",
+      "todo:",
       "done:5/5 · 150 pts",
       "started:",
       "done:gave up",
