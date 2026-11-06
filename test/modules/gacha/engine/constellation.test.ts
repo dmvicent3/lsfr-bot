@@ -11,6 +11,8 @@ const roll = (driverId: string, tier: Roll["tier"]): Roll => ({
   tier,
   featured: false,
   lost: false,
+  guaranteed: false,
+  pulls: 1,
 });
 
 describe("levelOf", () => {

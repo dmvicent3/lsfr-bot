@@ -5,7 +5,7 @@ import { pollStatus } from "../../../../src/modules/gacha/text/banner.ts";
 import { collectionText } from "../../../../src/modules/gacha/text/collection.ts";
 import { pityLine, record } from "../../../../src/modules/gacha/text/format.ts";
 import { historyText } from "../../../../src/modules/gacha/text/history.ts";
-import { pullText, shortText } from "../../../../src/modules/gacha/text/pull.ts";
+import { fiveNews, pullText, shortText } from "../../../../src/modules/gacha/text/pull.ts";
 import { driver } from "../testing/drivers.ts";
 
 const SENNA = driver({
@@ -48,6 +48,8 @@ describe("pullText", () => {
       tier: 5 as const,
       featured: true,
       lost: false,
+      guaranteed: false,
+      pulls: 1,
       level: 0,
       isNew: true,
       refund: 0,
@@ -69,6 +71,44 @@ describe("pullText", () => {
     expect(shortText({ balance: 90, cost: 1400, price: 140 })).toContain(
       "costs 1,400 and your balance is 90",
     );
+  });
+});
+
+const five = (o: { featured: boolean; lost: boolean; guaranteed: boolean }) => ({
+  driverId: "senna",
+  tier: 5 as const,
+  ...o,
+  pulls: 76,
+  level: 0,
+  isNew: true,
+  refund: 0,
+});
+
+describe("fiveNews", () => {
+  test("a won 50/50 with the pulls it took", () => {
+    expect(
+      fiveNews("u", SENNA, five({ featured: true, lost: false, guaranteed: false }), "limited"),
+    ).toBe(
+      "🏆 <@u> pulled ★5 Ayrton Senna (C0) on the limited banner after 76 pulls · won the 50/50!",
+    );
+  });
+
+  test("a lost 50/50 says the next is guaranteed", () => {
+    expect(
+      fiveNews("u", SENNA, five({ featured: false, lost: true, guaranteed: false }), "limited"),
+    ).toContain("after 76 pulls · lost the 50/50, so the next ★5 is guaranteed!");
+  });
+
+  test("a guaranteed ★5 says so", () => {
+    expect(
+      fiveNews("u", SENNA, five({ featured: true, lost: false, guaranteed: true }), "limited"),
+    ).toContain("after 76 pulls · guaranteed after a lost 50/50!");
+  });
+
+  test("the standard banner has no 50/50", () => {
+    expect(
+      fiveNews("u", SENNA, five({ featured: false, lost: false, guaranteed: false }), "standard"),
+    ).toBe("🏆 <@u> pulled ★5 Ayrton Senna (C0) on the standard banner after 76 pulls!");
   });
 });
 

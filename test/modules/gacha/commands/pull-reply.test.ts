@@ -15,6 +15,8 @@ const land = (driverId: string, tier: Landed["tier"]): Landed => ({
   tier,
   featured: false,
   lost: false,
+  guaranteed: false,
+  pulls: 1,
   level: 0,
   isNew: true,
   refund: 0,

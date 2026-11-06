@@ -15,6 +15,7 @@ export const pickAny = (pool: readonly string[], random: () => number): Pick => 
   driverId: choose(pool, random),
   featured: false,
   lost: false,
+  guaranteed: false,
   guarantee: false,
 });
 
@@ -27,10 +28,22 @@ export function pickFeatured(
   random: () => number,
 ): Pick {
   if (v.guarantee || random() < FEATURED_CHANCE) {
-    return { driverId: choose(v.featured, random), featured: true, lost: false, guarantee: false };
+    return {
+      driverId: choose(v.featured, random),
+      featured: true,
+      lost: false,
+      guaranteed: v.guarantee,
+      guarantee: false,
+    };
   }
 
   const others = v.pool.filter((id) => !v.featured.includes(id));
 
-  return { driverId: choose(others, random), featured: false, lost: true, guarantee: true };
+  return {
+    driverId: choose(others, random),
+    featured: false,
+    lost: true,
+    guaranteed: false,
+    guarantee: true,
+  };
 }

@@ -62,6 +62,8 @@ describe("PullStore", () => {
       tier: 3 as const,
       featured: false,
       lost: false,
+      guaranteed: false,
+      pulls: 1,
       level: 0,
       isNew: true,
       refund: 0,

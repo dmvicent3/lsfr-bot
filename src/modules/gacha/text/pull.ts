@@ -33,6 +33,16 @@ export function pullText(v: {
 export const shortText = (v: { balance: number; cost: number; price: number }): string =>
   `That costs ${amount(v.cost)} and your balance is ${amount(v.balance)} (one pull is ${amount(v.price)}). Points from every game add to it: play a daily!`;
 
-/** The public line for a ★5. */
-export const fiveNews = (userId: string, d: Driver, l: Landed, kind: BannerKind): string =>
-  `🏆 <@${userId}> pulled ★5 ${d.name} (C${l.level}) on the ${BANNER_NAME[kind].toLowerCase()}!`;
+/** How a limited ★5 went: guaranteed, or the 50/50 won or lost. */
+function fiftyFifty(l: Landed): string {
+  if (l.guaranteed) return "guaranteed after a lost 50/50";
+
+  return l.lost ? "lost the 50/50, so the next ★5 is guaranteed" : "won the 50/50";
+}
+
+/** The public line for a ★5: the banner, how many pulls it took and, on a limited, the 50/50. */
+export function fiveNews(userId: string, d: Driver, l: Landed, kind: BannerKind): string {
+  const head = `🏆 <@${userId}> pulled ★5 ${d.name} (C${l.level}) on the ${BANNER_NAME[kind].toLowerCase()} after ${plural(l.pulls, "pull")}`;
+
+  return kind === "limited" ? `${head} · ${fiftyFifty(l)}!` : `${head}!`;
+}

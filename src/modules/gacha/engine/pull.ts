@@ -31,6 +31,13 @@ const LIMITED: Record<Tier, Picker> = {
   3: any(3),
 };
 
+/** Pulls since a tier's last one, counting this one; ★3 has no counter. */
+const SINCE: Record<Tier, (p: Pity) => number> = {
+  5: (p) => p.five + 1,
+  4: (p) => p.four + 1,
+  3: () => 1,
+};
+
 const STANDARD: Record<Tier, Picker> = { 5: any(5), 4: any(4), 3: any(3) };
 
 /** One pull: the tier from the counters, then the driver; returns the roll and the new counters. */
@@ -38,9 +45,10 @@ export function pullOnce(d: Draw, pity: Pity, random: () => number): { roll: Rol
   const tier = rollTier(pity, random());
   const pickers = d.kind === "limited" && d.featured ? LIMITED : STANDARD;
   const picked = pickers[tier](d, countAfter(pity, tier), random);
-  const { driverId, featured, lost } = picked.pick;
+  const { driverId, featured, lost, guaranteed } = picked.pick;
+  const pulls = SINCE[tier](pity);
 
-  return { roll: { driverId, tier, featured, lost }, pity: picked.pity };
+  return { roll: { driverId, tier, featured, lost, guaranteed, pulls }, pity: picked.pity };
 }
 
 /** `count` pulls in a row, each starting from the counters the previous one left. */

@@ -38,6 +38,10 @@ export interface Roll {
   featured: boolean;
   /** A lost 50/50: a guarantee is now set. */
   lost: boolean;
+  /** Featured because of a guarantee, with no 50/50 rolled. */
+  guaranteed: boolean;
+  /** Pulls since this tier's last one, counting this one (1 for a ★3, which has no counter). */
+  pulls: number;
 }
 
 /** A driver chosen within a tier, and the guarantee that follows. */
@@ -45,6 +49,8 @@ export interface Pick {
   driverId: string;
   featured: boolean;
   lost: boolean;
+  /** Featured because of a guarantee, with no 50/50 rolled. */
+  guaranteed: boolean;
   /** The guarantee for this tier after the pick. */
   guarantee: boolean;
 }

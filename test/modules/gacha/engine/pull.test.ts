@@ -21,28 +21,49 @@ describe("pullOnce on a limited banner", () => {
   test("a won 50/50 gives the featured ★5 and no guarantee", () => {
     const { roll, pity } = pullOnce(LIMITED, FRESH, seq(0, 0.2, 0));
 
-    expect(roll).toEqual({ driverId: "f1", tier: 5, featured: true, lost: false });
+    expect(roll).toEqual({
+      driverId: "f1",
+      tier: 5,
+      featured: true,
+      lost: false,
+      guaranteed: false,
+      pulls: 1,
+    });
     expect(pity).toMatchObject({ five: 0, four: 1, guaranteeFive: false });
   });
 
   test("a lost 50/50 gives another ★5 and sets the guarantee", () => {
     const { roll, pity } = pullOnce(LIMITED, FRESH, seq(0, 0.7, 0.9));
 
-    expect(roll).toEqual({ driverId: "f3", tier: 5, featured: false, lost: true });
+    expect(roll).toEqual({
+      driverId: "f3",
+      tier: 5,
+      featured: false,
+      lost: true,
+      guaranteed: false,
+      pulls: 1,
+    });
     expect(pity.guaranteeFive).toBe(true);
   });
 
   test("the guarantee gives the featured ★5 and clears", () => {
     const { roll, pity } = pullOnce(LIMITED, { ...FRESH, guaranteeFive: true }, seq(0, 0.99));
 
-    expect(roll.driverId).toBe("f1");
+    expect(roll).toMatchObject({ driverId: "f1", featured: true, guaranteed: true });
     expect(pity.guaranteeFive).toBe(false);
   });
 
   test("a lost ★4 50/50 gives a non-featured ★4 and sets the ★4 guarantee", () => {
     const { roll, pity } = pullOnce(LIMITED, FRESH, seq(0.03, 0.9, 0.99));
 
-    expect(roll).toEqual({ driverId: "q5", tier: 4, featured: false, lost: true });
+    expect(roll).toEqual({
+      driverId: "q5",
+      tier: 4,
+      featured: false,
+      lost: true,
+      guaranteed: false,
+      pulls: 1,
+    });
     expect(pity).toMatchObject({ four: 0, five: 1, guaranteeFour: true });
   });
 
@@ -61,11 +82,24 @@ describe("pullOnce on a limited banner", () => {
   });
 });
 
+test("a roll counts the pulls since its tier's last one", () => {
+  const { roll } = pullOnce(LIMITED, { ...FRESH, five: 75, four: 2 }, seq(0, 0.2, 0));
+
+  expect(roll).toMatchObject({ tier: 5, pulls: 76 });
+});
+
 describe("pullOnce on the standard banner", () => {
   test("no 50/50: any ★5, guarantees untouched", () => {
     const { roll, pity } = pullOnce(STANDARD, FRESH, seq(0, 0.99));
 
-    expect(roll).toEqual({ driverId: "f3", tier: 5, featured: false, lost: false });
+    expect(roll).toEqual({
+      driverId: "f3",
+      tier: 5,
+      featured: false,
+      lost: false,
+      guaranteed: false,
+      pulls: 1,
+    });
     expect(pity.guaranteeFive).toBe(false);
   });
 });
