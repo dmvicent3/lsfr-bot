@@ -48,3 +48,23 @@ export interface Pick {
   /** The guarantee for this tier after the pick. */
   guarantee: boolean;
 }
+
+/** A pull's roll once the copy is counted. */
+export interface Landed extends Roll {
+  /** The level after this copy (C0–C6). */
+  level: number;
+  /** The first copy. */
+  isNew: boolean;
+  /** Given back for a copy past C6; 0 otherwise. */
+  refund: number;
+}
+
+/** What a player's balance is made of. */
+export interface Ledger {
+  /** Points earned across every game, ever. */
+  earned: number;
+  /** Given back for copies past C6. */
+  refunds: number;
+  /** Paid for pulls. */
+  spent: number;
+}
