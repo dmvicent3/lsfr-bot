@@ -12,8 +12,15 @@ export interface PointsSource {
   game: string;
   /** Shown in /gacha balance, e.g. "Word Duo". */
   label: string;
+  /**
+   * What `earned` counts. Absent: points, which are currency as they are. "pulls": gacha pulls,
+   * which the gacha turns into currency at its pull price.
+   */
+  unit?: PointsUnit;
   earned(db: Database, who: PlayerRef): number;
 }
+
+export type PointsUnit = "points" | "pulls";
 
 /**
  * How a game stores its points: a table with a guild_id column, the column naming the player,

@@ -66,8 +66,8 @@ describe("pointsSources and earnedBy", () => {
     const sources = pointsSources(modules);
 
     expect(earnedBy(sources, setup(), U)).toEqual([
-      { game: "a", label: "A", points: 150 },
-      { game: "b", label: "B", points: 30 },
+      { game: "a", label: "A", points: 150, unit: "points" },
+      { game: "b", label: "B", points: 30, unit: "points" },
     ]);
   });
 });

@@ -1,4 +1,4 @@
-import type { PlayerRef, PointsSource, PointsTable } from "./points-types.ts";
+import type { PlayerRef, PointsSource, PointsTable, PointsUnit } from "./points-types.ts";
 import type { BotModule } from "./types.ts";
 
 /** The rows a daily game's leaderboard counts. */
@@ -22,11 +22,16 @@ export function pointsSource(t: PointsTable): PointsSource {
 export const pointsSources = (modules: readonly BotModule[]): PointsSource[] =>
   modules.flatMap((m) => m.points ?? []);
 
-/** What each game gave one player, in source order. */
+/** What each game gave one player, in source order, in each source's own unit. */
 export function earnedBy(
   sources: readonly PointsSource[],
   db: Parameters<PointsSource["earned"]>[0],
   who: PlayerRef,
-): { game: string; label: string; points: number }[] {
-  return sources.map((s) => ({ game: s.game, label: s.label, points: s.earned(db, who) }));
+): { game: string; label: string; points: number; unit: PointsUnit }[] {
+  return sources.map((s) => ({
+    game: s.game,
+    label: s.label,
+    points: s.earned(db, who),
+    unit: s.unit ?? "points",
+  }));
 }
