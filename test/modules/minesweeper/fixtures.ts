@@ -39,6 +39,13 @@ export function game(rows: string[], opts: Partial<Game> = {}): Game {
     startedAt: 1_000,
     finishedAt: null,
     controls: "menus",
+    kind: "practice",
+    date: null,
+    level: null,
+    clicks: 0,
+    bbbv: null,
+    points: null,
+    streak: null,
     ...opts,
   };
 }

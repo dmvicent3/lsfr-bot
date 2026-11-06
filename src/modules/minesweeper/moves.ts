@@ -32,6 +32,13 @@ export function startGame(o: StartOptions): NewGame {
     startedAt: null,
     finishedAt: null,
     controls: o.controls,
+    kind: "practice",
+    date: null,
+    level: null,
+    clicks: 0,
+    bbbv: null,
+    points: null,
+    streak: null,
   };
 }
 
@@ -44,9 +51,12 @@ export function moveCursor(game: Game, axis: Axis, value: number): Game {
   return { ...game, cursor: toIndex(col, row, game.width) };
 }
 
-/** Lays the mines around the cursor on the first reveal and starts the clock. */
+/**
+ * Lays the mines around the cursor on the first reveal and starts the clock; a board laid in
+ * advance (the daily) starts its clock on its first reveal too.
+ */
 function laid(game: Game, now: number, random: () => number): Game & { field: boolean[] } {
-  if (game.field) return { ...game, field: game.field };
+  if (game.field) return { ...game, field: game.field, startedAt: game.startedAt ?? now };
 
   return { ...game, field: layMines(game, game.cursor, random), startedAt: now };
 }
@@ -57,7 +67,7 @@ export function applyReveal(game: Game, now: number, random: () => number): Step
 
   if (step.hint) return { game, hint: step.hint };
 
-  const next = { ...ready, cells: step.cells };
+  const next = { ...ready, cells: step.cells, clicks: game.clicks + 1 };
 
   if (step.hit !== null) {
     return { game: { ...next, hit: step.hit, result: "lost", finishedAt: now }, hint: null };

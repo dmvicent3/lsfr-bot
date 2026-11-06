@@ -18,6 +18,7 @@ describe("minesweeperModule", () => {
     expect(m.migrations?.map((x) => x.id)).toEqual([
       "minesweeper-001-init",
       "minesweeper-002-controls",
+      "minesweeper-003-daily",
     ]);
   });
 });

@@ -45,6 +45,25 @@ describe("moveCursor", () => {
   });
 });
 
+describe("applyReveal clicks", () => {
+  test("a reveal counts a click; a refused one doesn't", () => {
+    const g = game(["*..", "...", "..."], { cursor: 4 });
+    expect(applyReveal(g, 9_000, seeded(1)).game.clicks).toBe(1);
+    const flagged = game(["*f.", "...", "..."], { cursor: 1 });
+    expect(applyReveal(flagged, 9_000, seeded(1)).game.clicks).toBe(0);
+  });
+
+  test("a chord that opens counts a click", () => {
+    const g = game(["F..", "o..", "..."], { cursor: 3, clicks: 2 });
+    expect(applyReveal(g, 9_000, seeded(1)).game.clicks).toBe(3);
+  });
+
+  test("a laid board that never started starts its clock on the first reveal", () => {
+    const g = game(["*..", "...", "..."], { cursor: 4, startedAt: null });
+    expect(applyReveal(g, 9_000, seeded(1)).game.startedAt).toBe(9_000);
+  });
+});
+
 describe("applyReveal", () => {
   test("the first reveal lays mines, starts the clock and opens the cursor", () => {
     const { game: g, hint } = applyReveal(

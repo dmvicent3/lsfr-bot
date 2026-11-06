@@ -18,6 +18,13 @@ export interface GameRow {
   finished_at: number | null;
   result: string | null;
   controls: string;
+  kind: string;
+  date: string | null;
+  level: string | null;
+  clicks: number;
+  bbbv: number | null;
+  points: number | null;
+  streak: number | null;
 }
 
 export interface FinishedDbRow {

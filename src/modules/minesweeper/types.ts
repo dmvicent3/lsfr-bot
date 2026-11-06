@@ -4,6 +4,9 @@ export type Result = "won" | "lost" | "gave-up";
 
 export type Preset = "beginner" | "intermediate" | "expert";
 
+/** A practice board (any size, unscored) or the day's shared, scored board. */
+export type Kind = "practice" | "daily";
+
 export type Axis = "col" | "row";
 
 /** How the board's cursor moves: column/row menus, arrow buttons, or both. */
@@ -36,6 +39,17 @@ export interface Game extends Board {
   startedAt: number | null;
   finishedAt: number | null;
   controls: Controls;
+  kind: Kind;
+  /** The daily's date and level; null for practice. */
+  date: string | null;
+  level: Preset | null;
+  /** Reveals and chords that changed the board. */
+  clicks: number;
+  /** The daily's 3BV after its opening; null for practice. */
+  bbbv: number | null;
+  /** Set when a daily finishes. */
+  points: number | null;
+  streak: number | null;
 }
 
 export type NewGame = Omit<Game, "id">;
