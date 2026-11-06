@@ -12,6 +12,7 @@ export interface RawPages {
 export interface ApiDriver {
   id: string;
   name: string;
+  family: string;
   nationality: string;
 }
 
@@ -32,6 +33,8 @@ export type Champions = Map<number, string>;
 export interface BuiltDriver {
   id: string;
   name: string;
+  /** The family name, drawn large on the card. */
+  family: string;
   /** ISO 3166-1 alpha-2. */
   country: string;
   first: number;

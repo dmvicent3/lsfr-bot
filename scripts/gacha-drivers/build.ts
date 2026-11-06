@@ -65,6 +65,7 @@ export function buildDrivers(
         {
           id: d.id,
           name: d.name,
+          family: d.family,
           country: flagCode(d.nationality),
           ...t,
           titles: won,

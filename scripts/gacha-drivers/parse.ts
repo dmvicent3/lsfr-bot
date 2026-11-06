@@ -13,6 +13,7 @@ export function parseDrivers(page: unknown): ApiDriver[] {
   return records(table(page, "DriverTable").Drivers).map((d) => ({
     id: asText(d.driverId),
     name: `${asText(d.givenName)} ${asText(d.familyName)}`.trim(),
+    family: asText(d.familyName),
     nationality: asText(d.nationality),
   }));
 }

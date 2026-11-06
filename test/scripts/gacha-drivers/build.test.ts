@@ -55,7 +55,9 @@ describe("parse", () => {
       },
     };
 
-    expect(parseDrivers(drivers)).toEqual([{ id: "x", name: "Ann Bee", nationality: "Dutch" }]);
+    expect(parseDrivers(drivers)).toEqual([
+      { id: "x", name: "Ann Bee", family: "Bee", nationality: "Dutch" },
+    ]);
     expect(parseResults(results)).toEqual([
       { driverId: "x", season: 1999, round: 3, position: "2", grid: 1, status: "+1 Lap" },
     ]);
@@ -67,10 +69,10 @@ describe("parse", () => {
 
 describe("buildDrivers", () => {
   const drivers = [
-    { id: "champ", name: "C Hamp", nationality: "British" },
-    { id: "winner", name: "W Inner", nationality: "Italian" },
-    { id: "runner", name: "R Unner", nationality: "Swiss" },
-    { id: "reserve", name: "No Start", nationality: "" },
+    { id: "champ", name: "C Hamp", family: "Hamp", nationality: "British" },
+    { id: "winner", name: "W Inner", family: "Inner", nationality: "Italian" },
+    { id: "runner", name: "R Unner", family: "Unner", nationality: "Swiss" },
+    { id: "reserve", name: "No Start", family: "Start", nationality: "" },
   ];
   const results = [
     result("champ", 1960, "1", 1),
@@ -87,6 +89,7 @@ describe("buildDrivers", () => {
       {
         id: "champ",
         name: "C Hamp",
+        family: "Hamp",
         country: "GB",
         first: 1960,
         last: 1962,
@@ -99,6 +102,7 @@ describe("buildDrivers", () => {
       {
         id: "winner",
         name: "W Inner",
+        family: "Inner",
         country: "IT",
         first: 1961,
         last: 1961,
@@ -111,6 +115,7 @@ describe("buildDrivers", () => {
       {
         id: "runner",
         name: "R Unner",
+        family: "Unner",
         country: "CH",
         first: 1961,
         last: 1961,

@@ -4,6 +4,8 @@ import type { BannerKind, Featured, Pools, Tier } from "./engine/types.ts";
 export interface Driver {
   id: string;
   name: string;
+  /** The family name, drawn large on the card. */
+  family: string;
   /** ISO 3166-1 alpha-2. */
   country: string;
   first: number;
