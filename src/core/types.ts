@@ -1,4 +1,5 @@
 import type { Database } from "bun:sqlite";
+import type { PointsSource } from "./points-types.ts";
 import type {
   AutocompleteInteraction,
   ChatInputCommandInteraction,
@@ -110,6 +111,8 @@ export interface BotModule {
   events?: EventHandler[];
   jobs?: Job[];
   migrations?: Migration[];
+  /** The points its leaderboards count, as the gacha currency reads them. */
+  points?: PointsSource[];
 }
 
 export interface ProcessLike {

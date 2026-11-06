@@ -4,6 +4,7 @@ import { crosswordComponents } from "./components/components.ts";
 import { crosswordModals } from "./modals.ts";
 import type { Ask } from "./play/make.ts";
 import { crosswordMigrations } from "./store/migrations.ts";
+import { crosswordPoints } from "./points.ts";
 
 export function crosswordModule(
   ask: Ask | null = null,
@@ -18,5 +19,6 @@ export function crosswordModule(
     components: crosswordComponents(ask, random),
     modals: crosswordModals(),
     migrations: crosswordMigrations,
+    points: crosswordPoints,
   };
 }

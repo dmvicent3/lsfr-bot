@@ -4,6 +4,7 @@ import { fleetCommand } from "./commands/fleet.ts";
 import { controls } from "./components/controls.ts";
 import { pageHandler } from "./components/page.ts";
 import { fleetMigrations } from "./store/migrations.ts";
+import { fleetPoints } from "./points.ts";
 
 /** On only when JEV_URL is set: jevos picks its shots through the shared jev queue. */
 export function fleetModule(jev: Jev, random: () => number = Math.random): BotModule {
@@ -17,5 +18,6 @@ export function fleetModule(jev: Jev, random: () => number = Math.random): BotMo
     commands: [fleetCommand(deps)],
     components: [...controls.map((c) => c(deps)), pageHandler],
     migrations: fleetMigrations,
+    points: fleetPoints,
   };
 }

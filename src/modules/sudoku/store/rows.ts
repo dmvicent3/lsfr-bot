@@ -26,8 +26,9 @@ export const toGame = (r: GameRow): Game => ({
 export const COLUMNS =
   "guild_id, user_id, kind, date, slot, level, givens, solution, cells, wrong, cursor, checks, started_at, solved_at, points, streak, notes, note_mode, history";
 export const MARKS = "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
-export const SOLVED =
-  "SELECT * FROM sudoku_games WHERE guild_id = ? AND kind = 'daily' AND solved_at IS NOT NULL";
+/** The games that score: solved dailies. */
+export const DAILY_SOLVED = "kind = 'daily' AND solved_at IS NOT NULL";
+export const SOLVED = `SELECT * FROM sudoku_games WHERE guild_id = ? AND ${DAILY_SOLVED}`;
 export const KEY = "guild_id = ? AND user_id = ? AND kind = ? AND date = ? AND slot = ?";
 
 export const values = (g: Game) => [

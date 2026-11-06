@@ -5,6 +5,7 @@ import { gridCommand } from "./commands/commands.ts";
 import { gridComponents } from "./components/components.ts";
 import { gridModals } from "./modals.ts";
 import { gridMigrations } from "./store/migrations.ts";
+import { gridPoints } from "./points.ts";
 
 export function gridModule(
   snapshotSource: () => Snapshot | null = () => readSnapshot(),
@@ -19,5 +20,6 @@ export function gridModule(
     components: gridComponents(snapshotSource, random),
     modals: gridModals(snapshotSource),
     migrations: gridMigrations,
+    points: gridPoints,
   };
 }

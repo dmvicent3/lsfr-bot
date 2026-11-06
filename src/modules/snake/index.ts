@@ -3,6 +3,7 @@ import { snakeCommand } from "./commands/commands.ts";
 import { snakeComponents } from "./components/components.ts";
 import { snakeModals } from "./modals.ts";
 import { snakeMigrations } from "./store/migrations.ts";
+import { snakePoints } from "./points.ts";
 
 export function snakeModule(random: () => number = Math.random): BotModule {
   return {
@@ -14,5 +15,6 @@ export function snakeModule(random: () => number = Math.random): BotModule {
     components: snakeComponents(random),
     modals: snakeModals(),
     migrations: snakeMigrations,
+    points: snakePoints,
   };
 }

@@ -2,6 +2,7 @@ import type { BotModule } from "../../core/types.ts";
 import { groupsCommand } from "./commands/commands.ts";
 import { groupsComponents } from "./components/components.ts";
 import { groupsMigrations } from "./store/migrations.ts";
+import { groupsPoints } from "./points.ts";
 
 export function groupsModule(random: () => number = Math.random): BotModule {
   return {
@@ -12,5 +13,6 @@ export function groupsModule(random: () => number = Math.random): BotModule {
     commands: [groupsCommand(random)],
     components: groupsComponents(random),
     migrations: groupsMigrations,
+    points: groupsPoints,
   };
 }

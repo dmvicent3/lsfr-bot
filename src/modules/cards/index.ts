@@ -9,6 +9,7 @@ import { startHandler } from "./components/start.ts";
 import { voteHandler } from "./components/vote.ts";
 import { readyEvent } from "./events/ready.ts";
 import { cardsMigrations } from "./store/migrations.ts";
+import { cardsPoints } from "./points.ts";
 
 export function cardsModule(random: () => number = Math.random): BotModule {
   return {
@@ -28,5 +29,6 @@ export function cardsModule(random: () => number = Math.random): BotModule {
     ],
     events: [readyEvent],
     migrations: cardsMigrations,
+    points: cardsPoints,
   };
 }

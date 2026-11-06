@@ -11,8 +11,11 @@ const STATS = `SELECT difficulty,
     MIN(CASE WHEN result = 'win' THEN moves END) AS best
   FROM four_results WHERE guild_id = ? AND player_id = ? GROUP BY difficulty`;
 
+/** A win's points by difficulty, per result row. */
+export const WIN_POINTS = "CASE difficulty WHEN 'hard' THEN 3 WHEN 'normal' THEN 2 ELSE 1 END";
+
 const STANDINGS = `SELECT player_id AS userId,
-    SUM(CASE difficulty WHEN 'hard' THEN 3 WHEN 'normal' THEN 2 ELSE 1 END) AS points,
+    SUM(${WIN_POINTS}) AS points,
     COUNT(*) AS wins
   FROM four_results WHERE guild_id = ? AND result = 'win' AND ended_at >= ? AND ended_at < ?
   GROUP BY player_id ORDER BY points DESC, SUM(moves), player_id`;

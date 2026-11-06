@@ -5,6 +5,7 @@ import { dropHandler } from "./components/drop.ts";
 import { pageHandler } from "./components/page.ts";
 import { resignHandler } from "./components/resign.ts";
 import { fourMigrations } from "./store/migrations.ts";
+import { fourPoints } from "./points.ts";
 
 /** On only when JEV_URL is set: jevos picks its drops through the shared jev queue. */
 export function fourModule(jev: Jev): BotModule {
@@ -18,5 +19,6 @@ export function fourModule(jev: Jev): BotModule {
     commands: [fourCommand(deps)],
     components: [dropHandler(deps), resignHandler, pageHandler],
     migrations: fourMigrations,
+    points: fourPoints,
   };
 }

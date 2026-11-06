@@ -4,6 +4,7 @@ import { duelComponents } from "./components/components.ts";
 import { readSnapshot } from "../../core/countries/load.ts";
 import { duelMigrations } from "./store/migrations.ts";
 import type { Snapshot } from "./types.ts";
+import { duelPoints } from "./points.ts";
 
 export function duelModule(
   snapshotSource: () => Snapshot | null = () => readSnapshot(),
@@ -16,5 +17,6 @@ export function duelModule(
     commands: [duelCommand(snapshotSource)],
     components: duelComponents(),
     migrations: duelMigrations,
+    points: duelPoints,
   };
 }

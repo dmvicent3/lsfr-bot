@@ -6,6 +6,7 @@ import { multiGiveUpHandler } from "./components/multi-give-up.ts";
 import { multiGuessHandler } from "./components/multi-guess.ts";
 import { pageHandlers } from "./components/page.ts";
 import { wordMigrations } from "./store/migrations.ts";
+import { wordPoints } from "./points.ts";
 
 /** Classic `/word`, and Word Duo and Quad as their own `/duo` and `/quad` on the same tables. */
 export function wordModule(random: () => number = Math.random): BotModule {
@@ -18,5 +19,6 @@ export function wordModule(random: () => number = Math.random): BotModule {
     components: [...pageHandlers, multiGuessHandler, multiGiveUpHandler],
     modals: [multiAnswerHandler],
     migrations: wordMigrations,
+    points: wordPoints,
   };
 }

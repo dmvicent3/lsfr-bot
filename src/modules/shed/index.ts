@@ -16,6 +16,7 @@ import { stackingHandler } from "./components/stacking.ts";
 import { startHandler } from "./components/start.ts";
 import { readyEvent } from "./events/ready.ts";
 import { shedMigrations } from "./store/migrations.ts";
+import { shedPoints } from "./points.ts";
 
 export function shedModule(random: () => number = Math.random): BotModule {
   return {
@@ -42,5 +43,6 @@ export function shedModule(random: () => number = Math.random): BotModule {
     ],
     events: [readyEvent],
     migrations: shedMigrations,
+    points: shedPoints,
   };
 }

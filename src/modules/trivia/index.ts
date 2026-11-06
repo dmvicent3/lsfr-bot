@@ -6,6 +6,7 @@ import { topicHandler } from "./components/topic.ts";
 import { messageEvent } from "./events/message.ts";
 import { readyEvent } from "./events/ready.ts";
 import { triviaMigrations } from "./store/migrations.ts";
+import { triviaPoints } from "./points.ts";
 
 export function triviaModule(random: () => number = Math.random): BotModule {
   return {
@@ -17,5 +18,6 @@ export function triviaModule(random: () => number = Math.random): BotModule {
     components: [pickHandler, topicHandler, pageHandler],
     events: [messageEvent, readyEvent],
     migrations: triviaMigrations,
+    points: triviaPoints,
   };
 }
