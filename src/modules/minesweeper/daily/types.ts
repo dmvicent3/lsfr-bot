@@ -4,3 +4,9 @@ export interface DailyMap {
   opening: number;
   open: number[];
 }
+
+/** A finished daily's points and how they add up ("Expert: 150", "14 extra clicks: −14"). */
+export interface Award {
+  points: number;
+  parts: string[];
+}
