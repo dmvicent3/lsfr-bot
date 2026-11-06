@@ -29,7 +29,3 @@ export function historyText(v: {
 
   return [head, ...v.rows.map((p) => row(p, v.roster))].join("\n");
 }
-
-/** The page asked for, kept within the pages there are. */
-export const clampPage = (page: number, total: number, size: number): number =>
-  Math.min(Math.max(1, page), Math.max(1, Math.ceil(total / size)));

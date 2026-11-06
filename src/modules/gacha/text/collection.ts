@@ -2,7 +2,7 @@ import { flag } from "../../../core/countries/flag.ts";
 import { levelOf } from "../engine/constellation.ts";
 import { TIERS } from "../engine/types.ts";
 import type { Roster } from "../types.ts";
-import { plural } from "./format.ts";
+import { clampPage, plural } from "./format.ts";
 
 export const COLLECTION_PAGE = 36;
 
@@ -44,7 +44,7 @@ export function collectionText(v: {
   if (list.length === 0) return `${head}\nNo drivers yet. Try \`/gacha pull\`.`;
 
   const pages = Math.ceil(list.length / COLLECTION_PAGE);
-  const page = Math.min(Math.max(1, v.page), pages);
+  const page = clampPage(v.page, list.length, COLLECTION_PAGE);
   const shown = list.slice((page - 1) * COLLECTION_PAGE, page * COLLECTION_PAGE);
   const lines = TIERS.flatMap((t) => {
     const of = shown.filter((h) => h.tier === t);

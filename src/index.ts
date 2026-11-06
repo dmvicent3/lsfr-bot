@@ -25,6 +25,8 @@ import { crosswordModule } from "./modules/crossword/index.ts";
 import { dailiesModule } from "./modules/dailies/index.ts";
 import { feedbackModule } from "./modules/feedback/index.ts";
 import { feedbackTopics } from "./modules/feedback/topics.ts";
+import { gachaModule } from "./modules/gacha/index.ts";
+import { pointsSources } from "./core/points.ts";
 import { gridModule } from "./modules/grid/index.ts";
 import { groupsModule } from "./modules/groups/index.ts";
 import { snakeModule } from "./modules/snake/index.ts";
@@ -61,7 +63,9 @@ const features: BotModule[] = [
     ? [rssModule(jev, config.embedUrl), tictactoeModule(jev), fourModule(jev), fleetModule(jev)]
     : []),
 ];
-const modules = [...features, feedbackModule(feedbackTopics(features))];
+/** Gacha currency is earned from every other module's points, so it is built from them. */
+const withGacha = [...features, gachaModule(pointsSources(features))];
+const modules = [...withGacha, feedbackModule(feedbackTopics(withGacha))];
 const db = openDatabase(config.databasePath);
 runMigrations(db, [...coreMigrations, ...modules.flatMap((m) => m.migrations ?? [])]);
 await startBot([...modules, helpModule(modules)], config, db);

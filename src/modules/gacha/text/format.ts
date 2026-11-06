@@ -41,3 +41,7 @@ export function pityLine(p: Pity, limited: boolean): string {
 }
 
 export const plural = (n: number, word: string): string => `${n} ${word}${n === 1 ? "" : "s"}`;
+
+/** The page asked for, kept within the pages there are. */
+export const clampPage = (page: number, total: number, size: number): number =>
+  Math.min(Math.max(1, page), Math.max(1, Math.ceil(total / size)));
