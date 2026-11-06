@@ -18,6 +18,11 @@ test("cells join with a divider; an empty last cell drops it, an empty first kee
   expect(joinCells(["", "b"])).toBe("│ b");
 });
 
+test("an empty cell before a filled one takes the spacer; trailing empties still drop", () => {
+  expect(joinCells(["", "b"], "⬛")).toBe("⬛ │ b");
+  expect(joinCells(["a", ""], "⬛")).toBe("a");
+});
+
 test("one row per guess, each board's squares side by side", () => {
   const boards = boardStates(["crane", "slate"], ["slate", "bumpy"]);
   expect(gridRows(boards, ["slate", "bumpy"], label)).toEqual([
@@ -26,9 +31,17 @@ test("one row per guess, each board's squares side by side", () => {
   ]);
 });
 
-test("a board solved earlier leaves its column empty; no label for the share", () => {
+test("a board solved earlier holds its column with black boxes; no label for the share", () => {
   const boards = boardStates(["crane", "slate"], ["crane", "bumpy"]);
-  expect(gridRows(boards, ["crane", "bumpy"])).toEqual(["🟩🟩🟩🟩🟩 │ ⬛⬛🟩⬛🟩", "│ ⬛⬛⬛⬛⬛"]);
+  expect(gridRows(boards, ["crane", "bumpy"])).toEqual([
+    "🟩🟩🟩🟩🟩 │ ⬛⬛🟩⬛🟩",
+    "⬛⬛⬛⬛⬛ │ ⬛⬛⬛⬛⬛",
+  ]);
+});
+
+test("the last board solved early leaves its column empty: nothing after it to shift", () => {
+  const boards = boardStates(["slate", "crane"], ["crane", "bumpy"]);
+  expect(gridRows(boards, ["crane", "bumpy"], label)[1]).toBe("`BUMPY` ⬛⬛⬛⬛⬛");
 });
 
 test("a row empty on every board of the block is left out", () => {

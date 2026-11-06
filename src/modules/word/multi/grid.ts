@@ -15,18 +15,27 @@ export const blocks = <T>(items: readonly T[]): T[][] =>
     items.slice(n * PER_BLOCK, (n + 1) * PER_BLOCK),
   );
 
-/** Cells with a divider between; an empty last cell is dropped, an empty first keeps the divider. */
-export function joinCells(cells: readonly string[]): string {
+/**
+ * Cells with a divider between. Empty cells at the end are dropped; an empty cell before a filled
+ * one becomes `spacer`, so the columns after it stay put.
+ */
+export function joinCells(cells: readonly string[], spacer = ""): string {
   const kept = [...cells];
 
   while (kept.length > 0 && kept.at(-1) === "") kept.pop();
 
-  return kept.join(" │ ").trim();
+  return kept
+    .map((c) => c || spacer)
+    .join(" │ ")
+    .trim();
 }
 
 /** Guess `k`'s squares on a board, or nothing once the board was solved by an earlier guess. */
 const cell = (b: BoardState, guess: string, k: number): string =>
   b.solvedAt !== null && k >= b.solvedAt ? "" : squares(feedback(guess, b.word));
+
+/** What a solved board shows under a later guess when a board after it is still open. */
+const spacer = (boards: readonly BoardState[]): string => "⬛".repeat(boards[0]?.word.length ?? 0);
 
 /** One block's rows: each guess once, then its squares on each board; `label` names the guess. */
 export function gridRows(
@@ -39,7 +48,7 @@ export function gridRows(
 
     if (cells.every((c) => c === "")) return [];
 
-    const row = joinCells(cells);
+    const row = joinCells(cells, spacer(boards));
 
     return [label ? `${label(g)} ${row}` : row];
   });

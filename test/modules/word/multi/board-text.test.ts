@@ -26,7 +26,7 @@ test("before a guess: heading and how to play", () => {
   );
 });
 
-test("both boards on one line per guess; a solved board's column empties", () => {
+test("both boards on one line per guess; a solved board holds its column only when one after it is open", () => {
   expect(view({ guesses: ["slate", "bumpy"] })).toBe(
     [
       "**Word Duo #2** · attempts left 5",
@@ -35,7 +35,7 @@ test("both boards on one line per guess; a solved board's column empties", () =>
       "`BUMPY` ⬛⬛⬛⬛⬛",
     ].join("\n"),
   );
-  expect(view({ guesses: ["crane", "bumpy"] })).toContain("`BUMPY` │ ⬛⬛⬛⬛⬛");
+  expect(view({ guesses: ["crane", "bumpy"] })).toContain("`BUMPY` ⬛⬛⬛⬛⬛ │ ⬛⬛⬛⬛⬛");
 });
 
 test("a win shows the award and the wait", () => {
