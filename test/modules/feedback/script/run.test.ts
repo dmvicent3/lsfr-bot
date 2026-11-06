@@ -3,7 +3,7 @@ import { runScript } from "../../../../src/modules/feedback/script/run.ts";
 import type { Rest } from "../../../../src/modules/feedback/script/types.ts";
 import { setPollChannel } from "../../../../src/modules/feedback/settings.ts";
 import { newEntry, setup } from "../setup.ts";
-import { fakeRest } from "./fake-rest.ts";
+import { fakeRest } from "../../../core/polls/fake-rest.ts";
 
 const page = (from: number, n: number) =>
   Array.from({ length: n }, (_, k) => ({ id: String(from + k), username: `v${from + k}` }));

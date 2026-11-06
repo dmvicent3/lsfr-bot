@@ -1,24 +1,14 @@
 import type { Database } from "bun:sqlite";
+import type { PollRequest, Rest } from "../../../core/polls/types.ts";
 import type { FeedbackRepo } from "../store/repo.ts";
 
-/** The part of discord.js `REST` the script uses; tests pass a fake. */
-export interface Rest {
-  get(route: `/${string}`, options?: { query?: URLSearchParams }): Promise<unknown>;
-  post(route: `/${string}`, options?: { body?: unknown }): Promise<unknown>;
-}
+export type { PollRequest, PollState, Rest } from "../../../core/polls/types.ts";
 
 export interface ScriptDeps {
   db: Database;
   repo: FeedbackRepo;
   rest: Rest;
   now: number;
-}
-
-export interface PollRequest {
-  question: string;
-  options: string[];
-  hours: number;
-  multi: boolean;
 }
 
 /** Each command's arguments, by command name. */
@@ -59,12 +49,6 @@ export interface Tally {
   text: string;
   count: number;
   voters: string[];
-}
-
-/** The poll on a message: whether Discord has finalised it, and its answers. */
-export interface PollState {
-  finalized: boolean;
-  answers: { id: number; text: string; count: number | null }[];
 }
 
 /** Where a poll goes. */

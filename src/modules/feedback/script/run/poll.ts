@@ -1,6 +1,5 @@
-import { Routes } from "discord.js";
-import { asText, isRecord } from "../../../../core/guards.ts";
-import { messageUrl, pollBody, pollEnd } from "../body.ts";
+import { postPoll } from "../../../../core/polls/post.ts";
+import { messageUrl } from "../body.ts";
 import { pollTarget } from "../target.ts";
 import type { Args, Outcome, ScriptDeps } from "../types.ts";
 
@@ -10,24 +9,20 @@ export async function poll(args: Args["poll"], d: ScriptDeps): Promise<Outcome> 
 
   if (typeof target === "string") return { ok: false, text: target };
 
-  const sent = await d.rest.post(Routes.channelMessages(target.channelId), {
-    body: pollBody(args.poll),
-  });
-  const messageId = isRecord(sent) ? asText(sent.id) : "";
+  const posted = await postPoll(d.rest, target.channelId, args.poll, d.now);
 
-  if (!messageId) return { ok: false, text: "Discord did not return the posted message." };
+  if (!posted) return { ok: false, text: "Discord did not return the posted message." };
 
-  const { question, options, multi, hours } = args.poll;
+  const { question, options, multi } = args.poll;
   const id = d.repo.polls.add({
     ...target,
-    messageId,
+    ...posted,
     question,
     options,
     multi,
     createdAt: d.now,
-    endsAt: pollEnd(sent, d.now, hours),
   });
-  const url = messageUrl(target.guildId, target.channelId, messageId);
+  const url = messageUrl(target.guildId, target.channelId, posted.messageId);
 
   return { ok: true, text: `poll #${id} posted: ${url}` };
 }

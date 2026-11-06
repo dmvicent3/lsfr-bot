@@ -1,4 +1,4 @@
-import type { Rest } from "../../../../src/modules/feedback/script/types.ts";
+import type { Rest } from "../../../src/core/polls/types.ts";
 
 export interface RestCall {
   method: "get" | "post";

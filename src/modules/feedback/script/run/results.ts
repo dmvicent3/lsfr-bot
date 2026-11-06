@@ -1,6 +1,5 @@
-import { Routes } from "discord.js";
+import { readPoll } from "../../../../core/polls/post.ts";
 import { resultsText } from "../format.ts";
-import { pollState } from "../poll-state.ts";
 import { voters } from "../rest-reads.ts";
 import type { Args, Outcome, ScriptDeps, Tally } from "../types.ts";
 
@@ -10,9 +9,7 @@ export async function results(args: Args["results"], d: ScriptDeps): Promise<Out
 
   if (!stored) return { ok: false, text: `No poll #${args.id}.` };
 
-  const state = pollState(
-    await d.rest.get(Routes.channelMessage(stored.channelId, stored.messageId)),
-  );
+  const state = await readPoll(d.rest, stored.channelId, stored.messageId);
 
   if (!state) return { ok: false, text: `The message of poll #${args.id} has no poll.` };
 
